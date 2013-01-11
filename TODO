@@ -22,3 +22,8 @@
 - Lot output of DCF77 is _ugly_. There are two spaces between each output,
   the lines get really long. Lines shouldn't get longer than 80 characters.
 
+- Ambilight (sometimes?) enables itself after it was manually disabled
+
+- Ambilight enable/disable times: Just like the clock itself there should
+  be an option to enable and/or disable the ambilight depending on the
+  time, so it can be activated in the evening
