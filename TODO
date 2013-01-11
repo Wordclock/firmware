@@ -19,7 +19,7 @@
          78  88  88  78  88  88  88 189  2nd DCF77 correct
         DCF77 Reset
 
-- Lot output of DCF77 is _ugly_. There are two spaces between each output,
+- Log output of DCF77 is _ugly_. There are two spaces between each output,
   the lines get really long. Lines shouldn't get longer than 80 characters.
 
 - Ambilight (sometimes?) enables itself after it was manually disabled
