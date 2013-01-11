@@ -6,13 +6,13 @@
  *           This version of the german language supports four regional differences in speking.
  *
             \verbatim 
-                E S K I S T L F Ü N F    ==> ES IST FÜNF
+                E S K I S T L F Ãœ N F    ==> ES IST FÃœNF
                 Z E H N Z W A N Z I G    ==> ZEHN ZWANZIG
                 D R E I V I E R T E L    ==> DREI|VIERTEL
                 T G N A C H V O R J M    ==> NACH VOR
-                H A L B Q Z W Ö L F P    ==> HALB ZWÖLF
+                H A L B Q Z W Ã– L F P    ==> HALB ZWÃ–LF
                 Z W E I N S I E B E N    ==> ZW|EI|N|S|IEBEN
-                K D R E I R H F Ü N F    ==> DREI FÜNF
+                K D R E I R H F Ãœ N F    ==> DREI FÃœNF
                 E L F N E U N V I E R    ==> ELF NEUN VIER
                 W A C H T Z E H N R S    ==> ACHT ZEHN
                 B S E C H S F M U H R    ==> SECHS UHR
@@ -20,61 +20,61 @@
 
  *             -# Wessi-Modus:
  *                - es ist ein uhr
- *                - es ist fünf nach eins
+ *                - es ist fÃ¼nf nach eins
  *                - es ist zehn nach eins
  *                - es ist viertel nach eins
  *                - es ist zehn vor halb zwei
- *                - es ist fünf vor halb zwei
+ *                - es ist fÃ¼nf vor halb zwei
  *                - es ist halb zwei
- *                - es ist fünf nach halb zwei
+ *                - es ist fÃ¼nf nach halb zwei
  *                - es ist zehn nach halb zwei
  *                - es ist viertel vor zwei
  *                - es ist zehn vor zwei
- *                - es ist fünf vor zwei
+ *                - es ist fÃ¼nf vor zwei
  *             -# Rhein-Ruhr-Modus:
  *               - es ist ein uhr
- *               - es ist fünf nach eins
+ *               - es ist fÃ¼nf nach eins
  *               - es ist zehn nach eins
  *               - es ist viertel nach eins
  *               - es ist zwanzig nach eins
- *               - es ist fünf vor halb zwei
+ *               - es ist fÃ¼nf vor halb zwei
  *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
+ *               - es ist fÃ¼nf nach halb zwei
  *               - es ist zwanzig vor zwei
  *               - es ist viertel vor zwei
  *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
+ *               - es ist fï¿½nf vor zwei
  *             -# Ossi-Modus:
  *               - es ist ein uhr
- *               - es ist fünf nach eins
+ *               - es ist fÃ¼nf nach eins
  *               - es ist zehn nach eins
  *               - es ist viertel zwei
  *               - es ist zehn vor halb zwei
- *               - es ist fünf vor halb zwei
+ *               - es ist fÃ¼nf vor halb zwei
  *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
+ *               - es ist fÃ¼nf nach halb zwei
  *               - es ist zehn nach halb zwei
  *               - es ist dreiviertel zwei
  *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
+ *               - es ist fÃ¼nf vor zwei
  *             -# Swabian-Modus:
  *               - es ist ein uhr
- *               - es ist fünf nach eins
+ *               - es ist fÃ¼nf nach eins
  *               - es ist zehn nach eins
  *               - es ist viertel zwei
  *               - es ist zwanzig nach eins
- *               - es ist fünf vor halb zwei
+ *               - es ist fÃ¼nf vor halb zwei
  *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
+ *               - es ist fÃ¼nf nach halb zwei
  *               - es ist zwanzig vor zwei
  *               - es ist dreiviertel zwei
  *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
+ *               - es ist fÃ¼nf vor zwei
  *
  * \version $Id: display_wc_ger3.h 412 2012-01-10 20:03:08Z vt $
  * 
  * \author Copyright (c) 2012 Vlad Tepesch    
- * \author Copyright (c) 2012 Uwe Höß
+ * \author Copyright (c) 2012 Uwe HÃ¶ÃŸ
  * 
  * \remarks
  *   This program is free software; you can redistribute it and/or modify

@@ -8,7 +8,7 @@
  * \version $Id: ldr.c 285 2010-03-24 21:43:24Z vt $
  * 
  * 
- * \author Copyright (c) 2010 René Harsch ( rene@harsch.net )
+ * \author Copyright (c) 2010 RenÃ© Harsch ( rene@harsch.net )
  * \author Copyright (c) 2010 Vlad Tepesch  
  * 
  * \remarks

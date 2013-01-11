@@ -6,7 +6,7 @@
  * \version $Id: display_wc_ger3.c 412 2012-01-10 20:03:08Z vt $
  * 
  * \author Copyright (c) 2012 Vlad Tepesch    
- * \author Copyright (c) 2012 Uwe Höß
+ * \author Copyright (c) 2012 Uwe HÃ¶ÃŸ
  * 
  * \remarks
  *   This program is free software; you can redistribute it and/or modify
@@ -121,7 +121,7 @@ const uint16_t s_numbers[12] = {
  */
 static const uint16_t s_hourIncrement[TM_COUNT] = {
   BIN16(0,0,0,0,   1,1,1,1,1,1,1,1,0,0,0,0 ),  /* zehn vor halb */
-  BIN16(0,0,0,0,   1,1,1,1,1,1,1,0,0,0,0,0 ),  /* fünf vor halb */
+  BIN16(0,0,0,0,   1,1,1,1,1,1,1,0,0,0,0,0 ),  /* fÃ¼nf vor halb */
   BIN16(0,0,0,0,   1,1,1,1,1,1,1,1,1,0,0,0 ),  /* viertel */
   BIN16(0,0,0,0,   1,1,1,1,1,1,1,0,1,0,0,0 ),  /* viertel, aber 20 nach */
 };

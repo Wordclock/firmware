@@ -114,7 +114,7 @@ uart_puts_p (const char * progmem_s)
  */
 #if (BOOTLOADER_RESET_UART == 1)
 ISR(USART_RX_vect){
-  if(UDR0=='R')                                                                 //Reset-Signal für BT-Bootloader bekommen?
+  if(UDR0=='R')                                                                 //Reset-Signal fÃ¼r BT-Bootloader bekommen?
   {
 #if (BOOTLOADER_RESET_WDT == 1)                                                 // Reset via Watchdog
     //cli();                                                                      // disable Interrupts - not neccessary because interupt context

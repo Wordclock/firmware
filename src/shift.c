@@ -54,7 +54,7 @@ shift24_output (uint32_t value)
 
  
   SPDR = u2;                      // SPDR schreiben startet Uebertragung 
-  while (!(SPSR & (1 << SPIF)));  // warten auf Ende der Uebertragung für dieses Byte 
+  while (!(SPSR & (1 << SPIF)));  // warten auf Ende der Uebertragung fÃ¼r dieses Byte
 
   uint8_t u1 = (uint8_t)(u16);
   SPDR = u1;

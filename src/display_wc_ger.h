@@ -11,44 +11,44 @@
  *            This version of the german language supports two regional differences in speking.
 
             \verbatim 
-                E S K I S T A F Ü N F    ==> ES IST FÜNF
+                E S K I S T A F Ãœ N F    ==> ES IST FÃœNF
                 U Z E H N F M V O R G    ==> ZEHN VOR
                 D R E I V I E R T E L    ==> DREI VIERTEL
                 N A C H V O R H A L B    ==> NACH VOR HALB
-                X F Ü N F R S Z W E I    ==> FÜNF ZWEI
+                X F Ãœ N F R S Z W E I    ==> FÃœNF ZWEI
                 S I E B E N A V I E R    ==> SIEBEN VIER
                 Z E H N T G S E C H S    ==> ZEHN SECHS
                 L D R E I U A C H T J    ==> DREI ACHT
                 E L F N E U N E I N S    ==> ELF NEUN EIN|S
-                B Z W Ö L F R H U H R    ==> ZWÖLF UHR
+                B Z W Ã– L F R H U H R    ==> ZWÃ–LF UHR
             \endverbatim 
 
  *             -# Wessi-Modus:
  *                - es ist ein uhr
- *                - es ist fünf nach eins
+ *                - es ist fÃ¼nf nach eins
  *                - es ist zehn nach eins
  *                - es ist viertel nach eins
  *                - es ist zehn vor halb zwei
- *                - es ist fünf vor halb zwei
+ *                - es ist fÃ¼nf vor halb zwei
  *                - es ist halb zwei
- *                - es ist fünf nach halb zwei
+ *                - es ist fÃ¼nf nach halb zwei
  *                - es ist zehn nach halb zwei
  *                - es ist viertel vor zwei
  *                - es ist zehn vor zwei
- *                - es ist fünf vor zwei
+ *                - es ist fÃ¼nf vor zwei
  *             -# Ossi-Modus:
  *               - es ist ein uhr
- *               - es ist fünf nach eins
+ *               - es ist fÃ¼nf nach eins
  *               - es ist zehn nach eins
  *               - es ist viertel zwei
  *               - es ist zehn vor halb zwei
- *               - es ist fünf vor halb zwei
+ *               - es ist fÃ¼nf vor halb zwei
  *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
+ *               - es ist fÃ¼nf nach halb zwei
  *               - es ist zehn nach halb zwei
  *               - es ist dreiviertel zwei
  *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
+ *               - es ist fÃ¼nf vor zwei
 
  * 
  * \remarks
