@@ -51,7 +51,7 @@
 
 
 #if (MAX_PWM_STEPS==32)
-uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
+const uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
 {
      1,   2,   3,   4,   5,   6,   7,   8,
      9,  10,  12,  14,  16,  18,  21,  24,
@@ -59,7 +59,7 @@ uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
     83,  96, 111, 129, 153, 182, 216, 255
 };
 #elif (MAX_PWM_STEPS==64)
-uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
+const uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
 {
 	1,	 2,	  3,   4,   5,   6,   7,   8,
     9,  10,  11,  12,  13,  14,  15,  16,
