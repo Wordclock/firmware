@@ -1,0 +1,24 @@
+- Log output of DCF77 is buggy as the same timings are output various time,
+  although internally nothing changed, see below:
+  
+        low active DCF77 Module detected!
+         45  88  78  88  79  89  88  89  88  78  78  88  78  77  78  89  88
+         89  78  89  78  88  78  78  88  88  89  78  78  89  88  89  88  88
+         88  88  78  89  89  89  78  88  78  88  78  78  89  88  89  88  78
+         78  88  88  77  77  77  77  77  77  77  77  77  77  77  77  77 165
+         165 165 165 165 165 165 165 165 165 165 165 165 253 DCF77 Reset
+         88 189 DCF77 Reset
+         89  78  78  88  78  78  88  78  88  78  79  78  78  78  78  88  88
+         89  79  88  78  78  78  78  88  88  87  78  89  89  88  88  88  88
+         88  87  78  88  88  88  78  88  78  88  78  79  89  88  89  88  78
+         78  88  88  78  88  89  89 189  1st DCF77 correct
+        DCF77 Reset
+         88  88  77  78  78  89  88  78  88  78  88  78  88  88  89  89  88
+         88  78  88  78  88  88  89  78  88  89  78  89  88  88  88  89  89
+         88  89  78  89  88  88  78  88  78  88  78  79  89  88  89  89  78
+         78  88  88  78  88  88  88 189  2nd DCF77 correct
+        DCF77 Reset
+
+- Lot output of DCF77 is _ugly_. There are two spaces between each output,
+  the lines get really long. Lines shouldn't get longer than 80 characters.
+
