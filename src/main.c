@@ -34,7 +34,7 @@
 #include "i2c-rtc.h"
 #include "ldr.h"
 #include "pwm.h"
-#include "irmp.h"
+#include "Irmp/irmp.h"
 #include "timer.h"
 #include "user.h"
 #include "uart.h"
