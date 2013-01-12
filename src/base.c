@@ -36,8 +36,8 @@
  * @brief Converts a pair of BCD values into an integer
  *
  * This function expects a pair of BCD values. Both of these values are
- * expected in a single byte. The first BCD value takes up the first
- * four bits (0-3), the second BCD value the next four bits (4-7).
+ * expected to be in a single byte. The first BCD value should take up the
+ * first four bits (0-3), the second BCD value the next four bits (4-7).
  *
  * The first BCD value (bits 0-3) is considered to represent the least
  * significant digit. The second BCD value (bits 4-7) on the other hand
