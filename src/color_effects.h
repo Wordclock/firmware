@@ -35,14 +35,8 @@
  */
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
-#ifndef _COLOR_EFFECTS_H_
-#define _COLOR_EFFECTS_H_
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
+#ifndef _WC_COLOR_EFFECTS_H_
+#define _WC_COLOR_EFFECTS_H_
 
 #include "pwm.h"
 
@@ -96,10 +90,4 @@ extern void hue2rgb(
  */
 extern uint8_t pulseWaveForm(uint8_t step);
 
-
-#ifdef __cplusplus
-}
-#endif 
-
-#endif  //_COLOR_EFFECTS_H_
-
+#endif /* _WC_COLOR_EFFECTS_H_ */

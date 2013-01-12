@@ -40,12 +40,6 @@
 #ifndef _WC_I2C_RTC_H_
 #define _WC_I2C_RTC_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 /**
  *  Get I2C status
  *  @details  Returns I2C status
@@ -97,10 +91,5 @@ extern uint8_t                i2c_rtc_sram_read (uint8_t addr, void * void_value
  *  @return    TRUE = successful, FALSE = failed
  */
 extern uint8_t                i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p);
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif /* _WC_I2C_RTC_H_ */

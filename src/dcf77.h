@@ -35,15 +35,8 @@
  */
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
 #ifndef _WC_DCF77_H_
 #define _WC_DCF77_H_
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 
 #if (DCF_PRESENT == 1)
 
@@ -77,9 +70,4 @@ extern uint8_t   dcf77_getDateTime   (DATETIME * DateTime_p);
 
 #endif  /** (DCF_PRESENT == 1) */
 
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif // _WC_DCF77_H_
+#endif /* _WC_DCF77_H_ */

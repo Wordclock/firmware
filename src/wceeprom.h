@@ -45,11 +45,6 @@
 #include "display.h"
 #include "pwm.h"
 
-#ifdef __cplusplus
-extern  "C"
-{
-#endif
-
 /**
  *  this structure holds the persistent data of all modules
  *  \details  Internally ther will be two instanciations of this structure: \n
@@ -97,13 +92,4 @@ static inline WcEepromData* wcEeprom_getData(void)
  */
 void wcEeprom_writeback(const void* start, uint8_t len);
 
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
 #endif /* _WC_EEPROM_H_ */
-
-

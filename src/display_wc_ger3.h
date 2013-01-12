@@ -105,14 +105,8 @@
  */
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
 #ifndef _WC_DISPLAY_GER3_H_
 #define _WC_DISPLAY_GER3_H_
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
 
 /** 
  * wether "it is" can be deactivated via remote or not 
@@ -270,10 +264,5 @@ static inline DisplayState display_getNumberDisplayState( uint8_t number )
     number = number%12;
     return ((DisplayState)(s_numbers[number])) << DWP_HOUR_BEGIN;
 }
-
-#ifdef __cplusplus
-}
-#endif 
-
 
 #endif /* _WC_DISPLAY_GER3_H_ */

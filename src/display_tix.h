@@ -43,15 +43,10 @@
  */
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
 #ifndef _WC_DISPLAY_TIX_H_
 #define _WC_DISPLAY_TIX_H_
 
 #include "base.h"
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
 
 /* ports, pins and ddrs for minute LEDs*/
 #define DISPLAY_HOUR11_PORT PORTB
@@ -248,10 +243,5 @@ static inline DisplayState display_getNumberDisplayState( uint8_t number )
   res |= (display_getNumber(rem)<<DP_min01);
   return  res;
 }
-
-#ifdef __cplusplus
-}
-#endif 
-
 
 #endif /* _WC_DISPLAY_TIX_H_ */

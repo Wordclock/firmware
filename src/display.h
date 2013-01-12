@@ -43,16 +43,6 @@
 #ifndef _WC_DISPLAY_H_
 #define _WC_DISPLAY_H_
 
-
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
-
-
-
 /** interval blinking words (* 100ms) */
 #define DISPLAY_BLINK_INT_100ms 7
 
@@ -215,11 +205,6 @@ static inline DisplayState display_getHoursMask(void);
  *  @return bitset as used in display_setDisplayState with the given number
  */
 static inline DisplayState display_getNumberDisplayState( uint8_t number );
-
-
-#ifdef __cplusplus
-}
-#endif 
 
 
 /*

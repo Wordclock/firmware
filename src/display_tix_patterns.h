@@ -35,8 +35,8 @@
  */
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#ifndef _TIX_PATTERNS_
-#define _TIX_PATTERNS_
+#ifndef _WC_DISPLAY_TIX_PATTERNS_
+#define _WC_DISPLAY_TIX_PATTERNS_
 
 /* numbering:
 
@@ -348,4 +348,4 @@ static const uint8_t c_numbers3[TM_COUNT-1][2] = {  // no random and no 3
 
 
 
-#endif /* _TIX_PATTERNS_ */
+#endif /* _WC_DISPLAY_TIX_PATTERNS_ */

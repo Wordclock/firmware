@@ -40,12 +40,6 @@
 
 #include <avr/pgmspace.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 /**
  *  Initialize  UART
  *  @details  Initializes UART
@@ -78,10 +72,4 @@ extern void                   uart_puts_p(const char *s );
  */
 #define uart_puts_P(__s)      uart_puts_p(PSTR(__s))
 
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif // _WC_UART_H_
-
+#endif /* _WC_UART_H_ */

@@ -45,12 +45,6 @@
 #include "main.h"
 #include "display.h"
 
-#ifdef __cplusplus
-extern  "C"
-{
-#endif
-
-
 typedef enum e_MenuStates{
 
   MS_irTrain=0,
@@ -446,14 +440,5 @@ extern void user_init(void);
   /* .hueChangeIntervall  = */ USER_HUE_CHANGE_INT_100ms,    \
   /* .mode                = */ MS_normalMode                 \
 }
-  
-
-
-
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _WC_USER_H_ */

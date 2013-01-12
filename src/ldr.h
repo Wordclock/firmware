@@ -43,11 +43,6 @@
 #ifndef _WC_LDR_H_
 #define _WC_LDR_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
-
 /** defines the size of the internal buffer to smooth the measurements */
 #define LDR_ARRAY_SIZE     16
 
@@ -73,10 +68,5 @@ extern uint8_t  ldr_get_brightness (void);
  *  @details  Has to be called regularly. (intendet to be called at 1Hz)
  */
 extern void     ldr_ISR  (void);
-
-
-#ifdef __cplusplus
-}
-#endif 
 
 #endif /* _WC_LDR_H_ */

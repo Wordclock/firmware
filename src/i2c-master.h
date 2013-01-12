@@ -40,12 +40,6 @@
 #ifndef _WC_I2C_MASTER_H_
 #define _WC_I2C_MASTER_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 #define I2C_READ                    1
 #define I2C_WRITE                   0
 
@@ -122,11 +116,5 @@ extern uint8_t                i2c_master_read_nak (void);
  *  @return    byte read
  */
 #define i2c_master_read(ack)  (ack) ? i2c_master_read_ack() : i2c_master_read_nak();
-
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif /* _WC_I2C_MASTER_H_ */

@@ -43,14 +43,8 @@
  /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-#ifndef _WC_X_H_
-#define _WC_X_H_
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
+#ifndef _WC_MAIN_H_
+#define _WC_MAIN_H_
 
 #ifndef F_CPU
 #error F_CPU unkown
@@ -156,7 +150,4 @@ typedef struct
 
 extern void       main_ISR(void);
 
-#ifdef __cplusplus
-}
-#endif
-#endif /* _WC_X_H_ */
+#endif /* _WC_MAIN_H_ */

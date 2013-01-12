@@ -43,13 +43,6 @@
 #ifndef _WC_PWM_H_
 #define _WC_PWM_H_
 
-#ifdef __cplusplus
-extern  "C"
-{
-#endif
-
-
-
 #define MAX_PWM_STEPS         32                    // 32 PWM steps
 //#define MAX_PWM_STEPS         64                    // 64 PWM steps
 
@@ -176,9 +169,5 @@ extern void                   pwm_lock_brightness_val(uint8_t val);
 extern void                   pwm_release_brightness(void);
 
 extern void                   pwm_modifyLdrBrightness2pwmStep(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _WC_PWM_H_ */

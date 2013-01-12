@@ -43,7 +43,6 @@
 #ifndef _WC_DISPLAY_WC_H_
 #define _WC_DISPLAY_WC_H_
 
-
 /*
  * For language/front related constants look at the approriate display_wc_[language].h
  */
@@ -58,12 +57,6 @@
 #  define WC_DISP_GER 1
 #  include "display_wc_ger.h" 
 #endif
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
-
 
 /* ports, pins and ddrs for minute LEDs*/
 #define DISPLAY_MIN1_PORT PORTB
@@ -108,12 +101,5 @@ static inline DisplayState display_getIndicatorMask(void)
          | ( 1L<< DWP_min3    )
          | ( 1L<< DWP_min4    );
 }
-
-
-
-#ifdef __cplusplus
-}
-#endif 
-
 
 #endif /* _WC_DISPLAY_WC_H_ */

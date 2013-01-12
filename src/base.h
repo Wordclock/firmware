@@ -42,12 +42,6 @@
 #ifndef _WC_BASE_H_
 #define _WC_BASE_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 /**
  *  Can be used to create 8bit constants with binary numbers.\n
  *  Only 0 and 1 must be used for b0..b7
@@ -157,11 +151,4 @@ static inline void uint16ToHexStr(uint16_t data, char* o_text)
   o_text[0]  = getHexDigit((data>>12) & 0xF);
 }
 
-
-#ifdef __cplusplus
-}
-#endif
-
-
 #endif /* _WC_BASE_H_ */
-

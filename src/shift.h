@@ -41,12 +41,6 @@
 
 #include "avr/io.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 #define SHIFT_SR_SPI_DDR  DDRB
 #define SHIFT_SR_SPI_PORT PORTB
 #define SHIFT_SR_SPI_MOSI PIN3
@@ -56,10 +50,5 @@ extern "C"
 
 extern void		shift24_init (void);
 extern void		shift24_output (uint32_t value);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _WC_SHIFT_H_ */

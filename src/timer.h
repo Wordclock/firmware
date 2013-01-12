@@ -38,17 +38,6 @@
 #ifndef _WC_TIMER_H_
 #define _WC_TIMER_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 extern void                   timer_init (void);
-
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _WC_TIMER_H_ */
