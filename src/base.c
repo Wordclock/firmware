@@ -55,11 +55,13 @@
  * @return Converted integer
  * @see itobcd()
  */
-uint8_t
-bcdtoi (uint8_t bcd)
+uint8_t bcdtoi(uint8_t bcd)
 {
-  uint8_t i = 10 * (bcd >> 4) + (bcd & 0x0F);
-  return (i);
+
+    uint8_t i = 10 * (bcd >> 4) + (bcd & 0x0F);
+
+    return i;
+
 }
 
 /**
@@ -86,8 +88,7 @@ bcdtoi (uint8_t bcd)
  * @return Pair of BCD values
  * @see bcdtoi()
  */
-uint8_t
-itobcd (uint8_t i)
+uint8_t itobcd(uint8_t i)
 {
 
     uint8_t bcd;
@@ -100,30 +101,42 @@ itobcd (uint8_t i)
 
 }
 
-void byteToStr( uint8_t val, char o_buf[4] )
+void byteToStr(uint8_t val, char o_buf[4])
 {
-  uint8_t v=val;
-  uint8_t r;
-  o_buf[3]=0;
-  o_buf[1]=' ';
-  o_buf[0]=' ';
-  v = div10(v, &r);
-  o_buf[2] = r + '0';
-  if(v>0){
+
+    uint8_t v = val;
+    uint8_t r;
+
+    o_buf[3] = 0;
+    o_buf[1] = ' ';
+    o_buf[0] = ' ';
     v = div10(v, &r);
-    o_buf[1] = r + '0';
-    if(v>0){
-      o_buf[0] = v + '0';
+    o_buf[2] = r + '0';
+
+    if (v > 0) {
+
+		v = div10(v, &r);
+		o_buf[1] = r + '0';
+
+		if (v > 0) {
+
+			o_buf[0] = v + '0';
+
+		}
+
     }
-  }
+
 }
 
-void byteToStrLessHundred( uint8_t val, char o_buf[3] )
+void byteToStrLessHundred(uint8_t val, char o_buf[3])
 {
-  uint8_t v=val;
-  uint8_t r;
-  o_buf[2] ='\0';
-  v = div10(v, &r);
-  o_buf[0] = v?v+'0':' ';
-  o_buf[1] = r + '0';
+
+    uint8_t v = val;
+    uint8_t r;
+
+    o_buf[2] = '\0';
+    v = div10(v, &r);
+    o_buf[0] = v ? v + '0' : ' ';
+    o_buf[1] = r + '0';
+
 }
