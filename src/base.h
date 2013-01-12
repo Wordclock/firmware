@@ -158,18 +158,6 @@ static inline void uint16ToHexStr(uint16_t data, char* o_text)
 }
 
 
-#if 0 // yet not used
-
-/**
- * Calculate day of week, perhaps later used for weekday display (by 3-to-8 decoder)
- * @detail  Calculates day of week, 0=sunday, 1=monday, ... 6=saturday
- * @return  day of week
- */
-extern uint8_t          dayofweek (int, int, int);
-
-#endif // 0
-
-
 #ifdef __cplusplus
 }
 #endif

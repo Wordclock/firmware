@@ -105,19 +105,3 @@ void byteToStrLessHundred( uint8_t val, char o_buf[3] )
   o_buf[0] = v?v+'0':' ';
   o_buf[1] = r + '0';
 }
-
-
-#if 0 // yet not used
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * Calculate day of week, perhaps later used for weekday display (by 3-to-8 decoder)
- * @detail  Calculates day of week, 0=sunday, 1=monday, ... 6=saturday
- * @return  day of week
- *---------------------------------------------------------------------------------------------------------------------------------------------------
- */
-uint8_t
-dayofweek (int d, int m, int y)
-{
-   return (d+=m<3?y--:y-2,23*m/9+d+4+y/4-y/100+y/400)%7;
-}
-
-#endif // 0
