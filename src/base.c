@@ -111,29 +111,29 @@ uint8_t itobcd(uint8_t i)
  * will be NULL terminated automatically.
  *
  * @param val The byte to convert into a string
- * @param o_buf Pointer to a buffer where the resulting string is stored
+ * @param str Pointer to a buffer where the resulting string is stored
  * @see byteToStrLessOneHundred()
  */
-void byteToStr(uint8_t val, char o_buf[4])
+void byteToStr(uint8_t val, char str[4])
 {
 
     uint8_t v = val;
     uint8_t r;
 
-    o_buf[3] = 0;
-    o_buf[1] = ' ';
-    o_buf[0] = ' ';
+    str[3] = 0;
+    str[1] = ' ';
+    str[0] = ' ';
     v = div10(v, &r);
-    o_buf[2] = r + '0';
+    str[2] = r + '0';
 
     if (v > 0) {
 
 		v = div10(v, &r);
-		o_buf[1] = r + '0';
+		str[1] = r + '0';
 
 		if (v > 0) {
 
-			o_buf[0] = v + '0';
+			str[0] = v + '0';
 
 		}
 
@@ -151,18 +151,18 @@ void byteToStr(uint8_t val, char o_buf[4])
  * The string will be NULL terminated automatically.
  *
  * @param val The byte to convert into a string
- * @param o_buf Pointer to a buffer where the resulting string is stored
+ * @param str Pointer to a buffer where the resulting string is stored
  * @see byteToStr()
  */
-void byteToStrLessOneHundred(uint8_t val, char o_buf[3])
+void byteToStrLessOneHundred(uint8_t val, char str[3])
 {
 
     uint8_t v = val;
     uint8_t r;
 
-    o_buf[2] = '\0';
+    str[2] = '\0';
     v = div10(v, &r);
-    o_buf[0] = v ? v + '0' : ' ';
-    o_buf[1] = r + '0';
+    str[0] = v ? v + '0' : ' ';
+    str[1] = r + '0';
 
 }
