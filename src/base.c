@@ -89,19 +89,15 @@ bcdtoi (uint8_t bcd)
 uint8_t
 itobcd (uint8_t i)
 {
-  uint8_t   bcd;
 
-#if 0
-  bcd = (i / 10) << 4;
-  bcd |= (i % 10);
-#else
-  uint8_t   r;
+    uint8_t bcd;
+    uint8_t r;
 
-  bcd = div10 (i, &r) << 4;
-  bcd |= r;
-#endif
+    bcd = div10(i, &r) << 4;
+    bcd |= r;
 
-  return (bcd);
+    return bcd;
+
 }
 
 void byteToStr( uint8_t val, char o_buf[4] )
