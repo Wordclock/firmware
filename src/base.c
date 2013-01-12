@@ -154,7 +154,7 @@ void byteToStr(uint8_t val, char o_buf[4])
  * @param o_buf Pointer to a buffer where the resulting string is stored
  * @see byteToStr()
  */
-void byteToStrLessHundred(uint8_t val, char o_buf[3])
+void byteToStrLessOneHundred(uint8_t val, char o_buf[3])
 {
 
     uint8_t v = val;
