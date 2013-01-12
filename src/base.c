@@ -32,11 +32,28 @@
 #include <inttypes.h>
 #include "base.h"
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * converts a bcd pair to integer
- * @param     bcd bcd pair
- * @return    converted integer
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Converts a pair of BCD values into an integer
+ *
+ * This function expects a pair of BCD values. Both of these values are
+ * expected in a single byte. The first BCD value takes up the first
+ * four bits (0-3), the second BCD value the next four bits (4-7).
+ *
+ * The first BCD value (bits 0-3) is considered to represent the least
+ * significant digit. The second BCD value (bits 4-7) on the other hand
+ * represents the most significant digit.
+ *
+ * To clarify this consider the example `00110101`<sub>2</sub>: The first
+ * nibble (bits 4-7) represents the digit `3`<sub>10</sub>. This actually
+ * stands for the group of tens. The second nibble (bits 0-3) represents the
+ * digit `5`<sub>10</sub>, which stands just for itself in this context (least
+ * significant digit). The result then would be `35`<sub>10</sub>.
+ *
+ * This function obviously returns only values from 0 up to 99.
+ *
+ * @param bcd Pair of BCD values
+ * @return Converted integer
+ * @see itobcd()
  */
 uint8_t
 bcdtoi (uint8_t bcd)
@@ -45,11 +62,29 @@ bcdtoi (uint8_t bcd)
   return (i);
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * converts an integer to bcd pair
- * @param     i integer number (0-255)
- * @return    converted bcd pair
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Converts an integer into a pair of BCD values
+ *
+ * This function expects an integer, which it will then convert into a pair of
+ * BCD values. Both of these values will be returned in a single byte. The
+ * first BCD value will take up the first four bits (0-3), the second BCD
+ * value will take up the remaining bits (4-7).
+ *
+ * The first BCD value (bits 0-3) will represent the least significant digit.
+ * The second BCD value (bits 4-7) on the other hand will represent the most
+ * significant digit.
+ *
+ * To clarify this consider the example `95`<sub>10</sub>: The most significant
+ * digit is `9`<sub>10</sub>, which in binary is `1001`<sub>2</sub>.
+ * `5`<sub>10</sub> is the least significant digit here, and in binary is
+ * represented by `0101`<sub>2</sub>. These two nibbles will be then returned
+ * in the form of a single byte, namely `10010101`<sub>2</sub>.
+ *
+ * This function obviously can only work with values from 0 up to 99.
+ *
+ * @param i Integer to convert
+ * @return Pair of BCD values
+ * @see bcdtoi()
  */
 uint8_t
 itobcd (uint8_t i)
