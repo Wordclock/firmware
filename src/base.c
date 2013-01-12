@@ -101,6 +101,19 @@ uint8_t itobcd(uint8_t i)
 
 }
 
+/**
+ * @brief Converts a byte into a string
+ *
+ * This function converts a given byte to a string. It takes up considerable
+ * less program space than the adequate printf() equivalent.
+ *
+ * The buffer needs to be big enough to hold at least 4 bytes. The string
+ * will be NULL terminated automatically.
+ *
+ * @param val The byte to convert into a string
+ * @param o_buf Pointer to a buffer where the resulting string is stored
+ * @see byteToStrLessOneHundred()
+ */
 void byteToStr(uint8_t val, char o_buf[4])
 {
 
@@ -128,6 +141,19 @@ void byteToStr(uint8_t val, char o_buf[4])
 
 }
 
+/**
+ * @brief Converts a byte with values below 100 into a string
+ *
+ * This function converts a given byte to a string - similar to byteToStr().
+ * However it works only with values from 0 to 99. Therefore the size of the
+ * buffer only needs to be 3 bytes big and the implementation is easier.
+ *
+ * The string will be NULL terminated automatically.
+ *
+ * @param val The byte to convert into a string
+ * @param o_buf Pointer to a buffer where the resulting string is stored
+ * @see byteToStr()
+ */
 void byteToStrLessHundred(uint8_t val, char o_buf[3])
 {
 
