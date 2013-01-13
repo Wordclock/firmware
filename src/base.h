@@ -94,9 +94,9 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 
 }
 
-void byteToStrLessHundred(uint8_t val, char str[3]);
+extern void byteToStrLessHundred(uint8_t val, char str[3]);
 
-void byteToStr(uint8_t val, char str[4]);
+extern void byteToStr(uint8_t val, char str[4]);
 
 /**
  * @brief Returns the hex digit representation of a nibble
