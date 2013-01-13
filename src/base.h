@@ -45,9 +45,8 @@
  * @see BIN16()
  */
 #define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
-        (  ((b7)<<7) | ((b6)<<6) | ((b5)<<5) | ((b4)<<4) \
-         | ((b3)<<3) | ((b2)<<2) | ((b1)<<1) | ((b0)<<0))
-
+	((b7 << 7) | (b6 << 6) | (b5 << 5) | (b4 << 4) \
+	| (b3 << 3) | (b2 << 2) | (b1 << 1) | (b0 << 0))
 
 /**
  * @brief Build short by explicitly setting each bit
@@ -60,10 +59,9 @@
  * @return Short represented by the given bits.
  * @see BIN8()
  */
-#define BIN16( b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
-        (   (((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8))<<8)             \
-          | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
-
+#define BIN16(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
+	((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
+    | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
 
 /**
  * @brief Divides an integer by ten while also keeping track of the remainder
