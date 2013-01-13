@@ -47,6 +47,15 @@ extern uint8_t dcf77_getDateTime(DATETIME* DateTime_p);
 
 #else
 
+/**
+ * @brief Empty macro in case DCF77 functionality is disabled
+ *
+ * When the DCF77 functionality is disabled during the compilation this empty
+ * macro makes sure that the ISR won't be included.
+ *
+ * @see DCF_PRESENT
+ * @see timer.c
+ */
 #define dcf77_ISR()
 
 #endif  /* (DCF_PRESENT == 1) */
