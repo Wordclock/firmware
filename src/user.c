@@ -220,10 +220,10 @@ static void printStateStack(){
 void putTime( const DATETIME* time)
 {
   char txt[8];
-  byteToStrLessHundred(time->hh, txt);
+  byteToStrLessOneHundred(time->hh, txt);
   uart_puts(txt);
   uart_putc(':');
-  byteToStrLessHundred(time->mm, txt);
+  byteToStrLessOneHundred(time->mm, txt);
   uart_puts(txt);
   uart_putc('\n');
 }
@@ -289,7 +289,7 @@ static uint8_t leaveSubState( int8_t indexOfStateToLeave)
 #     if (USER_LOG_STATE == 1) 
       {
         char buff[5];
-        byteToStrLessHundred(g_stateStack[i], buff);
+        byteToStrLessOneHundred(g_stateStack[i], buff);
         uart_puts(buff);
         uart_putc(':');
         uart_putc(canLeave?'y':'n');

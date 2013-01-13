@@ -94,7 +94,7 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 
 }
 
-extern void byteToStrLessHundred(uint8_t val, char str[3]);
+extern void byteToStrLessOneHundred(uint8_t val, char str[3]);
 
 extern void byteToStr(uint8_t val, char str[4]);
 

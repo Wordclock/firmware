@@ -165,7 +165,7 @@ handle_brightness (void)
   {
 #if (MAIN_LOG_BRIGHTNESS==1)
     char buff[5];
-    byteToStrLessHundred(ldr_brightness, buff);
+    byteToStrLessOneHundred(ldr_brightness, buff);
     uart_puts_P("brightness: ");
     uart_puts(buff);
     uart_putc('\n');
