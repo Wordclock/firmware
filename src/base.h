@@ -85,10 +85,10 @@ extern uint8_t          itobcd (uint8_t i);
  * @param remainder Pointer to store the remainder at
  * @return Integer result
  */
-static inline uint8_t div10 (uint8_t x, uint8_t* o_remaind)
+static inline uint8_t div10 (uint8_t x, uint8_t* remainder)
 {
   uint8_t y = (((uint16_t)x)*205)>>11;
-  *o_remaind = x-(y*10);
+  *remainder = x-(y*10);
   return y;
 }
 
