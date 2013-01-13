@@ -19,25 +19,15 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file base.h
- * 
- *  This module provides some usefull or basic tool routines
+ * @brief Provides some common useful and quite basic functions and/or macros
  *
- * @version $Id: base.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The functions and macros declared here might be useful to various parts and
+ * are therefore put into a separate module.
+ *
+ * @see base.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
 
 #ifndef _WC_BASE_H_
 #define _WC_BASE_H_
