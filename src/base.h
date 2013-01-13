@@ -144,9 +144,9 @@ void byteToStr( uint8_t val, char o_buf[4] );
 /**
  * creates a hexadecimal character from a nibble
  */
-static inline char getHexDigit(uint8_t i_4bit)
+static inline char nibbleToHex(uint8_t nibble)
 {
-  return i_4bit + ( (i_4bit<10)?'0':'A'-10 );
+  return nibble + ( (nibble<10)?'0':'A'-10 );
 }
 
 
