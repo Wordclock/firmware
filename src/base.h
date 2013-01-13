@@ -92,10 +92,10 @@ static inline uint8_t div10 (uint8_t x, uint8_t* remainder)
   return y;
 }
 
-void byteToStrLessHundred( uint8_t val, char o_buf[3] );
+void byteToStrLessHundred( uint8_t val, char str[3] );
 
 
-void byteToStr( uint8_t val, char o_buf[4] );
+void byteToStr( uint8_t val, char str[4] );
 
 /**
  * @brief Returns the hex digit representation of a nibble
@@ -124,17 +124,17 @@ static inline char nibbleToHex(uint8_t nibble)
  * the buffer needs to have a length of 5 bytes at least.
  *
  * @param data Data to convert
- * @param o_text Pointer to a buffer where the resulting string is stored
+ * @param str Pointer to a buffer where the resulting string is stored
  * @return void
  * @see nibbleToHex()
  */
-static inline void uint16ToHexStr(uint16_t data, char* o_text)
+static inline void uint16ToHexStr(uint16_t data, char* str)
 {
-  o_text[4]  = 0;
-  o_text[3]  = getHexDigit(data & 0xF);
-  o_text[2]  = getHexDigit((data>> 4) & 0xF);
-  o_text[1]  = getHexDigit((data>> 8) & 0xF);
-  o_text[0]  = getHexDigit((data>>12) & 0xF);
+  str[4]  = 0;
+  str[3]  = getHexDigit(data & 0xF);
+  str[2]  = getHexDigit((data>> 4) & 0xF);
+  str[1]  = getHexDigit((data>> 8) & 0xF);
+  str[0]  = getHexDigit((data>>12) & 0xF);
 }
 
 #endif /* _WC_BASE_H_ */
