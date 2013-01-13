@@ -63,10 +63,6 @@
 	((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
     | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
 
-extern uint8_t bcdtoi(uint8_t bcd);
-
-extern uint8_t itobcd(uint8_t i);
-
 /**
  * @brief Divides an integer by ten while also keeping track of the remainder
  *
@@ -93,10 +89,6 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 	return y;
 
 }
-
-extern void byteToStrLessOneHundred(uint8_t val, char str[3]);
-
-extern void byteToStr(uint8_t val, char str[4]);
 
 /**
  * @brief Returns the hex digit representation of a nibble
@@ -140,5 +132,13 @@ static inline void uint16ToHexStr(uint16_t data, char* str)
 	str[0] = nibbleToHex((data >> 12) & 0xF);
 
 }
+
+extern void byteToStrLessOneHundred(uint8_t val, char str[3]);
+
+extern void byteToStr(uint8_t val, char str[4]);
+
+extern uint8_t bcdtoi(uint8_t bcd);
+
+extern uint8_t itobcd(uint8_t i);
 
 #endif /* _WC_BASE_H_ */
