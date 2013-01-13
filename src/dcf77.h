@@ -37,29 +37,10 @@
 
 #if (DCF_PRESENT == 1)
 
-extern bool   enable_dcf77_ISR;     // En- / Disable DCF77 examination
-/**
- *  Initializes DCF77
- *  @details  Configures DCF77 IO hardware and clear variables
- *
- */
+extern bool   enable_dcf77_ISR;
+
 extern void      dcf77_init          (void);
-/**
- *  receive and decode DCF77 signal
- *  @details  Decode DCF77 signal - measure pulse time to
- *            decode the received signal
- *            must be called each 10ms (1000 HZ)
- *
- */
 extern void      dcf77_ISR           (void);
-/**
- *  update RTC with DCF77
- *  @details  update RTC time with dcf77 time
- *            called 1 time per day
- *  @param    DateTime_p as the actual date and time
- *  @return   True if valid dcf77 signal was received and datetime_p updated
- *
- */
 extern uint8_t   dcf77_getDateTime   (DATETIME * DateTime_p);
 #else
 
