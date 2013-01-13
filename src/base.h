@@ -63,10 +63,9 @@
 	((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
     | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
 
-extern uint8_t          bcdtoi (uint8_t bcd);
+extern uint8_t bcdtoi(uint8_t bcd);
 
-extern uint8_t          itobcd (uint8_t i);
-
+extern uint8_t itobcd(uint8_t i);
 
 /**
  * @brief Divides an integer by ten while also keeping track of the remainder
@@ -85,17 +84,19 @@ extern uint8_t          itobcd (uint8_t i);
  * @param remainder Pointer to store the remainder at
  * @return Integer result
  */
-static inline uint8_t div10 (uint8_t x, uint8_t* remainder)
+static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 {
-  uint8_t y = (((uint16_t)x)*205)>>11;
-  *remainder = x-(y*10);
-  return y;
+
+	uint8_t y = ((uint16_t)x * 205) >> 11;
+	*remainder = x - (y * 10);
+
+	return y;
+
 }
 
-void byteToStrLessHundred( uint8_t val, char str[3] );
+void byteToStrLessHundred(uint8_t val, char str[3]);
 
-
-void byteToStr( uint8_t val, char str[4] );
+void byteToStr(uint8_t val, char str[4]);
 
 /**
  * @brief Returns the hex digit representation of a nibble
@@ -111,9 +112,10 @@ void byteToStr( uint8_t val, char str[4] );
  */
 static inline char nibbleToHex(uint8_t nibble)
 {
-  return nibble + ( (nibble<10)?'0':'A'-10 );
-}
 
+	return nibble + ((nibble < 10) ? '0' : 'A' - 10);
+
+}
 
 /**
  * @brief Converts data into its appropriate hexadecimal representation
@@ -130,11 +132,13 @@ static inline char nibbleToHex(uint8_t nibble)
  */
 static inline void uint16ToHexStr(uint16_t data, char* str)
 {
-  str[4]  = 0;
-  str[3]  = nibbleToHex(data & 0xF);
-  str[2]  = nibbleToHex((data>> 4) & 0xF);
-  str[1]  = nibbleToHex((data>> 8) & 0xF);
-  str[0]  = nibbleToHex((data>>12) & 0xF);
+
+	str[4] = 0;
+	str[3] = nibbleToHex(data & 0xF);
+	str[2] = nibbleToHex((data >> 4) & 0xF);
+	str[1] = nibbleToHex((data >> 8) & 0xF);
+	str[0] = nibbleToHex((data >> 12) & 0xF);
+
 }
 
 #endif /* _WC_BASE_H_ */
