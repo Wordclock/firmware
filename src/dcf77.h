@@ -37,15 +37,18 @@
 
 #if (DCF_PRESENT == 1)
 
-extern bool   enable_dcf77_ISR;
+extern bool enable_dcf77_ISR;
 
-extern void      dcf77_init          (void);
-extern void      dcf77_ISR           (void);
-extern uint8_t   dcf77_getDateTime   (DATETIME * DateTime_p);
+extern void dcf77_init(void);
+
+extern void dcf77_ISR(void);
+
+extern uint8_t dcf77_getDateTime(DATETIME* DateTime_p);
+
 #else
 
-#define  dcf77_ISR()
+#define dcf77_ISR()
 
-#endif  /** (DCF_PRESENT == 1) */
+#endif  /* (DCF_PRESENT == 1) */
 
 #endif /* _WC_DCF77_H_ */
