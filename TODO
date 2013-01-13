@@ -22,11 +22,11 @@
 - Log output of DCF77 is _ugly_. There are two spaces between each output,
   the lines get really long. Lines shouldn't get longer than 80 characters.
 
-- Ambilight (sometimes?) enables itself after it was manually disabled
+- Ambilight (sometimes?) enables itself after it was manually disabled.
 
 - Ambilight enable/disable times: Just like the clock itself there should
   be an option to enable and/or disable the ambilight depending on the
-  time, so it can be activated in the evening
+  time, so it can be activated in the evening.
 
 - Right now "enable_dcf77_ISR" is used to indicate whether or not the DCF77
   module is "enabled". Maybe this should be reworked so there are functions
