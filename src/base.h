@@ -33,8 +33,16 @@
 #define _WC_BASE_H_
 
 /**
- *  Can be used to create 8bit constants with binary numbers.\n
- *  Only 0 and 1 must be used for b0..b7
+ * @brief Build byte by explicitly setting each bit
+ *
+ * This can be used to build up a byte manually by explicitly listing all the
+ * bits. For instance in order to build up the byte `01101001`<sub>2</sub>,
+ * you would call it like that: BIN8(0, 1, 1, 0, 1, 0, 0, 1).
+ *
+ * Obviously b7..b0 are expected to be either 0 and/or 1.
+ *
+ * @return Byte represented by the given bits.
+ * @see BIN16()
  */
 #define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
         (  ((b7)<<7) | ((b6)<<6) | ((b5)<<5) | ((b4)<<4) \
@@ -42,8 +50,15 @@
 
 
 /**
- *  Can be used to create 16bit constants with binary numbers.\n
- *  Only 0 and 1 must be used for b0..b15
+ * @brief Build short by explicitly setting each bit
+ *
+ * This can be used to build up a byte manually by explicitly listing all the
+ * bits.
+ *
+ * Obviously b15..b0 are expected to be either 0 and/or 1.
+ *
+ * @return Short represented by the given bits.
+ * @see BIN8()
  */
 #define BIN16( b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
         (   (((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8))<<8)             \
@@ -51,9 +66,21 @@
 
 
 /**
- * converts a bcd pair to integer
- * @param bcd  bcd pair
- * @return    converted integer
+ * @brief Divides an integer by ten while also keeping track of the remainder
+ *
+ * This function divides the given parameter by ten and returns the resulting
+ * integer directly. The remainder of the division will be stored at the
+ * location in memory provided by the second argument.
+ *
+ * This function makes use of an approximation, which multiplies the given
+ * parameter by a constant and shifts it to the right afterwards. This holds
+ * true for 0-255 at least.
+ *
+ * This is only applicable to integers stored in a single byte (uint8_t).
+ *
+ * @param x Value to divide (dividend)
+ * @param remainder Pointer to store the remainder at
+ * @return Integer result
  */
 extern uint8_t          bcdtoi (uint8_t bcd);
 
