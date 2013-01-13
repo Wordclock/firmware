@@ -131,10 +131,10 @@ static inline char nibbleToHex(uint8_t nibble)
 static inline void uint16ToHexStr(uint16_t data, char* str)
 {
   str[4]  = 0;
-  str[3]  = getHexDigit(data & 0xF);
-  str[2]  = getHexDigit((data>> 4) & 0xF);
-  str[1]  = getHexDigit((data>> 8) & 0xF);
-  str[0]  = getHexDigit((data>>12) & 0xF);
+  str[3]  = nibbleToHex(data & 0xF);
+  str[2]  = nibbleToHex((data>> 4) & 0xF);
+  str[1]  = nibbleToHex((data>> 8) & 0xF);
+  str[0]  = nibbleToHex((data>>12) & 0xF);
 }
 
 #endif /* _WC_BASE_H_ */

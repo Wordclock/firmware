@@ -66,8 +66,8 @@ WcEepromData g_epromWorking;
 # if (EEPROM_LOG_INIT == 1) || (EEPROM_LOG_WRITEBACK == 1)
 static void uart_putHexByte(uint8_t byte)
 {
-  uart_putc( getHexDigit(byte >> 4 ) );
-  uart_putc( getHexDigit(byte & 0xf ) );
+  uart_putc( nibbleToHex(byte >> 4 ) );
+  uart_putc( nibbleToHex(byte & 0xf ) );
 }
 #endif
 
