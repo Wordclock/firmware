@@ -28,6 +28,7 @@
   be an option to enable and/or disable the ambilight depending on the
   time, so it can be activated in the evening
 
-- Right now "enable_dcf77_ISR" is used to indicate of whether or not the
-  DCF77 module is "enabled" or not. Maybe this should be reworked to
-  own methods, something dcf77_enable() and dcf77_disable().
+- Right now "enable_dcf77_ISR" is used to indicate whether or not the DCF77
+  module is "enabled". Maybe this should be reworked so there are functions
+  called dcf77_enable() and dcf77_disable(), which could be called instead
+  of setting the flag directly to true and/or false.
