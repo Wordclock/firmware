@@ -91,10 +91,21 @@ extern uint8_t          itobcd (uint8_t i);
 
 
 /**
- * Divides a byte by ten. Also returns remainder
- * @param x         the value to divide
- * @param o_remaind pointer to memory there the remainder will be stored
- * @return the quotient
+ * @brief Divides an integer by ten while also keeping track of the remainder
+ *
+ * This function divides the given parameter by ten and returns the resulting
+ * integer directly. The remainder of the division will be stored at the
+ * location in memory provided by the second argument.
+ *
+ * This function makes use of an approximation, which multiplies the given
+ * parameter by a constant and shifts it to the right afterwards. This holds
+ * true for 0-255 at least.
+ *
+ * This is only applicable to integers stored in a single byte (uint8_t).
+ *
+ * @param x Value to divide (dividend)
+ * @param remainder Pointer to store the remainder at
+ * @return Integer result
  */
 static inline uint8_t div10 (uint8_t x, uint8_t* o_remaind)
 {
@@ -142,7 +153,16 @@ void byteToStrLessHundred( uint8_t val, char o_buf[3] );
 void byteToStr( uint8_t val, char o_buf[4] );
 
 /**
- * creates a hexadecimal character from a nibble
+ * @brief Returns the hex digit representation of a nibble
+ *
+ * This function expects a nibble - handed over in the four least significant
+ * bits of a byte. It then returns the hex digit representation of it. The
+ * byte `00001011`<sub>2</sub> for instance would become `B`<sub>16</sub>.
+ *
+ * This function expects the upper four bits always to be zero.
+ *
+ * @param nibble Nibble to convert
+ * @return char Hex digit representation
  */
 static inline char nibbleToHex(uint8_t nibble)
 {
@@ -151,11 +171,17 @@ static inline char nibbleToHex(uint8_t nibble)
 
 
 /**
- *  converts data into hex-format and prints data into o_text
- *  @param   data    the 16bit word to convert
- *  @param   o_text  The buffer that will receive the converted number.
- *                   The buffer should have at least a length of 5.
- *                   
+ * @brief Converts data into its appropriate hexadecimal representation
+ *
+ * This function will convert the given data into a string containing the
+ * hexadecimal representation of that given data. The result will be stored
+ * at the given buffer. The string will be NULL terminated automatically, so
+ * the buffer needs to have a length of 5 bytes at least.
+ *
+ * @param data Data to convert
+ * @param o_text Pointer to a buffer where the resulting string is stored
+ * @return void
+ * @see nibbleToHex()
  */
 static inline void uint16ToHexStr(uint16_t data, char* o_text)
 {
