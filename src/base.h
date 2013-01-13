@@ -63,30 +63,8 @@
 	((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
     | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
 
-/**
- * @brief Divides an integer by ten while also keeping track of the remainder
- *
- * This function divides the given parameter by ten and returns the resulting
- * integer directly. The remainder of the division will be stored at the
- * location in memory provided by the second argument.
- *
- * This function makes use of an approximation, which multiplies the given
- * parameter by a constant and shifts it to the right afterwards. This holds
- * true for 0-255 at least.
- *
- * This is only applicable to integers stored in a single byte (uint8_t).
- *
- * @param x Value to divide (dividend)
- * @param remainder Pointer to store the remainder at
- * @return Integer result
- */
 extern uint8_t          bcdtoi (uint8_t bcd);
 
-/**
- * converts an integer to bcd pair
- * @param i    integer number (0-255)
- * @return    converted bcd pair
- */
 extern uint8_t          itobcd (uint8_t i);
 
 
@@ -114,26 +92,9 @@ static inline uint8_t div10 (uint8_t x, uint8_t* o_remaind)
   return y;
 }
 
-/**
- *  translates a byte to a string
- *  Stripped verion of byteToStr that only can handle values between 0-99
- * @param val    the value to transform into string [0,99]
- * @param o_buf  Buffer that will receive the transformed string
- *               Has to be at least 3 bytes long because result is
- *               right justified. a \\0 is written to o_buf[2]
- *
- */
 void byteToStrLessHundred( uint8_t val, char o_buf[3] );
 
 
-/**
- *  translates a byte to a string
- * @param val    the value to transform into string
- * @param o_buf  Buffer that will receive the transformed string
- *               Has to be at least 4 bytes long because result is
- *               right justified. a \\0 is written to o_buf[3]
- *
- */
 void byteToStr( uint8_t val, char o_buf[4] );
 
 /**
