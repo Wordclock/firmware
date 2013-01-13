@@ -128,7 +128,7 @@
 #define USER_LOG_IR_TRAIN      0  /**< reports some usefull information on IR-Training to UART  */
 #define EEPROM_LOG_INIT        0  /**< reports EEPROM data on init to UART                      */
 #define EEPROM_LOG_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
-#define DCF77_LOG              0
+#define DCF77_LOG              0  /**< reports various states and changes of the DCF module		*/
 
 #define TRUE                   1
 #define FALSE                  0
