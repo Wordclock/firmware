@@ -109,22 +109,6 @@ extern uint8_t          itobcd (uint8_t i);
  */
 static inline uint8_t div10 (uint8_t x, uint8_t* o_remaind)
 {
-  // seems to produce bug in byteToStrLessHundred, but why?
-    //uint8_t y;
-    //register uint8_t hilf;
-    //asm(
-    //   "ldi %[temp], 205     \n"
-    //   "mul %[temp], %[input]   \n"
-    //   "lsr R1             \n"
-    //   "lsr R1             \n"
-    //   "lsr R1             \n"
-    //   "mov %[result], R1  \n"
-    //    : [result] "=d" (y), [temp]"=d" (hilf)
-    //    : [input]"d" (x)
-    //    : "r1","r0"
-    // );
-    //*o_remaind = x-(10*y);
-    //return y;
   uint8_t y = (((uint16_t)x)*205)>>11;
   *o_remaind = x-(y*10);
   return y;
