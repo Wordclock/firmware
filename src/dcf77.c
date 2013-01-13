@@ -35,6 +35,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
+#include <stdbool.h>
 
 #include "main.h"
 #include "dcf77.h"
@@ -96,7 +97,7 @@ volatile typedef struct{
 } DCF_Struct;
 
 static DCF_Struct             DCF;
-uint8_t                       enable_dcf77_ISR;                                 // En- / Disable DCF77 examination
+bool                          enable_dcf77_ISR;                                 // En- / Disable DCF77 examination
 static uint8_t                count_low;
 static uint8_t                count_high;
 

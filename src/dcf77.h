@@ -33,9 +33,11 @@
 #ifndef _WC_DCF77_H_
 #define _WC_DCF77_H_
 
+#include <stdbool.h>
+
 #if (DCF_PRESENT == 1)
 
-extern uint8_t   enable_dcf77_ISR;     // En- / Disable DCF77 examination
+extern bool   enable_dcf77_ISR;     // En- / Disable DCF77 examination
 /**
  *  Initializes DCF77
  *  @details  Configures DCF77 IO hardware and clear variables
