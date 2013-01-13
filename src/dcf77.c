@@ -18,23 +18,18 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file dcf77.c
- * 
- *  dcf (radio controlled time signal) interpretation
+ * @brief Implementation of the interface declared in dcf77.h
  *
- * \version $Id: dcf77.c 332 2010-07-22 21:07:02Z tg $
- * 
- * \author Copyright (c) 2010 Torsten Giese
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This file contains the implementation of the interface as it is declared
+ * in dcf77.h. In order to understand the source code completely, a basic
+ * understanding of the DCF77 signal is needed. Take a look at the Wikipedia
+ * [article](https://en.wikipedia.org/wiki/DCF77) for a detailed description
+ * of the concept and the time signal itself.
+ *
+ * @see dcf77.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #include <inttypes.h>
 #include <avr/io.h>

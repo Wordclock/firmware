@@ -18,22 +18,17 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file dcf77.h
- * 
- *  Interface for the dcf (radio controlled time signal) interpretation
+ * @brief Interface for access to the DCF77 time signal
  *
- * \version $Id: dcf77.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Torsten Giese
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * DCF77 is used to get the current date and time automatically. This file
+ * defines the interface to get access to the date and time information. There
+ * is an initialization phase, which will try to detect the availability of the
+ * module and determine whether or not the internal pull up resistor is needed.
+ *
+ * @see dcf77.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DCF77_H_
 #define _WC_DCF77_H_
