@@ -102,7 +102,7 @@ handle_datetime (DATETIME * datetimep)
     else
     {                                                                             // next time not reached...
       datetimep->ss = soft_seconds;                                               // update only seconds
-      rtc = TRUE;
+      rtc = true;
     }
 
     if (rtc)
@@ -115,7 +115,7 @@ handle_datetime (DATETIME * datetimep)
         if (last_hour != datetimep->hh)
         {
 #         if (DCF_PRESENT == 1)
-            enable_dcf77_ISR = TRUE;                                              // enable DCF77 every hour
+            enable_dcf77_ISR = true;                                              // enable DCF77 every hour
 #         endif  /** (DCF_PRESENT == 1) */
           last_hour = datetimep->hh;                                              // store current hour as last hour
         }
@@ -149,7 +149,7 @@ handle_datetime (DATETIME * datetimep)
   }
   else
   {
-    rtc = TRUE;                                                                   // time not changed, do nothing
+    rtc = true;                                                                   // time not changed, do nothing
   }
 }
 

@@ -40,6 +40,8 @@
 #ifndef _WC_I2C_RTC_H_
 #define _WC_I2C_RTC_H_
 
+#include <stdbool.h>
+
 /**
  *  Get I2C status
  *  @details  Returns I2C status
@@ -53,7 +55,7 @@ extern uint8_t                i2c_rtc_get_status (void);
  *  @param    datetime   date & time
  *  @return    TRUE = successful, FALSE = failed
  */
-extern uint8_t                i2c_rtc_write (const DATETIME * datetime);
+extern bool                  i2c_rtc_write (const DATETIME * datetime);
 
 /**
  *  Read date & time
@@ -61,7 +63,7 @@ extern uint8_t                i2c_rtc_write (const DATETIME * datetime);
  *  @param    datetime  date & time
  *  @return    TRUE = successful, FALSE = failed
  */
-extern uint8_t                i2c_rtc_read (DATETIME * datetime);
+extern bool                  i2c_rtc_read (DATETIME * datetime);
 
 /**
  *  Write data into SRAM
@@ -71,7 +73,7 @@ extern uint8_t                i2c_rtc_read (DATETIME * datetime);
  *  @param    length       length of buffer
  *  @return    TRUE = successful, FALSE = failed
  */
-extern uint8_t                i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length);
+extern bool                  i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length);
 
 /**
  *  Read data into SRAM
@@ -81,7 +83,7 @@ extern uint8_t                i2c_rtc_sram_write (uint8_t addr, void * void_valu
  *  @param    length      length of buffer
  *  @return    TRUE = successful, FALSE = failed
  */
-extern uint8_t                i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length);
+extern bool                  i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length);
 
 /**
  *  Initialize RTC
@@ -90,6 +92,6 @@ extern uint8_t                i2c_rtc_sram_read (uint8_t addr, void * void_value
  *  @param    status_p      pointer to byte in order to store I2C status
  *  @return    TRUE = successful, FALSE = failed
  */
-extern uint8_t                i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p);
+extern bool                  i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p);
 
 #endif /* _WC_I2C_RTC_H_ */

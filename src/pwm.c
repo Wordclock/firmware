@@ -45,6 +45,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
+#include <stdbool.h>
 #include "wceeprom.h"
 
 #include "uart.h"
@@ -95,10 +96,10 @@ const uint8_t pwm_table[MAX_PWM_STEPS]  PROGMEM =
 #  error unknown pwm step size
 #endif
 
-static uint8_t                pwm_is_on;                                        ///< flag: pwm is on
+static bool                   pwm_is_on;                                        ///< flag: pwm is on
 static uint8_t                base_pwm_idx;                                     ///< current base pwm index
 static uint8_t                brightness_pwm_val;                               ///< current brightness pwm value
-static uint8_t                brightness_lock;                                  ///< flag that forbids that brightness changes take effect
+static bool                   brightness_lock;                                  ///< flag that forbids that brightness changes take effect
 #define offset_pwm_idx   (wcEeprom_getData()->pwmParams.brightnessOffset)
 //static int8_t                 offset_pwm_idx;                                   ///< current offset pwm index
 #define g_occupancy               (wcEeprom_getData()->pwmParams.occupancy)
@@ -213,7 +214,7 @@ void pwm_on (void)
     TCCR2A |= ((1<<COM2B1) | (1<<COM2B0));                                        // @EDI: INVERTED PWM on OC2B, 8 Bit Fast PWM
 # endif
 
-  pwm_is_on = TRUE;                                                               // set flag
+  pwm_is_on = true;                                                               // set flag
   pwm_set_brightness_step ();
 }
 
@@ -236,7 +237,7 @@ void pwm_off (void)
 # endif
 
 
-  pwm_is_on = FALSE;                                                              // reset flag
+  pwm_is_on = false;                                                              // reset flag
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -390,14 +391,14 @@ pwm_step_down_brightness (void)
 
 void pwm_lock_brightness_val(uint8_t val)
 {
-  brightness_lock = TRUE;
+  brightness_lock = true;
   brightness_pwm_val = val;
   pwm_set_brightness_step();
 }
 
 void pwm_release_brightness(void)
 {
-  brightness_lock = FALSE;
+  brightness_lock = false;
   pwm_set_brightness_step();
 }
 

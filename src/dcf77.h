@@ -43,7 +43,7 @@ extern void dcf77_init(void);
 
 extern void dcf77_ISR(void);
 
-extern uint8_t dcf77_getDateTime(DATETIME* DateTime_p);
+extern bool dcf77_getDateTime(DATETIME* DateTime_p);
 
 #else
 

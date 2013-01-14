@@ -232,7 +232,7 @@ static uint8_t TrainIrState_handleIR( const IRMP_DATA* i_irCode )
         log_irTrain("Ir train finished\n");
         wcEeprom_writeback( g_params, sizeof(*g_params) ); /* save all */
         quitMyself(MS_irTrain,NULL);
-        return TRUE;
+        return true;
       }
       ++mode_trainIrState.curKey;
     }
@@ -255,7 +255,7 @@ static uint8_t TrainIrState_handleIR( const IRMP_DATA* i_irCode )
   disp = display_getNumberDisplayState(mode_trainIrState.curKey) | display_getIndicatorMask();
   display_setDisplayState( disp, disp );
 
-  return TRUE;
+  return true;
 }
 
 static void TrainIrState_init( void )
@@ -360,10 +360,10 @@ static uint8_t NormalState_handleIR(  uint8_t cmdCode )
 
 #endif
   {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 static void NormalState_init( void )
@@ -416,10 +416,10 @@ static uint8_t AutoHueState_handleIR(  uint8_t cmdCode )
     uart_putc('0' + g_params->hueChangeIntervall);
 #endif
   }else{
-    return FALSE;
+    return false;
   }
    
-  return TRUE;
+  return true;
 
 }
 
@@ -460,7 +460,7 @@ static void EnterTimeState_enter( const void* param )
   log_time("TH\n");
   mode_enterTimeState.time = *((DATETIME*)param);
   mode_enterTimeState.curSubState = ETS_hour;
-  mode_enterTimeState.prohibitLeave = TRUE;
+  mode_enterTimeState.prohibitLeave = true;
 
   if(   mode_enterTimeState.time.hh >=USER_ENTERTIME_DAY_NIGHT_CHANGE_HOUR 
      && mode_enterTimeState.time.hh < USER_ENTERTIME_DAY_NIGHT_CHANGE_HOUR+12 )
@@ -487,10 +487,10 @@ static uint8_t EnterTimeState_handleIr(  uint8_t cmdCode )
     }else if( ETS_minutes == mode_enterTimeState.curSubState){
       log_time("TS\n");
       mode_enterTimeState.time.ss = 0;
-      mode_enterTimeState.prohibitLeave = FALSE;
+      mode_enterTimeState.prohibitLeave = false;
       pwm_release_brightness();
       quitMyself(MS_enterTime, &(mode_enterTimeState.time));
-      return TRUE;
+      return true;
     }
   }else if(    UI_UP   == cmdCode
             || UI_DOWN == cmdCode)
@@ -515,7 +515,7 @@ static uint8_t EnterTimeState_handleIr(  uint8_t cmdCode )
     }
 
   }else{
-    //return FALSE;
+    //return false;
   }
   dispInternalTime(&mode_enterTimeState.time, 
                    ((ETS_hour == mode_enterTimeState.curSubState)
@@ -523,7 +523,7 @@ static uint8_t EnterTimeState_handleIr(  uint8_t cmdCode )
                     : display_getMinuteMask()
                     ) | display_getTimeSetIndicatorMask()) ;
 
-  return TRUE;
+  return true;
 }
 
 static void EnterTimeState_init( void )
@@ -541,7 +541,7 @@ static void SetSystemTimeState_enter( const void* param )
 {
   log_state("SST\n");
   addSubState(MS_setSystemTime, MS_enterTime,  &g_dateTime );
-  mode_setSystemTimeState.prohibitLeave = TRUE;
+  mode_setSystemTimeState.prohibitLeave = true;
 
 }
 
@@ -552,7 +552,7 @@ static void SetSystemTimeState_substateFinished (e_MenuStates finishedState, con
     const DATETIME* time = result;
     i2c_rtc_write( time );
     g_dateTime = *time;
-    mode_setSystemTimeState.prohibitLeave = FALSE;
+    mode_setSystemTimeState.prohibitLeave = false;
     quitMyself( MS_setSystemTime, NULL);
   }
 }
@@ -580,7 +580,7 @@ static void SetOnOffTimeState_enter( const void* param )
   addSubState(MS_setOnOffTime
              , MS_enterTime
              , &dt);
-  mode_setOnOffTimeState.prohibitLeave = TRUE;
+  mode_setOnOffTimeState.prohibitLeave = true;
 
 }
 
@@ -638,14 +638,14 @@ static uint8_t SetOnOffTimeState_handleIr(  uint8_t cmdCode )
     }
     if( cmdCode == UI_SET_ONOFF_TIMES )
     {
-      mode_setOnOffTimeState.prohibitLeave = FALSE;
+      mode_setOnOffTimeState.prohibitLeave = false;
       g_animPreview = 0;
       quitMyself( MS_setOnOffTime, NULL);
     }
   }
 
 
-  return TRUE;
+  return true;
 }
 
 
@@ -670,10 +670,10 @@ static uint8_t PulseState_handleIR(  uint8_t cmdCode )
     uart_putc('0' + g_params->pulseUpdateInterval);
 #endif
   }else{
-    return FALSE;
+    return false;
   }
    
-  return TRUE;
+  return true;
 
 }
 
@@ -772,7 +772,7 @@ static void    UserState_SubstateFinished(e_MenuStates state, e_MenuStates finis
 
 static uint8_t UserState_HanbdleIr (e_MenuStates state, uint8_t cmdCode)
 { 
-  uint8_t handled = FALSE;
+  uint8_t handled = false;
  
   // Train Ir not here because of special handling due to raw data needed
 
@@ -859,7 +859,7 @@ static uint8_t UserState_prohibitTimeDisplay( e_MenuStates state )
 
 static uint8_t UserState_prohibitLeave( e_MenuStates state )
 {
-  uint8_t prohibit = FALSE;
+  uint8_t prohibit = false;
 
   if( MS_normalMode == state ){
     prohibit = mode_enterTimeState.prohibitLeave;

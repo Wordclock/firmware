@@ -40,6 +40,8 @@
 #ifndef _WC_I2C_MASTER_H_
 #define _WC_I2C_MASTER_H_
 
+#include <stdbool.h>
+
 #define I2C_READ                    1
 #define I2C_WRITE                   0
 
@@ -52,7 +54,7 @@
  *  @details  Configures I2C bus in order to operate as I2C master
  *  @return    TRUE if successful, FALSE, if not
  */
-extern uint8_t                i2c_master_init (void);
+extern bool                   i2c_master_init (void);
 
 /**
  *  Start I2C transfer

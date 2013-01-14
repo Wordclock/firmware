@@ -129,9 +129,6 @@
 #define LOG_EEPROM_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
 #define LOG_DCF77              0  /**< reports various states and changes of the DCF module		*/
 
-#define TRUE                   1
-#define FALSE                  0
-
 #ifndef NULL
 #  define NULL 0
 #endif

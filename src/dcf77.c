@@ -228,7 +228,7 @@ dcf77_check_module_type(void)
  * Analyze the received Signal and calculate the reflect data
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-static uint8_t
+static bool
 dcf77_check(void)
 {
   #if (LOG_DCF77 == 1)
@@ -247,20 +247,20 @@ dcf77_check(void)
           && (DCF.PauseCounter >= 96)))                                         // pause too long for data
   {
     DCF.PauseCounter = 0;                                                       // clear pause length counter
-    return(FALSE);
+    return(false);
   }
   if (((DCF.PauseCounter >= 170)                                                // Sync puls
       && (DCF.BitCounter != 58))                                                // but not 58 bits transfered
       || (DCF.BitCounter >= 59))                                                // or more then 58 Bits
   {
     dcf77_reset();                                                              //   then reset
-    return(FALSE);
+    return(false);
   }
   if (DCF.BitCounter <= 20)                                                     // Bit 0 - 20 = Weather data
   {
     DCF.BitCounter++;                                                           // increase bit counter
     DCF.PauseCounter = 0;                                                       // clear pause length counter
-    return(FALSE);
+    return(false);
   }
   if ((DCF.PauseCounter >= 78)
       && (DCF.PauseCounter <= 95))                                              // 0 or 1 detect?
@@ -281,7 +281,7 @@ dcf77_check(void)
           && (DCF.Parity%2 != 0))                                               // ParityCount not even?
     {
       dcf77_reset();                                                            //   then reset
-      return(FALSE);
+      return(false);
     }
     if ((DCF.BitCounter == 28)                                                  // next will be Hours
       || (DCF.BitCounter == 35)                                                 // next will be Day of Month
@@ -294,7 +294,7 @@ dcf77_check(void)
     }
     DCF.BitCounter++;                                                           // increase Bit Counter
     DCF.PauseCounter = 0;                                                       // clear pause length counter
-    return(FALSE);
+    return(false);
   }
   if (DCF.PauseCounter >= 170)                                                  // sync pause (longer then 1700 ms)?
   {
@@ -306,24 +306,24 @@ dcf77_check(void)
       || (DCF.Parity%2 != 0))                                                   // ParityCount not even?
     {
       dcf77_reset();                                                            //   then reset
-      return(FALSE);
+      return(false);
     }
     uint8_t NewTime;
     NewTime = DCF.NewTime[0] + DCF.NewTime[1]*60;
     if ((DCF.OldTime + 1) == NewTime)
     {
       log_dcf77(" 2nd DCF77 correct\n");
-      return(TRUE);                                                               // Everything fine, received Data could be take over
+      return(true);                                                               // Everything fine, received Data could be take over
     }
     else
     {
       log_dcf77(" 1st DCF77 correct\n");
       DCF.OldTime = NewTime;
       dcf77_reset();
-      return(FALSE);
+      return(false);
     }
   }
-  return(FALSE);
+  return(false);
 }
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * dcf77: Initialize Port
@@ -400,7 +400,7 @@ dcf77_ISR(void)
  * dcf77: set datetime with dcf77 time
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-uint8_t
+bool
 dcf77_getDateTime(DATETIME * DateTime_p)
 {
   if (getFlag(AVAILABLE) && getFlag(CHECK))                                     // DCF Module available and full pulse received?
@@ -415,13 +415,13 @@ dcf77_getDateTime(DATETIME * DateTime_p)
         DateTime_p->MM  = DCF.NewTime[4];
         DateTime_p->YY  = DCF.NewTime[5];
         dcf77_reset();                                                          //      Reset Variables
-        enable_dcf77_ISR = FALSE;                                               //      Clear enable_dcf77_ISR
+        enable_dcf77_ISR = false;                                               //      Clear enable_dcf77_ISR
         DCF_OUTPUT_PORT &= ~(1<<DCF_OUTPUT_BIT);                                //      deactivate Control-LED
-        return (TRUE);
+        return (true);
       }                                                                         //    NO ->
       clearFlag(CHECK);                                                         //      do nothing and return false
   }
-  return (FALSE);
+  return (false);
 }
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * dcf77: END

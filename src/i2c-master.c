@@ -145,11 +145,11 @@ i2c_reset (void)
  *  @return    TRUE if successful, FALSE, if not
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-uint8_t
+bool
 i2c_master_init(void)
 {
   static uint8_t  already_called;
-  uint8_t         rtc;
+  bool            rtc;
 
   if (! already_called)
   {
@@ -161,7 +161,7 @@ i2c_master_init(void)
   }
   else
   {
-    rtc = 0;
+    rtc = false;
   }
   return rtc;
 }

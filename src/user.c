@@ -255,7 +255,7 @@ static void addState(e_MenuStates mode, const void* param)
 
 static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 {
-  uint8_t success = TRUE;
+  uint8_t success = true;
   int8_t nextIdx;
   if( curState == -1 ){
     nextIdx = 0;
@@ -280,7 +280,7 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 static uint8_t leaveSubState( int8_t indexOfStateToLeave)
 {
   int8_t i;
-  uint8_t success = TRUE;
+  uint8_t success = true;
   log_state("leaving substates: ");
   for( i = g_topOfStack-1; i>=indexOfStateToLeave; --i)   /* check if all substates are ready to leave */
   {
@@ -393,7 +393,7 @@ handle_ir_code (void)
           wcEeprom_writeback( wcEeprom_getData(), sizeof(WcEepromData)); /* save whole data */
         }else{
           int8_t i;
-          uint8_t handled = FALSE;
+          uint8_t handled = false;
           for( i = g_topOfStack-1; i>=0 && !handled; --i)                           // goto state stack and check
           {                                                                         // if someone handles the code
             handled  =    handled || UserState_HanbdleIr(g_stateStack[i], ir_code);
@@ -457,7 +457,7 @@ handle_ir_code (void)
 #           if (DCF_PRESENT == 1)
               }else if( UI_DCF_GET_TIME == ir_code ){
                   log_state("DCF\n");
-                  enable_dcf77_ISR = TRUE;
+                  enable_dcf77_ISR = true;
 #           endif  /** (DCF_PRESENT == 1) */
 #           if (AMBILIGHT_PRESENT == 1)
               }else if( UI_AMBIENT_LIGHT == ir_code ){
@@ -655,14 +655,14 @@ static uint8_t curTimeIsBetween ( uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2
 
 static uint8_t checkActivation(void)
 {
-  uint8_t on  = TRUE;
+  uint8_t on  = true;
   uint8_t i;
 
   for( i=0; i<UI_AUTOOFFTIMES_COUNT; i+=2)
   {
     if(     curTimeIsBetween( g_params->autoOffTimes[i  ].h, g_params->autoOffTimes[i  ].m,
                               g_params->autoOffTimes[i+1].h, g_params->autoOffTimes[i+1].m)){
-      on = FALSE;
+      on = false;
     }
   }
   return on;
