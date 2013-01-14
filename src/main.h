@@ -116,18 +116,18 @@
 
 
 // Debugging:
-#define MAIN_LOG               0  /**< reports clock init on UART                               */
-#define MAIN_LOG_BRIGHTNESS    0  /**< reports brightnes updates to UART                        */
-#define LDR_LOG                0  /**< reports all ldr measurements to UART                     */
-#define LDR2PWM_LOG            0  /**< reports changes on ldr2pwm mapping to UART               */
-#define DISPLAY_LOG_STATE      0  /**< reports the display output data to UART                  */
-#define USER_LOG_IR_CMD        0  /**< reports the detected IR Command to UART                  */
-#define USER_LOG_STATE         0  /**< reports the internal state changes to UART               */
-#define USER_LOG_TIME          0  /**< reports internal time updates to UART                    */
-#define USER_LOG_IR_TRAIN      0  /**< reports some usefull information on IR-Training to UART  */
-#define EEPROM_LOG_INIT        0  /**< reports EEPROM data on init to UART                      */
-#define EEPROM_LOG_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
-#define DCF77_LOG              0  /**< reports various states and changes of the DCF module		*/
+#define LOG_MAIN               0  /**< reports clock init on UART                               */
+#define LOG_MAIN_BRIGHTNESS    0  /**< reports brightnes updates to UART                        */
+#define LOG_LDR                0  /**< reports all ldr measurements to UART                     */
+#define LOG_LDR2PWM            0  /**< reports changes on ldr2pwm mapping to UART               */
+#define LOG_DISPLAY_STATE      0  /**< reports the display output data to UART                  */
+#define LOG_USER_IR_CMD        0  /**< reports the detected IR Command to UART                  */
+#define LOG_USER_STATE         0  /**< reports the internal state changes to UART               */
+#define LOG_USER_TIME          0  /**< reports internal time updates to UART                    */
+#define LOG_USER_IR_TRAIN      0  /**< reports some usefull information on IR-Training to UART  */
+#define LOG_EEPROM_INIT        0  /**< reports EEPROM data on init to UART                      */
+#define LOG_EEPROM_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
+#define LOG_DCF77              0  /**< reports various states and changes of the DCF module		*/
 
 #define TRUE                   1
 #define FALSE                  0

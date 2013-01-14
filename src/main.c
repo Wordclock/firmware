@@ -64,7 +64,7 @@
 #define READ_DATETIME_INTERVAL    15                                              // interval in seconds: read rtc
 static volatile uint8_t           soft_seconds;                                   // seconds of a softclock, see main_ISR()
 
-#if  (MAIN_LOG == 1)
+#if  (LOG_MAIN == 1)
 #  define log_main(x) uart_puts_P(x)
 #else
 #  define log_main(x)
@@ -163,7 +163,7 @@ handle_brightness (void)
 
   if (last_ldr_brightness != ldr_brightness)
   {
-#if (MAIN_LOG_BRIGHTNESS==1)
+#if (LOG_MAIN_BRIGHTNESS==1)
     char buff[5];
     byteToStrLessOneHundred(ldr_brightness, buff);
     uart_puts_P("brightness: ");

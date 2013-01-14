@@ -178,7 +178,7 @@ static uint8_t checkActivation(void);
 static uint8_t curTimeIsBetween ( uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 
-#if (USER_LOG_STATE == 1) 
+#if (LOG_USER_STATE == 1) 
 static void printStateStack(){
   uint8_t i=0;
   uart_puts_P("stack: [");
@@ -208,14 +208,14 @@ static void printStateStack(){
 
 
 
-#if (USER_LOG_STATE == 1)
+#if (LOG_USER_STATE == 1)
 #  define   log_state(x)  uart_puts_P(x)
 #else
 #  define   log_state(x)  
 #endif
 
 
-#if (USER_LOG_TIME== 1)
+#if (LOG_USER_TIME== 1)
 #  define   log_time(x)  uart_puts_P(x)
 void putTime( const DATETIME* time)
 {
@@ -286,7 +286,7 @@ static uint8_t leaveSubState( int8_t indexOfStateToLeave)
   {
       uint8_t canLeave = ! UserState_prohibitLeave( g_stateStack[i] );
       success = success && canLeave;
-#     if (USER_LOG_STATE == 1) 
+#     if (LOG_USER_STATE == 1) 
       {
         char buff[5];
         byteToStrLessOneHundred(g_stateStack[i], buff);
@@ -343,7 +343,7 @@ handle_ir_code (void)
     if(g_keyDelay){
       return;
     }
-#   if (USER_LOG_IR_CMD == 1)
+#   if (LOG_USER_IR_CMD == 1)
     {
       char text[20];
       uart_puts_P("IR-cmd: ");

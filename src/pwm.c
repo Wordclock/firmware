@@ -405,7 +405,7 @@ void pwm_release_brightness(void)
 
 
 
-#if (LDR2PWM_LOG == 1)
+#if (LOG_LDR2PWM == 1)
 
 void outputVals()
 {
@@ -551,7 +551,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
   uint8_t left;
   uint8_t right;
 
-# if (LDR2PWM_LOG == 1)
+# if (LOG_LDR2PWM == 1)
     uart_puts_P("before\n");
     outputVals();
 # endif
@@ -559,7 +559,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
   g_ldrBrightness2pwmStep[ind] = val;
   getBounds(ind, val, &left, &right);
 
-# if (LDR2PWM_LOG == 1)
+# if (LOG_LDR2PWM == 1)
     uart_puts_P("bounds\n");
     outputVals();
     outputPointer(ind, left, right);
@@ -569,7 +569,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
   interpolate(ind, right);
 
   g_occupancy |= (((LDR2PWM_OCC_TYPE)1)<<ind);
-# if (LDR2PWM_LOG == 1)
+# if (LOG_LDR2PWM == 1)
     uart_puts_P("after\n");
     outputVals();
 # endif

@@ -46,7 +46,7 @@
 
 
 
-#if  (DCF77_LOG == 1)
+#if  (LOG_DCF77 == 1)
 #define log_dcf77(x) uart_puts_P(x)
 #else
 #define log_dcf77(x)
@@ -135,7 +135,7 @@ dcf77_check_module_type(void)
 
   if (count_low + count_high >= 100)                                            // one second over?
   {                                                                             // YES ->
-    #if (DCF77_LOG == 1)
+    #if (LOG_DCF77 == 1)
     {
       char log_text[8];
       byteToStr (count_low, log_text);
@@ -188,7 +188,7 @@ dcf77_check_module_type(void)
       {                                                                         //    YES ->
         setFlag(DEFINED);                                                       //      DCF Module defined
         setFlag(AVAILABLE);                                                     //      DCF Module detected
-        #if (DCF77_LOG == 1)
+        #if (LOG_DCF77 == 1)
         {
           if (getFlag(HIGH_ACTIVE))
           {
@@ -231,7 +231,7 @@ dcf77_check_module_type(void)
 static uint8_t
 dcf77_check(void)
 {
-  #if (DCF77_LOG == 1)
+  #if (LOG_DCF77 == 1)
   {
     if (DCF.PauseCounter > 0 )
     {

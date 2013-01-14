@@ -44,7 +44,7 @@
 #include "base.h"
 
 
-#if (EEPROM_LOG_WRITEBACK == 1)
+#if (LOG_EEPROM_WRITEBACK == 1)
 #  define   log_eeprom(x)  uart_puts_P(x)
 #else
 #  define   log_eeprom(x)  
@@ -63,7 +63,7 @@ const WcEepromData PROGMEM pm_eepromDefaultParams = {
 WcEepromData g_epromWorking; 
 
 
-# if (EEPROM_LOG_INIT == 1) || (EEPROM_LOG_WRITEBACK == 1)
+# if (LOG_EEPROM_INIT == 1) || (LOG_EEPROM_WRITEBACK == 1)
 static void uart_putHexByte(uint8_t byte)
 {
   uart_putc( nibbleToHex(byte >> 4 ) );
@@ -77,12 +77,12 @@ void wcEeprom_init(void)
   if(    (g_epromWorking.swVersion  != SW_VERSION)
       || (g_epromWorking.structSize != sizeof(g_epromWorking)))
   {
-#   if (EEPROM_LOG_INIT == 1)
+#   if (LOG_EEPROM_INIT == 1)
     uart_puts_P("Using defaults instead eeprom\n");
 #   endif
     memcpy_P(&g_epromWorking, &pm_eepromDefaultParams, sizeof(WcEepromData));
   }
-# if (EEPROM_LOG_INIT == 1)
+# if (LOG_EEPROM_INIT == 1)
   {
     uint8_t i = 0;
     uint8_t* ptr = (uint8_t*)(&g_epromWorking);
@@ -107,7 +107,7 @@ static uint8_t wcEeprom_writeIfChanged(uint8_t index)
   sdramByte  =  *(((uint8_t*)&g_epromWorking)+index);
   if( eepromByte != sdramByte )
   {
-#   if (EEPROM_LOG_WRITEBACK == 1)
+#   if (LOG_EEPROM_WRITEBACK == 1)
     {
       char buf[5];
       uart_puts_P("EEPROM Byte ");
@@ -131,7 +131,7 @@ void wcEeprom_writeback(const void* start, uint8_t len)
 {
   uint8_t eepromIndex = ( ((uint8_t*)start) - ( (uint8_t*)&g_epromWorking)); 
   uint8_t eepromIndexEnd = eepromIndex + len-1;
-# if (EEPROM_LOG_WRITEBACK == 1)
+# if (LOG_EEPROM_WRITEBACK == 1)
   {
     uart_puts_P("EEpromWrite idx: ");
     uart_putHexByte(eepromIndex);

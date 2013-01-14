@@ -119,7 +119,7 @@ void display_outputData(DisplayState state)
     DISPLAY_HOUR13_PORT &= ~(1 << DISPLAY_HOUR13_PIN);
   }
 
-#if (DISPLAY_LOG_STATE==1)
+#if (LOG_DISPLAY_STATE==1)
   {
     uint8_t i;
     uart_puts_P("Disp: ");

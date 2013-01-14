@@ -98,7 +98,7 @@ void display_outputData(DisplayState state)
     DISPLAY_MIN4_PORT &= ~(1 << DISPLAY_MIN4_PIN);
   }
 
-#if (DISPLAY_LOG_STATE==1)
+#if (LOG_DISPLAY_STATE==1)
   {
     uint8_t i;
     uart_puts_P("Disp: ");

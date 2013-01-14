@@ -193,7 +193,7 @@ static void incDecRangeOverflow(uint8_t* val, int8_t dir,  uint8_t max)
 /*********************************************************************************/
 /*********************************************************************************/
 
-#if (USER_LOG_IR_TRAIN == 1)
+#if (LOG_USER_IR_TRAIN == 1)
 #  define   log_irTrain(x)  uart_puts_P(x)
 #else
 #  define   log_irTrain(x)  

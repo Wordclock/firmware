@@ -92,7 +92,7 @@ ldr_init (void)
   curr_sum = result;              // also init the sum
   curr_sum *= LDR_ARRAY_SIZE;     //
 
-# if (LDR_LOG == 1)
+# if (LOG_LDR == 1)
   {
     char buff[5];
     byteToStr(result, buff);
@@ -132,7 +132,7 @@ ldr_ISR (void)
     // read out last conversion and recalculating summary
     uint8_t measurement = ADCH;
 
-# if (LDR_LOG == 1)
+# if (LOG_LDR == 1)
   {
     char buff[5];
     byteToStr(measurement, buff);
