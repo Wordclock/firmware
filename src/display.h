@@ -213,8 +213,6 @@ static inline DisplayState display_getNumberDisplayState( uint8_t number );
 
 #if (WC_DISP_ENG == 1) || (WC_DISP_GER == 1)|| (WC_DISP_GER3 == 1)
 #  include "display_wc.h" 
-#elif (TIX_DISP == 1)
-#  include "display_tix.h" 
 #else   /* default to german */
 #  define WC_DISP_GER 1
 #  include "display_wc.h" 

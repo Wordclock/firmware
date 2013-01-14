@@ -64,15 +64,13 @@
 #define WC_DISP_GER   0   /**< Word Clock with german layout with 2 regional idoms */
 #define WC_DISP_GER3  1   /**< Word Clock with german layout with 3 regional idoms */
 #define WC_DISP_ENG   0   /**< Word Clock with english layout                      */
-#define TIX_DISP      0   /**< TIX Clock -> google                                 */
 
 /**
  *  if only one color LEDs are used.
  *  changing this to 1 will save a lot of memory
  *  by disabling all the RGB-Code
- *  @remark  Tix clock is allways mono color
  */
-#define MONO_COLOR_CLOCK  ((TIX_DISP == 1) ||  0)
+#define MONO_COLOR_CLOCK 0
 
 /**
  *  activates code for DCF control 
