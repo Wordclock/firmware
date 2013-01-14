@@ -129,10 +129,6 @@
 #define LOG_EEPROM_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
 #define LOG_DCF77              0  /**< reports various states and changes of the DCF module		*/
 
-#ifndef NULL
-#  define NULL 0
-#endif
-
 typedef struct
 {
   unsigned char  YY;   ///< year     0-99
