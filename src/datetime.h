@@ -44,7 +44,7 @@ typedef struct
 	unsigned char hh; /**< Hour, ranges from 0 to 23 */
 	unsigned char mm; /**< Minute, ranges from 0 to 59 */
 	unsigned char ss; /**< Seconds, ranges from 0 to 59 */
-	unsigned char wd; /**< Weekday, ranges from 0 to 6, 0 represents sunday */
+	unsigned char wd; /**< Weekday, ranges from 0 to 6, 0 represents Sunday */
 
 } datetime_t;
 
