@@ -317,7 +317,7 @@ extern void    handle_ir_code ();
  *           A call to this may not change the display.
  * @param i_time  the new time to set
  */
-extern void  user_setNewTime( const DATETIME* i_time);
+extern void  user_setNewTime( const datetime_t* i_time);
 
 
 /**

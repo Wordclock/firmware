@@ -168,12 +168,12 @@ static uint8_t      g_checkIfAutoOffDelay;
 static e_userCommands g_lastPressedKey;
 
 static uint8_t        g_keyPressTime;
-static DATETIME g_dateTime;
+static datetime_t g_dateTime;
 
 #define g_params (&(wcEeprom_getData()->userParams))
 
 
-static void dispInternalTime(const DATETIME* i_time, uint32_t blinkmask);
+static void dispInternalTime(const datetime_t* i_time, uint32_t blinkmask);
 static uint8_t checkActivation(void);
 static uint8_t curTimeIsBetween ( uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
@@ -217,7 +217,7 @@ static void printStateStack(){
 
 #if (LOG_USER_TIME== 1)
 #  define   log_time(x)  uart_puts_P(x)
-void putTime( const DATETIME* time)
+void putTime( const datetime_t* time)
 {
   char txt[8];
   byteToStrLessOneHundred(time->hh, txt);
@@ -524,7 +524,7 @@ void user_init(void)
 }
 
 
-static void dispInternalTime(const DATETIME* i_time, uint32_t blinkmask)
+static void dispInternalTime(const datetime_t* i_time, uint32_t blinkmask)
 {
   putTime(i_time);
   display_setDisplayState( display_getTimeState( i_time ), blinkmask);
@@ -532,7 +532,7 @@ static void dispInternalTime(const DATETIME* i_time, uint32_t blinkmask)
 
 
 
-extern void  user_setNewTime( const DATETIME* i_time)
+extern void  user_setNewTime( const datetime_t* i_time)
 {
 
   if( i_time ){

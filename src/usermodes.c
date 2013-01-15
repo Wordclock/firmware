@@ -110,7 +110,7 @@ static SetOnOffmTimeState mode_setOnOffTimeState;
 /** contains Data for time input state */
 typedef struct EnterTimeState{
   uint8_t   prohibitLeave;     /**<  is it allowed to leave state at the moment?         */
-  DATETIME  time;              /**<  buffer that will be manipulated during time input   */
+  datetime_t  time;              /**<  buffer that will be manipulated during time input   */
   enum e_EnterTimesubStates{
     ETS_hour,
     ETS_minutes, 
@@ -458,7 +458,7 @@ static void DemoState_init( void )
 static void EnterTimeState_enter( const void* param )
 {
   log_time("TH\n");
-  mode_enterTimeState.time = *((DATETIME*)param);
+  mode_enterTimeState.time = *((datetime_t*)param);
   mode_enterTimeState.curSubState = ETS_hour;
   mode_enterTimeState.prohibitLeave = true;
 
@@ -549,7 +549,7 @@ static void SetSystemTimeState_substateFinished (e_MenuStates finishedState, con
 {
   if( finishedState == MS_enterTime)
   {
-    const DATETIME* time = result;
+    const datetime_t* time = result;
     i2c_rtc_write( time );
     g_dateTime = *time;
     mode_setSystemTimeState.prohibitLeave = false;
@@ -570,7 +570,7 @@ static void SetSystemTimeState_init( void )
 
 static void SetOnOffTimeState_enter( const void* param )
 {
-  DATETIME dt = {0,0,0,0,0,0,0};
+  datetime_t dt = {0,0,0,0,0,0,0};
   dt.hh = g_params->autoOffTimes[0].h;
   dt.mm = g_params->autoOffTimes[0].m;
 
@@ -588,8 +588,8 @@ static void SetOnOffTimeState_substateFinished (e_MenuStates finishedState, cons
 {
   if( finishedState == MS_enterTime)
   {
-    const DATETIME* time = result;
-    DATETIME dt = *time;
+    const datetime_t* time = result;
+    datetime_t dt = *time;
     g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].h = dt.hh;
     g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].m = dt.mm;
 

@@ -149,7 +149,7 @@ static const uint16_t s_hourIncrement[TM_COUNT] = {
 
 
 
-DisplayState display_getTimeState (const DATETIME* i_newDateTime)
+DisplayState display_getTimeState (const datetime_t* i_newDateTime)
 {
   uint8_t hour       = i_newDateTime->hh;
   uint8_t minutes    = i_newDateTime->mm/5;

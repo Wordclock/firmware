@@ -57,7 +57,7 @@ extern uint8_t                i2c_rtc_get_status (void);
  *  @param    datetime   date & time
  *  @return    TRUE = successful, FALSE = failed
  */
-extern bool                  i2c_rtc_write (const DATETIME * datetime);
+extern bool                  i2c_rtc_write (const datetime_t * datetime);
 
 /**
  *  Read date & time
@@ -65,7 +65,7 @@ extern bool                  i2c_rtc_write (const DATETIME * datetime);
  *  @param    datetime  date & time
  *  @return    TRUE = successful, FALSE = failed
  */
-extern bool                  i2c_rtc_read (DATETIME * datetime);
+extern bool                  i2c_rtc_read (datetime_t * datetime);
 
 /**
  *  Write data into SRAM

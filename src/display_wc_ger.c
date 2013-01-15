@@ -77,7 +77,7 @@ static const uint8_t minWessidreiVirtel = ( DISP_SETBIT(DWP_viertel)  | DISP_SET
 
 
 
-DisplayState display_getTimeState (const DATETIME* i_newDateTime)
+DisplayState display_getTimeState (const datetime_t* i_newDateTime)
 {
   uint8_t hour    = i_newDateTime->hh;
   uint8_t minutes = i_newDateTime->mm;

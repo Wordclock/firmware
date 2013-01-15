@@ -94,7 +94,7 @@ i2c_rtc_get_status (void)
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 bool
-i2c_rtc_write (const DATETIME * datetime)
+i2c_rtc_write (const datetime_t * datetime)
 {
   uint8_t      rtcbuf[7];
   bool 		   rtc = false;
@@ -125,7 +125,7 @@ i2c_rtc_write (const DATETIME * datetime)
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 bool
-i2c_rtc_read (DATETIME * datetime)
+i2c_rtc_read (datetime_t * datetime)
 {
   uint8_t  rtcbuf[7];
   bool     rtc = false;

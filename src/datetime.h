@@ -19,9 +19,9 @@
 
 /**
  * @file datetime.h
- * @brief Contains the DATETIME type definition
+ * @brief Contains the datetime_t type definition
  *
- * The DATETIME type is used throughout the whole project in various places
+ * The datetime_t type is used throughout the whole project in various places
  * where access to time is needed. Every module that needs access to this is
  * supposed to include this header.
  */
@@ -46,6 +46,6 @@ typedef struct
 	unsigned char ss; /**< Seconds, ranges from 0 to 59 */
 	unsigned char wd; /**< Weekday, ranges from 0 to 6, 0 represents sunday */
 
-} DATETIME;
+} datetime_t;
 
 #endif /* _WC_DATETIME_H_ */

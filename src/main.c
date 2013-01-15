@@ -84,7 +84,7 @@ static volatile uint8_t           soft_seconds;                                 
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 static void
-handle_datetime (DATETIME * datetimep)
+handle_datetime (datetime_t * datetimep)
 {
   static uint8_t    last_hour = 0xff;                                             // value of last hour
   static uint8_t    last_minute = 0xff;                                           // value of minutes evaluated last call
@@ -200,7 +200,7 @@ void wdt_init(void)
 int
 main (void)
 {
-  static DATETIME  datetime;  
+  static datetime_t  datetime;  
 
   uart_init();                                                                  // initialize uart
   log_main("Init...\n");

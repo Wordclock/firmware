@@ -105,7 +105,7 @@ extern void display_outputData(DisplayState state);
  * @param    i_newDateTime  the new time that should be displayed
  * @return   DisplayState as needed by setDisplayState
  */
-extern DisplayState display_getTimeState (const DATETIME* i_newDateTime);
+extern DisplayState display_getTimeState (const datetime_t* i_newDateTime);
 
 
 /**
@@ -128,7 +128,7 @@ extern void    display_setDisplayState( DisplayState i_showStates, DisplayState 
  * @details  f_call = on time change ~1-2/min
  * @param i_newDateTime  the new time that should be displayed
  */
-static inline void display_setNewTime (const DATETIME* i_newDateTime)
+static inline void display_setNewTime (const datetime_t* i_newDateTime)
 {
   display_setDisplayState( display_getTimeState(i_newDateTime), 0 );
 };
@@ -145,7 +145,7 @@ extern void display_fadeDisplayState( DisplayState i_showStates);
  * @details  f_call = on time change ~1-2/min
  * @param i_newDateTime  the new time that should be displayed
  */
-static inline void display_fadeNewTime (const DATETIME* i_newDateTime)
+static inline void display_fadeNewTime (const datetime_t* i_newDateTime)
 {
   display_fadeDisplayState(display_getTimeState(i_newDateTime));
 };

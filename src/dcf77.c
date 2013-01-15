@@ -401,7 +401,7 @@ dcf77_ISR(void)
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 bool
-dcf77_getDateTime(DATETIME * DateTime_p)
+dcf77_getDateTime(datetime_t * DateTime_p)
 {
   if (getFlag(AVAILABLE) && getFlag(CHECK))                                     // DCF Module available and full pulse received?
   {                                                                             // YES ->
