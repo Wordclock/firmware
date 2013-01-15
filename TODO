@@ -46,3 +46,20 @@
   file provided by avr-libc is also called "twi.h", so it makes more sense
   to rename these modules. Moreover some rework is needed to make (more) use
   of "twi.h".
+
+- Use macros for port definitions, something like:
+
+    #define PORT(...) 	PORT_(__VA_ARGS__)
+    #define PORT_(a, b) (a)
+    #define DDR(...) 	DDR_(__VA_ARGS__)
+    #define DDR_(a, b) 	(*(&a - 1))
+    #define PIN(...) 	PIN_(__VA_ARGS__)
+    #define PIN_(a, b) 	(*(&a - 2))
+    #define BIT(...) 	BIT_(__VA_ARGS__)
+    #define BIT_(a, b) 	b
+
+- Make the determination of the DCF77 module type optional. Although this is
+  a nice gimmick, it only takes up program space and doesn't provide any real
+  use, as the module type should be known when actually building the clock,
+  so it can be compiled with the support for the right module, which in return
+  would save some program space and fasten up the initialization.
