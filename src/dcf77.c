@@ -52,7 +52,6 @@
 #define log_dcf77(x)
 #endif
 /* ********************************************************************************* */
-#define boolean uint8_t
 uint8_t DCF_FLAG;
 
 typedef enum FLAGS_e{
@@ -70,7 +69,7 @@ typedef enum FLAGS_e{
 
 #define FLAG_REGISTER (DCF_FLAG)
 
-static inline boolean getFlag(FLAGS flag){ return FLAG_REGISTER & (1<<flag); }
+static inline bool getFlag(FLAGS flag){ return FLAG_REGISTER & (1<<flag); }
 static inline void setFlag(FLAGS flag)   { FLAG_REGISTER |= (1<<flag);       }
 static inline void clearFlag(FLAGS flag) { FLAG_REGISTER &= ~(1<<flag);      }
 
