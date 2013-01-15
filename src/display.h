@@ -43,6 +43,8 @@
 #ifndef _WC_DISPLAY_H_
 #define _WC_DISPLAY_H_
 
+#include "datetime.h"
+
 /** interval blinking words (* 100ms) */
 #define DISPLAY_BLINK_INT_100ms 7
 

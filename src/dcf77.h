@@ -35,6 +35,8 @@
 
 #include <stdbool.h>
 
+#include "datetime.h"
+
 #if (DCF_PRESENT == 1)
 
 extern bool enable_dcf77_ISR;

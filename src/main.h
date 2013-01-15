@@ -127,17 +127,6 @@
 #define LOG_EEPROM_WRITEBACK   0  /**< reports changed EEPROM data to UART                      */
 #define LOG_DCF77              0  /**< reports various states and changes of the DCF module		*/
 
-typedef struct
-{
-  unsigned char  YY;   ///< year     0-99
-  unsigned char  MM;   ///< month    1-12
-  unsigned char  DD;   ///< day      0-31
-  unsigned char  hh;   ///< hour     0-23
-  unsigned char  mm;   ///< minutes  0-59
-  unsigned char  ss;   ///< seconds  0-59
-  unsigned char  wd;   ///< weekday  0-6, 0 = sunday
-} DATETIME;
-
 extern void       main_ISR(void);
 
 #endif /* _WC_MAIN_H_ */

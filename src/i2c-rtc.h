@@ -42,6 +42,8 @@
 
 #include <stdbool.h>
 
+#include "datetime.h"
+
 /**
  *  Get I2C status
  *  @details  Returns I2C status
