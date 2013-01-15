@@ -41,6 +41,7 @@
 #include "dcf77.h"
 #include "base.h"
 #include "uart.h"
+#include "ports.h"
 
 #if (DCF_PRESENT == 1)
 
@@ -87,15 +88,10 @@ static inline void clearFlag(FLAGS flag) { FLAG_REGISTER &= ~(1<<flag);      }
 
 /* ********************************************************************************* */
 // Input definition of DCF Modul
-#define DCF_INPUT_PORT          PORTB
-#define DCF_INPUT_DDR           DDRB
-#define DCF_INPUT_PIN           PINB
-#define DCF_INPUT_BIT           7
+#define DCF_INPUT PORTB, 7
 
 // Output definition of DCF Signal (Control - LED)
-#define DCF_OUTPUT_PORT         PORTD
-#define DCF_OUTPUT_DDR          DDRD
-#define DCF_OUTPUT_BIT          4
+#define DCF_OUTPUT PORTD, 4
 
 /**
  * @brief Type definition containing variables needed for decoding
@@ -194,19 +190,19 @@ dcf77_check_module_type(void)
       {                                                                         //    YES ->
         count_pass = 0;
         count_switch++;                                                         //        increase count of activates and deactivaes of the Pull-Up Resistor
-        if ((DCF_INPUT_PIN & (1 << DCF_INPUT_BIT)))                             //      PULL-UP activated?
+        if ((PIN(DCF_INPUT) & (1 << BIT(DCF_INPUT))))                           //      PULL-UP activated?
         {                                                                       //      YES ->
-          DCF_INPUT_PORT            &= ~(1 << DCF_INPUT_BIT);                   //        deactivate Pull-Up Resistor
+          PORT(DCF_INPUT)           &= ~(1 << BIT(DCF_INPUT));                  //        deactivate Pull-Up Resistor
           log_dcf77(" Pull-UP deactivated\n");
          }
         else
         {                                                                       //      NO ->
-          DCF_INPUT_PORT            |= (1 << DCF_INPUT_BIT);                    //        activate Pull-Up Resistor
+          PORT(DCF_INPUT)           |= (1 << BIT(DCF_INPUT));                   //        activate Pull-Up Resistor
           log_dcf77(" Pull-UP activated\n");
         }
         if (count_switch == 30)                                                 //      switched 30 times between active and deactice Pull-Up?
         {                                                                       //      YES ->
-          DCF_INPUT_PORT            |= (1 << DCF_INPUT_BIT);                    //        activate Pull-Up Resistor
+          PORT(DCF_INPUT)           |= (1 << BIT(DCF_INPUT));                   //        activate Pull-Up Resistor
           setFlag(DEFINED);                                                     //        DCF Module defined
           clearFlag(AVAILABLE);                                                 //        no DCF Module detected
           log_dcf77("\nNo DCF77 Module detected!\n");
@@ -379,11 +375,11 @@ dcf77_check(void)
 void
 dcf77_init(void)
 {
-  DCF_INPUT_DDR             &= ~(1 << DCF_INPUT_BIT);                           // set DCF Pin as input
-  DCF_INPUT_PORT            &= ~(1 << DCF_INPUT_BIT);                           // deactivate Pull-Up Resistor
+  DDR(DCF_INPUT)            &= ~(1 << BIT(DCF_INPUT));                          // set DCF Pin as input
+  PORT(DCF_INPUT)           &= ~(1 << BIT(DCF_INPUT));                          // deactivate Pull-Up Resistor
 
-  DCF_OUTPUT_DDR            |=  (1<<DCF_OUTPUT_BIT);                            // set Control-LED as output
-  DCF_OUTPUT_PORT           &= ~(1<<DCF_OUTPUT_BIT);                            // set Control-LED to low
+  DDR(DCF_OUTPUT)           |=  (1<<BIT(DCF_OUTPUT));                           // set Control-LED as output
+  PORT(DCF_OUTPUT)          &= ~(1<<BIT(DCF_OUTPUT));                           // set Control-LED to low
 
   clearFlag(DEFINED);                                                           // DCF Module not defined yet
   setFlag(AVAILABLE);                                                           // TRUE to check if DCF77 module is installed
@@ -414,7 +410,7 @@ dcf77_ISR(void)
   {                                                                             // YES ->
   if (!(getFlag(DEFINED)))                                                      //  Module defined yet?
     {                                                                           //  NO ->
-      if (!(DCF_INPUT_PIN & (1 << DCF_INPUT_BIT)))                              //    DCF77 receiver port HIGH? (low active)
+      if (!(PIN(DCF_INPUT) & (1 << BIT(DCF_INPUT))))                            //    DCF77 receiver port HIGH? (low active)
       {                                                                         //    YES ->
         count_low++;                                                            //      increase low counter
       }
@@ -431,22 +427,22 @@ dcf77_ISR(void)
         uint8_t dcf_signal;
         if (getFlag(HIGH_ACTIVE))                                               //      High Active Module?
         {                                                                       //      YES ->
-          dcf_signal = (DCF_INPUT_PIN & (1 << DCF_INPUT_BIT));                  //        read DCF Signal
+          dcf_signal = (PIN(DCF_INPUT) & (1 << BIT(DCF_INPUT)));                //        read DCF Signal
         }
         else
         {                                                                       //      NO ->
-          dcf_signal = !(DCF_INPUT_PIN & (1 << DCF_INPUT_BIT));                 //        read and invert DCF Signal
+          dcf_signal = !(PIN(DCF_INPUT) & (1 << BIT(DCF_INPUT)));               //        read and invert DCF Signal
         }
 
         if (dcf_signal)                                                         //        DCF77 signal HIGH?
         {                                                                       //        YES ->
           DCF.PauseCounter++;                                                   //          increment PauseCounter
-          DCF_OUTPUT_PORT &= ~(1<<DCF_OUTPUT_BIT);                              //          deactivate Control-LED
+          PORT(DCF_OUTPUT) &= ~(1<<BIT(DCF_OUTPUT));                            //          deactivate Control-LED
         }
         else
         {                                                                       //        NO ->
           setFlag(CHECK);                                                       //          Set DCF.Check (Pulse has ended)
-          DCF_OUTPUT_PORT |= (1<<DCF_OUTPUT_BIT);                               //          activate Control-LED
+          PORT(DCF_OUTPUT) |= (1<<BIT(DCF_OUTPUT));                             //          activate Control-LED
         }
       }
     }
@@ -481,7 +477,7 @@ dcf77_getDateTime(datetime_t * DateTime_p)
         DateTime_p->YY  = DCF.NewTime[5];
         dcf77_reset();                                                          //      Reset Variables
         enable_dcf77_ISR = false;                                               //      Clear enable_dcf77_ISR
-        DCF_OUTPUT_PORT &= ~(1<<DCF_OUTPUT_BIT);                                //      deactivate Control-LED
+        PORT(DCF_OUTPUT) &= ~(1<<BIT(DCF_OUTPUT));                              //      deactivate Control-LED
         return (true);
       }                                                                         //    NO ->
       clearFlag(CHECK);                                                         //      do nothing and return false
