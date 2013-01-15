@@ -54,13 +54,25 @@
 /* ********************************************************************************* */
 uint8_t DCF_FLAG;
 
+/**
+ * @brief Contains various flags used within this module
+ *
+ * This flags are mainly used to enable a basic form of communication between
+ * various functions of this module. To save some space they are combined into
+ * an enumeration.
+ *
+ * @see FLAG_REGISTER()
+ * @see getFlag()
+ * @see setFlag()
+ * @see clearFlag()
+ */
 typedef enum FLAGS_e{
-   CHECK = 0,
-   DEFINED,
-   AVAILABLE,
-   HIGH_ACTIVE,
+   CHECK = 0, /**< Indicates whether a full time frame has been received */
+   DEFINED, /**< Indicates whether the module type has already been determined */
+   AVAILABLE, /**< Indicates whether or not there actually is a DCF77 module */
+   HIGH_ACTIVE, /**< Indicates whether the DCF77 module is high or low active */
 
-   _FLAG_COUNT
+   _FLAG_COUNT /**< Flag counter to ensure that enumeration is not too big */
 }FLAGS;
 
 #if (_FLAG_COUNT>8)
@@ -85,14 +97,20 @@ static inline void clearFlag(FLAGS flag) { FLAG_REGISTER &= ~(1<<flag);      }
 #define DCF_OUTPUT_DDR          DDRD
 #define DCF_OUTPUT_BIT          4
 
+/**
+ * @brief Type definition containing variables needed for decoding
+ *
+ * These variables are needed in order to successfully decode the DCF77 time
+ * signal. They are combined in a struct.
+ */
 volatile typedef struct{
-  uint8_t   PauseCounter;                                                       // Counter for pause length (+1 each 10 ms)
-  uint8_t   BitCounter;                                                         // which Bit is currently transfered
-  uint8_t   Parity;                                                             // must be even when checked
-  uint8_t   BCDShifter;                                                         // Data will be received in BCD Code
-  uint8_t   NewTime[6];                                                         // store Date & Time while receiving DCF signal
-  uint8_t   NewTimeShifter;                                                     // used to identify which data is currently transfered
-  uint8_t   OldTime;                                                            // stores the last successful received time
+  uint8_t   PauseCounter; /**< Counter for the pause length, +1 for each 10 ms */
+  uint8_t   BitCounter; /**< Indicates which bit is currently being broadcasted */
+  uint8_t   Parity; /**< Parity bit counter */
+  uint8_t   BCDShifter; /**< Shift counter for decoding BCD */
+  uint8_t   NewTime[6]; /**< Stores date & time while receiving DCF signal */
+  uint8_t   NewTimeShifter; /**< Identifies which data is currently being broadcasted */
+  uint8_t   OldTime; /**< Stores the last successful received time */
 } DCF_Struct;
 
 static DCF_Struct             DCF;
@@ -101,10 +119,14 @@ static uint8_t                count_low;
 static uint8_t                count_high;
 
 const static uint8_t          BCD_Kodierung[] = { 1,  2,  4,  8, 10, 20, 40, 80 };
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: clear all dcf variables
- * Reset all used variables if an error occurs while receiving the DCF77 signal
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Resets the state of the DCF77 module
+ *
+ * This function resets various variables used to keep track of the DCF77 time
+ * signal. It gets usually called when an error during the reception gets
+ * detected.
+ *
+ * @see DCF_Struct
  */
 static void
 dcf77_reset(void)
@@ -122,9 +144,20 @@ dcf77_reset(void)
     DCF.NewTime[i]    = 0;                                                      // Store temporary new received data
   }
 }
-/* --------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: check input signal (low or high active) and if a pull up is needed
- * --------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Determines what kind of module is connected to the microcontroller
+ *
+ * This function detects the kind of module connected to the microcontroller,
+ * which includes the detection of whether the module is high or low active
+ * and whether the internal pull up resistor is needed or not.
+ *
+ * This works by trying out all possible combinations and looking whether
+ * transitions on the DCF77 pin occur.
+ *
+ * This function is only used during the initialization phase. Once the module
+ * type was determined, it won't change during runtime anymore.
+ *
+ * @see FLAGS_e
  */
 static void
 dcf77_check_module_type(void)
@@ -222,10 +255,18 @@ dcf77_check_module_type(void)
     count_high  = 0;
   }
 }
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: analyze received signal
- * Analyze the received Signal and calculate the reflect data
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Analyzes the received information
+ *
+ * This functions analyzes the received information. It gets called once a new
+ * bit has been received. Any errors will trigger a reset (see dcf77_reset()).
+ * This includes invalid pulse lenghts, invalid amount of bits received and/or
+ * invalid parity bits. If the received time frame was valid true is returned,
+ * otherwise it will return false.
+ *
+ * @return True if valid time frame was received, false otherwise
+ * @see DCF_Struct
+ * @see dcf77_reset()
  */
 static bool
 dcf77_check(void)
@@ -324,9 +365,16 @@ dcf77_check(void)
   }
   return(false);
 }
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: Initialize Port
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Initializes the DCF77 module
+ *
+ * This function initializes the DCF77 port. Among other things it sets the
+ * data direction registers for the input and output. Furthermore some flags
+ * are set and/or cleared to trigger further initilization tasks, such as the
+ * detection of the module type.
+ *
+ * @see dcf77_check_module_type()
+ * @see FLAGS_e
  */
 void
 dcf77_init(void)
@@ -344,9 +392,20 @@ dcf77_init(void)
 
   DCF.OldTime = 0;
 }
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: interrupt routine to count the pause length
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief ISR counting the pause length between two pulses
+ *
+ * This ISR needs to be called every 10 ms. It will count the pause between
+ * two pulses, which in return makes it possible to determine the length of the
+ * pulse itself and therefore decode the signal afterwards.
+ *
+ * If a transition from high to low is registered, the CHECK flag is set, so
+ * that dcf77_check() will be called to decode the received information.
+ *
+ * Furthermore it sets the output pin according to the input pin.
+ *
+ * @see dcf77_check()
+ * @see FLAGS_e
  */
 void
 dcf77_ISR(void)
@@ -395,9 +454,16 @@ dcf77_ISR(void)
 }
 
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * dcf77: set datetime with dcf77 time
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Puts the received date & time into a buffer
+ *
+ * When a valid time frame was received, this functions puts the current date
+ * & time into a buffer of type datetime_t and returns true. Otherwise it will
+ * return false and do nothing to the buffer.
+ *
+ * @param DateTime_p Pointer to a buffer where the resulting date & time is stored
+ * @return True if date & time has been put into buffer, false otherwise
+ * @see FLAGS_e
  */
 bool
 dcf77_getDateTime(datetime_t * DateTime_p)
