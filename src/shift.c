@@ -116,7 +116,7 @@ void shift24_init(void) {
 	SPCR = _BV(SPE) | _BV(MSTR) | _BV(CPOL);
 	
 	/*
-	 * Double SPI speed
+	 * SPI2X: Double SPI speed
 	 */
 	SPSR |= _BV(SPI2X);
 
