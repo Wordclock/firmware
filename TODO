@@ -47,16 +47,7 @@
   to rename these modules. Moreover some rework is needed to make (more) use
   of "twi.h".
 
-- Use macros for port definitions, something like:
-
-    #define PORT(...) 	PORT_(__VA_ARGS__)
-    #define PORT_(a, b) (a)
-    #define DDR(...) 	DDR_(__VA_ARGS__)
-    #define DDR_(a, b) 	(*(&a - 1))
-    #define PIN(...) 	PIN_(__VA_ARGS__)
-    #define PIN_(a, b) 	(*(&a - 2))
-    #define BIT(...) 	BIT_(__VA_ARGS__)
-    #define BIT_(a, b) 	b
+- Use macros for port definitions provided by ports.h
 
 - Make the determination of the DCF77 module type optional. Although this is
   a nice gimmick, it only takes up program space and doesn't provide any real
