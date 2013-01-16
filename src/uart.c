@@ -18,23 +18,18 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file uart.c
- * 
- *  Handles the hardware UART interface
+ * @brief Implementation of the interface for access to the UART hardware
  *
- * \version $Id: uart.c 334 2010-07-23 19:11:46Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
-* 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This implements the various functions declared in uart.h in order to enable
+ * access to the UART hardware. Furthermore it implements a rather basic ISR,
+ * which will be executed once data has been received. This is used to start
+ * the bootloader, either by using the watchdog timer or by jumping to it
+ * directly.
+ *
+ * @see uart.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #include <inttypes.h>
 #include <avr/io.h>
