@@ -37,31 +37,12 @@
 
 #include <avr/pgmspace.h>
 
-/**
- *  Initialize  UART
- *  @details  Initializes UART
- */
 extern void                   uart_init(void);
 
-/**
- *  Send character
- *  @details  Sends character
- *  @param    ch  character to be transmitted
- */
 extern void                   uart_putc (unsigned char ch);
 
-/**
- *  Send string
- *  @details  Sends '\\0'-terminated string
- *  @param    s string to be transmitted
- */
 extern void                   uart_puts (const char * s);
 
-/**
- *  Send string (stored in program memory)
- *  @details  Sends String stored in program memory (e.g. flash memory)
- *  @param    s program memory string to be transmitted
- */
 extern void                   uart_puts_p(const char *s );
 
 /**
