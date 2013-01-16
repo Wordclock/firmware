@@ -139,7 +139,7 @@ void uart_putc(unsigned char c)
 }
 
 /**
- * @brief Transmits a string
+ * @brief Transmits a complete string
  *
  * This functions transmits a complete string. The string needs to be null
  * terminated. Internally it makes use of uart_putc(), so each character gets
@@ -160,7 +160,7 @@ void uart_puts(const char* s)
 }
 
 /**
- * @brief Transmits a string stored in program memory
+ * @brief Transmits a complete string stored in program memory
  *
  * This functions transmits a complete string stored in program memory. The
  * string needs to be null terminated. Internally it makes use of
@@ -184,7 +184,7 @@ void uart_puts_p(const char* s)
 }
 
 /**
- * @brief ISR for data received on UART
+ * @brief ISR for data received over UART
  *
  * This ISR is only available when BOOTLOADER_RESET_UART is enabled. When a "R"
  * is received, it will reset the microcontroller and start the bootloader.
