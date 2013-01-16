@@ -54,10 +54,9 @@
  * @brief The pin the MISO line of the SPI is attached to
  *
  * Although this pin is actually not needed to output data, it has to be set
- * to input in order for the SPI to act as master, see [1], page 163,
- * table 19-1.
+ * to input in order for the SPI to act as master, see [1], p. 163, table 19-1.
  *
- * [1] http://www.atmel.com/images/doc2545.pdf
+ * [1]: http://www.atmel.com/images/doc2545.pdf
  */
 #define SHIFT_SR_SPI_MISO PIN4
 
@@ -84,6 +83,11 @@
  * control of the SPI module. Afterwards data can be output using
  * shift24_output().
  *
+ * You'll find a description of the various registers used in this function at
+ * [1], p. 168f, section 19.5.1.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
  * @see shift24_output()
  */
 void shift24_init (void)
@@ -107,7 +111,7 @@ void shift24_init (void)
 }
 
 /**
- * @brief Outputs the given over the Serial Peripheral Interface (SPI)
+ * @brief Outputs the given data over the Serial Peripheral Interface (SPI)
  *
  * This function is responsible for the actual output. It takes the given data
  * at blocks of eight bits and puts them into the appropriate register (SPDR).
