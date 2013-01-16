@@ -39,11 +39,11 @@
 
 extern void uart_init(void);
 
-extern void uart_putc(unsigned char ch);
+extern void uart_putc(unsigned char c);
 
 extern void uart_puts(const char* s);
 
-extern void uart_puts_p(const char*s);
+extern void uart_puts_p(const char* s);
 
 /**
  * @brief Macro used to automatically put a string constant into program memory

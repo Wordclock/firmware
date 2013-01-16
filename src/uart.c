@@ -127,14 +127,14 @@ void uart_init(void)
  * possible that the last transmission is not yet completed, so that the
  * UDRE0 bit within the UCSR0A register needs to be polled (busy waiting).
  *
- * @param ch Character to transmit
+ * @param c Character to transmit
  */
-void uart_putc(unsigned char ch)
+void uart_putc(unsigned char c)
 {
 
 	while (!(UCSR0A & _BV(UDRE0)));
 
-	UDR0 = ch;
+	UDR0 = c;
 
 }
 
@@ -166,16 +166,16 @@ void uart_puts(const char* s)
  * string needs to be null terminated. Internally it makes use of
  * pgm_read_byte() to retrieve the data and uart_putc() to transmit it.
  *
- * @param progmem_s Pointer to string stored in program memory to transmit
+ * @param s Pointer to string stored in program memory to transmit
  * @see uart_putc()
  * @see pgm_read_byte()
  */
-void uart_puts_p(const char* progmem_s)
+void uart_puts_p(const char* s)
 {
 
 	char ch;
 
-	while ((ch = pgm_read_byte(progmem_s++)) != '\0') {
+	while ((ch = pgm_read_byte(s++)) != '\0') {
 
 		uart_putc(ch);
 
