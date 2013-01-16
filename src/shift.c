@@ -88,20 +88,20 @@
  */
 void shift24_init (void)
 {
-  SHIFT_SR_SPI_DDR |= (1<< SHIFT_SR_SPI_MOSI) 
-                   |  (1 << SHIFT_SR_SPI_RCLK)
-                   |  (1 << SHIFT_SR_SPI_SCK);
-  SHIFT_SR_SPI_DDR  &= ~(1<< SHIFT_SR_SPI_MISO); /* MISO muss eingang sein */
-  SHIFT_SR_SPI_PORT |= (1<< SHIFT_SR_SPI_RCLK)
-                    |  (1<< SHIFT_SR_SPI_MISO);
+  SHIFT_SR_SPI_DDR |= (_BV(SHIFT_SR_SPI_MOSI))
+                   |  (_BV(SHIFT_SR_SPI_RCLK))
+                   |  (_BV(SHIFT_SR_SPI_SCK));
+  SHIFT_SR_SPI_DDR  &= ~(_BV(SHIFT_SR_SPI_MISO)); /* MISO muss eingang sein */
+  SHIFT_SR_SPI_PORT |= (_BV(SHIFT_SR_SPI_RCLK))
+                    |  (_BV(SHIFT_SR_SPI_MISO));
 
    // SPI als Master 
    // High-Bits zuerst 
    // SCK ist HIGH wenn inaktiv 
-   SPCR = (1 << SPE) | (1 << MSTR) | (1 << CPOL);
+   SPCR = (_BV(SPE)) | (_BV(MSTR)) | (_BV(CPOL));
 	
    // maximale Geschwindigkeit: F_CPU / 2 
-   SPSR |= (1 << SPI2X);
+   SPSR |= (_BV(SPI2X));
 
    shift24_output(0); /* send dummybytes to intialize */
 }
@@ -132,18 +132,18 @@ shift24_output (uint32_t data)
 
  
   SPDR = u2;                      // SPDR schreiben startet Uebertragung 
-  while (!(SPSR & (1 << SPIF)));  // warten auf Ende der Uebertragung für dieses Byte
+  while (!(SPSR & (_BV(SPIF))));  // warten auf Ende der Uebertragung für dieses Byte
 
   uint8_t u1 = (uint8_t)(u16);
   SPDR = u1;
-  while (!(SPSR & (1 << SPIF)));
+  while (!(SPSR & (_BV(SPIF))));
 
   SPDR = u0;
-  while (!(SPSR & (1 << SPIF)));
+  while (!(SPSR & (_BV(SPIF))));
 
   /* latch data */
-  SHIFT_SR_SPI_PORT &= ~(1<< SHIFT_SR_SPI_RCLK);
-  SHIFT_SR_SPI_PORT |=  (1<< SHIFT_SR_SPI_RCLK);
+  SHIFT_SR_SPI_PORT &= ~(_BV(SHIFT_SR_SPI_RCLK));
+  SHIFT_SR_SPI_PORT |=  (_BV(SHIFT_SR_SPI_RCLK));
 }
 
 
