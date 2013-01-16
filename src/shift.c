@@ -50,6 +50,16 @@
 #define SHIFT_SR_SPI_RCLK PIN2
 #define SHIFT_SR_SPI_SCK  PIN5
 
+/**
+ * @brief Initializes this module
+ *
+ * This function has to be called once before using shift24_output(). It sets
+ * up the hardware by writing the right values into various registers in
+ * control of the SPI module. Afterwards data can be output using
+ * shift24_output().
+ *
+ * @see shift24_output()
+ */
 void shift24_init (void)
 {
   SHIFT_SR_SPI_DDR |= (1<< SHIFT_SR_SPI_MOSI) 
@@ -70,6 +80,23 @@ void shift24_init (void)
    shift24_output(0); /* send dummybytes to intialize */
 }
 
+/**
+ * @brief Outputs the given over the Serial Peripheral Interface (SPI)
+ *
+ * This function is responsible for the actual output. It takes the given data
+ * at blocks of eight bits and puts them into the appropriate register (SPDR).
+ * After the transfer has completed it takes the next byte.
+ *
+ * Before this function can be used, the module needs to be initialized by
+ * calling shift24_init().
+ *
+ * Although the argument accepts 32 bits (uint32_t), only 24 of the least
+ * significant bits will be output. The eight most significant bits are
+ * completely ignored.
+ *
+ * @param value Data to be output
+ * @see shift24_init()
+ */
 void
 shift24_output (uint32_t value)
 {
