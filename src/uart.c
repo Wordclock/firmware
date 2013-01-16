@@ -39,10 +39,15 @@
 #include "main.h"
 
 #if (BOOTLOADER_RESET_UART == 1)
-#if (BOOTLOADER_RESET_WDT == 1)
-#include <avr/wdt.h>
-#endif
-#include <avr/interrupt.h>
+
+	#include <avr/interrupt.h>
+
+	#if (BOOTLOADER_RESET_WDT == 1)
+
+		#include <avr/wdt.h>
+
+	#endif
+
 #endif
 
 /**
@@ -65,19 +70,53 @@
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  */
-void
-uart_init (void)
+void uart_init(void)
 {
-#if (BOOTLOADER_RESET_UART == 1)
-  UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);                                  // activate UART0 TX,RX,RXINT
-#else
-  UCSR0B |= _BV(TXEN0);                                                         // activate UART0 TX
-#endif
-  UBRR0H = UBRR_VALUE;                                                          // store baudrate (upper byte)
-  UBRR0L = UBRR_VALUE;                                                          // store baudrate (lower byte)
-#if USE_2X
-  UCSR0A = _BV(U2X);
-#endif
+
+	/*
+	 * Check whether bootloader support is enabled
+	 */
+	#if (BOOTLOADER_RESET_UART == 1)
+
+		/*
+		 * Bootloader support is activated, both receiver and transmitter are
+		 * needed
+		 *
+		 * TXEN0: Enable transmitter
+		 * RXEN0: Enable receiver
+		 * RXCIE0: Enable receiver
+		 */
+		UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);
+
+	#else
+
+		/*
+		 * Bootloader support is disabled, only transmitter is needed
+		 *
+		 * TXEN0: Enable transmitter
+		 */
+		UCSR0B |= _BV(TXEN0);
+
+	#endif
+
+	/*
+	 * Set baud rate according to calculated value
+	 */
+	UBRR0H = UBRR_VALUE;
+	UBRR0L = UBRR_VALUE;
+
+	/*
+	 * Check whether speed should be doubled
+	 */
+	#if USE_2X
+
+		/*
+		 * U2X: Double the UART transmission speed
+		 */
+		UCSR0A = _BV(U2X);
+
+	#endif
+
 }
 
 /**
@@ -90,15 +129,13 @@ uart_init (void)
  *
  * @param ch Character to transmit
  */
-void
-uart_putc (unsigned char ch)
+void uart_putc(unsigned char ch)
 {
-  while (!(UCSR0A & _BV(UDRE0)))
-  {
-    ;
-  }
 
-  UDR0 = ch;
+	while (!(UCSR0A & _BV(UDRE0)));
+
+	UDR0 = ch;
+
 }
 
 /**
@@ -111,13 +148,15 @@ uart_putc (unsigned char ch)
  * @param s Pointer to string to transmit
  * @see uart_putc()
  */
-void
-uart_puts (const char * s)
+void uart_puts(const char* s)
 {
-  while (*s)
-  {
-    uart_putc (*s++);
-  }
+
+	while(*s) {
+
+		uart_putc(*s++);
+
+	}
+
 }
 
 /**
@@ -131,15 +170,17 @@ uart_puts (const char * s)
  * @see uart_putc()
  * @see pgm_read_byte()
  */
-void
-uart_puts_p (const char * progmem_s)
+void uart_puts_p(const char* progmem_s)
 {
-  char ch;
 
-  while ((ch = pgm_read_byte (progmem_s++)) != '\0')
-  {
-    uart_putc (ch);
-  }
+	char ch;
+
+	while ((ch = pgm_read_byte(progmem_s++)) != '\0') {
+
+		uart_putc(ch);
+
+	}
+
 }
 
 /**
@@ -159,16 +200,42 @@ uart_puts_p (const char * progmem_s)
  * @see BOOTLOADER_RESET_WDT
  */
 #if (BOOTLOADER_RESET_UART == 1)
-ISR(USART_RX_vect){
-  if(UDR0=='R')                                                                 //Reset-Signal für BT-Bootloader bekommen?
-  {
-#if (BOOTLOADER_RESET_WDT == 1)                                                 // Reset via Watchdog
-    //cli();                                                                      // disable Interrupts - not neccessary because interupt context
-    wdt_enable(WDTO_15MS);                                                      // enable Watchdog Timer with lowest Timeout Value
-    while(1);                                                                   // will never end until Watchdog Reset
-#else
-    asm volatile ("jmp 0x3800");                                                // jump directly to chip45boot2 bootloader
-#endif
-  }
-}
+
+	ISR(USART_RX_vect)
+	{
+
+		/*
+		 * Check whether received data was R
+		 */
+		if (UDR0 == 'R') {
+
+			/*
+			 * Check whether reset should be performed using the watchdog timer
+			 */
+			#if (BOOTLOADER_RESET_WDT == 1)
+
+				/*
+				 * Enable watchdog timer with shortest possible value
+				 */
+				wdt_enable(WDTO_15MS);
+
+				/*
+				 * Do nothing and wait for the reset performed by the watchdog
+				 * timer
+				 */
+				while (1);
+
+			#else
+
+				/*
+				 * No actual reset needed, jump to chip45boot2 directly
+				 */
+				asm volatile("jmp 0x3800");
+
+			#endif
+
+		}
+
+	}
+
 #endif
