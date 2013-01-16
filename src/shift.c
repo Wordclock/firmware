@@ -86,14 +86,14 @@ void shift24_init (void)
  * significant bits will be output. The eight most significant bits are
  * completely ignored.
  *
- * @param value Data to be output
+ * @param data Data to be output
  * @see shift24_init()
  */
 void
-shift24_output (uint32_t value)
+shift24_output (uint32_t data)
 {
-  uint8_t u0 = (uint8_t)(value);     /* to if this somehow can be put between SPDR=x and while() */
-  uint16_t u16 = (uint16_t)(value  >>  8);
+  uint8_t u0 = (uint8_t)(data);     /* to if this somehow can be put between SPDR=x and while() */
+  uint16_t u16 = (uint16_t)(data  >>  8);
   uint8_t u2 = (uint8_t)(u16 >> 8);
 
  

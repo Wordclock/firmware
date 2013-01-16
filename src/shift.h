@@ -34,6 +34,6 @@
 
 extern void	shift24_init(void);
 
-extern void	shift24_output(uint32_t value);
+extern void	shift24_output(uint32_t data);
 
 #endif /* _WC_SHIFT_H_ */
