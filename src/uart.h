@@ -18,22 +18,19 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file uart.h
- * 
- *  Handles the hardware UART interface
+ * @brief Interface for access to the UART hardware
  *
- * \version $Id: uart.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
-* 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This defines an interface for access to the UART hardware. For now it is
+ * only possible to send data out, which is primarily used for debugging
+ * purposes. However if BOOTLOADER_RESET_UART is enabled a pretty basic ISR
+ * for receiving data is registered to process the reset in order to start
+ * the bootloader.
+ *
+ * @see BOOTLOADER_RESET_UART
+ * @see uart.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_UART_H_
 #define _WC_UART_H_
