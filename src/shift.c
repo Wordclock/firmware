@@ -44,6 +44,12 @@
 #include "main.h"
 #include "shift.h"
 
+#define SHIFT_SR_SPI_DDR  DDRB
+#define SHIFT_SR_SPI_PORT PORTB
+#define SHIFT_SR_SPI_MOSI PIN3
+#define SHIFT_SR_SPI_MISO PIN4 /* not used, but has to be input*/
+#define SHIFT_SR_SPI_RCLK PIN2
+#define SHIFT_SR_SPI_SCK  PIN5
 
 void shift24_init (void)
 {

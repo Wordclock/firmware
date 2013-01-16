@@ -32,15 +32,6 @@
 #ifndef _WC_SHIFT_H_
 #define _WC_SHIFT_H_
 
-#include "avr/io.h"
-
-#define SHIFT_SR_SPI_DDR  DDRB
-#define SHIFT_SR_SPI_PORT PORTB
-#define SHIFT_SR_SPI_MOSI PIN3
-#define SHIFT_SR_SPI_MISO PIN4 /* not used, but has to be input*/
-#define SHIFT_SR_SPI_RCLK PIN2
-#define SHIFT_SR_SPI_SCK  PIN5
-
 extern void		shift24_init (void);
 extern void		shift24_output (uint32_t value);
 
