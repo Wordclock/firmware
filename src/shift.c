@@ -126,15 +126,14 @@ void shift24_init (void)
 void
 shift24_output (uint32_t data)
 {
-  uint8_t u0 = (uint8_t)(data);     /* to if this somehow can be put between SPDR=x and while() */
-  uint16_t u16 = (uint16_t)(data  >>  8);
-  uint8_t u2 = (uint8_t)(u16 >> 8);
+  uint8_t u0 = (uint8_t)(data);
+  uint8_t u1 = (uint8_t)(data >> 8);
+  uint8_t u2 = (uint8_t)(data >> 16);
 
  
   SPDR = u2;                      // SPDR schreiben startet Uebertragung 
   while (!(SPSR & (_BV(SPIF))));  // warten auf Ende der Uebertragung für dieses Byte
 
-  uint8_t u1 = (uint8_t)(u16);
   SPDR = u1;
   while (!(SPSR & (_BV(SPIF))));
 
