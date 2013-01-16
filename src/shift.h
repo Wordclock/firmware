@@ -18,23 +18,16 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file shift.h
- * 
- *  The shift-module provides the interface to the SPI shift register cascade
+ * @brief Interface to the shift register cascade
  *
- * \version $Id: shift.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This module is used to output data to the shift registers. It makes use of
+ * the SPI interface. It needs to be initialized once using shift24_init().
+ * Afterwards data can be output by using shift24_output().
+ *
+ * @see shift.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #ifndef _WC_SHIFT_H_
 #define _WC_SHIFT_H_
