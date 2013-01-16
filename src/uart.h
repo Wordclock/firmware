@@ -37,13 +37,13 @@
 
 #include <avr/pgmspace.h>
 
-extern void                   uart_init(void);
+extern void uart_init(void);
 
-extern void                   uart_putc (unsigned char ch);
+extern void uart_putc(unsigned char ch);
 
-extern void                   uart_puts (const char * s);
+extern void uart_puts(const char* s);
 
-extern void                   uart_puts_p(const char *s );
+extern void uart_puts_p(const char*s);
 
 /**
  * @brief Macro used to automatically put a string constant into program memory
@@ -54,6 +54,6 @@ extern void                   uart_puts_p(const char *s );
  * @see PSTR()
  * @see uart_puts_p()
  */
-#define uart_puts_P(__s)      uart_puts_p(PSTR(__s))
+#define uart_puts_P(__s) uart_puts_p(PSTR(__s))
 
 #endif /* _WC_UART_H_ */
