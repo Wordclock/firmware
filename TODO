@@ -54,3 +54,5 @@
   use, as the module type should be known when actually building the clock,
   so it can be compiled with the support for the right module, which in return
   would save some program space and fasten up the initialization.
+
+- Fix header includes: It seems that various includes are actually not needed.
