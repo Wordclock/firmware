@@ -45,16 +45,14 @@
 #include <avr/interrupt.h>
 #endif
 
-#define UART_BAUD             9600L
+/**
+ * @brief The baud rate used for communication
+ *
+ * @see uart_init()
+ */
+#define BAUD 9600
 
-// calculate real baud rate:
-#define UBRR_VAL              ((F_CPU+UART_BAUD*8)/(UART_BAUD*16)-1)            // round
-#define BAUD_REAL             (F_CPU/(16*(UBRR_VAL+1)))                         // real baudrate
-#define BAUD_ERROR            ((BAUD_REAL*1000)/UART_BAUD)                      // error in promille
-
-#if ((BAUD_ERROR < 990) || (BAUD_ERROR > 1010))
-#  error Error of baud rate of RS232 UART is more than 1%. That is too high!
-#endif
+#include <util/setbaud.h>
 
 /**
  * @brief Initializes the UART hardware
@@ -75,8 +73,11 @@ uart_init (void)
 #else
   UCSR0B |= (1<<TXEN0);                                                         // activate UART0 TX
 #endif
-  UBRR0H = UBRR_VAL >> 8;                                                       // store baudrate (upper byte)
-  UBRR0L = UBRR_VAL & 0xFF;                                                     // store baudrate (lower byte)
+  UBRR0H = UBRR_VALUE;                                                          // store baudrate (upper byte)
+  UBRR0L = UBRR_VALUE;                                                          // store baudrate (lower byte)
+#if USE_2X
+  UCSR0A = _BV(U2X);
+#endif
 }
 
 /**
