@@ -32,7 +32,8 @@
 #ifndef _WC_SHIFT_H_
 #define _WC_SHIFT_H_
 
-extern void		shift24_init (void);
-extern void		shift24_output (uint32_t value);
+extern void	shift24_init(void);
+
+extern void	shift24_output(uint32_t value);
 
 #endif /* _WC_SHIFT_H_ */
