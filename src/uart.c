@@ -56,10 +56,16 @@
 #  error Error of baud rate of RS232 UART is more than 1%. That is too high!
 #endif
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Initialize  UART
- *  @details  Initializes UART
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Initializes the UART hardware
+ *
+ * This functions initializes the UART hardware. It needs to be called once
+ * **before** other functions of this module can be used.
+ *
+ * For a detailed description of the various registers used here, take a look
+ * at [1], p. 190f.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
  */
 void
 uart_init (void)
@@ -73,11 +79,15 @@ uart_init (void)
   UBRR0L = UBRR_VAL & 0xFF;                                                     // store baudrate (lower byte)
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Send character
- *  @details  Sends character
- *  @param    ch character to be transmitted
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Transmits a single character
+ *
+ * This functions transmits a single character using the UART hardware. It
+ * basically just puts the data into the UDR0 register. However it might be
+ * possible that the last transmission is not yet completed, so that the
+ * UDRE0 bit within the UCSR0A register needs to be polled (busy waiting).
+ *
+ * @param ch Character to transmit
  */
 void
 uart_putc (unsigned char ch)
@@ -90,11 +100,15 @@ uart_putc (unsigned char ch)
   UDR0 = ch;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Send string
- *  @details  Sends '\0'-terminated string
- *  @param    s string to be transmitted
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Transmits a string
+ *
+ * This functions transmits a complete string. The string needs to be null
+ * terminated. Internally it makes use of uart_putc(), so each character gets
+ * transmitted individually.
+ *
+ * @param s Pointer to string to transmit
+ * @see uart_putc()
  */
 void
 uart_puts (const char * s)
@@ -105,11 +119,16 @@ uart_puts (const char * s)
   }
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Send string (stored in program memory)
- *  @details  Sends String stored in program memory (e.g. flash memory)
- *  @param    s program memory string to be transmitted
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Transmits a string stored in program memory
+ *
+ * This functions transmits a complete string stored in program memory. The
+ * string needs to be null terminated. Internally it makes use of
+ * pgm_read_byte() to retrieve the data and uart_putc() to transmit it.
+ *
+ * @param progmem_s Pointer to string stored in program memory to transmit
+ * @see uart_putc()
+ * @see pgm_read_byte()
  */
 void
 uart_puts_p (const char * progmem_s)
@@ -122,10 +141,21 @@ uart_puts_p (const char * progmem_s)
   }
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  RX Interrupt on UART
- *  @details  jump to the bootloader if 'R' was received via WDT or direct jump
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief ISR for data received on UART
+ *
+ * This ISR is only available when BOOTLOADER_RESET_UART is enabled. When a "R"
+ * is received, it will reset the microcontroller and start the bootloader.
+ *
+ * Depending on the setting of BOOTLOADER_RESET_WDT this is either achieved by
+ * enabling the watchdog timer and waiting for it to reset the microcontroller,
+ * which will then start the bootloader or by directly jumping to it. The
+ * latter is needed for [chip45boot2][1].
+ *
+ * [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
+ *
+ * @see BOOTLOADER_RESET_UART
+ * @see BOOTLOADER_RESET_WDT
  */
 #if (BOOTLOADER_RESET_UART == 1)
 ISR(USART_RX_vect){
