@@ -65,7 +65,13 @@ extern void                   uart_puts (const char * s);
 extern void                   uart_puts_p(const char *s );
 
 /**
- * Macro to automatically put a string constant into program memory
+ * @brief Macro used to automatically put a string constant into program memory
+ *
+ * This macro puts the given string automatically into program memory (using
+ * PSTR()) and replaces the call with a call to uart_puts_p().
+ *
+ * @see PSTR()
+ * @see uart_puts_p()
  */
 #define uart_puts_P(__s)      uart_puts_p(PSTR(__s))
 
