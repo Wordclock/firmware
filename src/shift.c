@@ -90,24 +90,41 @@
  *
  * @see shift24_output()
  */
-void shift24_init (void)
-{
-  SHIFT_SR_SPI_DDR |= (_BV(SHIFT_SR_SPI_MOSI))
-                   |  (_BV(SHIFT_SR_SPI_RCLK))
-                   |  (_BV(SHIFT_SR_SPI_SCK));
-  SHIFT_SR_SPI_DDR  &= ~(_BV(SHIFT_SR_SPI_MISO)); /* MISO muss eingang sein */
-  SHIFT_SR_SPI_PORT |= (_BV(SHIFT_SR_SPI_RCLK))
-                    |  (_BV(SHIFT_SR_SPI_MISO));
+void shift24_init(void) {
 
-   // SPI als Master 
-   // High-Bits zuerst 
-   // SCK ist HIGH wenn inaktiv 
-   SPCR = (_BV(SPE)) | (_BV(MSTR)) | (_BV(CPOL));
+	/*
+	 * Set the data direction registers to enable SPI master mode
+	 */
+	SHIFT_SR_SPI_DDR |= _BV(SHIFT_SR_SPI_MOSI) | _BV(SHIFT_SR_SPI_RCLK)
+			| _BV(SHIFT_SR_SPI_SCK);
+	SHIFT_SR_SPI_DDR  &= ~(_BV(SHIFT_SR_SPI_MISO));
+
+	/*
+	 * Set RCLK line to high. When data is output it will be set low and high
+	 * again, as the shift registers only latch the data at a low-to-high
+	 * transition.
+	 *
+	 * Furthermore enable the pull-up at the MOSI pin, just in case.
+	 */
+	SHIFT_SR_SPI_PORT |= _BV(SHIFT_SR_SPI_RCLK) | _BV(SHIFT_SR_SPI_MISO);
+
+	/*
+	 * SPE: Enable SPI hardware
+	 * MSTR: Select SPI master mode
+	 * CPOL: SCK is high when idle
+	 */
+	SPCR = _BV(SPE) | _BV(MSTR) | _BV(CPOL);
 	
-   // maximale Geschwindigkeit: F_CPU / 2 
-   SPSR |= (_BV(SPI2X));
+	/*
+	 * Double SPI speed
+	 */
+	SPSR |= _BV(SPI2X);
 
-   shift24_output(0); /* send dummybytes to intialize */
+	/*
+	 * Send out 0 to get well defined states
+	 */
+	shift24_output(0);
+
 }
 
 /**
@@ -127,26 +144,34 @@ void shift24_init (void)
  * @param data Data to be output
  * @see shift24_init()
  */
-void
-shift24_output (uint32_t data)
-{
-  uint8_t u0 = (uint8_t)(data);
-  uint8_t u1 = (uint8_t)(data >> 8);
-  uint8_t u2 = (uint8_t)(data >> 16);
+void shift24_output(uint32_t data) {
 
- 
-  SPDR = u2;                      // SPDR schreiben startet Uebertragung 
-  while (!(SPSR & (_BV(SPIF))));  // warten auf Ende der Uebertragung für dieses Byte
+	uint8_t u0 = (uint8_t)(data);
+	uint8_t u1 = (uint8_t)(data >> 8);
+	uint8_t u2 = (uint8_t)(data >> 16);
 
-  SPDR = u1;
-  while (!(SPSR & (_BV(SPIF))));
+	/*
+	 * Writing to SPDR starts the transmission. Afterwards wait until the SPIF
+	 * bit in SPSR is cleared, which indicates that the transmission was
+	 * completed, so that the next transmission can be started.
+	 */
 
-  SPDR = u0;
-  while (!(SPSR & (_BV(SPIF))));
+	SPDR = u2;
+	while (!(SPSR & (_BV(SPIF))));
 
-  /* latch data */
-  SHIFT_SR_SPI_PORT &= ~(_BV(SHIFT_SR_SPI_RCLK));
-  SHIFT_SR_SPI_PORT |=  (_BV(SHIFT_SR_SPI_RCLK));
+	SPDR = u1;
+	while (!(SPSR & (_BV(SPIF))));
+
+	SPDR = u0;
+	while (!(SPSR & (_BV(SPIF))));
+
+	/*
+	 * Transfer contents of shift register stages to storage registers and
+	 * output them in parallel. See [1], p. 5, Table 3, for details.
+	 *
+	 * [1]: http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf
+	 */
+	SHIFT_SR_SPI_PORT &= ~(_BV(SHIFT_SR_SPI_RCLK));
+	SHIFT_SR_SPI_PORT |=  (_BV(SHIFT_SR_SPI_RCLK));
+
 }
-
-
