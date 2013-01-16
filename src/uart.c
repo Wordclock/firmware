@@ -69,9 +69,9 @@ void
 uart_init (void)
 {
 #if (BOOTLOADER_RESET_UART == 1)
-  UCSR0B |= (1<<TXEN0)|(1<<RXEN0)|(1<<RXCIE0);                                  // activate UART0 TX,RX,RXINT
+  UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);                                  // activate UART0 TX,RX,RXINT
 #else
-  UCSR0B |= (1<<TXEN0);                                                         // activate UART0 TX
+  UCSR0B |= _BV(TXEN0);                                                         // activate UART0 TX
 #endif
   UBRR0H = UBRR_VALUE;                                                          // store baudrate (upper byte)
   UBRR0L = UBRR_VALUE;                                                          // store baudrate (lower byte)
@@ -93,7 +93,7 @@ uart_init (void)
 void
 uart_putc (unsigned char ch)
 {
-  while (!(UCSR0A & (1<<UDRE0)))
+  while (!(UCSR0A & _BV(UDRE0)))
   {
     ;
   }
