@@ -54,24 +54,10 @@
 
 
 
-/**  Initialize the adc for ldr measurements.*/
 extern void     ldr_init (void);
 
-/**
- *  returns the smoothed brightness
- *  @details  The brightness is low pass filtered.
- *            The mean value from the last LDR_ARRAY_SIZE measurements will be returned.
- *  @return   A 8bit value containing the brightness.\n
- *            Brightness means that the value is inverse proportional 
- *            to the adc results from reading the ldr. \n
- *            A value of 255 means very bright and 0 means very dark.
- */
 extern uint8_t  ldr_get_brightness (void);
 
-/**
- *  Handles the reading of the ldr with the ADC.
- *  @details  Has to be called regularly. (intendet to be called at 1Hz)
- */
 extern void     ldr_ISR  (void);
 
 #endif /* _WC_LDR_H_ */
