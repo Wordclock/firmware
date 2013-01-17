@@ -20,15 +20,14 @@
 
 /**
  * @file timer.c
- * @brief Implementation of the interface for access to the timers including
- * the appropriate ISRs
+ * @brief Implementation of interface for access to the timer to execute
+ * functions on a regular basis
  *
- * This file contains the implementation of the interface for access to the
- * timers. Furthermore the appropriate timer ISRs are registered and defined
- * here.
+ * This file contains the implementation of the interface for access to the timer
+ * to execute functions on a regular basis. Furthermore the appropriate timer
+ * ISR is registered and defined here.
  *
- * For now the whole project gets along with a single timer, namely
- * Timer/Counter1. For a detailed description of this unit see [1], p. 108f.
+ * For a detailed description of this unit see [1], p. 108f.
  *
  * The various functions needed to be called on a regular basis can simply be
  * added to the appropriate macro definitions, that is INTERRUPT_10000HZ up to
@@ -41,6 +40,7 @@
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  *
+ * @see timer_init()
  * @see timer.h
  */
 

@@ -20,10 +20,16 @@
 
 /**
  * @file timer.h
- * @brief Interface for access to the timers including the appropriate ISRs
+ * @brief Interface for access to the timer to execute functions on a regular
+ * basis
  *
- * This module is responsible for setting up the timers of the microcontroller.
- * It's basically enough to initialize the module by calling timer_init().
+ * This module is responsible for setting up the timer including the
+ * appropriate ISR. This ISR will then call various functions on a regular
+ * basis.
+ *
+ * In order to initialize this module timer_init() needs to be called.
+ * Afterwards the appropriate ISR will be called automatically - presumed
+ * that interrupts are enabled globally.
  *
  * @see timer.c
  */
