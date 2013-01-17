@@ -19,26 +19,20 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file ldr.h
- * 
- *  Handles the ldr sensor.
- *  \details
- *      Written for ATMEGA88 @ 8 MHz. \n
+ * @brief Interface for handling access to the LDR sensor
  *
- * \version $Id: ldr.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 René Harsch ( rene@harsch.net )
- * \author Copyright (c) 2010 Vlad Tepesch  
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This module handles the access to the brightness measured by the LDR sensor.
+ * The returned brightness is the mean value of the last couple of
+ * measurements, defined by LDR_ARRAY_SIZE.
+ *
+ * It is used to enable the reaction to changes of the ambient light, e.g.
+ * increasing the brightness of the LEDs involved when the light in the room
+ * the Wordclock is in is switched on.
+ *
+ * @see ldr.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #ifndef _WC_LDR_H_
 #define _WC_LDR_H_
