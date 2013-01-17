@@ -116,23 +116,23 @@ void ldr_init(void)
 	 * Alignment: Left adjusted
 	 * Channel: 0
 	 */
-	ADMUX = (1<<REFS0) | (1<<ADLAR);
+	ADMUX = _BV(REFS0) | _BV(ADLAR);
 
 	/*
 	 * ADEN: Enable ADC
 	 * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
 	 */
-	ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0);
+	ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
 
 	/*
 	 * Start first conversion
 	 */
-	ADCSRA |= (1<<ADSC);
+	ADCSRA |= _BV(ADSC);
 
 	/*
 	 * Wait for conversion to finish
 	 */
-	while (ADCSRA & (1<<ADSC));
+	while (ADCSRA & _BV(ADSC));
 
 	/*
 	 * Read out the measured value
@@ -171,7 +171,7 @@ void ldr_init(void)
 	/*
 	 * Start next measurement, which will then be handled by ldr_ISR()
 	 */
-	ADCSRA |= (1<<ADSC);
+	ADCSRA |= _BV(ADSC);
 
 }
 
@@ -238,7 +238,7 @@ void ldr_ISR(void)
 	/*
 	 * Check whether last conversion has been completed
 	 */
-	if ((ADCSRA & (1<<ADSC))) {
+	if ((ADCSRA & _BV(ADSC))) {
 
 		/*
 		 * Read out value of last conversion
@@ -292,7 +292,7 @@ void ldr_ISR(void)
 		 * Start next conversion, which will be handled in the next
 		 * iteration of this function
 		 */
-		ADCSRA |= (1<<ADSC);
+		ADCSRA |= _BV(ADSC);
 
 	}
 
