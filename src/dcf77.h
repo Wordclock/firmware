@@ -20,12 +20,27 @@
 
 /**
  * @file dcf77.h
- * @brief Interface for access to the DCF77 time signal
+ * @brief Header file for access to the DCF77 time signal
  *
- * DCF77 is used to get the current date and time automatically. This file
- * defines the interface to get access to the date and time information. There
- * is an initialization phase, which will try to detect the availability of the
- * module and determine whether or not the internal pull up resistor is needed.
+ * DCF77 is used to get the current date and time automatically. This contains
+ * the header declaration to get access to the date and time information.
+ *
+ * In order for this module to work a DCF77 receiver is needed, which looks
+ * something like [this][1].
+ *
+ * This module is reported to work with the following receivers:
+ *
+ * * [DCF-Empfangsmodul DCF1][2] from pollin.de
+ * * [C-Control DCF-Empfängerplatine][3] from conrad.de
+ * * [DCF 77 Empfängermodul][4] from reichelt.de
+ *
+ * All these receivers output the demodulated signal digitally. It then needs
+ * to be decoded, which is what this module is all about.
+ *
+ * [1]: https://en.wikipedia.org/wiki/File:Low_cost_DCF77_receiver.jpg
+ * [2]: http://www.pollin.de/shop/dt/NTQ5OTgxOTk-/Bausaetze_Module/Module/DCF_Empfangsmodul_DCF1.html
+ * [3]: http://www.conrad.de/ce/de/product/641138/C-Control-DCF-Empfaengerplatine
+ * [4]: https://secure.reichelt.de/DCF77-MODUL/3/index.html?ACTION=3&GROUPID=3636&ARTICLE=57772
  *
  * @see dcf77.c
  */
