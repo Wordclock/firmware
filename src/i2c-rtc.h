@@ -18,22 +18,23 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file i2c-rtc.h
- * 
- *  Handling of an DS1307 I2C real time clock
+ * @brief Header for handling access to the DS1307 RTC
  *
- * \version $Id: i2c-rtc.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The [RTC][1] (Real-time clock) is connected to the microcontroller via the
+ * [I2C][2] bus. This header makes some functions available, which can be used
+ * to access the RTC module used in this project, namely the [DS1307][3].
+ *
+ * Internally it makes use of i2c-master.h quite heavily.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Real-time_clock
+ * [2]: https://en.wikipedia.org/wiki/I2c
+ * [3]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+ *
+ * @see i2c-rtc.c
+ * @see i2c-master.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 
