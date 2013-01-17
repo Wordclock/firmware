@@ -138,8 +138,8 @@ void timer_init(void)
 	 * Mode: 14 (Fast PWM)
 	 * Prescaler: 1
 	 */
-	TCCR1A = (1 << WGM11);
-	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
+	TCCR1A = _BV(WGM11);
+	TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);
 
 	/*
 	 * ICIE1: Input capture interrupt enable
