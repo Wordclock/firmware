@@ -75,6 +75,6 @@ extern bool dcf77_getDateTime(datetime_t* DateTime_p);
  */
 #define dcf77_ISR()
 
-#endif  /* (DCF_PRESENT == 1) */
+#endif /* (DCF_PRESENT == 1) */
 
 #endif /* _WC_DCF77_H_ */
