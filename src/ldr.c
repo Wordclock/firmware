@@ -50,21 +50,63 @@
 #include "ldr.h"
 #include "base.h"
 
-/** contains the last LDR_ARRAY_SIZE measurements */
+/**
+ * @brief Contains the last measurements taken
+ *
+ * This effectively acts as a low pass filter, as the brightness calculated by
+ * ldr_get_brightness() will be the mean value of the values stored in this
+ * array. The array is as big as defined in LDR_ARRAY_SIZE.
+ *
+ * This is actually a [ring buffer][1], which means that LDR_ARRAY_SIZE
+ * should be a multiple of two.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Circular_buffer
+ *
+ * @see LDR_ARRAY_SIZE
+ * @see ldr_get_brightness()
+ * @see ldr_ISR()
+ */
 static volatile uint8_t             array[LDR_ARRAY_SIZE];
 
-/** 
- *  contains the sum of all elements of array 
- *  \details  This is redundant but saves the effort to calculate the sum
- *            of all buffer elements after every measurements
+/**
+ * @brief Contains the sum of all elements in array
+ *
+ * Although this is redundant and could be calculated by simply adding up the
+ * values in array itself, it makes things faster when it comes down to
+ * actually returning the "current" brightness with ldr_get_brightness().
+ *
+ * \warning: Consider that the datatype must be able to store values at least
+ * as big as LDR_ARRAY_SIZE * 255.
+ *
+ * @see array
+ * @see ldr_get_brightness()
+ * @see ldr_ISR()
  */
 static volatile uint16_t            curr_sum;
 
 
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * ldr_init: initialize adc for ldr
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Initializes this module
+ *
+ * This function needs to be called **once** before any brightness can be
+ * retrieved using ldr_get_brightness(). It primarily initializes the ADC
+ * unit, see [1], p. 244f, chapter 24 for details.
+ *
+ * For an overview of the various registers involved take a look at [1],
+ * p. 255f.
+ *
+ * Besides setting up the hardware this function takes the first measurement
+ * and saves it, so that ldr_get_brightness() can return it immediately when
+ * called afterwards.
+ *
+ * If the logging for this module is activated (LOG_LDR == 1), it also will
+ * output the value of the first measurement.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see curr_sum
+ * @see LOG_LDR
  */
 void
 ldr_init (void)
@@ -104,9 +146,25 @@ ldr_init (void)
   return;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * ldr_get_brightness: returns the average of brightness 
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Returns the "current" brightness - calculated from the last taken
+ * measurements
+ *
+ * Before this function can be called, the module first needs to be initialized
+ * by calling ldr_init().
+ *
+ * This function returns the "current" brightness. "Current" means that it
+ * is actually calculated from the last taken measurements. The number of
+ * measurements taken into account is defined in LDR_ARRAY_SIZE.
+ *
+ * The returned value is actually the mean value of the last measurements.
+ * This makes it more robust against sudden changes of the ambient light.
+ *
+ *
+ * @see ldr_init()
+ * @see LDR_ARRAY_SIZE
+ * @return Eight bit value containing the brightness. 255 represents the
+ * 			maximum brightness, 0 represents darkness.
  */
 uint8_t
 ldr_get_brightness (void)
@@ -115,11 +173,29 @@ ldr_get_brightness (void)
 }
 
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * ldr isr, called every 1 sec
- * recalculate our new summary and start a new conversion
- *---------------------------------------------------------------------------------------------------------------------------------------------------
- * @see INTERRUPT_1HZ
+/**
+ * @brief Takes the measurement and recalculates the new value to return
+ *
+ * This function is the actual workhorse. It should be called regularly, e.g.
+ * once every second. This is achieved by using the various macros defined in
+ * timer.c, namely INTERRUPT_1HZ.
+ *
+ * It will read out the value from the ADC measurement started in the last
+ * cycle and put it into array. It will then also recalculate the new value
+ * for curr_sum, which is needed by ldr_get_brightness().
+ *
+ * If logging is enabled it will also output the value of the measurement
+ * taken.
+ *
+ * It uses an counter in order to keep track of the current index for array.
+ * It uses a modulo operation to get the new value of this index, which is
+ * reason why LDR_ARRAY_SIZE should be a multiple of 2, so this can be
+ * performed by a appropriate bit shift.
+ *
+ * @see array
+ * @see curr_sum
+ * @see LOG_LDR
+ * @see LDR_ARRAY_SIZE
  */
 void
 ldr_ISR (void)
