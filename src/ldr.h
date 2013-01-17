@@ -49,15 +49,12 @@
  *
  * @see ldr_get_brightness()
  */
-#define LDR_ARRAY_SIZE     16
+#define LDR_ARRAY_SIZE 16
 
+extern void ldr_init(void);
 
+extern uint8_t ldr_get_brightness(void);
 
-
-extern void     ldr_init (void);
-
-extern uint8_t  ldr_get_brightness (void);
-
-extern void     ldr_ISR  (void);
+extern void ldr_ISR(void);
 
 #endif /* _WC_LDR_H_ */
