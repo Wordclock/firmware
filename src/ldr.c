@@ -53,30 +53,30 @@
  *
  * This effectively acts as a low pass filter, as the brightness calculated by
  * ldr_get_brightness() will be the mean value of the values stored in this
- * array. The array is as big as defined in LDR_ARRAY_SIZE.
+ * array. The array is as big as defined in MEASUREMENTS_ARRAY_SIZE.
  *
- * This is actually a [ring buffer][1], which means that LDR_ARRAY_SIZE
- * should be a multiple of two.
+ * This is actually a [ring buffer][1], which means that
+ * MEASUREMENTS_ARRAY_SIZE should be a multiple of two.
  *
  * [1]: https://en.wikipedia.org/wiki/Circular_buffer
  *
- * @see LDR_ARRAY_SIZE
+ * @see MEASUREMENTS_ARRAY_SIZE
  * @see ldr_get_brightness()
  * @see ldr_ISR()
  */
-static volatile uint8_t array[LDR_ARRAY_SIZE];
+static volatile uint8_t measurements[MEASUREMENTS_ARRAY_SIZE];
 
 /**
- * @brief Contains the sum of all elements in array
+ * @brief Contains the sum of all elements in measurements
  *
  * Although this is redundant and could be calculated by simply adding up the
- * values in array itself, it makes things faster when it comes down to
+ * values in measurements itself, it makes things faster when it comes down to
  * actually returning the "current" brightness with ldr_get_brightness().
  *
  * \warning: Consider that the datatype must be able to store values at least
- * as big as LDR_ARRAY_SIZE * 255.
+ * as big as MEASUREMENTS_ARRAY_SIZE * 255.
  *
- * @see array
+ * @see measurements
  * @see ldr_get_brightness()
  * @see ldr_ISR()
  */
@@ -140,19 +140,19 @@ void ldr_init(void)
 	result = ADCH;
 
 	/*
-	 * Initialize array by putting the measured value in every field
+	 * Initialize measurements by putting the measured value in every field
 	 */
-	for (int i = 0; i < LDR_ARRAY_SIZE; i++) {
+	for (int i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
 
-		array[i] = result;
+		measurements[i] = result;
 
 	}
 
 	/*
-	 * Initialize curr_sum by multiplying it with LDR_ARRAY_SIZE
+	 * Initialize curr_sum by multiplying it with MEASUREMENTS_ARRAY_SIZE
 	 */
 	curr_sum = result;
-	curr_sum *= LDR_ARRAY_SIZE;
+	curr_sum *= MEASUREMENTS_ARRAY_SIZE;
 
 	/*
 	 * Check whether logging is enabled
@@ -184,21 +184,21 @@ void ldr_init(void)
  *
  * This function returns the "current" brightness. "Current" means that it
  * is actually calculated from the last taken measurements. The number of
- * measurements taken into account is defined in LDR_ARRAY_SIZE.
+ * measurements taken into account is defined in MEASUREMENTS_ARRAY_SIZE.
  *
  * The returned value is actually the mean value of the last measurements.
  * This makes it more robust against sudden changes of the ambient light.
  *
  *
  * @see ldr_init()
- * @see LDR_ARRAY_SIZE
+ * @see MEASUREMENTS_ARRAY_SIZE
  * @return Eight bit value containing the brightness. 255 represents the
  * 			maximum brightness, 0 represents darkness.
  */
 uint8_t ldr_get_brightness(void)
 {
 
-	return  255 - (curr_sum / LDR_ARRAY_SIZE);
+	return  255 - (curr_sum / MEASUREMENTS_ARRAY_SIZE);
 
 }
 
@@ -211,21 +211,21 @@ uint8_t ldr_get_brightness(void)
  * timer.c, namely INTERRUPT_1HZ.
  *
  * It will read out the value from the ADC measurement started in the last
- * cycle and put it into array. It will then also recalculate the new value
+ * cycle and put it into measurements. It will then also recalculate the new value
  * for curr_sum, which is needed by ldr_get_brightness().
  *
  * If logging is enabled it will also output the value of the measurement
  * taken.
  *
- * It uses an counter in order to keep track of the current index for array.
+ * It uses an counter in order to keep track of the current index for measurements.
  * It uses a modulo operation to get the new value of this index, which is
- * reason why LDR_ARRAY_SIZE should be a multiple of 2, so this can be
+ * reason why MEASUREMENTS_ARRAY_SIZE should be a multiple of 2, so this can be
  * performed by a appropriate bit shift.
  *
- * @see array
+ * @see measurements
  * @see curr_sum
  * @see LOG_LDR
- * @see LDR_ARRAY_SIZE
+ * @see MEASUREMENTS_ARRAY_SIZE
  */
 void ldr_ISR(void)
 {
@@ -263,12 +263,12 @@ void ldr_ISR(void)
 		 * As we are going to replace the value at curr_index with the value
 		 * of the last conversion, we need to subtract it from curr_sum
 		 */
-		curr_sum -= array[curr_index];
+		curr_sum -= measurements[curr_index];
 
 		/*
-		 * Put value of last conversion into array
+		 * Put value of last conversion into measurements
 		 */
-		array[curr_index] = measurement;
+		measurements[curr_index] = measurement;
 
 		/*
 		 * Add the value of the last measurement to curr_sum
@@ -286,7 +286,7 @@ void ldr_ISR(void)
 		 *
 		 * [1]: https://en.wikipedia.org/wiki/Circular_buffer
 		 */
-		curr_index %= LDR_ARRAY_SIZE;
+		curr_index %= MEASUREMENTS_ARRAY_SIZE;
 
 		/*
 		 * Start next conversion, which will be handled in the next

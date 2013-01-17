@@ -25,7 +25,7 @@
  *
  * This module handles the access to the brightness measured by the LDR sensor.
  * The returned brightness is the mean value of the last couple of
- * measurements, defined by LDR_ARRAY_SIZE.
+ * measurements, defined by MEASUREMENTS_ARRAY_SIZE.
  *
  * It is used to enable the reaction to changes of the ambient light, e.g.
  * increasing the brightness of the LEDs involved when the light in the room
@@ -49,7 +49,7 @@
  *
  * @see ldr_get_brightness()
  */
-#define LDR_ARRAY_SIZE 16
+#define MEASUREMENTS_ARRAY_SIZE 16
 
 extern void ldr_init(void);
 
