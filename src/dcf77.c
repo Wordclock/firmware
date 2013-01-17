@@ -402,6 +402,7 @@ dcf77_init(void)
  *
  * @see dcf77_check()
  * @see FLAGS_e
+ * @see INTERRUPT_100HZ
  */
 void
 dcf77_ISR(void)

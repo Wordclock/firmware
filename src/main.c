@@ -255,6 +255,9 @@ main (void)
   }
 }
 
+/**
+ * @see INTERRUPT_1HZ
+ */
 void
 main_ISR (void)
 {

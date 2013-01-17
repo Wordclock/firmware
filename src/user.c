@@ -587,12 +587,17 @@ extern void  user_setNewTime( const datetime_t* i_time)
 
 
 
-
+/**
+ * @see INTERRUPT_100HZ
+ */
 void user_isr100Hz(void)
 {                       //@EDI: State machine should also be updated when clock off!
   UserState_Isr100Hz(g_stateStack[g_topOfStack-1]);
 }
 
+/**
+ * @see INTERRUPT_10HZ
+ */
 void user_isr10Hz(void)
 {                       // @EDI: State machine should also be updated when clock off!
   UserState_Isr10Hz(g_stateStack[g_topOfStack-1]);
@@ -602,7 +607,9 @@ void user_isr10Hz(void)
   ++g_keyPressTime;
 }
 
-
+/**
+ * @see INTERRUPT_1HZ
+ */
 void  user_isr1Hz(void)
 {
   useAutoOffAnimation = 0;			// @EDI: only when anim is active (auto off or preview) this flag will be set to one

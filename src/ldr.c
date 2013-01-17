@@ -122,6 +122,7 @@ ldr_get_brightness (void)
  * ldr isr, called every 1 sec
  * recalculate our new summary and start a new conversion
  *---------------------------------------------------------------------------------------------------------------------------------------------------
+ * @see INTERRUPT_1HZ
  */
 void
 ldr_ISR (void)

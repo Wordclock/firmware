@@ -127,8 +127,9 @@ ISR( DISPLAY_TIMER_OVF_vect )
 
 
 
-
-
+/**
+ * @see INTERRUPT_10HZ
+ */
 void display_blinkStep (void)
 {
   if(    g_blinkState 
