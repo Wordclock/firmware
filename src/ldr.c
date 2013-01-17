@@ -107,7 +107,7 @@ static volatile uint16_t curr_sum;
 void ldr_init(void)
 {
 
-	volatile uint8_t result;
+	uint8_t result;
 
 	/*
 	 * Set up the ADC unit
