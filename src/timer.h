@@ -31,6 +31,6 @@
 #ifndef _WC_TIMER_H_
 #define _WC_TIMER_H_
 
-extern void                   timer_init (void);
+extern void timer_init(void);
 
 #endif /* _WC_TIMER_H_ */
