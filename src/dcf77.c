@@ -20,13 +20,19 @@
 
 /**
  * @file dcf77.c
- * @brief Implementation of the interface declared in dcf77.h
+ * @brief Implementation of the header declared in dcf77.h
  *
- * This file contains the implementation of the interface as it is declared
- * in dcf77.h. In order to understand the source code completely, a basic
- * understanding of the DCF77 signal is needed. Take a look at the Wikipedia
- * [article](https://en.wikipedia.org/wiki/DCF77) for a detailed description
- * of the concept and the time signal itself.
+ * This file contains the implementation of the header declared in dcf77.h. In
+ * order to understand the source code completely, a basic understanding of the
+ * DCF77 signal is needed. Take a look at the Wikipedia [article][1] for an
+ * overview of the concept and a detailed description of the the time signal.
+ *
+ * This moudule can detect the availability of the module itself and determine
+ * whether it is active high or low. Furthermore it checks whether the internal
+ * pull up resistor is needed. Take a look at dcf77_check_module_type() for
+ * details.
+ *
+ * [1]: https://en.wikipedia.org/wiki/DCF77
  *
  * @see dcf77.h
  */
@@ -45,19 +51,45 @@
 
 
 #if  (LOG_DCF77 == 1)
+/**
+ * @brief Used to output logging information of this module
+ *
+ * When the logging for this module is enabled (LOG_DCF77 == 1), this macro
+ * is used to output various kinds of information.
+ *
+ * @see LOG_DCF77
+ */
 #define log_dcf77(x) uart_puts_P(x)
 #else
+/**
+ * @brief Used to output logging information of this module
+ *
+ * This makes sure that nothing is being output when the logging for this
+ * module is deactivated (LOG_DCF77 == 0).
+ *
+ * @see LOG_DCF77
+ */
 #define log_dcf77(x)
 #endif
-/* ********************************************************************************* */
-uint8_t DCF_FLAG;
-
 /**
  * @brief Contains various flags used within this module
  *
- * This flags are mainly used to enable a basic form of communication between
- * various functions of this module. To save some space they are combined into
- * an enumeration.
+ * These flags are mainly used to enable a basic form of communication between
+ * the various functions of this module. To save some space they are combined
+ * into an enumeration.
+ *
+ * @see FLAGS_e
+ * @see getFlag()
+ * @see setFlag()
+ * @see clearFlag()
+ */
+uint8_t DCF_FLAG;
+
+/**
+ * @brief Holds various flags defined in FLAG_e
+ *
+ * This is the actual variable holding the flags. It gets used by getFlag(),
+ * setFlag() and clearFLag().
  *
  * @see getFlag()
  * @see setFlag()
@@ -76,15 +108,49 @@ typedef enum FLAGS_e{
 #  error To much data for Flag register
 #endif
 
+/**
+ * @brief Retrieves the value of an individual flag
+ *
+ * @see FLAGS_e
+ * @see setFlag()
+ * @see clearFlag()
+ */
 static inline bool getFlag(FLAGS flag){ return DCF_FLAG & _BV(flag); }
+/**
+ * @brief Sets the value for an individual flag
+ *
+ * @see FLAGS_e
+ * @see getFlag()
+ * @see clearFlag()
+ */
 static inline void setFlag(FLAGS flag)   { DCF_FLAG |= _BV(flag);       }
+/**
+ * @brief Clears the value for an individual flag
+ *
+ * @see FLAGS_e
+ * @see getFlag()
+ * @see clearFlag()
+ */
 static inline void clearFlag(FLAGS flag) { DCF_FLAG &= ~_BV(flag);      }
 
-/* ********************************************************************************* */
-// Input definition of DCF Modul
+/**
+ * @brief Port and pin of where the DCF77 receiver is attached to
+ *
+ * @see ports.h
+ */
 #define DCF_INPUT PORTB, 7
 
-// Output definition of DCF Signal (Control - LED)
+/**
+ * @brief Port and pin of where to output the DCF77 signal
+ *
+ * This is primarily used for a LED, which would provide an indication of the
+ * received DCF77 time signal. With a little bit of exercise you can
+ * distinguish between 100 ms pulses and 200 ms pulses. Furthermore it is
+ * possible to get an idea of the quality of the signal. If there is a lot of
+ * noise in the proximity of the receiver the LED will blink abnormally.
+ *
+ * @see ports.h
+ */
 #define DCF_OUTPUT PORTD, 4
 
 /**
@@ -97,17 +163,54 @@ volatile typedef struct{
   uint8_t   PauseCounter; /**< Counter for the pause length, +1 for each 10 ms */
   uint8_t   BitCounter; /**< Indicates which bit is currently being broadcasted */
   uint8_t   Parity; /**< Parity bit counter */
-  uint8_t   BCDShifter; /**< Shift counter for decoding BCD */
-  uint8_t   NewTime[6]; /**< Stores date & time while receiving DCF signal */
+  uint8_t   BCDShifter; /**< Shift counter used for converting the received data from BCD to decimal */
+  uint8_t   NewTime[6]; /**< Stores date & time of the time frame currently being broadcasted */
   uint8_t   NewTimeShifter; /**< Identifies which data is currently being broadcasted */
-  uint8_t   OldTime; /**< Stores the last successful received time */
+  uint8_t   OldTime; /**< Stores the time of the reception of  valid timeframe */
 } DCF_Struct;
 
+/**
+ * @brief Holding DCF_Struct to be accessible by various function in this file
+ *
+ * @see DCF_Struct
+ */
 static DCF_Struct             DCF;
+/**
+ * @brief Indicates whether the DCF77 reception should be enabled or not
+ *
+ * Setting this to false will deactivate the DCF77 reception temporarily. This,
+ * for instance, can be used to deactivate the DCF77 reception once a
+ * successful time frame has been successfully received in a row, within in a
+ * hour.
+ *
+ * Keep in mind that this only will deactivate the decoding within this module.
+ * The receiver, however, will stay enabled.
+ */
 bool                          enable_dcf77_ISR;                                 // En- / Disable DCF77 examination
+/**
+ * @brief Counter keeping track of the amount of low pulses received
+ *
+ * This is used during the initialization phase where the type of the receiver
+ * is determined.
+ *
+ * @see dcf77_check_module_type()
+ */
 static uint8_t                count_low;
+/**
+ * @brief Counter keeping track of the amount of high pulses received
+ *
+ * This is used during the initialization phase where the type of the receiver
+ * is determined.
+ *
+ * @see dcf77_check_module_type()
+ */
 static uint8_t                count_high;
 
+/**
+ * @brief Used for converting received data from BCD to decimal
+ *
+ * @see DCF_Struct::BCDShifter
+ */
 const static uint8_t          BCD_Kodierung[] = { 1,  2,  4,  8, 10, 20, 40, 80 };
 /**
  * @brief Resets the state of the DCF77 module
@@ -385,7 +488,8 @@ dcf77_init(void)
 /**
  * @brief ISR counting the pause length between two pulses
  *
- * This ISR needs to be called every 10 ms. It will count the pause between
+ * This ISR needs to be called every 10 ms. This is achieved by putting it
+ * into the macro INTERRUPT_100HZ. It will then count the pause between
  * two pulses, which in return makes it possible to determine the length of the
  * pulse itself and therefore decode the signal afterwards.
  *
@@ -448,11 +552,12 @@ dcf77_ISR(void)
 /**
  * @brief Puts the received date & time into a buffer
  *
- * When a valid time frame was received, this functions puts the current date
+ * When a valid pulse has been received, this functions puts the current date
  * & time into a buffer of type datetime_t and returns true. Otherwise it will
- * return false and do nothing to the buffer.
+ * return false and do nothing to the buffer at all.
  *
- * @param DateTime_p Pointer to a buffer where the resulting date & time is stored
+ * @param DateTime_p Pointer to buffer where the resulting date & time should
+ * 		  be stored
  * @return True if date & time has been put into buffer, false otherwise
  * @see FLAGS_e
  */
