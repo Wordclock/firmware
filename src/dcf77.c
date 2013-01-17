@@ -33,13 +33,10 @@
 
 #include <inttypes.h>
 #include <avr/io.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
 #include <stdbool.h>
 
 #include "main.h"
 #include "dcf77.h"
-#include "base.h"
 #include "uart.h"
 #include "ports.h"
 
