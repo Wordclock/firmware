@@ -36,8 +36,6 @@
  * @see i2c-master.c
  */
 
-
-
 #ifndef _WC_I2C_RTC_H_
 #define _WC_I2C_RTC_H_
 
@@ -45,16 +43,16 @@
 
 #include "datetime.h"
 
-extern uint8_t                i2c_rtc_get_status (void);
+extern uint8_t i2c_rtc_get_status(void);
 
-extern bool                  i2c_rtc_write (const datetime_t * datetime);
+extern bool i2c_rtc_write(const datetime_t* datetime);
 
-extern bool                  i2c_rtc_read (datetime_t * datetime);
+extern bool i2c_rtc_read(datetime_t* datetime);
 
-extern bool                  i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length);
+extern bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length);
 
-extern bool                  i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length);
+extern bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length);
 
-extern bool                  i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p);
+extern bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p);
 
 #endif /* _WC_I2C_RTC_H_ */
