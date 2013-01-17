@@ -71,32 +71,37 @@
  * Obviously enough this should be bigger and/or equal to the biggest
  * INTERRUPT_* macro, namely INTERRUPT_10000HZ
  */
-#define F_INTERRUPT           10000                                             // frequency of interrupts
+#define F_INTERRUPT 10000
 
 /**
  * @brief List of functions that should be called 10000 times a second
  */
-#define  INTERRUPT_10000HZ    {  irmp_ISR(); }
+#define INTERRUPT_10000HZ { irmp_ISR(); }
+
 /**
  * @brief List of functions that should be called 1000 times a second
  */
-#define  INTERRUPT_1000HZ     { }
+#define INTERRUPT_1000HZ { }
+
 /**
  * @brief List of functions that should be called 100 times a second
  */
-#define  INTERRUPT_100HZ      { dcf77_ISR(); user_isr100Hz(); }
+#define INTERRUPT_100HZ { dcf77_ISR(); user_isr100Hz(); }
+
 /**
  * @brief List of functions that should be called 10 times a second
  */
-#define  INTERRUPT_10HZ       { user_isr10Hz(); display_blinkStep(); }
+#define INTERRUPT_10HZ { user_isr10Hz(); display_blinkStep(); }
+
 /**
  * @brief List of functions that should be called once a second
  */
-#define  INTERRUPT_1HZ        { main_ISR(); ldr_ISR(); user_isr1Hz(); }
+#define INTERRUPT_1HZ { main_ISR(); ldr_ISR(); user_isr1Hz(); }
+
 /**
  * @brief List of functions that should be called once a minute
  */
-#define  INTERRUPT_1M         { }
+#define INTERRUPT_1M { }
 
 /**
  * @brief Initializes the timers
@@ -112,13 +117,35 @@
  *
  * @see ISR(TIMER1_CAPT_vect)
  */
-void
-timer_init (void)
+void timer_init(void)
 {
-  ICR1    = (F_CPU / F_INTERRUPT) - 1;                           // compare value: 1/10000 of CPU frequency
-  TCCR1A  = (1 << WGM11);
-  TCCR1B  = (1 << WGM13)|(1 << WGM12) | (1 << CS10);             // switch CTC PWM Mode on, set prescaler to 1
-  TIMSK1  = 1 << ICIE1;                                          // ICIE1: Interrupt if timer reaches the Top (ICR1 register)
+
+	/*
+	 * Input capture register is used as compare value. The formula below
+	 * ensures that the ISR will be triggered as often as defined in
+	 * F_INTERRUPT.
+	 */
+	ICR1 = (F_CPU / F_INTERRUPT) - 1;
+
+	/*
+	 * Set up Timer/Counter1
+	 *
+	 * See [1], p. 132, Table 16-4 for an overview of the available modes
+	 * See [1], p. 133, Table 16-5 for an overview of the available prescalers
+	 *
+	 * [1]: http://www.atmel.com/images/doc2545.pdf
+	 *
+	 * Mode: 14 (Fast PWM)
+	 * Prescaler: 1
+	 */
+	TCCR1A = (1 << WGM11);
+	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
+
+	/*
+	 * ICIE1: Input capture interrupt enable
+	 */
+	TIMSK1 = 1 << ICIE1;
+
 }
 
 /**
@@ -147,66 +174,80 @@ timer_init (void)
  */
 ISR(TIMER1_CAPT_vect)
 {
-  static uint8_t  thousands_counter;
-  static uint8_t  hundreds_counter;
-  static uint8_t  tenths_counter;
-  static uint8_t  seconds_counter;
-  static uint8_t  minutes_counter;
 
-  INTERRUPT_10000HZ;
+	/*
+	 * Variables needed to divide the ISR frequency down to smaller frequencies
+	 */
+	static uint8_t thousands_counter;
+	static uint8_t hundreds_counter;
+	static uint8_t tenths_counter;
+	static uint8_t seconds_counter;
+	static uint8_t minutes_counter;
 
-  thousands_counter++;
+	/*
+	 * The following part works by incrementing the thousands_counter each
+	 * time the ISR is called. It is then compared against 10, which of course
+	 * will only be true every tenth time. In case this comparison returns
+	 * false, the execution of the ISR is ended with a simple return. Otherwise
+	 * the next smaller counter will be incremented and once again compared
+	 * against ten. This is done until the desired resolution of one minute
+	 * is reached. Between each of these comparisons the list of macros defined
+	 * above is added, so that the appropriate functions will get called with
+	 * the specified frequency.
+	 */
 
-  if (thousands_counter != 10)
-  {
-    return;
-  }
+	INTERRUPT_10000HZ;
 
-  thousands_counter = 0;
+	if (++thousands_counter != 10) {
 
-  INTERRUPT_1000HZ;
+		return;
 
-  hundreds_counter++;
+	}
 
-  if (hundreds_counter != 10)
-  {
-    return;
-  }
+	thousands_counter = 0;
 
-  hundreds_counter = 0;
+	INTERRUPT_1000HZ;
 
-  INTERRUPT_100HZ;
+	if (++hundreds_counter != 10) {
 
-  tenths_counter++;
+		return;
 
-  if (tenths_counter != 10)                                                     // generate 10Hz ....
-  {
-    return;
-  }
+	}
 
-  tenths_counter = 0;
+	hundreds_counter = 0;
 
-  INTERRUPT_10HZ;
+	INTERRUPT_100HZ;
 
-  seconds_counter++;
+	if (++tenths_counter != 10) {
 
-  if (seconds_counter != 10)                                                    // generate 1Hz ....
-  {
-    return;
-  }
+		return;
 
-  seconds_counter = 0;
+	}
 
-  INTERRUPT_1HZ;
+	tenths_counter = 0;
 
-  minutes_counter++;
+	INTERRUPT_10HZ;
 
-  if (minutes_counter != 60)                                                    // generate 1/60 Hz ....
-  {
-    return;
-  }
+	if (++seconds_counter != 10) {
 
-  minutes_counter = 0;
+		return;
 
-  INTERRUPT_1M;
+	}
+
+	seconds_counter = 0;
+
+	INTERRUPT_1HZ;
+
+	minutes_counter++;
+
+	if (minutes_counter != 60) {
+
+		return;
+
+	}
+
+	minutes_counter = 0;
+
+	INTERRUPT_1M;
+
 }
