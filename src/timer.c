@@ -18,23 +18,31 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file timer.c
- * 
- *  Handles the timer ISRs and the providing of diffrent clock sources
+ * @brief Implementation of the interface for access to the timers including
+ * the appropriate ISRs
  *
- * \version $Id: timer.c 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
-* 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This file contains the implementation of the interface for access to the
+ * timers. Furthermore the appropriate timer ISRs are registered and defined
+ * here.
+ *
+ * For now the whole project gets along with a single timer, namely
+ * Timer/Counter1. For a detailed description of this unit see [1], p. 108f.
+ *
+ * The various functions needed to be called on a regular basis can simply be
+ * added to the appropriate macro definitions, that is INTERRUPT_10000HZ up to
+ * INTERRUPT_1M. The names should be pretty self explanatory.
+ *
+ * These macros will then be added to the ISR, which will call them
+ * appropriately.
+ *
+ * The frequency of the ISR itself can be defined with F_INTERRUPT.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see timer.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #include <inttypes.h>
 #include <avr/io.h>
