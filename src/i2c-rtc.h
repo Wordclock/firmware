@@ -45,56 +45,16 @@
 
 #include "datetime.h"
 
-/**
- *  Get I2C status
- *  @details  Returns I2C status
- *  @return    i2c rtc status
- */
 extern uint8_t                i2c_rtc_get_status (void);
 
-/**
- *  Write date & time
- *  @details  Writes date & time into RTC
- *  @param    datetime   date & time
- *  @return    TRUE = successful, FALSE = failed
- */
 extern bool                  i2c_rtc_write (const datetime_t * datetime);
 
-/**
- *  Read date & time
- *  @details  Reads date & time from rtc
- *  @param    datetime  date & time
- *  @return    TRUE = successful, FALSE = failed
- */
 extern bool                  i2c_rtc_read (datetime_t * datetime);
 
-/**
- *  Write data into SRAM
- *  @details  Writes data into SRAM
- *  @param    addr         address
- *  @param    void_valuep  pointer to buffer
- *  @param    length       length of buffer
- *  @return    TRUE = successful, FALSE = failed
- */
 extern bool                  i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length);
 
-/**
- *  Read data into SRAM
- *  @details  Reads data into SRAM
- *  @param    addr         address
- *  @param    void_valuep  pointer to buffer
- *  @param    length      length of buffer
- *  @return    TRUE = successful, FALSE = failed
- */
 extern bool                  i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length);
 
-/**
- *  Initialize RTC
- *  @details  Initializes & configures RTC
- *  @param    errorcode_p   pointer to byte in order to store errorcode
- *  @param    status_p      pointer to byte in order to store I2C status
- *  @return    TRUE = successful, FALSE = failed
- */
 extern bool                  i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p);
 
 #endif /* _WC_I2C_RTC_H_ */
