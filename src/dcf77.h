@@ -56,7 +56,7 @@ extern bool dcf77_getDateTime(datetime_t* DateTime_p);
  * macro makes sure that the ISR won't be included.
  *
  * @see DCF_PRESENT
- * @see timer.c
+ * @see INTERRUPT_100HZ
  */
 #define dcf77_ISR()
 
