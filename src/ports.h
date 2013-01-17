@@ -29,10 +29,10 @@
  * Consider this classic example:
  *
  * \code
- *	#define WHATEVER_PORT	PORTD
- *  #define WHATEVER_DDR	DDRD
- *  #define WHATEVER_PIN	PIND
- *  #define WHATEVER_BIT	4
+ *  #define WHATEVER_PORT 	PORTD
+ *  #define WHATEVER_DDR 	DDRD
+ *  #define WHATEVER_PIN 	PIND
+ *  #define WHATEVER_BIT 	4
  * \endcode
  *
  * This is kind of ugly for various reasons one of which is the implied
@@ -43,15 +43,38 @@
  * \endcode
  *
  * This works because the addresses of the involved registers can be calculated
- * as there is a system behind them. The macros are based on a concept known
- * as [variadic macro's](https://en.wikipedia.org/wiki/Variadic_macro).
+ * as there is a system behind them. Normally the PINx register comes first and
+ * is followed by the DDRx register, which in return is followed by the PORTx
+ * register itself. For instance for the port C of an ATmega168 it looks like
+ * this (see [1], p. 343, chapter 31).
  *
- * This implementation is a combination of ideas taken from [1] and [2].
+ * \verbatim
+ * 	0x08 (0x28) PORTC
+ * 	0x07 (0x27) DDRC
+ * 	0x06 (0x26) PINC
+ * \endverbatim
  *
- * [1]: http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=91304
- * [2]: http://homepage.hispeed.ch/peterfleury/group__pfleury__lcd.html
+ * So by knowing the address location of PORTC both of the addresses for DDRC
+ * as well as PINC can easily be calculated by subtracting one and/or two.
  *
- * \warning This hasn't been tested with every AVR yet.
+ * However there is an exception to this in case of ATmega64's and ATmega128's,
+ * which provide an additional port F. The PINF for whatever reason register is
+ * located at 0x00 instead of 0x60, which one would expect following the scheme
+ * described above. For details see [2], p. 369ff. However the appropriate
+ * PIN() macro accommodates for this with a relative simple distinction of the
+ * used microcontroller.
+ *
+ * The macros are based on a concept known as [variadic macro's][3].
+ *
+ * This implementation is a combination of ideas taken from [4] and [5].
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ * [2]: http://www.atmel.com/Images/doc2490.pdf
+ * [3]: https://en.wikipedia.org/wiki/Variadic_macro
+ * [4]: http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=91304
+ * [5]: http://homepage.hispeed.ch/peterfleury/group__pfleury__lcd.html
+ *
+ * \warning This hasn't been thoroughly tested with every AVR yet.
  */
 
 #ifndef _WC_PORTS_H_
