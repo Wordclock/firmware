@@ -37,8 +37,6 @@
  * @see ldr.h
  */
 
-
-
 #include <inttypes.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -66,7 +64,7 @@
  * @see ldr_get_brightness()
  * @see ldr_ISR()
  */
-static volatile uint8_t             array[LDR_ARRAY_SIZE];
+static volatile uint8_t array[LDR_ARRAY_SIZE];
 
 /**
  * @brief Contains the sum of all elements in array
@@ -82,9 +80,7 @@ static volatile uint8_t             array[LDR_ARRAY_SIZE];
  * @see ldr_get_brightness()
  * @see ldr_ISR()
  */
-static volatile uint16_t            curr_sum;
-
-
+static volatile uint16_t curr_sum;
 
 /**
  * @brief Initializes this module
@@ -108,42 +104,75 @@ static volatile uint16_t            curr_sum;
  * @see curr_sum
  * @see LOG_LDR
  */
-void
-ldr_init (void)
+void ldr_init(void)
 {
-  volatile uint8_t result;
- 
-  ADMUX = 0                       // ADC0
-        | (1<<REFS0)              // use Avcc
-        | (1<<ADLAR);             // left justify result in ADCH
- 
-  ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0);      // prescaler to 32 / in our case sampling frequence of 250kHz
-                                                     // and activate ADC
 
-  ADCSRA |= (1<<ADSC);                      // ADC start 
-  while ( ADCSRA & (1<<ADSC) ) {
-    ;     
-  }
+	volatile uint8_t result;
 
-  result = ADCH;  // read out the value and init the summary array
-  for (int i = 0; i < LDR_ARRAY_SIZE; array[i++] = result);
+	/*
+	 * Set up the ADC unit
+	 *
+	 * Reference: AVCC with external capacitor at AREF pin
+	 * Alignment: Left adjusted
+	 * Channel: 0
+	 */
+	ADMUX = (1<<REFS0) | (1<<ADLAR);
 
-  curr_sum = result;              // also init the sum
-  curr_sum *= LDR_ARRAY_SIZE;     //
+	/*
+	 * ADEN: Enable ADC
+	 * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
+	 */
+	ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0);
 
-# if (LOG_LDR == 1)
-  {
-    char buff[5];
-    byteToStr(result, buff);
-    uart_puts_P("LDR init: ");
-    uart_puts(buff);
-    uart_putc('\n');
-  }
-# endif
+	/*
+	 * Start first conversion
+	 */
+	ADCSRA |= (1<<ADSC);
 
-  ADCSRA |= (1<<ADSC);     // start next measurement (will be read in 1Hz Interupt)
+	/*
+	 * Wait for conversion to finish
+	 */
+	while (ADCSRA & (1<<ADSC));
 
-  return;
+	/*
+	 * Read out the measured value
+	 */
+	result = ADCH;
+
+	/*
+	 * Initialize array by putting the measured value in every field
+	 */
+	for (int i = 0; i < LDR_ARRAY_SIZE; i++) {
+
+		array[i] = result;
+
+	}
+
+	/*
+	 * Initialize curr_sum by multiplying it with LDR_ARRAY_SIZE
+	 */
+	curr_sum = result;
+	curr_sum *= LDR_ARRAY_SIZE;
+
+	/*
+	 * Check whether logging is enabled
+	 */
+	# if (LOG_LDR == 1)
+
+		char buff[5];
+
+		byteToStr(result, buff);
+		uart_puts_P("LDR init: ");
+		uart_puts(buff);
+		uart_putc('\n');
+
+	# endif
+
+	/*
+	 * Start next measurement, which will then be handled by ldr_ISR()
+	 */
+	ADCSRA |= (1<<ADSC);
+
 }
 
 /**
@@ -166,10 +195,11 @@ ldr_init (void)
  * @return Eight bit value containing the brightness. 255 represents the
  * 			maximum brightness, 0 represents darkness.
  */
-uint8_t
-ldr_get_brightness (void)
+uint8_t ldr_get_brightness(void)
 {
-  return ( 255-(curr_sum / LDR_ARRAY_SIZE)); 
+
+	return  255 - (curr_sum / LDR_ARRAY_SIZE);
+
 }
 
 
@@ -197,35 +227,73 @@ ldr_get_brightness (void)
  * @see LOG_LDR
  * @see LDR_ARRAY_SIZE
  */
-void
-ldr_ISR (void)
+void ldr_ISR(void)
 {
-  static uint8_t   curr_index = 0;
 
-  if ( (ADCSRA & (1<<ADSC)) == 0) {
-    // read out last conversion and recalculating summary
-    uint8_t measurement = ADCH;
+	/*
+	 * This counter keeps track of the index we need to put the measurement in
+	 */
+	static uint8_t curr_index = 0;
 
-# if (LOG_LDR == 1)
-  {
-    char buff[5];
-    byteToStr(measurement, buff);
-    uart_puts_P("LDR: ");
-    uart_puts(buff);
-    uart_putc('\n');
-  }
-# endif
+	/*
+	 * Check whether last conversion has been completed
+	 */
+	if ((ADCSRA & (1<<ADSC))) {
 
-    curr_sum -= array[curr_index];
-    array[curr_index] = measurement;
-    curr_sum += measurement;
-    curr_index++;
+		/*
+		 * Read out value of last conversion
+		 */
+		uint8_t measurement = ADCH;
 
-    curr_index %= LDR_ARRAY_SIZE;
+		/*
+		 * Check whether logging is enabled
+		 */
+		# if (LOG_LDR == 1)
 
-    // start next ADC converting
-    ADCSRA |= (1<<ADSC); 
-  } 
+			char buff[5];
 
-  return;
+			byteToStr(measurement, buff);
+			uart_puts_P("LDR: ");
+			uart_puts(buff);
+			uart_putc('\n');
+
+		# endif
+
+		/*
+		 * As we are going to replace the value at curr_index with the value
+		 * of the last conversion, we need to subtract it from curr_sum
+		 */
+		curr_sum -= array[curr_index];
+
+		/*
+		 * Put value of last conversion into array
+		 */
+		array[curr_index] = measurement;
+
+		/*
+		 * Add the value of the last measurement to curr_sum
+		 */
+		curr_sum += measurement;
+
+		/*
+		 * Increment curr_index for next iteration of this function
+		 */
+		curr_index++;
+
+		/*
+		 * Use modulo operation to get the next value for curr_index,
+		 * see [ring buffer][1].
+		 *
+		 * [1]: https://en.wikipedia.org/wiki/Circular_buffer
+		 */
+		curr_index %= LDR_ARRAY_SIZE;
+
+		/*
+		 * Start next conversion, which will be handled in the next
+		 * iteration of this function
+		 */
+		ADCSRA |= (1<<ADSC);
+
+	}
+
 }
