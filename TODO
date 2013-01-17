@@ -56,3 +56,7 @@
   would save some program space and fasten up the initialization.
 
 - Fix header includes: It seems that various includes are actually not needed.
+
+- dcf77.h: Instead of dynamically building the header depending on the value
+  of DCF_PRESENT it actually would make more sense to not include the file
+  in the first place, when the DCF77 functionality is not needed.
