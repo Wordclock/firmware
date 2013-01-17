@@ -37,7 +37,18 @@
 #ifndef _WC_LDR_H_
 #define _WC_LDR_H_
 
-/** defines the size of the internal buffer to smooth the measurements */
+/**
+ * @brief Number of measurements to take into account for calculating the brightness
+ *
+ * This effectively acts as a low pass filter. The brightness calculated by
+ * ldr_get_brightness() will be the mean value of the values stored in an array
+ * of this size.
+ *
+ * In order to keep the calculations fast this should be an multiple of two,
+ * so calculations of the current index can be done by appropriate bit shifts.
+ *
+ * @see ldr_get_brightness()
+ */
 #define LDR_ARRAY_SIZE     16
 
 
