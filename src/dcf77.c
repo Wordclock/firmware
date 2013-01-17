@@ -59,7 +59,6 @@ uint8_t DCF_FLAG;
  * various functions of this module. To save some space they are combined into
  * an enumeration.
  *
- * @see FLAG_REGISTER()
  * @see getFlag()
  * @see setFlag()
  * @see clearFlag()
@@ -77,11 +76,9 @@ typedef enum FLAGS_e{
 #  error To much data for Flag register
 #endif
 
-#define FLAG_REGISTER (DCF_FLAG)
-
-static inline bool getFlag(FLAGS flag){ return FLAG_REGISTER & _BV(flag); }
-static inline void setFlag(FLAGS flag)   { FLAG_REGISTER |= _BV(flag);       }
-static inline void clearFlag(FLAGS flag) { FLAG_REGISTER &= ~_BV(flag);      }
+static inline bool getFlag(FLAGS flag){ return DCF_FLAG & _BV(flag); }
+static inline void setFlag(FLAGS flag)   { DCF_FLAG |= _BV(flag);       }
+static inline void clearFlag(FLAGS flag) { DCF_FLAG &= ~_BV(flag);      }
 
 /* ********************************************************************************* */
 // Input definition of DCF Modul
