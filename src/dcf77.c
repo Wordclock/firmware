@@ -702,12 +702,18 @@ static bool dcf77_check(void)
 		 * 	BCDShifter on the other hand is used to keep track of the value
 		 * 	the currently received bit represents as it is BCD encoded.
 		 */
-		if ((DCF.BitCounter == 28) || (DCF.BitCounter == 35)
-				|| (DCF.BitCounter == 41) || (DCF.BitCounter == 44)
-				|| (DCF.BitCounter == 49)) {
+		switch(DCF.BitCounter) {
 
-			DCF.NewTimeShifter++;
-			DCF.BCDShifter = 0;
+			case 28:
+			case 35:
+			case 41:
+			case 44:
+			case 49:
+
+				DCF.NewTimeShifter++;
+				DCF.BCDShifter = 0;
+
+				break;
 
 		}
 
