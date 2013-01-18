@@ -28,7 +28,7 @@
  * overview of the concept. For a detailed description of the the time signal,
  * see [2].
  *
- * This moudule can detect the availability of the module itself and determine
+ * This module can detect the availability of the receiver and determine
  * whether it is active high or low. Furthermore it checks whether the internal
  * pull up resistor of the microcontroller is needed. Take a look at
  * dcf77_check_receiver_type() for details.
@@ -135,7 +135,7 @@ typedef enum FLAGS_e {
      * @brief Indicates whether or not there actually is a DCF77 receiver
      *
      * When a receiver could successfully be detected, this gets set. Otherwise
-     * it might be cleared, when no module could be found.
+     * it might be cleared, when no receiver could be found.
      *
      * This in combination with FLAGS_e::DEFINED allows to tell whether there
      * actually is a receiver.
@@ -146,13 +146,13 @@ typedef enum FLAGS_e {
     AVAILABLE,
 
     /**
-     * @brief Indicates whether the DCF77 module is high or low active
+     * @brief Indicates whether the DCF77 receiver is active high or low
      *
      * The type of the receiver is determined during the initialization phase,
      * see dcf77_check_receiver_type(). This flag gets set when the receiver is
-     * high active, meaning it is high during the pulse and low during the
-     * pause. Otherwise it is cleared, which indicates that the module is low
-     * active.
+     * active high, meaning it is high during the pulse and low during the
+     * pause. Otherwise it is cleared, which indicates that the receiver is
+     * active low.
      *
      * @see dcf77_check_receiver_type()
      */
@@ -441,17 +441,17 @@ static void dcf77_reset(void)
 }
 
 /**
- * @brief Determines what kind of module is connected to the microcontroller
+ * @brief Determines what kind of receiver is connected to the microcontroller
  *
- * This function detects the kind of module connected to the microcontroller,
- * which includes the detection of whether the module is high or low active
- * and whether the internal pull up resistor is needed or not.
+ * This function detects the kind of receiver connected to the microcontroller,
+ * which includes the detection of whether the module is active high or low and
+ * whether the internal pull up resistor is needed or not.
  *
  * This works by trying out all possible combinations and looking whether
  * transitions on the DCF77 pin occur.
  *
  * This function is only used during the initialization phase. Once the type of
- * the receiver was determined, it won't change during runtime anymore.
+ * the receiver has been determined, it won't change during runtime anymore.
  *
  * @see FLAGS_e
  */
@@ -554,8 +554,8 @@ static void dcf77_check_receiver_type(void)
 
 				/*
 				 * Check whether setting for the pull up resistor has been
-				 * changed 30 times already. If the module hasn't been detected
-				 * by now, it probably isn't available.
+				 * changed 30 times already. If the receiver hasn't
+				 * been detected by now, it probably isn't available.
 				 */
 				if (count_switch == 30) {
 
@@ -600,7 +600,7 @@ static void dcf77_check_receiver_type(void)
 
 				/*
 				 * If logging for this module is enabled the type of the
-				 * module detected should be output
+				 * receiver detected should be output
 				 */
         		#if (LOG_DCF77 == 1)
 
@@ -631,15 +631,16 @@ static void dcf77_check_receiver_type(void)
 			if (count_low > count_high) {
 
 				/*
-				 * Check whether the current presumed type of the module is
-				 * high active.
+				 * Check whether the current presumed type of the receiver is
+				 * active high.
 				 */
 				if (getFlag(HIGH_ACTIVE)) {
 
 					/*
-					 * We would expect count_high to be bigger in case of a
-					 * high active module, therefore we reset the pass counter
-					 * and presume an low active module for the next passes.
+					 * We would expect count_high to be bigger in case of an
+					 * active high receiver, therefore we reset the pass
+					 * counter and presume an active low module for the next
+					 * passes.
 					 */
 					count_pass = 0;
 					clearFlag(HIGH_ACTIVE);
@@ -652,15 +653,15 @@ static void dcf77_check_receiver_type(void)
 			} else {
 
 				/*
-				 * Check whether the current presumed type of the module is
-				 * low active
+				 * Check whether the current presumed type of the receiver is
+				 * active low
 				 */
 				if (!(getFlag(HIGH_ACTIVE))) {
 
 					/*
-					 * We would expect count_low to be bigger in case of a low
-					 * active module, therefore we reset the pass counter and
-					 * presume an low active module for the next passes.
+					 * We would expect count_low to be bigger in case of an
+					 * active low receiver, therefore we reset the pass counter
+					 * and presume an active low receiver for the next passes.
 					 */
 					count_pass = 0;
 					setFlag(HIGH_ACTIVE);
@@ -934,7 +935,7 @@ static bool dcf77_check(void)
  * This function initializes the DCF77 port. Among other things it sets the
  * data direction registers for the input and output. Furthermore some flags
  * are set and/or cleared to trigger further initilization tasks, such as the
- * detection of the module type.
+ * detection of the receiver type.
  *
  * @see dcf77_check_receiver_type()
  * @see FLAGS_e
@@ -1105,7 +1106,7 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
 {
 
 	/*
-	 * Check whether module is available and whether a full pulse has just
+	 * Check whether receiver is available and whether a full pulse has just
 	 * been received
 	 */
 	if (getFlag(AVAILABLE) && getFlag(CHECK)) {
@@ -1133,8 +1134,8 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
 
 			/*
 			 * Disable DCF77. Since the time now has been synchronized the
-			 * DCF77 module gets deactivated. It will be reenabled by the
-			 * main program once every hour.
+			 * DCF77 module gets deactivated. It can be reenabled by the
+			 * main program, e.g. once every hour.
 			 */
 			enable_dcf77_ISR = false;
 
