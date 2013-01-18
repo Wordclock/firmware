@@ -101,6 +101,8 @@
 /**
  * @brief Helper macro needed to implement PORT()
  *
+ * @param a	Name of the port
+ * @param b Number of the pin
  * @see PORT()
  */
 #define PORT_(a, b) (a)
@@ -124,6 +126,8 @@
 /**
  * @brief Helper macro needed to implement DDR()
  *
+ * @param a	Name of the port
+ * @param b Number of the pin
  * @see DDR()
  */
 #define DDR_(a, b) 	(*(&a - 1))
@@ -156,6 +160,8 @@
 	* With these devices the location of the PINF register is located at an
 	* address contrary to the one you might expect, namely 0x00.
 	*
+	* @param a	Name of the port
+	* @param b Number of the pin
 	* @see PIN()
 	*/
     #define PIN_(a, b) ((&PORTF == &(x)) ? _SFR_IO8(0x00) : (*(&a - 2)))
@@ -165,6 +171,8 @@
 	/**
 	* @brief Helper macro needed to implement PIN()
 	*
+	* @param a	Name of the port
+	* @param b Number of the pin
 	* @see PIN()
 	*/
 	#define PIN_(a, b) (*(&a - 2))
@@ -188,10 +196,12 @@
 #define BIT(...) BIT_(__VA_ARGS__)
 
 /**
-* @brief Helper macro needed to implement BIT()
-*
-* @see BIT()
-*/
+ * @brief Helper macro needed to implement BIT()
+ *
+ * @param a	Name of the port
+ * @param b Number of the pin
+ * @see BIT()
+ */
 #define BIT_(a, b) b
 
 #endif /* _WC_PORTS_H_ */
