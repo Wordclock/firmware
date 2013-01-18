@@ -48,11 +48,13 @@
  * register itself. For instance for the port C of an ATmega168 it looks like
  * this (see [1], p. 343, chapter 31).
  *
- * \verbatim
- * 	0x08 (0x28) PORTC
- * 	0x07 (0x27) DDRC
- * 	0x06 (0x26) PINC
- * \endverbatim
+ * \code
+ *	[...]
+ *	0x08 (0x28) PORTC
+ *	0x07 (0x27) DDRC
+ *	0x06 (0x26) PINC
+ *	[...]
+ * \endcode
  *
  * So by knowing the address location of PORTC both of the addresses for DDRC
  * as well as PINC can easily be calculated by subtracting one and/or two.
