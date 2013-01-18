@@ -283,7 +283,7 @@ static uint8_t count_high;
  *
  * @see DCF_Struct::BCDShifter
  */
-const static uint8_t BCD_Kodierung[] = {1, 2, 4, 8, 10, 20, 40, 80};
+const static uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
 
 /**
  * @brief Resets the state of the DCF77 module
@@ -663,10 +663,9 @@ static bool dcf77_check(void)
 
 				/*
 				 * Calculate the new time. This is achieved by using the
-				 * BCD table represented by BCD_Kodierung.
+				 * BCD table represented by BcdWeights.
 				 */
-				DCF.NewTime[DCF.NewTimeShifter]
-					+= BCD_Kodierung[DCF.BCDShifter];
+				DCF.NewTime[DCF.NewTimeShifter] += BcdWeights[DCF.BCDShifter];
 
 			}
 
