@@ -592,8 +592,11 @@ static bool dcf77_check(void)
 
 	#endif
 
-	if ((DCF.PauseCounter <= 6)
-      || ((DCF.PauseCounter <= 77) && (DCF.PauseCounter >= 96))) {
+   /*
+	* Check whether pause length is smaller or equal to 60 ms, which is
+	* considered to be some sort of a spike.
+	*/
+	if (DCF.PauseCounter <= 6) {
 
 		/*
 		 * Clear pause length counter
