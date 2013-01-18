@@ -25,14 +25,16 @@
  * This file contains the implementation of the header declared in dcf77.h. In
  * order to understand the source code completely, a basic understanding of the
  * DCF77 signal is needed. Take a look at the Wikipedia [article][1] for an
- * overview of the concept and a detailed description of the the time signal.
+ * overview of the concept. For a detailed description of the the time signal,
+ * see [2].
  *
  * This moudule can detect the availability of the module itself and determine
  * whether it is active high or low. Furthermore it checks whether the internal
- * pull up resistor is needed. Take a look at dcf77_check_module_type() for
- * details.
+ * pull up resistor of the microcontroller is needed. Take a look at
+ * dcf77_check_module_type() for details.
  *
  * [1]: https://en.wikipedia.org/wiki/DCF77
+ * [2]: https://en.wikipedia.org/wiki/DCF77#Time_code_interpretation
  *
  * @see dcf77.h
  */
@@ -107,22 +109,52 @@ uint8_t DCF_FLAG;
 typedef enum FLAGS_e {
 
 	/**
-	 * @brief Indicates whether a full valid time frame has been received
+	 * @brief Indicates whether a new full pulse has been received
+	 *
+	 * This is set during the ISR whenever a new pulse has been received. It
+	 * is used within dcf77_getDateTime() to see if there is anything to do.
+	 *
+	 * @see dcf77_ISR()
+	 * @see dcf77_getDateTime
 	 */
     CHECK = 0,
 
     /**
-     * @brief Indicates whether the module type has already been determined
+     * @brief Indicates whether the receiver type has already been determined
+     *
+     * This is set when the receiver type has been detected successfully. This
+     * might also get set when no receiver could be found. In that case it is
+     * combined FLAGS_e::AVAILABLE.
+     *
+     * @see FLAGS_e::AVAILABLE
+     * @see dcf77_check_module_type()
      */
     DEFINED,
 
     /**
-     * @brief Indicates whether or not there actually is a DCF77 module
+     * @brief Indicates whether or not there actually is a DCF77 receiver
+     *
+     * When a receiver could successfully be detected, this gets set. Otherwise
+     * it might be cleared, when no module could be found.
+     *
+     * This in combination with FLAGS_e::DEFINED allows to tell whether there
+     * actually is a receiver.
+     *
+     * @ſee FLAGS_e::DEFINED
+     * @see dcf77_check_module_type()
      */
     AVAILABLE,
 
     /**
      * @brief Indicates whether the DCF77 module is high or low active
+     *
+     * The type of the receiver is determined during the initialization phase,
+     * see dcf77_check_module_type(). This flag gets set when the receiver is
+     * high active, meaning it is high during the pulse and low during the
+     * pause. Otherwise it is cleared, which indicates that the module is low
+     * active.
+     *
+     * @see dcf77_check_module_type()
      */
     HIGH_ACTIVE,
 
@@ -201,38 +233,118 @@ static inline void clearFlag(FLAGS flag)
 volatile typedef struct {
 
 	/**
-	 * @brief Counter for the pause length, +1 for each 10 ms
+	 * @brief Counter for the pause length
+	 *
+	 * This variable stores the length of the pause between two pulses.
+	 * Normally the length between two pulses is either 800 ms or 900 ms,
+	 * depending upon the length of the pulse, which is either 100 ms or
+	 * 200 ms. However due to the fact that no pulse is being broadcasted in
+	 * the last second, the pause for the first bit will actually be at least
+	 * 1800 ms.
+	 *
+	 * This variable will be increased by one every 10 ms by dcf77_ISR(). It
+	 * is then analyzed by dcf77_check().
+	 *
+	 * @see dcf77_ISR()
+	 * @see dcf77_check()
 	 */
     uint8_t PauseCounter;
 
     /**
      * @brief Indicates which bit is currently being broadcasted
+     *
+     * There are 58 bits being broadcasted every minute. This is a counter,
+     * which keeps track which number currently is being broadcast and used
+     * quite heavily in dcf77_check() to enable various case differentiations
+     * based upon the number of the bit.
+     *
+     * It is reset either when an error is detected or when bit 0 is received,
+     * which is recognized by a pause length of at least 1800 ms.
+     *
+     * @see dcf77_check()
      */
     uint8_t BitCounter;
 
     /**
-     * @brief Parity bit counter
+     * @brief Variable holding the parity data received
+     *
+     * Bit number 28, 35 and 58 are parity bits, so that together with the
+     * block transferred previously it always must be even. If not we can
+     * assume that there was some kind of an error and discard the whole time
+     * frame.
+     *
+     * @see dcf77_check()
      */
     uint8_t Parity;
 
     /**
      * @brief Shift counter used for converting the received data from BCD to
-     * decimal
+     * 	decimal
+     *
+     * This is used to keep track of the weight the currently received bit
+     * is representing. Consider the minute "block as an example. It consists
+     * of bits 21 to 28. Bits 21 to 27 contain the actual information. So this
+     * counter will be incremented by one starting at bit 21 and ending with
+     * bit 27. It then will get used to determine the weight of the bit just
+     * received using BcdWeights
+     *
+     * After a "block" has been successfully decoded this variable will then
+     * be reset, so it can be used for the next "block".
+     *
+     * @see BcdWeights
      */
     uint8_t BCDShifter;
 
     /**
      * @brief Stores date & time of the time frame currently being broadcasted
+     *
+     * This is an array storing the received information. It consists of 6
+     * elements, which are:
+     *
+     * * 0: Minutes, ranges from 0 to 59
+     * * 1: Hour, ranges from 0 to 23
+     * * 2: Day of month, ranges from 1 to 31
+     * * 3: Day of week, ranges from 1 (= Monday) to 7 (= Sunday)
+     * * 4: Month number, ranges from 0 to 1
+     * * 5: Year within *century*, ranges from 0 to 99.
+     *
+     * This is also the order in which the information is received.
      */
     uint8_t NewTime[6];
 
     /**
      * @brief Identifies which data is currently being broadcasted
+     *
+     * This variable is used to keep track of the "block" that is currently
+     * being broadcasted. Such "blocks" are: Minutes, Hour, Day of month, Day
+     * of week, Month number, Year within century. Once the transfer of a new
+     * "block" starts this counter is incremented.
+     *
+     * This is effectively used as an index for DCF_Struct::NewTime.
+     *
+     * @see DCF_Struct::NewTime
      */
     uint8_t NewTimeShifter;
 
     /**
      * @brief Stores the time of the reception of  valid timeframe
+     *
+     * This stores the time of the last successfully received timeframe. It
+     * is calculated by the following formula:
+     *
+     * 	Hour + Minutes * 60
+     *
+     * This is used to determine whether the currently received timeframe
+     * equals the old received one plus one minute, which is an indicator for
+     * having received two timeframes successfully in a row.
+     *
+     * Note that this is a 8 bit value. Because it can overflow it might be
+     * that some constellations of new time and old time will be registered as
+     * valid, although they are not.
+     *
+     * For instance 8:31 would be recognized as a valid successor to 4:15.
+     * This shouldn't play too big a role in real life, but will improve
+     * performance a lot as it can be calculated natively.
      */
     uint8_t OldTime;
 
@@ -279,7 +391,20 @@ static uint8_t count_low;
 static uint8_t count_high;
 
 /**
- * @brief Used for converting received data from BCD to decimal
+ * @brief Used for converting received data from BCD to its decimal
+ * 	representation
+ *
+ *
+ * The information for minutes, hours, 	day of month, day of week, month
+ * number and year within century is transferred using a code very similar to
+ * the BCD code, see [1].
+ *
+ * The "classic" BCD code can only represent decimal digits from 0 to 9.
+ * However in case of DCF77 the minutes, hours, day of month, month number and
+ * year within century can have up to two digits, e.g. 31, which explains the
+ * weights 10, 20, 40 and 80.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Binary-coded_decimal
  *
  * @see DCF_Struct::BCDShifter
  */
