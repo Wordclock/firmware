@@ -31,7 +31,7 @@
  * This moudule can detect the availability of the module itself and determine
  * whether it is active high or low. Furthermore it checks whether the internal
  * pull up resistor of the microcontroller is needed. Take a look at
- * dcf77_check_module_type() for details.
+ * dcf77_check_receiver_type() for details.
  *
  * [1]: https://en.wikipedia.org/wiki/DCF77
  * [2]: https://en.wikipedia.org/wiki/DCF77#Time_code_interpretation
@@ -127,7 +127,7 @@ typedef enum FLAGS_e {
      * combined FLAGS_e::AVAILABLE.
      *
      * @see FLAGS_e::AVAILABLE
-     * @see dcf77_check_module_type()
+     * @see dcf77_check_receiver_type()
      */
     DEFINED,
 
@@ -141,7 +141,7 @@ typedef enum FLAGS_e {
      * actually is a receiver.
      *
      * @ſee FLAGS_e::DEFINED
-     * @see dcf77_check_module_type()
+     * @see dcf77_check_receiver_type()
      */
     AVAILABLE,
 
@@ -149,12 +149,12 @@ typedef enum FLAGS_e {
      * @brief Indicates whether the DCF77 module is high or low active
      *
      * The type of the receiver is determined during the initialization phase,
-     * see dcf77_check_module_type(). This flag gets set when the receiver is
+     * see dcf77_check_receiver_type(). This flag gets set when the receiver is
      * high active, meaning it is high during the pulse and low during the
      * pause. Otherwise it is cleared, which indicates that the module is low
      * active.
      *
-     * @see dcf77_check_module_type()
+     * @see dcf77_check_receiver_type()
      */
     HIGH_ACTIVE,
 
@@ -376,7 +376,7 @@ bool enable_dcf77_ISR;
  * This is used during the initialization phase where the type of the receiver
  * is determined.
  *
- * @see dcf77_check_module_type()
+ * @see dcf77_check_receiver_type()
  */
 static uint8_t count_low;
 
@@ -386,7 +386,7 @@ static uint8_t count_low;
  * This is used during the initialization phase where the type of the receiver
  * is determined.
  *
- * @see dcf77_check_module_type()
+ * @see dcf77_check_receiver_type()
  */
 static uint8_t count_high;
 
@@ -455,7 +455,7 @@ static void dcf77_reset(void)
  *
  * @see FLAGS_e
  */
-static void dcf77_check_module_type(void)
+static void dcf77_check_receiver_type(void)
 {
 
 	/*
@@ -936,7 +936,7 @@ static bool dcf77_check(void)
  * are set and/or cleared to trigger further initilization tasks, such as the
  * detection of the module type.
  *
- * @see dcf77_check_module_type()
+ * @see dcf77_check_receiver_type()
  * @see FLAGS_e
  */
 void dcf77_init(void)
@@ -1017,9 +1017,9 @@ void dcf77_ISR(void)
 			}
 
 			/*
-			 * Determine the receiver type using dcf77_check_module_type()
+			 * Determine the receiver type using dcf77_check_receiver_type()
 			 */
-			dcf77_check_module_type();
+			dcf77_check_receiver_type();
 
 		} else {
 
