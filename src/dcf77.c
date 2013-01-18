@@ -111,15 +111,7 @@ typedef enum FLAGS_e {
     AVAILABLE, /**< Indicates whether or not there actually is a DCF77 module */
     HIGH_ACTIVE, /**< Indicates whether the DCF77 module is high or low active */
 
-    _FLAG_COUNT /**< Flag counter to ensure that enumeration is not too big */
-
 } FLAGS;
-
-#if (_FLAG_COUNT > 8)
-
-	#error Too much enumerators in FLAGS_e
-
-#endif
 
 /**
  * @brief Retrieves the value of an individual flag
