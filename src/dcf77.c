@@ -106,10 +106,25 @@ uint8_t DCF_FLAG;
  */
 typedef enum FLAGS_e {
 
-    CHECK = 0, /**< Indicates whether a full valid time frame has been received */
-    DEFINED, /**< Indicates whether the module type has already been determined */
-    AVAILABLE, /**< Indicates whether or not there actually is a DCF77 module */
-    HIGH_ACTIVE, /**< Indicates whether the DCF77 module is high or low active */
+	/**
+	 * @brief Indicates whether a full valid time frame has been received
+	 */
+    CHECK = 0,
+
+    /**
+     * @brief Indicates whether the module type has already been determined
+     */
+    DEFINED,
+
+    /**
+     * @brief Indicates whether or not there actually is a DCF77 module
+     */
+    AVAILABLE,
+
+    /**
+     * @brief Indicates whether the DCF77 module is high or low active
+     */
+    HIGH_ACTIVE,
 
 } FLAGS;
 
@@ -185,13 +200,41 @@ static inline void clearFlag(FLAGS flag)
  */
 volatile typedef struct {
 
-    uint8_t PauseCounter; /**< Counter for the pause length, +1 for each 10 ms */
-    uint8_t BitCounter; /**< Indicates which bit is currently being broadcasted */
-    uint8_t Parity; /**< Parity bit counter */
-    uint8_t BCDShifter; /**< Shift counter used for converting the received data from BCD to decimal */
-    uint8_t NewTime[6]; /**< Stores date & time of the time frame currently being broadcasted */
-    uint8_t NewTimeShifter; /**< Identifies which data is currently being broadcasted */
-    uint8_t OldTime; /**< Stores the time of the reception of  valid timeframe */
+	/**
+	 * @brief Counter for the pause length, +1 for each 10 ms
+	 */
+    uint8_t PauseCounter;
+
+    /**
+     * @brief Indicates which bit is currently being broadcasted
+     */
+    uint8_t BitCounter;
+
+    /**
+     * @brief Parity bit counter
+     */
+    uint8_t Parity;
+
+    /**
+     * @brief Shift counter used for converting the received data from BCD to
+     * decimal
+     */
+    uint8_t BCDShifter;
+
+    /**
+     * @brief Stores date & time of the time frame currently being broadcasted
+     */
+    uint8_t NewTime[6];
+
+    /**
+     * @brief Identifies which data is currently being broadcasted
+     */
+    uint8_t NewTimeShifter;
+
+    /**
+     * @brief Stores the time of the reception of  valid timeframe
+     */
+    uint8_t OldTime;
 
 } DCF_Struct;
 
