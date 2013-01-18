@@ -787,8 +787,9 @@ static bool dcf77_check(void)
 			if (!((DCF.BitCounter == 28) || (DCF.BitCounter == 35))) {
 
 				/*
-				 * Calculate the new time. This is achieved by using the
-				 * BCD table represented by BcdWeights.
+				 * Calculate the new time. This is achieved by using a table
+				 * containing the weight each digit is representing, namely
+				 * BcdWeights
 				 */
 				DCF.NewTime[DCF.NewTimeShifter] += BcdWeights[DCF.BCDShifter];
 
@@ -797,7 +798,7 @@ static bool dcf77_check(void)
 		}
 
 		/*
-		 * Increment BCD shift counter preparing it for the next iteration
+		 * Increment BCD shift counter in preparation for the next iteration
 		 */
 		DCF.BCDShifter++;
 
