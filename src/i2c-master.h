@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2012, 2013 Karol Babioch <karol@babioch.de>
  * Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
+ * Copyright (C) 2005, 2008 Peter Fleury <pfleury@gmx.ch>
  *
  * This file is part of Wordclock.
  *
