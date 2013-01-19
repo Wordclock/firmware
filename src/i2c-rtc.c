@@ -512,8 +512,14 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  * register of the RTC. Furthermore it sets "rtc_initialized" to true, so
  * other functions of this module can be used.
  *
+ * It should be noted that there is a CH bit (bit 7 of register 0), see [1],
+ * p. 8, which will halt the clock of the RTC. This function makes sure that
+ * this bit is set to 0, so the clock is **not** halted.
+ *
  * If there is some sort of error with the I2C bus this function will return
  * false.
+ *
+ * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @return Result of the operation, true if successful, false else
  * @see ctrlreg
