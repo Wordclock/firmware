@@ -168,7 +168,8 @@ static uint8_t i2c_rtc_status;
  * the RTC itself, so it persists even when it is powered off. This is done
  * during the initialization, see i2c_rtc_init().
  *
- * The control register of the DS1307 is located at 0x07, see [1], p. 8.
+ * The control register of the DS1307 is located at memory address 0x07,
+ * see [1], p. 8.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
