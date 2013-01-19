@@ -26,9 +26,9 @@
  * appropriate ISR. This ISR will then call various functions on a regular
  * basis.
  *
- * In order to initialize this module timer_init() needs to be called.
- * Afterwards the appropriate ISR will be called automatically - presumed
- * that interrupts are enabled globally.
+ * In order to initialize this module timer_init() needs to be called **once**.
+ * Afterwards the appropriate ISR will be called automatically - presuming that
+ * interrupts are enabled globally.
  *
  * @see timer.c
  */
