@@ -18,25 +18,23 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file wceeprom.h
- * 
- *  The eeprom module handles the persistent data of the wordclock modules
- *  \details
- *    It is responsible to provide the stored data on program start 
- *    as well as the writeback of updated params
+ * @brief Header allowing for access to persistent storage of various settings
  *
- * \version $Id: wceeprom.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The microcontroller used in this project provides some amount of
+ * [EEPROM][1]. This EEPROM is used to store various settings to be available
+ * across resets. This among other things includes various parameters from the
+ * user module, the display module and PWM module.
+ *
+ * This module is used to get previously saved settings during boot up and save
+ * the settings whenever changes occur.
+ *
+ * [1]: https://en.wikipedia.org/wiki/EEPROM
+ *
+ * @see WcEepromData
+ * @see uart.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_EEPROM_H_
 #define _WC_EEPROM_H_
