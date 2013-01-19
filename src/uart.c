@@ -40,13 +40,13 @@
 
 #if (BOOTLOADER_RESET_UART == 1)
 
-	#include <avr/interrupt.h>
+    #include <avr/interrupt.h>
 
-	#if (BOOTLOADER_RESET_WDT == 1)
+    #if (BOOTLOADER_RESET_WDT == 1)
 
-		#include <avr/wdt.h>
+        #include <avr/wdt.h>
 
-	#endif
+    #endif
 
 #endif
 
@@ -73,49 +73,49 @@
 void uart_init(void)
 {
 
-	/*
-	 * Check whether bootloader support is enabled
-	 */
-	#if (BOOTLOADER_RESET_UART == 1)
+    /*
+     * Check whether bootloader support is enabled
+     */
+    #if (BOOTLOADER_RESET_UART == 1)
 
-		/*
-		 * Bootloader support is activated, both receiver and transmitter are
-		 * needed
-		 *
-		 * TXEN0: Enable transmitter
-		 * RXEN0: Enable receiver
-		 * RXCIE0: Enable receiver
-		 */
-		UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);
+        /*
+         * Bootloader support is activated, both receiver and transmitter are
+         * needed
+         *
+         * TXEN0: Enable transmitter
+         * RXEN0: Enable receiver
+         * RXCIE0: Enable receiver
+         */
+        UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);
 
-	#else
+    #else
 
-		/*
-		 * Bootloader support is disabled, only transmitter is needed
-		 *
-		 * TXEN0: Enable transmitter
-		 */
-		UCSR0B |= _BV(TXEN0);
+        /*
+         * Bootloader support is disabled, only transmitter is needed
+         *
+         * TXEN0: Enable transmitter
+         */
+        UCSR0B |= _BV(TXEN0);
 
-	#endif
+    #endif
 
-	/*
-	 * Set baud rate according to calculated value
-	 */
-	UBRR0H = UBRR_VALUE;
-	UBRR0L = UBRR_VALUE;
+    /*
+     * Set baud rate according to calculated value
+     */
+    UBRR0H = UBRR_VALUE;
+    UBRR0L = UBRR_VALUE;
 
-	/*
-	 * Check whether speed should be doubled
-	 */
-	#if USE_2X
+    /*
+     * Check whether speed should be doubled
+     */
+    #if USE_2X
 
-		/*
-		 * U2X: Double the UART transmission speed
-		 */
-		UCSR0A = _BV(U2X);
+        /*
+         * U2X: Double the UART transmission speed
+         */
+        UCSR0A = _BV(U2X);
 
-	#endif
+    #endif
 
 }
 
@@ -132,9 +132,9 @@ void uart_init(void)
 void uart_putc(unsigned char c)
 {
 
-	while (!(UCSR0A & _BV(UDRE0)));
+    while (!(UCSR0A & _BV(UDRE0)));
 
-	UDR0 = c;
+    UDR0 = c;
 
 }
 
@@ -151,11 +151,11 @@ void uart_putc(unsigned char c)
 void uart_puts(const char* s)
 {
 
-	while(*s) {
+    while(*s) {
 
-		uart_putc(*s++);
+        uart_putc(*s++);
 
-	}
+    }
 
 }
 
@@ -173,13 +173,13 @@ void uart_puts(const char* s)
 void uart_puts_p(const char* s)
 {
 
-	char ch;
+    char ch;
 
-	while ((ch = pgm_read_byte(s++)) != '\0') {
+    while ((ch = pgm_read_byte(s++)) != '\0') {
 
-		uart_putc(ch);
+        uart_putc(ch);
 
-	}
+    }
 
 }
 
@@ -201,41 +201,41 @@ void uart_puts_p(const char* s)
  */
 #if (BOOTLOADER_RESET_UART == 1)
 
-	ISR(USART_RX_vect)
-	{
+    ISR(USART_RX_vect)
+    {
 
-		/*
-		 * Check whether received data was R
-		 */
-		if (UDR0 == 'R') {
+        /*
+         * Check whether received data was R
+         */
+        if (UDR0 == 'R') {
 
-			/*
-			 * Check whether reset should be performed using the watchdog timer
-			 */
-			#if (BOOTLOADER_RESET_WDT == 1)
+            /*
+             * Check whether reset should be performed using the watchdog timer
+             */
+            #if (BOOTLOADER_RESET_WDT == 1)
 
-				/*
-				 * Enable watchdog timer with shortest possible value
-				 */
-				wdt_enable(WDTO_15MS);
+                /*
+                 * Enable watchdog timer with shortest possible value
+                 */
+                wdt_enable(WDTO_15MS);
 
-				/*
-				 * Do nothing and wait for the reset performed by the watchdog
-				 * timer
-				 */
-				while (1);
+                /*
+                 * Do nothing and wait for the reset performed by the watchdog
+                 * timer
+                 */
+                while (1);
 
-			#else
+            #else
 
-				/*
-				 * No actual reset needed, jump to chip45boot2 directly
-				 */
-				asm volatile("jmp 0x3800");
+                /*
+                 * No actual reset needed, jump to chip45boot2 directly
+                 */
+                asm volatile("jmp 0x3800");
 
-			#endif
+            #endif
 
-		}
+        }
 
-	}
+    }
 
 #endif

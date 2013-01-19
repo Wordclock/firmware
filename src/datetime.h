@@ -38,13 +38,13 @@
 typedef struct
 {
 
-	unsigned char YY; /**< Year, ranges from 0 to 99 */
-	unsigned char MM; /**< Month, ranges from 1 to 12 */
-	unsigned char DD; /**< Day, ranges from 0 to 31 */
-	unsigned char hh; /**< Hour, ranges from 0 to 23 */
-	unsigned char mm; /**< Minute, ranges from 0 to 59 */
-	unsigned char ss; /**< Seconds, ranges from 0 to 59 */
-	unsigned char wd; /**< Weekday, ranges from 0 to 6, 0 represents Sunday */
+    unsigned char YY; /**< Year, ranges from 0 to 99 */
+    unsigned char MM; /**< Month, ranges from 1 to 12 */
+    unsigned char DD; /**< Day, ranges from 0 to 31 */
+    unsigned char hh; /**< Hour, ranges from 0 to 23 */
+    unsigned char mm; /**< Minute, ranges from 0 to 59 */
+    unsigned char ss; /**< Seconds, ranges from 0 to 59 */
+    unsigned char wd; /**< Weekday, ranges from 0 to 6, 0 represents Sunday */
 
 } datetime_t;
 

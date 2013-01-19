@@ -128,14 +128,14 @@ void byteToStr(uint8_t val, char str[4])
 
     if (v > 0) {
 
-		v = div10(v, &r);
-		str[1] = r + '0';
+        v = div10(v, &r);
+        str[1] = r + '0';
 
-		if (v > 0) {
+        if (v > 0) {
 
-			str[0] = v + '0';
+            str[0] = v + '0';
 
-		}
+        }
 
     }
 

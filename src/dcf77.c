@@ -58,27 +58,27 @@
  */
 #if  (LOG_DCF77 == 1)
 
-	/**
-	 * @brief Used to output logging information of this module
-	 *
-	 * When the logging for this module is enabled (LOG_DCF77 == 1), this macro
-	 * is used to output various kinds of information.
-	 *
-	 * @see LOG_DCF77
-	 */
-	#define log_dcf77(x) uart_puts_P(x)
+    /**
+     * @brief Used to output logging information of this module
+     *
+     * When the logging for this module is enabled (LOG_DCF77 == 1), this macro
+     * is used to output various kinds of information.
+     *
+     * @see LOG_DCF77
+     */
+    #define log_dcf77(x) uart_puts_P(x)
 
 #else
 
-	/**
-	 * @brief Used to output logging information of this module
-	 *
-	 * This makes sure that nothing is being output when the logging for this
-	 * module is deactivated (LOG_DCF77 == 0).
-	 *
-	 * @see LOG_DCF77
-	 */
-	#define log_dcf77(x)
+    /**
+     * @brief Used to output logging information of this module
+     *
+     * This makes sure that nothing is being output when the logging for this
+     * module is deactivated (LOG_DCF77 == 0).
+     *
+     * @see LOG_DCF77
+     */
+    #define log_dcf77(x)
 
 #endif
 
@@ -108,15 +108,15 @@ uint8_t DCF_FLAG;
  */
 typedef enum FLAGS_e {
 
-	/**
-	 * @brief Indicates whether a new full pulse has been received
-	 *
-	 * This is set during the ISR whenever a new pulse has been received. It
-	 * is used within dcf77_getDateTime() to see if there is anything to do.
-	 *
-	 * @see dcf77_ISR()
-	 * @see dcf77_getDateTime
-	 */
+    /**
+     * @brief Indicates whether a new full pulse has been received
+     *
+     * This is set during the ISR whenever a new pulse has been received. It
+     * is used within dcf77_getDateTime() to see if there is anything to do.
+     *
+     * @see dcf77_ISR()
+     * @see dcf77_getDateTime
+     */
     CHECK = 0,
 
     /**
@@ -170,7 +170,7 @@ typedef enum FLAGS_e {
 static inline bool getFlag(FLAGS flag)
 {
 
-	return DCF_FLAG & _BV(flag);
+    return DCF_FLAG & _BV(flag);
 
 }
 
@@ -184,7 +184,7 @@ static inline bool getFlag(FLAGS flag)
 static inline void setFlag(FLAGS flag)
 {
 
-	DCF_FLAG |= _BV(flag);
+    DCF_FLAG |= _BV(flag);
 
 }
 
@@ -198,7 +198,7 @@ static inline void setFlag(FLAGS flag)
 static inline void clearFlag(FLAGS flag)
 {
 
-	DCF_FLAG &= ~_BV(flag);
+    DCF_FLAG &= ~_BV(flag);
 
 }
 
@@ -232,22 +232,22 @@ static inline void clearFlag(FLAGS flag)
  */
 volatile typedef struct {
 
-	/**
-	 * @brief Counter for the pause length
-	 *
-	 * This variable stores the length of the pause between two pulses.
-	 * Normally the length between two pulses is either 800 ms or 900 ms,
-	 * depending upon the length of the pulse, which is either 100 ms or
-	 * 200 ms. However due to the fact that no pulse is being broadcasted in
-	 * the last second, the pause for the first bit will actually be at least
-	 * 1800 ms.
-	 *
-	 * This variable will be increased by one every 10 ms by dcf77_ISR(). It
-	 * is then analyzed by dcf77_check().
-	 *
-	 * @see dcf77_ISR()
-	 * @see dcf77_check()
-	 */
+    /**
+     * @brief Counter for the pause length
+     *
+     * This variable stores the length of the pause between two pulses.
+     * Normally the length between two pulses is either 800 ms or 900 ms,
+     * depending upon the length of the pulse, which is either 100 ms or
+     * 200 ms. However due to the fact that no pulse is being broadcasted in
+     * the last second, the pause for the first bit will actually be at least
+     * 1800 ms.
+     *
+     * This variable will be increased by one every 10 ms by dcf77_ISR(). It
+     * is then analyzed by dcf77_check().
+     *
+     * @see dcf77_ISR()
+     * @see dcf77_check()
+     */
     uint8_t PauseCounter;
 
     /**
@@ -279,7 +279,7 @@ volatile typedef struct {
 
     /**
      * @brief Shift counter used for converting the received data from BCD to
-     * 	decimal
+     *     decimal
      *
      * This is used to keep track of the weight the currently received bit
      * is representing. Consider the minute "block as an example. It consists
@@ -332,7 +332,7 @@ volatile typedef struct {
      * This stores the time of the last successfully received timeframe. It
      * is calculated by the following formula:
      *
-     * 	Hour + Minutes * 60
+     *     Hour + Minutes * 60
      *
      * This is used to determine whether the currently received timeframe
      * equals the old received one plus one minute, which is an indicator for
@@ -392,12 +392,11 @@ static uint8_t count_high;
 
 /**
  * @brief Used for converting received data from BCD to its decimal
- * 	representation
+ *    representation
  *
- *
- * The information for minutes, hours, 	day of month, day of week, month
- * number and year within century is transferred using a code very similar to
- * the BCD code, see [1].
+ * The information for minutes, hours, day of month, day of week, month number
+ * and year within century are transferred using a code very similar to the BCD
+ * code, see [1].
  *
  * The "classic" BCD code can only represent decimal digits from 0 to 9.
  * However in case of DCF77 the minutes, hours, day of month, month number and
@@ -422,21 +421,21 @@ const static uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
 static void dcf77_reset(void)
 {
 
-	log_dcf77("DCF77 Reset\n");
+    log_dcf77("DCF77 Reset\n");
 
-	DCF.Parity = 0;
-	DCF.PauseCounter = 0;
-	DCF.BCDShifter = 0;
-	DCF.BitCounter = 0;
-	DCF.NewTimeShifter = 0;
+    DCF.Parity = 0;
+    DCF.PauseCounter = 0;
+    DCF.BCDShifter = 0;
+    DCF.BitCounter = 0;
+    DCF.NewTimeShifter = 0;
 
-	setFlag(CHECK);
+    setFlag(CHECK);
 
-	for (uint8_t i = 0; i < 6; i++) {
+    for (uint8_t i = 0; i < 6; i++) {
 
-		DCF.NewTime[i] = 0;
+        DCF.NewTime[i] = 0;
 
-	}
+    }
 
 }
 
@@ -458,228 +457,228 @@ static void dcf77_reset(void)
 static void dcf77_check_receiver_type(void)
 {
 
-	/*
-	 * Keeps track of how often this method was already called without enabling
-	 * and/or disabling the pull up resistor
-	 */
-	static uint8_t count_pass;
+    /*
+     * Keeps track of how often this method was already called without enabling
+     * and/or disabling the pull up resistor
+     */
+    static uint8_t count_pass;
 
-	/*
-	 * Keeps track of how often the pull up resistor was switched on and/or off
-	 */
-	static uint8_t count_switch;
+    /*
+     * Keeps track of how often the pull up resistor was switched on and/or off
+     */
+    static uint8_t count_switch;
 
-	/*
-	* Check whether one second has passed
-	*/
-	if (count_low + count_high >= 100) {
+    /*
+    * Check whether one second has passed
+    */
+    if (count_low + count_high >= 100) {
 
-    	#if (LOG_DCF77 == 1)
+        #if (LOG_DCF77 == 1)
 
-			char log_text[8];
+            char log_text[8];
 
-			byteToStr (count_low, log_text);
-			uart_puts(log_text);
-			uart_puts(" ");
+            byteToStr (count_low, log_text);
+            uart_puts(log_text);
+            uart_puts(" ");
 
-			byteToStr (count_high, log_text);
-			uart_puts(log_text);
-			uart_puts(" ");
+            byteToStr (count_high, log_text);
+            uart_puts(log_text);
+            uart_puts(" ");
 
-			byteToStr (count_high+count_low, log_text);
-			uart_puts(log_text);
-			uart_puts(" ");
+            byteToStr (count_high+count_low, log_text);
+            uart_puts(log_text);
+            uart_puts(" ");
 
-			byteToStr (count_pass, log_text);
-			uart_puts(log_text);
-			uart_puts(" ");
+            byteToStr (count_pass, log_text);
+            uart_puts(log_text);
+            uart_puts(" ");
 
-			byteToStr (count_switch, log_text);
-			uart_puts(log_text);
-			uart_puts("\n");
+            byteToStr (count_switch, log_text);
+            uart_puts(log_text);
+            uart_puts("\n");
 
-    	#endif
+        #endif
 
-		/*
-		 * Check if at least one of both counters is low
-		 */
-		if ((count_low == 0) || (count_high == 0)) {
+        /*
+         * Check if at least one of both counters is low
+         */
+        if ((count_low == 0) || (count_high == 0)) {
 
-			/**
-			 * Check whether this was already tried 20 times
-			 */
-			if (++count_pass == 20) {
+            /**
+             * Check whether this was already tried 20 times
+             */
+            if (++count_pass == 20) {
 
-				/*
-				 * Reset counter for keeping track of how often this function
-				 * was called with the same setting for the pull up resistor
-				 */
-				count_pass = 0;
+                /*
+                 * Reset counter for keeping track of how often this function
+                 * was called with the same setting for the pull up resistor
+                 */
+                count_pass = 0;
 
-				/*
-				 * Increase the counter for keeping track of how often the
-				 * setting for the pull up resistor has been changed, as we
-				 * are going to change it immediately.
-				 */
-				count_switch++;
+                /*
+                 * Increase the counter for keeping track of how often the
+                 * setting for the pull up resistor has been changed, as we
+                 * are going to change it immediately.
+                 */
+                count_switch++;
 
-				/*
-				 * Check whether pull up resistor is activated right now
-				 */
-				if ((PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)))) {
+                /*
+                 * Check whether pull up resistor is activated right now
+                 */
+                if ((PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)))) {
 
-					/*
-					 * Deactivate pull up resistor
-					 */
-					PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
+                    /*
+                     * Deactivate pull up resistor
+                     */
+                    PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
 
-					/*
-					 * Output logging information regarding the change
-					 */
-					log_dcf77(" Pull-UP deactivated\n");
+                    /*
+                     * Output logging information regarding the change
+                     */
+                    log_dcf77(" Pull-UP deactivated\n");
 
-				} else {
+                } else {
 
-					/*
-					 * Activate pull up resistor
-					 */
-					PORT(DCF_INPUT)           |= _BV(BIT(DCF_INPUT));
+                    /*
+                     * Activate pull up resistor
+                     */
+                    PORT(DCF_INPUT) |= _BV(BIT(DCF_INPUT));
 
-					/*
-					 * Output logging information regarding the change
-					 */
-					log_dcf77(" Pull-UP activated\n");
+                    /*
+                     * Output logging information regarding the change
+                     */
+                    log_dcf77(" Pull-UP activated\n");
 
-				}
+                }
 
-				/*
-				 * Check whether setting for the pull up resistor has been
-				 * changed 30 times already. If the receiver hasn't
-				 * been detected by now, it probably isn't available.
-				 */
-				if (count_switch == 30) {
+                /*
+                 * Check whether setting for the pull up resistor has been
+                 * changed 30 times already. If the receiver hasn't
+                 * been detected by now, it probably isn't available.
+                 */
+                if (count_switch == 30) {
 
-					/*
-					 * Activate pull up resistor just in case
-					 */
-					PORT(DCF_INPUT) |= _BV(BIT(DCF_INPUT));
+                    /*
+                     * Activate pull up resistor just in case
+                     */
+                    PORT(DCF_INPUT) |= _BV(BIT(DCF_INPUT));
 
-					/*
-					 * Set and/or clear appropriate flags
-					 */
-					setFlag(DEFINED);
-					clearFlag(AVAILABLE);
+                    /*
+                     * Set and/or clear appropriate flags
+                     */
+                    setFlag(DEFINED);
+                    clearFlag(AVAILABLE);
 
-					/*
-					 * Output logging information
-					 */
-					log_dcf77("\nNo DCF77 Module detected!\n");
+                    /*
+                     * Output logging information
+                     */
+                    log_dcf77("\nNo DCF77 Module detected!\n");
 
-				}
+                }
 
-			}
+            }
 
-		} else {
+        } else {
 
-			/*
-			 * Both count_low and count_high have values different from 0,
-			 * which means that there probably is a receiver available
-			 */
+            /*
+             * Both count_low and count_high have values different from 0,
+             * which means that there probably is a receiver available
+             */
 
-			/*
-			 * Check whether there were 30 changes without a change of the
-			 * setting for the pull up resistor
-			 */
-			if (++count_pass == 30) {
+            /*
+             * Check whether there were 30 changes without a change of the
+             * setting for the pull up resistor
+             */
+            if (++count_pass == 30) {
 
-				/*
-				 * Module successfully detected, set appropriate flags
-				 */
-				setFlag(DEFINED);
-				setFlag(AVAILABLE);
+                /*
+                 * Module successfully detected, set appropriate flags
+                 */
+                setFlag(DEFINED);
+                setFlag(AVAILABLE);
 
-				/*
-				 * If logging for this module is enabled the type of the
-				 * receiver detected should be output
-				 */
-        		#if (LOG_DCF77 == 1)
+                /*
+                 * If logging for this module is enabled the type of the
+                 * receiver detected should be output
+                 */
+                #if (LOG_DCF77 == 1)
 
-					if (getFlag(HIGH_ACTIVE)) {
+                    if (getFlag(HIGH_ACTIVE)) {
 
-						log_dcf77("\nHigh active DCF77 Module detected!\n");
+                        log_dcf77("\nHigh active DCF77 Module detected!\n");
 
-					} else {
+                    } else {
 
-						log_dcf77("\nLow active DCF77 Module detected!\n");
+                        log_dcf77("\nLow active DCF77 Module detected!\n");
 
-					}
+                    }
 
-        		#endif
+                #endif
 
-				return;
+                return;
 
-			}
+            }
 
-			/*
-			 * Check which of both counters is bigger, which is an indicator
-			 * for the type of the receiver, as one of both should be
-			 * significantly bigger than the other.
-			 *
-			 * Remember: The pulse length is 100 ms and/or 200 ms, but the
-			 * pause between two pulses is at least 800 ms long.
-			 */
-			if (count_low > count_high) {
+            /*
+             * Check which of both counters is bigger, which is an indicator
+             * for the type of the receiver, as one of both should be
+             * significantly bigger than the other.
+             *
+             * Remember: The pulse length is 100 ms and/or 200 ms, but the
+             * pause between two pulses is at least 800 ms long.
+             */
+            if (count_low > count_high) {
 
-				/*
-				 * Check whether the current presumed type of the receiver is
-				 * active high.
-				 */
-				if (getFlag(HIGH_ACTIVE)) {
+                /*
+                 * Check whether the current presumed type of the receiver is
+                 * active high.
+                 */
+                if (getFlag(HIGH_ACTIVE)) {
 
-					/*
-					 * We would expect count_high to be bigger in case of an
-					 * active high receiver, therefore we reset the pass
-					 * counter and presume an active low module for the next
-					 * passes.
-					 */
-					count_pass = 0;
-					clearFlag(HIGH_ACTIVE);
+                    /*
+                     * We would expect count_high to be bigger in case of an
+                     * active high receiver, therefore we reset the pass
+                     * counter and presume an active low module for the next
+                     * passes.
+                     */
+                    count_pass = 0;
+                    clearFlag(HIGH_ACTIVE);
 
-				}
+                }
 
-			/*
-			 * count_low is smaller (and/or equal) to count_high
-			 */
-			} else {
+            /*
+             * count_low is smaller (and/or equal) to count_high
+             */
+            } else {
 
-				/*
-				 * Check whether the current presumed type of the receiver is
-				 * active low
-				 */
-				if (!(getFlag(HIGH_ACTIVE))) {
+                /*
+                 * Check whether the current presumed type of the receiver is
+                 * active low
+                 */
+                if (!(getFlag(HIGH_ACTIVE))) {
 
-					/*
-					 * We would expect count_low to be bigger in case of an
-					 * active low receiver, therefore we reset the pass counter
-					 * and presume an active low receiver for the next passes.
-					 */
-					count_pass = 0;
-					setFlag(HIGH_ACTIVE);
+                    /*
+                     * We would expect count_low to be bigger in case of an
+                     * active low receiver, therefore we reset the pass counter
+                     * and presume an active low receiver for the next passes.
+                     */
+                    count_pass = 0;
+                    setFlag(HIGH_ACTIVE);
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-		/*
-		 * Reset both counters, the high and/or low detection will be reached
-		 * directly the next time this function is called
-		 */
-		count_low = 0;
-		count_high = 0;
+        /*
+         * Reset both counters, the high and/or low detection will be reached
+         * directly the next time this function is called
+         */
+        count_low = 0;
+        count_high = 0;
 
-	}
+    }
 
 }
 /**
@@ -698,234 +697,234 @@ static void dcf77_check_receiver_type(void)
 static bool dcf77_check(void)
 {
 
-	/*
-	 * Check whether logging for this module is enabled
-	 */
-	#if (LOG_DCF77 == 1)
+    /*
+     * Check whether logging for this module is enabled
+     */
+    #if (LOG_DCF77 == 1)
 
-		if (DCF.PauseCounter > 0) {
+        if (DCF.PauseCounter > 0) {
 
-			char log_text[8];
+            char log_text[8];
 
-			/*
-			 * Output the length of the last pause
-			 */
-			byteToStr(DCF.PauseCounter, log_text);
-			uart_puts(log_text);
-			uart_puts(" ");
+            /*
+             * Output the length of the last pause
+             */
+            byteToStr(DCF.PauseCounter, log_text);
+            uart_puts(log_text);
+            uart_puts(" ");
 
-		}
+        }
 
-	#endif
+    #endif
 
    /*
-	* Check whether pause length is smaller or equal to 60 ms, which is
-	* considered to be some sort of a spike.
-	*/
-	if (DCF.PauseCounter <= 6) {
+    * Check whether pause length is smaller or equal to 60 ms, which is
+    * considered to be some sort of a spike.
+    */
+    if (DCF.PauseCounter <= 6) {
 
-		/*
-		 * Clear pause length counter
-		 */
-		DCF.PauseCounter = 0;
+        /*
+         * Clear pause length counter
+         */
+        DCF.PauseCounter = 0;
 
-		return false;
+        return false;
 
-	}
+    }
 
-	if (((DCF.PauseCounter >= 170) && (DCF.BitCounter != 58))
-		  || (DCF.BitCounter >= 59)) {
+    if (((DCF.PauseCounter >= 170) && (DCF.BitCounter != 58))
+          || (DCF.BitCounter >= 59)) {
 
-		/*
-		 * Reset the internal state of this module
-		 */
-		dcf77_reset();
+        /*
+         * Reset the internal state of this module
+         */
+        dcf77_reset();
 
-		return false;
+        return false;
 
-	}
+    }
 
-	/*
-	 * The bits 0 - 20 are not important for us and won't be examined at all.
-	 * They basically contain only contain weather data and information about
-	 * leap seconds and time changes at the end of the hour.
-	 */
-	if (DCF.BitCounter <= 20) {
+    /*
+     * The bits 0 - 20 are not important for us and won't be examined at all.
+     * They basically contain only contain weather data and information about
+     * leap seconds and time changes at the end of the hour.
+     */
+    if (DCF.BitCounter <= 20) {
 
-		/*
-		 * Increase bit counter
-		 */
-		DCF.BitCounter++;
+        /*
+         * Increase bit counter
+         */
+        DCF.BitCounter++;
 
-		/*
-		 * Reset pause counter
-		 */
-		DCF.PauseCounter = 0;
+        /*
+         * Reset pause counter
+         */
+        DCF.PauseCounter = 0;
 
-		return false;
+        return false;
 
-	}
+    }
 
-	/*
-	 * Check whether either 0 or 1 have been received.
-	 */
-	if ((DCF.PauseCounter >= 78) && (DCF.PauseCounter <= 95)) {
+    /*
+     * Check whether either 0 or 1 have been received.
+     */
+    if ((DCF.PauseCounter >= 78) && (DCF.PauseCounter <= 95)) {
 
-		/*
-		 * Check whether 1 has been received
-		 */
-		if (DCF.PauseCounter <= 86) {
+        /*
+         * Check whether 1 has been received
+         */
+        if (DCF.PauseCounter <= 86) {
 
-			/*
-			 * Increase the parity counter
-			 */
-			DCF.Parity++;
+            /*
+             * Increase the parity counter
+             */
+            DCF.Parity++;
 
-			/*
-			 * Check whether received bit was neither the parity data for the
-			 * minutes nor the parity data for the hour
-			 */
-			if (!((DCF.BitCounter == 28) || (DCF.BitCounter == 35))) {
+            /*
+             * Check whether received bit was neither the parity data for the
+             * minutes nor the parity data for the hour
+             */
+            if (!((DCF.BitCounter == 28) || (DCF.BitCounter == 35))) {
 
-				/*
-				 * Calculate the new time. This is achieved by using a table
-				 * containing the weight each digit is representing, namely
-				 * BcdWeights
-				 */
-				DCF.NewTime[DCF.NewTimeShifter] += BcdWeights[DCF.BCDShifter];
+                /*
+                 * Calculate the new time. This is achieved by using a table
+                 * containing the weight each digit is representing, namely
+                 * BcdWeights
+                 */
+                DCF.NewTime[DCF.NewTimeShifter] += BcdWeights[DCF.BCDShifter];
 
-			}
+            }
 
-		}
+        }
 
-		/*
-		 * Increment BCD shift counter in preparation for the next iteration
-		 */
-		DCF.BCDShifter++;
+        /*
+         * Increment BCD shift counter in preparation for the next iteration
+         */
+        DCF.BCDShifter++;
 
-		/*
-		 * Check whether parity data is valid in case we just received bit 28
-		 * and/or 35
-		 */
-		if (((DCF.BitCounter == 28) || (DCF.BitCounter == 35))
-				&& (DCF.Parity % 2 != 0)) {
+        /*
+         * Check whether parity data is valid in case we just received bit 28
+         * and/or 35
+         */
+        if (((DCF.BitCounter == 28) || (DCF.BitCounter == 35))
+                && (DCF.Parity % 2 != 0)) {
 
-			dcf77_reset();
-			return false;
+            dcf77_reset();
+            return false;
 
-		}
+        }
 
-		/*
-		 * Check whether the next bit will contain information about another
-		 * "property". The order is as following:
-		 *
-		 * Minute -> Hour -> Day of the month -> Day of the week -> Month
-		 * 	-> Year
-		 *
-		 * 	The new "property" will be stored within its own field in
-		 * 	DCF.NewTime. NewTimeShifter is used to keep track of this.
-		 *
-		 * 	BCDShifter on the other hand is used to keep track of the value
-		 * 	the currently received bit represents as it is BCD encoded.
-		 */
-		switch(DCF.BitCounter) {
+        /*
+         * Check whether the next bit will contain information about another
+         * "property". The order is as following:
+         *
+         * Minute -> Hour -> Day of the month -> Day of the week -> Month
+         *     -> Year
+         *
+         *     The new "property" will be stored within its own field in
+         *     DCF.NewTime. NewTimeShifter is used to keep track of this.
+         *
+         *     BCDShifter on the other hand is used to keep track of the value
+         *     the currently received bit represents as it is BCD encoded.
+         */
+        switch(DCF.BitCounter) {
 
-			case 28:
-			case 35:
-			case 41:
-			case 44:
-			case 49:
+            case 28:
+            case 35:
+            case 41:
+            case 44:
+            case 49:
 
-				DCF.NewTimeShifter++;
-				DCF.BCDShifter = 0;
+                DCF.NewTimeShifter++;
+                DCF.BCDShifter = 0;
 
-				break;
+                break;
 
-		}
+        }
 
-		/*
-		 * Increase bit counter
-		 */
-		DCF.BitCounter++;
+        /*
+         * Increase bit counter
+         */
+        DCF.BitCounter++;
 
-		/*
-		 * Reset pause counter
-		 */
-		DCF.PauseCounter = 0;
+        /*
+         * Reset pause counter
+         */
+        DCF.PauseCounter = 0;
 
-		return false;
+        return false;
 
-	}
+    }
 
-	/**
-	 * Check whether received bit was the start of a new minute.
-	 */
-	if (DCF.PauseCounter >= 170) {
+    /**
+     * Check whether received bit was the start of a new minute.
+     */
+    if (DCF.PauseCounter >= 170) {
 
-		/*
-		 * Check whether the last bit broadcasted was 1
-		 */
-		if (!(DCF.PauseCounter >= 187)) {
+        /*
+         * Check whether the last bit broadcasted was 1
+         */
+        if (!(DCF.PauseCounter >= 187)) {
 
-			/*
-			 * Increase parity counter
-			 */
-			DCF.Parity++;
+            /*
+             * Increase parity counter
+             */
+            DCF.Parity++;
 
-		}
+        }
 
-		/*
-		 * Check whether 58 bits have been received and whether the parity data
-		 * for the last one is valid, which means even.
-		 */
-		if ((DCF.BitCounter != 58) || (DCF.Parity % 2 != 0)) {
+        /*
+         * Check whether 58 bits have been received and whether the parity data
+         * for the last one is valid, which means even.
+         */
+        if ((DCF.BitCounter != 58) || (DCF.Parity % 2 != 0)) {
 
-			/*
-			 * Reset the internal state of this module
-			 */
-			dcf77_reset();
+            /*
+             * Reset the internal state of this module
+             */
+            dcf77_reset();
 
-			return false;
+            return false;
 
-		}
+        }
 
-		uint8_t NewTime;
+        uint8_t NewTime;
 
-		NewTime = DCF.NewTime[0] + DCF.NewTime[1] * 60;
+        NewTime = DCF.NewTime[0] + DCF.NewTime[1] * 60;
 
-		if ((DCF.OldTime + 1) == NewTime) {
+        if ((DCF.OldTime + 1) == NewTime) {
 
-			/*
-			 * Output some log information
-			 */
-			log_dcf77(" 2nd DCF77 correct\n");
+            /*
+             * Output some log information
+             */
+            log_dcf77(" 2nd DCF77 correct\n");
 
-			return true;
+            return true;
 
-		} else {
+        } else {
 
-			/*
-			 * Output some log information
-			 */
-			log_dcf77(" 1st DCF77 correct\n");
+            /*
+             * Output some log information
+             */
+            log_dcf77(" 1st DCF77 correct\n");
 
-			/*
-			 * Take over the NewTime as OldTime for the next iteration
-			 */
-			DCF.OldTime = NewTime;
+            /*
+             * Take over the NewTime as OldTime for the next iteration
+             */
+            DCF.OldTime = NewTime;
 
-			/*
-			 * Reset the internal state of this module
-			 */
-			dcf77_reset();
+            /*
+             * Reset the internal state of this module
+             */
+            dcf77_reset();
 
-			return false;
+            return false;
 
-		}
+        }
 
-	}
+    }
 
-	return false;
+    return false;
 
 }
 
@@ -943,33 +942,33 @@ static bool dcf77_check(void)
 void dcf77_init(void)
 {
 
-	/*
-	 * Set up DCF input pin
-	 */
-	DDR(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
-	PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
+    /*
+     * Set up DCF input pin
+     */
+    DDR(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
+    PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
 
-	/*
-	 * Set up DCF output in
-	 */
-	DDR(DCF_OUTPUT) |=  _BV(BIT(DCF_OUTPUT));
-	PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
+    /*
+     * Set up DCF output in
+     */
+    DDR(DCF_OUTPUT) |=  _BV(BIT(DCF_OUTPUT));
+    PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
 
-	/*
-	 * Set and/or clear various flags
-	 */
-	clearFlag(DEFINED);
-	setFlag(AVAILABLE);
+    /*
+     * Set and/or clear various flags
+     */
+    clearFlag(DEFINED);
+    setFlag(AVAILABLE);
 
-	/*
-	 * Reset this module using dcf77_reset
-	 */
-	dcf77_reset();
+    /*
+     * Reset this module using dcf77_reset
+     */
+    dcf77_reset();
 
-	/*
-	 * Reset the time of last successfully received time frame to 0
-	 */
-	DCF.OldTime = 0;
+    /*
+     * Reset the time of last successfully received time frame to 0
+     */
+    DCF.OldTime = 0;
 
 }
 
@@ -993,100 +992,100 @@ void dcf77_init(void)
 void dcf77_ISR(void)
 {
 
-	/*
-	 * Check whether receiver is actually available
-	 */
-	if (getFlag(AVAILABLE)) {
+    /*
+     * Check whether receiver is actually available
+     */
+    if (getFlag(AVAILABLE)) {
 
-		/*
-		 * Check whether receiver type has already been determined
-		 */
-		if (!(getFlag(DEFINED))) {
+        /*
+         * Check whether receiver type has already been determined
+         */
+        if (!(getFlag(DEFINED))) {
 
-			/*
-			 * Check whether high or low level is is on the DCF77 input pin and
-			 * increase the appropriate counter
-			 */
-			if (!(PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)))) {
+            /*
+             * Check whether high or low level is is on the DCF77 input pin and
+             * increase the appropriate counter
+             */
+            if (!(PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)))) {
 
-				count_low++;
+                count_low++;
 
-			} else {
+            } else {
 
-				count_high++;
+                count_high++;
 
-			}
+            }
 
-			/*
-			 * Determine the receiver type using dcf77_check_receiver_type()
-			 */
-			dcf77_check_receiver_type();
+            /*
+             * Determine the receiver type using dcf77_check_receiver_type()
+             */
+            dcf77_check_receiver_type();
 
-		} else {
+        } else {
 
-			/*
-			 * Receiver type has already been determined
-			 */
+            /*
+             * Receiver type has already been determined
+             */
 
-			/*
-			 * Check whether the receiver is enabled after all
-			 */
-			if (enable_dcf77_ISR) {
+            /*
+             * Check whether the receiver is enabled after all
+             */
+            if (enable_dcf77_ISR) {
 
-				uint8_t dcf_signal;
+                uint8_t dcf_signal;
 
-				/*
-				 * Check which type of receiver is used and negate the input
-				 * pin if necessary. Apply this value to dcf_signal.
-				 */
-				if (getFlag(HIGH_ACTIVE)) {
+                /*
+                 * Check which type of receiver is used and negate the input
+                 * pin if necessary. Apply this value to dcf_signal.
+                 */
+                if (getFlag(HIGH_ACTIVE)) {
 
-					dcf_signal = (PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)));
+                    dcf_signal = (PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)));
 
-				} else {
+                } else {
 
-					dcf_signal = !(PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)));
+                    dcf_signal = !(PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)));
 
-				}
+                }
 
-				/*
-				 * Check if signal is high
-				 */
-				if (dcf_signal) {
+                /*
+                 * Check if signal is high
+                 */
+                if (dcf_signal) {
 
-					/*
-					 * Increase pause counter
-					 */
-					DCF.PauseCounter++;
+                    /*
+                     * Increase pause counter
+                     */
+                    DCF.PauseCounter++;
 
-					/*
-					 * Disable DCF77 output
-					 */
-					PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
+                    /*
+                     * Disable DCF77 output
+                     */
+                    PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
 
-				} else {
+                } else {
 
-					/*
-					 * DCF signal is low
-					 */
+                    /*
+                     * DCF signal is low
+                     */
 
-					/*
-					 * Set check flag to analyze signal
-					 */
-					setFlag(CHECK);
+                    /*
+                     * Set check flag to analyze signal
+                     */
+                    setFlag(CHECK);
 
-					/*
-					 * Enable DCF output
-					 */
-					PORT(DCF_OUTPUT) |= _BV(BIT(DCF_OUTPUT));
+                    /*
+                     * Enable DCF output
+                     */
+                    PORT(DCF_OUTPUT) |= _BV(BIT(DCF_OUTPUT));
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
 }
 
@@ -1098,65 +1097,65 @@ void dcf77_ISR(void)
  * return false and do nothing to the buffer at all.
  *
  * @param DateTime_p Pointer to buffer where the resulting date & time should
- * 		  be stored
+ *           be stored
  * @return True if date & time has been put into buffer, false otherwise
  * @see FLAGS_e
  */
 bool dcf77_getDateTime(datetime_t * DateTime_p)
 {
 
-	/*
-	 * Check whether receiver is available and whether a full pulse has just
-	 * been received
-	 */
-	if (getFlag(AVAILABLE) && getFlag(CHECK)) {
+    /*
+     * Check whether receiver is available and whether a full pulse has just
+     * been received
+     */
+    if (getFlag(AVAILABLE) && getFlag(CHECK)) {
 
-		/*
-		 * Check whether a full valid time frame has been received
-		 */
-		if (dcf77_check()) {
+        /*
+         * Check whether a full valid time frame has been received
+         */
+        if (dcf77_check()) {
 
-			/*
-			 * Take over the time just broadcasted over DCF77
-			 */
-			DateTime_p->ss = 0;
-			DateTime_p->mm = DCF.NewTime[0];
-			DateTime_p->hh = DCF.NewTime[1];
-			DateTime_p->DD = DCF.NewTime[2];
-			DateTime_p->wd = DCF.NewTime[3];
-			DateTime_p->MM = DCF.NewTime[4];
-			DateTime_p->YY = DCF.NewTime[5];
+            /*
+             * Take over the time just broadcasted over DCF77
+             */
+            DateTime_p->ss = 0;
+            DateTime_p->mm = DCF.NewTime[0];
+            DateTime_p->hh = DCF.NewTime[1];
+            DateTime_p->DD = DCF.NewTime[2];
+            DateTime_p->wd = DCF.NewTime[3];
+            DateTime_p->MM = DCF.NewTime[4];
+            DateTime_p->YY = DCF.NewTime[5];
 
-			/*
-			 * Reset this module
-			 */
-			dcf77_reset();
+            /*
+             * Reset this module
+             */
+            dcf77_reset();
 
-			/*
-			 * Disable DCF77. Since the time now has been synchronized the
-			 * DCF77 module gets deactivated. It can be reenabled by the
-			 * main program, e.g. once every hour.
-			 */
-			enable_dcf77_ISR = false;
+            /*
+             * Disable DCF77. Since the time now has been synchronized the
+             * DCF77 module gets deactivated. It can be reenabled by the
+             * main program, e.g. once every hour.
+             */
+            enable_dcf77_ISR = false;
 
-			/*
-			 * Deactivate the output since the ISR is deactivated, too
-			 */
-			PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
+            /*
+             * Deactivate the output since the ISR is deactivated, too
+             */
+            PORT(DCF_OUTPUT) &= ~_BV(BIT(DCF_OUTPUT));
 
-			return true;
+            return true;
 
-		}
+        }
 
-		/*
-		 * Clear the CHECK flag to indicate that the module should continue
-		 * to analyze the time signal.
-		 */
-		clearFlag(CHECK);
+        /*
+         * Clear the CHECK flag to indicate that the module should continue
+         * to analyze the time signal.
+         */
+        clearFlag(CHECK);
 
-	}
+    }
 
-	return false;
+    return false;
 
 }
 

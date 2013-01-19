@@ -120,31 +120,31 @@
 void timer_init(void)
 {
 
-	/*
-	 * Input capture register is used as compare value. The formula below
-	 * ensures that the ISR will be triggered as often as defined in
-	 * F_INTERRUPT.
-	 */
-	ICR1 = (F_CPU / F_INTERRUPT) - 1;
+    /*
+     * Input capture register is used as compare value. The formula below
+     * ensures that the ISR will be triggered as often as defined in
+     * F_INTERRUPT.
+     */
+    ICR1 = (F_CPU / F_INTERRUPT) - 1;
 
-	/*
-	 * Set up Timer/Counter1
-	 *
-	 * See [1], p. 132, Table 16-4 for an overview of the available modes
-	 * See [1], p. 133, Table 16-5 for an overview of the available prescalers
-	 *
-	 * [1]: http://www.atmel.com/images/doc2545.pdf
-	 *
-	 * Mode: 14 (Fast PWM)
-	 * Prescaler: 1
-	 */
-	TCCR1A = _BV(WGM11);
-	TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);
+    /*
+     * Set up Timer/Counter1
+     *
+     * See [1], p. 132, Table 16-4 for an overview of the available modes
+     * See [1], p. 133, Table 16-5 for an overview of the available prescalers
+     *
+     * [1]: http://www.atmel.com/images/doc2545.pdf
+     *
+     * Mode: 14 (Fast PWM)
+     * Prescaler: 1
+     */
+    TCCR1A = _BV(WGM11);
+    TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);
 
-	/*
-	 * ICIE1: Input capture interrupt enable
-	 */
-	TIMSK1 = 1 << ICIE1;
+    /*
+     * ICIE1: Input capture interrupt enable
+     */
+    TIMSK1 = 1 << ICIE1;
 
 }
 
@@ -175,79 +175,79 @@ void timer_init(void)
 ISR(TIMER1_CAPT_vect)
 {
 
-	/*
-	 * Variables needed to divide the ISR frequency down to smaller frequencies
-	 */
-	static uint8_t thousands_counter;
-	static uint8_t hundreds_counter;
-	static uint8_t tenths_counter;
-	static uint8_t seconds_counter;
-	static uint8_t minutes_counter;
+    /*
+     * Variables needed to divide the ISR frequency down to smaller frequencies
+     */
+    static uint8_t thousands_counter;
+    static uint8_t hundreds_counter;
+    static uint8_t tenths_counter;
+    static uint8_t seconds_counter;
+    static uint8_t minutes_counter;
 
-	/*
-	 * The following part works by incrementing the thousands_counter each
-	 * time the ISR is called. It is then compared against 10, which of course
-	 * will only be true every tenth time. In case this comparison returns
-	 * false, the execution of the ISR is ended with a simple return. Otherwise
-	 * the next smaller counter will be incremented and once again compared
-	 * against ten. This is done until the desired resolution of one minute
-	 * is reached. Between each of these comparisons the list of macros defined
-	 * above is added, so that the appropriate functions will get called with
-	 * the specified frequency.
-	 */
+    /*
+     * The following part works by incrementing the thousands_counter each
+     * time the ISR is called. It is then compared against 10, which of course
+     * will only be true every tenth time. In case this comparison returns
+     * false, the execution of the ISR is ended with a simple return. Otherwise
+     * the next smaller counter will be incremented and once again compared
+     * against ten. This is done until the desired resolution of one minute
+     * is reached. Between each of these comparisons the list of macros defined
+     * above is added, so that the appropriate functions will get called with
+     * the specified frequency.
+     */
 
-	INTERRUPT_10000HZ;
+    INTERRUPT_10000HZ;
 
-	if (++thousands_counter != 10) {
+    if (++thousands_counter != 10) {
 
-		return;
+        return;
 
-	}
+    }
 
-	thousands_counter = 0;
+    thousands_counter = 0;
 
-	INTERRUPT_1000HZ;
+    INTERRUPT_1000HZ;
 
-	if (++hundreds_counter != 10) {
+    if (++hundreds_counter != 10) {
 
-		return;
+        return;
 
-	}
+    }
 
-	hundreds_counter = 0;
+    hundreds_counter = 0;
 
-	INTERRUPT_100HZ;
+    INTERRUPT_100HZ;
 
-	if (++tenths_counter != 10) {
+    if (++tenths_counter != 10) {
 
-		return;
+        return;
 
-	}
+    }
 
-	tenths_counter = 0;
+    tenths_counter = 0;
 
-	INTERRUPT_10HZ;
+    INTERRUPT_10HZ;
 
-	if (++seconds_counter != 10) {
+    if (++seconds_counter != 10) {
 
-		return;
+        return;
 
-	}
+    }
 
-	seconds_counter = 0;
+    seconds_counter = 0;
 
-	INTERRUPT_1HZ;
+    INTERRUPT_1HZ;
 
-	minutes_counter++;
+    minutes_counter++;
 
-	if (minutes_counter != 60) {
+    if (minutes_counter != 60) {
 
-		return;
+        return;
 
-	}
+    }
 
-	minutes_counter = 0;
+    minutes_counter = 0;
 
-	INTERRUPT_1M;
+    INTERRUPT_1M;
 
 }

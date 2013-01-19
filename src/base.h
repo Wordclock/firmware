@@ -45,8 +45,8 @@
  * @see BIN16()
  */
 #define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
-	((b7 << 7) | (b6 << 6) | (b5 << 5) | (b4 << 4) \
-	| (b3 << 3) | (b2 << 2) | (b1 << 1) | (b0 << 0))
+    ((b7 << 7) | (b6 << 6) | (b5 << 5) | (b4 << 4) \
+    | (b3 << 3) | (b2 << 2) | (b1 << 1) | (b0 << 0))
 
 /**
  * @brief Build short by explicitly setting each bit
@@ -60,7 +60,7 @@
  * @see BIN8()
  */
 #define BIN16(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
-	((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
+    ((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
     | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
 
 /**
@@ -83,10 +83,10 @@
 static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 {
 
-	uint8_t y = ((uint16_t)x * 205) >> 11;
-	*remainder = x - (y * 10);
+    uint8_t y = ((uint16_t)x * 205) >> 11;
+    *remainder = x - (y * 10);
 
-	return y;
+    return y;
 
 }
 
@@ -105,7 +105,7 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 static inline char nibbleToHex(uint8_t nibble)
 {
 
-	return nibble + ((nibble < 10) ? '0' : 'A' - 10);
+    return nibble + ((nibble < 10) ? '0' : 'A' - 10);
 
 }
 
@@ -125,11 +125,11 @@ static inline char nibbleToHex(uint8_t nibble)
 static inline void uint16ToHexStr(uint16_t data, char* str)
 {
 
-	str[4] = 0;
-	str[3] = nibbleToHex(data & 0xF);
-	str[2] = nibbleToHex((data >> 4) & 0xF);
-	str[1] = nibbleToHex((data >> 8) & 0xF);
-	str[0] = nibbleToHex((data >> 12) & 0xF);
+    str[4] = 0;
+    str[3] = nibbleToHex(data & 0xF);
+    str[2] = nibbleToHex((data >> 4) & 0xF);
+    str[1] = nibbleToHex((data >> 8) & 0xF);
+    str[0] = nibbleToHex((data >> 12) & 0xF);
 
 }
 

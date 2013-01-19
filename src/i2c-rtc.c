@@ -191,7 +191,7 @@ static uint8_t i2c_rtc_status;
 uint8_t i2c_rtc_get_status(void)
 {
 
-	return i2c_rtc_status;
+    return i2c_rtc_status;
 
 }
 
@@ -209,28 +209,28 @@ uint8_t i2c_rtc_get_status(void)
 bool i2c_rtc_write(const datetime_t * datetime)
 {
 
-	uint8_t rtcbuf[7];
-	bool rtc = false;
+    uint8_t rtcbuf[7];
+    bool rtc = false;
 
-	if (rtc_initialized) {
+    if (rtc_initialized) {
 
-		rtcbuf[0] = itobcd(datetime->ss);
-		rtcbuf[1] = itobcd(datetime->mm);
-		rtcbuf[2] = itobcd(datetime->hh);
-		rtcbuf[3] = itobcd(datetime->wd) + 1;
-		rtcbuf[4] = itobcd(datetime->DD);
-		rtcbuf[5] = itobcd(datetime->MM);
-		rtcbuf[6] = itobcd(datetime->YY);
+        rtcbuf[0] = itobcd(datetime->ss);
+        rtcbuf[1] = itobcd(datetime->mm);
+        rtcbuf[2] = itobcd(datetime->hh);
+        rtcbuf[3] = itobcd(datetime->wd) + 1;
+        rtcbuf[4] = itobcd(datetime->DD);
+        rtcbuf[5] = itobcd(datetime->MM);
+        rtcbuf[6] = itobcd(datetime->YY);
 
-		if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
+        if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
-			rtc = true;
+            rtc = true;
 
-		}
+        }
 
-	}
+    }
 
-	return rtc;
+    return rtc;
 
 }
 
@@ -247,28 +247,28 @@ bool i2c_rtc_write(const datetime_t * datetime)
 bool i2c_rtc_read(datetime_t * datetime)
 {
 
-	uint8_t rtcbuf[7];
-	bool rtc = false;
+    uint8_t rtcbuf[7];
+    bool rtc = false;
 
-	if (rtc_initialized) {
+    if (rtc_initialized) {
 
-		if (i2c_rtc_sram_read(0x00, rtcbuf, 7)) {
+        if (i2c_rtc_sram_read(0x00, rtcbuf, 7)) {
 
-			datetime->YY = bcdtoi(rtcbuf[6]);
-			datetime->MM = bcdtoi(rtcbuf[5]);
-			datetime->DD = bcdtoi(rtcbuf[4]);
-			datetime->wd = bcdtoi(rtcbuf[3]) - 1;
-			datetime->hh = bcdtoi(rtcbuf[2]);
-			datetime->mm = bcdtoi(rtcbuf[1]);
-			datetime->ss = bcdtoi(rtcbuf[0]);
+            datetime->YY = bcdtoi(rtcbuf[6]);
+            datetime->MM = bcdtoi(rtcbuf[5]);
+            datetime->DD = bcdtoi(rtcbuf[4]);
+            datetime->wd = bcdtoi(rtcbuf[3]) - 1;
+            datetime->hh = bcdtoi(rtcbuf[2]);
+            datetime->mm = bcdtoi(rtcbuf[1]);
+            datetime->ss = bcdtoi(rtcbuf[0]);
 
-			rtc = true;
+            rtc = true;
 
-		}
+        }
 
-	}
+    }
 
-	return rtc;
+    return rtc;
 
 }
 
@@ -300,40 +300,40 @@ bool i2c_rtc_read(datetime_t * datetime)
 bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
 {
 
-	unsigned char* valuep = void_valuep;
-	bool rtc = false;
+    unsigned char* valuep = void_valuep;
+    bool rtc = false;
 
-	if (rtc_initialized) {
+    if (rtc_initialized) {
 
-		if (length && addr + length <= 64) {
+        if (length && addr + length <= 64) {
 
-			i2c_master_start_wait(DEVRTC + I2C_WRITE);
+            i2c_master_start_wait(DEVRTC + I2C_WRITE);
 
-			if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+            if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
 
-				rtc = true;
+                rtc = true;
 
-				while (length--) {
+                while (length--) {
 
-					if (i2c_master_write(*valuep++, &i2c_rtc_status) != 0) {
+                    if (i2c_master_write(*valuep++, &i2c_rtc_status) != 0) {
 
-						rtc = false;
+                        rtc = false;
 
-						break;
+                        break;
 
-					}
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			i2c_master_stop();
+            i2c_master_stop();
 
-		}
+        }
 
-	}
+    }
 
-	return rtc;
+    return rtc;
 
 }
 
@@ -369,40 +369,40 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
 bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
 {
 
-	unsigned char* valuep = void_valuep;
-	bool rtc = false;
+    unsigned char* valuep = void_valuep;
+    bool rtc = false;
 
-	if (rtc_initialized) {
+    if (rtc_initialized) {
 
-		if (length && (addr + length <= 64)) {
+        if (length && (addr + length <= 64)) {
 
-			i2c_master_start_wait(DEVRTC + I2C_WRITE);
+            i2c_master_start_wait(DEVRTC + I2C_WRITE);
 
-			if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+            if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
 
-				if (i2c_master_rep_start(DEVRTC + I2C_READ, &i2c_rtc_status) == 0) {
+                if (i2c_master_rep_start(DEVRTC + I2C_READ, &i2c_rtc_status) == 0) {
 
-					rtc = true;
+                    rtc = true;
 
-					while (--length) {
+                    while (--length) {
 
-						*valuep++ = i2c_master_read_ack();
+                        *valuep++ = i2c_master_read_ack();
 
-					}
+                    }
 
-					*valuep++ = i2c_master_read_nak();
+                    *valuep++ = i2c_master_read_nak();
 
-				}
+                }
 
-			}
+            }
 
-			i2c_master_stop();
+            i2c_master_stop();
 
-		}
+        }
 
-	}
+    }
 
-	return rtc;
+    return rtc;
 
 }
 
@@ -424,42 +424,42 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
 bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 {
 
-	bool rtc = false;
-	uint8_t seconds;
+    bool rtc = false;
+    uint8_t seconds;
 
-	*status_p = 0xff;
-	*errorcode_p = i2c_master_init();
+    *status_p = 0xff;
+    *errorcode_p = i2c_master_init();
 
-	if (*errorcode_p == 0) {
+    if (*errorcode_p == 0) {
 
-		rtc_initialized = true;
+        rtc_initialized = true;
 
-		uint8_t ctrlreg = CTRL_REG;
+        uint8_t ctrlreg = CTRL_REG;
 
-		if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
+        if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
 
-			rtc = true;
+            rtc = true;
 
-			if (i2c_rtc_sram_read(0x00, &seconds, 1)) {
+            if (i2c_rtc_sram_read(0x00, &seconds, 1)) {
 
-				if (seconds & 0x80) {
+                if (seconds & 0x80) {
 
-					seconds &= ~0x80;
-					(void)i2c_rtc_sram_write(0x00, &seconds, 1);
+                    seconds &= ~0x80;
+                    (void)i2c_rtc_sram_write(0x00, &seconds, 1);
 
-				}
+                }
 
-			}
+            }
 
-		} else {
+        } else {
 
-			*errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
-			*status_p = i2c_rtc_status;
+            *errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
+            *status_p = i2c_rtc_status;
 
-		}
+        }
 
-	}
+    }
 
-	return rtc;
+    return rtc;
 
 }

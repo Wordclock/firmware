@@ -29,17 +29,17 @@
  * Consider this classic example:
  *
  * \code
- *  #define WHATEVER_PORT 	PORTD
- *  #define WHATEVER_DDR 	DDRD
- *  #define WHATEVER_PIN 	PIND
- *  #define WHATEVER_BIT 	4
+ *  #define WHATEVER_PORT    PORTD
+ *  #define WHATEVER_DDR     DDRD
+ *  #define WHATEVER_PIN     PIND
+ *  #define WHATEVER_BIT     4
  * \endcode
  *
  * This is kind of ugly for various reasons one of which is the implied
  * redundancy. With the macro defined in this file a simple definitions enough:
  *
  * \code
- * 	#define WHATEVER PORTD, 4
+ *  #define WHATEVER PORTD, 4
  * \endcode
  *
  * This works because the addresses of the involved registers can be calculated
@@ -49,11 +49,11 @@
  * this (see [1], p. 343, chapter 31).
  *
  * \code
- *	[...]
- *	0x08 (0x28) PORTC
- *	0x07 (0x27) DDRC
- *	0x06 (0x26) PINC
- *	[...]
+ *   [...]
+ *  0x08 (0x28) PORTC
+ *  0x07 (0x27) DDRC
+ *  0x06 (0x26) PINC
+ *   [...]
  * \endcode
  *
  * So by knowing the address location of PORTC both of the addresses for DDRC
@@ -101,7 +101,7 @@
 /**
  * @brief Helper macro needed to implement PORT()
  *
- * @param a	Name of the port
+ * @param a Name of the port
  * @param b Number of the pin
  * @see PORT()
  */
@@ -126,15 +126,15 @@
 /**
  * @brief Helper macro needed to implement DDR()
  *
- * @param a	Name of the port
+ * @param a Name of the port
  * @param b Number of the pin
  * @see DDR()
  */
-#define DDR_(a, b) 	(*(&a - 1))
+#define DDR_(a, b)     (*(&a - 1))
 
 /**
  * @brief References the PIN register of a port given its name followed by the
- *        pin number
+ *     pin number
  *
  * This macro expects two arguments, the first of which is the name of the
  * port. The second one is the number of the pin. A valid input would be:
@@ -153,29 +153,29 @@
 
 #if defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
 
-	/**
-	* @brief Helper macro needed to implement PIN() for ATmega64 and ATmega128
-	*        devices
-	*
-	* With these devices the location of the PINF register is located at an
-	* address contrary to the one you might expect, namely 0x00.
-	*
-	* @param a	Name of the port
-	* @param b Number of the pin
-	* @see PIN()
-	*/
+    /**
+    * @brief Helper macro needed to implement PIN() for ATmega64 and ATmega128
+    *     devices
+    *
+    * With these devices the location of the PINF register is located at an
+    * address contrary to the one you might expect, namely 0x00.
+    *
+    * @param a Name of the port
+    * @param b Number of the pin
+    * @see PIN()
+    */
     #define PIN_(a, b) ((&PORTF == &(x)) ? _SFR_IO8(0x00) : (*(&a - 2)))
 
 #else
 
-	/**
-	* @brief Helper macro needed to implement PIN()
-	*
-	* @param a	Name of the port
-	* @param b Number of the pin
-	* @see PIN()
-	*/
-	#define PIN_(a, b) (*(&a - 2))
+    /**
+    * @brief Helper macro needed to implement PIN()
+    *
+    * @param a Name of the port
+    * @param b Number of the pin
+    * @see PIN()
+    */
+    #define PIN_(a, b) (*(&a - 2))
 
 #endif
 
@@ -198,7 +198,7 @@
 /**
  * @brief Helper macro needed to implement BIT()
  *
- * @param a	Name of the port
+ * @param a Name of the port
  * @param b Number of the pin
  * @see BIT()
  */

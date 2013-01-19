@@ -107,71 +107,71 @@ static volatile uint16_t curr_sum;
 void ldr_init(void)
 {
 
-	uint8_t result;
+    uint8_t result;
 
-	/*
-	 * Set up the ADC unit
-	 *
-	 * Reference: AVCC with external capacitor at AREF pin
-	 * Alignment: Left adjusted
-	 * Channel: 0
-	 */
-	ADMUX = _BV(REFS0) | _BV(ADLAR);
+    /*
+     * Set up the ADC unit
+     *
+     * Reference: AVCC with external capacitor at AREF pin
+     * Alignment: Left adjusted
+     * Channel: 0
+     */
+    ADMUX = _BV(REFS0) | _BV(ADLAR);
 
-	/*
-	 * ADEN: Enable ADC
-	 * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
-	 */
-	ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
+    /*
+     * ADEN: Enable ADC
+     * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
+     */
+    ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
 
-	/*
-	 * Start first conversion
-	 */
-	ADCSRA |= _BV(ADSC);
+    /*
+     * Start first conversion
+     */
+    ADCSRA |= _BV(ADSC);
 
-	/*
-	 * Wait for conversion to finish
-	 */
-	while (ADCSRA & _BV(ADSC));
+    /*
+     * Wait for conversion to finish
+     */
+    while (ADCSRA & _BV(ADSC));
 
-	/*
-	 * Read out the measured value
-	 */
-	result = ADCH;
+    /*
+     * Read out the measured value
+     */
+    result = ADCH;
 
-	/*
-	 * Initialize measurements by putting the measured value in every field
-	 */
-	for (int i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
+    /*
+     * Initialize measurements by putting the measured value in every field
+     */
+    for (int i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
 
-		measurements[i] = result;
+        measurements[i] = result;
 
-	}
+    }
 
-	/*
-	 * Initialize curr_sum by multiplying it with MEASUREMENTS_ARRAY_SIZE
-	 */
-	curr_sum = result;
-	curr_sum *= MEASUREMENTS_ARRAY_SIZE;
+    /*
+     * Initialize curr_sum by multiplying it with MEASUREMENTS_ARRAY_SIZE
+     */
+    curr_sum = result;
+    curr_sum *= MEASUREMENTS_ARRAY_SIZE;
 
-	/*
-	 * Check whether logging is enabled
-	 */
-	# if (LOG_LDR == 1)
+    /*
+     * Check whether logging is enabled
+     */
+    # if (LOG_LDR == 1)
 
-		char buff[5];
+        char buff[5];
 
-		byteToStr(result, buff);
-		uart_puts_P("LDR init: ");
-		uart_puts(buff);
-		uart_putc('\n');
+        byteToStr(result, buff);
+        uart_puts_P("LDR init: ");
+        uart_puts(buff);
+        uart_putc('\n');
 
-	# endif
+    # endif
 
-	/*
-	 * Start next measurement, which will then be handled by ldr_ISR()
-	 */
-	ADCSRA |= _BV(ADSC);
+    /*
+     * Start next measurement, which will then be handled by ldr_ISR()
+     */
+    ADCSRA |= _BV(ADSC);
 
 }
 
@@ -193,12 +193,12 @@ void ldr_init(void)
  * @see ldr_init()
  * @see MEASUREMENTS_ARRAY_SIZE
  * @return Eight bit value containing the brightness. 255 represents the
- * 			maximum brightness, 0 represents darkness.
+ *     maximum brightness, 0 represents darkness.
  */
 uint8_t ldr_get_brightness(void)
 {
 
-	return  255 - (curr_sum / MEASUREMENTS_ARRAY_SIZE);
+    return  255 - (curr_sum / MEASUREMENTS_ARRAY_SIZE);
 
 }
 
@@ -230,70 +230,70 @@ uint8_t ldr_get_brightness(void)
 void ldr_ISR(void)
 {
 
-	/*
-	 * This counter keeps track of the index we need to put the measurement in
-	 */
-	static uint8_t curr_index = 0;
+    /*
+     * This counter keeps track of the index we need to put the measurement in
+     */
+    static uint8_t curr_index = 0;
 
-	/*
-	 * Check whether last conversion has been completed
-	 */
-	if ((ADCSRA & _BV(ADSC))) {
+    /*
+     * Check whether last conversion has been completed
+     */
+    if ((ADCSRA & _BV(ADSC))) {
 
-		/*
-		 * Read out value of last conversion
-		 */
-		uint8_t measurement = ADCH;
+        /*
+         * Read out value of last conversion
+         */
+        uint8_t measurement = ADCH;
 
-		/*
-		 * Check whether logging is enabled
-		 */
-		# if (LOG_LDR == 1)
+        /*
+         * Check whether logging is enabled
+         */
+        # if (LOG_LDR == 1)
 
-			char buff[5];
+            char buff[5];
 
-			byteToStr(measurement, buff);
-			uart_puts_P("LDR: ");
-			uart_puts(buff);
-			uart_putc('\n');
+            byteToStr(measurement, buff);
+            uart_puts_P("LDR: ");
+            uart_puts(buff);
+            uart_putc('\n');
 
-		# endif
+        # endif
 
-		/*
-		 * As we are going to replace the value at curr_index with the value
-		 * of the last conversion, we need to subtract it from curr_sum
-		 */
-		curr_sum -= measurements[curr_index];
+        /*
+         * As we are going to replace the value at curr_index with the value
+         * of the last conversion, we need to subtract it from curr_sum
+         */
+        curr_sum -= measurements[curr_index];
 
-		/*
-		 * Put value of last conversion into measurements
-		 */
-		measurements[curr_index] = measurement;
+        /*
+         * Put value of last conversion into measurements
+         */
+        measurements[curr_index] = measurement;
 
-		/*
-		 * Add the value of the last measurement to curr_sum
-		 */
-		curr_sum += measurement;
+        /*
+         * Add the value of the last measurement to curr_sum
+         */
+        curr_sum += measurement;
 
-		/*
-		 * Increment curr_index for next iteration of this function
-		 */
-		curr_index++;
+        /*
+         * Increment curr_index for next iteration of this function
+         */
+        curr_index++;
 
-		/*
-		 * Use modulo operation to get the next value for curr_index,
-		 * see [ring buffer][1].
-		 *
-		 * [1]: https://en.wikipedia.org/wiki/Circular_buffer
-		 */
-		curr_index %= MEASUREMENTS_ARRAY_SIZE;
+        /*
+         * Use modulo operation to get the next value for curr_index,
+         * see [ring buffer][1].
+         *
+         * [1]: https://en.wikipedia.org/wiki/Circular_buffer
+         */
+        curr_index %= MEASUREMENTS_ARRAY_SIZE;
 
-		/*
-		 * Start next conversion, which will be handled in the next
-		 * iteration of this function
-		 */
-		ADCSRA |= _BV(ADSC);
+        /*
+         * Start next conversion, which will be handled in the next
+         * iteration of this function
+         */
+        ADCSRA |= _BV(ADSC);
 
-	}
+    }
 
 }
