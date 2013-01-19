@@ -22,18 +22,14 @@
  * @file i2c-rtc.h
  * @brief Header for handling access to the DS1307 RTC
  *
- * The [RTC][1] (Real-time clock) is connected to the microcontroller via the
- * [I2C][2] bus. This header makes some functions available, which can be used
- * to access the RTC module used in this project, namely the [DS1307][3].
+ * This header makes functions of the DS1307 RTC available to other modules.
+ * Beside providing the functionality to read and/or set the time, the RTC
+ * is also equipped with SRAM to write to and/or read from. This SRAM is
+ * battery backed, so it can be used to store things basically persistent.
  *
- * Internally it makes use of i2c-master.h quite heavily.
- *
- * [1]: https://en.wikipedia.org/wiki/Real-time_clock
- * [2]: https://en.wikipedia.org/wiki/I2c
- * [3]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+ * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @see i2c-rtc.c
- * @see i2c-master.c
  */
 
 #ifndef _WC_I2C_RTC_H_
