@@ -21,10 +21,10 @@
 
 /**
  * @file ldr.c
- * @brief Implements the interface for handling access to the LDR sensor
+ * @brief Implements the header defined in ldr.h
  *
- * This file contains the implementation for the interface declared in ldr.h.
- * It makes use of the ADC unit, so it might be useful to take a look at [1],
+ * This file contains the implementation of the header declared in ldr.h. It
+ * makes use of the ADC unit, so it might be useful to take a look at [1],
  * p. 244f, chapter 24.
  *
  * Before you can actually retrieve the "current" brightness using

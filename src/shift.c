@@ -20,9 +20,9 @@
 
 /**
  * @file shift.c
- * @brief Implementation of the interface for the shift register cascade
+ * @brief Implementation of the header declared in shift.h
  *
- * This file contains the actual implementation of the interface defined in
+ * This file contains the actual implementation of the header declared in
  * shift.h.
  *
  * @see shift.c
@@ -114,7 +114,7 @@ void shift24_init(void) {
      * CPOL: SCK is high when idle
      */
     SPCR = _BV(SPE) | _BV(MSTR) | _BV(CPOL);
-    
+
     /*
      * SPI2X: Double SPI speed
      */

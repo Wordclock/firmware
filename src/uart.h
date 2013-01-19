@@ -20,13 +20,13 @@
 
 /**
  * @file uart.h
- * @brief Interface for access to the UART hardware
+ * @brief Header for utilizing the UART hardware
  *
- * This defines an interface for access to the UART hardware. For now it is
- * only possible to send data out, which is primarily used for debugging
- * purposes. However if BOOTLOADER_RESET_UART is enabled a pretty basic ISR
- * for receiving data is registered to process the reset in order to start
- * the bootloader.
+ * This is the header, which needs to be included when access to the UART
+ * hardware is needed. For now it is only possible to send data out, which is
+ * primarily used for debugging purposes. However if BOOTLOADER_RESET_UART is
+ * enabled a pretty basic ISR for receiving data is registered to process the
+ * reset in order to start the bootloader.
  *
  * @see BOOTLOADER_RESET_UART
  * @see uart.c

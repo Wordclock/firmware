@@ -20,8 +20,7 @@
 
 /**
  * @file timer.h
- * @brief Interface for access to the timer to execute functions on a regular
- * basis
+ * @brief Header for access to the timer to execute functions on a regularly
  *
  * This module is responsible for setting up the timer including the
  * appropriate ISR. This ISR will then call various functions on a regular

@@ -21,7 +21,7 @@
 
 /**
  * @file ldr.h
- * @brief Interface for handling access to the LDR sensor
+ * @brief Header file allowing to access brightness measurements from the LDR
  *
  * This module handles the access to the brightness measured by the LDR sensor.
  * The returned brightness is the mean value of the last couple of

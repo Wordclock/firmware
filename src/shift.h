@@ -20,7 +20,7 @@
 
 /**
  * @file shift.h
- * @brief Interface to the shift register cascade
+ * @brief Header file for access to the shift register cascade
  *
  * This module is used to output data to the shift registers. It makes use of
  * the SPI interface. It needs to be initialized once using shift24_init().

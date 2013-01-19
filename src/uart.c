@@ -20,10 +20,10 @@
 
 /**
  * @file uart.c
- * @brief Implementation of the interface for access to the UART hardware
+ * @brief Implementation of the header declared in uart.h.
  *
- * This implements the various functions declared in uart.h in order to enable
- * access to the UART hardware. Furthermore it implements a rather basic ISR,
+ * This implements the various functions declared in uart.h in order to utilize
+ * the UART hardware. Furthermore it implements a rather basic ISR,
  * which will be executed once data has been received. This is used to start
  * the bootloader, either by using the watchdog timer or by jumping to it
  * directly.

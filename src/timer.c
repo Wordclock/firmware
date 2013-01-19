@@ -20,12 +20,10 @@
 
 /**
  * @file timer.c
- * @brief Implementation of interface for access to the timer to execute
- * functions on a regular basis
+ * @brief Implementation of the header declared in timer.h
  *
- * This file contains the implementation of the interface for access to the timer
- * to execute functions on a regular basis. Furthermore the appropriate timer
- * ISR is registered and defined here.
+ * This file contains the implementation of the header declared in timer.h.
+ * Furthermore the appropriate timer ISR is registered and defined here.
  *
  * For a detailed description of this unit see [1], p. 108f.
  *
