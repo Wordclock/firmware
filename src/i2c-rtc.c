@@ -215,6 +215,15 @@ bool i2c_rtc_write(const datetime_t * datetime)
 
     if (rtc_initialized) {
 
+        /*
+         * Write converted fields of the provided buffer in form of the struct
+         * datetime_t into the allocated buffer. Special care is needed in case
+         * of the "wd" field, which contains the day of the week.
+         *
+         * The definitions of datetime_t::wd and the one from the RTC
+         * differ, as datetime_t starts counting at 0, whereas the RTC
+         * starts at 1.
+         */
         rtcbuf[0] = itobcd(datetime->ss);
         rtcbuf[1] = itobcd(datetime->mm);
         rtcbuf[2] = itobcd(datetime->hh);
@@ -223,6 +232,11 @@ bool i2c_rtc_write(const datetime_t * datetime)
         rtcbuf[5] = itobcd(datetime->MM);
         rtcbuf[6] = itobcd(datetime->YY);
 
+        /*
+         * The date & time information is located at the first 7 addresses of
+         * the RTC SRAM. Write our built up buffer to the RTC. If nothing
+         * unexpected happens, the return value will be set to true.
+         */
         if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
             rtc = true;
@@ -253,7 +267,22 @@ bool i2c_rtc_read(datetime_t * datetime)
 
     if (rtc_initialized) {
 
+        /*
+         * Read first seven bytes from RTC, which contain the time and date
+         * information we are interested in. Only proceed if we get a valid
+         * response.
+         */
         if (i2c_rtc_sram_read(0x00, rtcbuf, 7)) {
+
+            /*
+             * Put the response into the buffer after converting the BCD
+             * encoded information. Special care is needed in case of the "wd"
+             * field, which contains the day of the week.
+             *
+             * The definitions of datetime_t::wd and the one from the RTC
+             * differ, as datetime_t starts counting at 0, whereas the RTC
+             * starts at 1.
+             */
 
             datetime->YY = bcdtoi(rtcbuf[6]);
             datetime->MM = bcdtoi(rtcbuf[5]);
@@ -263,6 +292,9 @@ bool i2c_rtc_read(datetime_t * datetime)
             datetime->mm = bcdtoi(rtcbuf[1]);
             datetime->ss = bcdtoi(rtcbuf[0]);
 
+            /*
+             * Indicate success, which then will be returned
+             */
             rtc = true;
 
         }
@@ -306,16 +338,42 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
 
     if (rtc_initialized) {
 
+        /*
+         * Basic check of the arguments provided. length obviously must be not
+         * equal to 0. There are only 64 bytes to write to. This boundary
+         * shouldn't be exceeded.
+         */
         if (length && addr + length <= 64) {
 
+            /*
+             * Start I2C transfer. The write address of the RTC can be
+             * calculated quite easily using macros defined earlier on.
+             */
             i2c_master_start_wait(DEVRTC + I2C_WRITE);
 
+            /*
+             * Write address requested to write to to the I2C bus. Only proceed
+             * if the write operation exits successfully.
+             */
             if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
 
+                /*
+                 * Indicate true. If nothing unexpected happens, this will stay
+                 * true until the end.
+                 */
                 rtc = true;
 
+                /*
+                 * Decrement length until it hits zero
+                 */
                 while (length--) {
 
+                    /*
+                     * Write next byte to the I2C bus and post increment the
+                     * valuep pointer, where the data is actually read from.
+                     * If there is some sort of error, the return value will
+                     * be set to false and we break out of this loop.
+                     */
                     if (i2c_master_write(*valuep++, &i2c_rtc_status) != 0) {
 
                         rtc = false;
@@ -328,6 +386,9 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
 
             }
 
+            /*
+             * Release the I2C bus.
+             */
             i2c_master_stop();
 
         }
@@ -373,30 +434,67 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
     unsigned char* valuep = void_valuep;
     bool rtc = false;
 
+    /*
+     * Basic check of the arguments provided. length obviously must be not
+     * equal to 0. There are only 64 bytes to write to. This boundary
+     * shouldn't be exceeded.
+     */
     if (rtc_initialized) {
 
+        /*
+         * Basic check of the arguments provided. length obviously must be not
+         * equal to 0. There are only 64 bytes to write to. This boundary
+         * shouldn't be exceeded.
+         */
         if (length && (addr + length <= 64)) {
 
+            /*
+             * Start I2C transfer. First of all we need to tell the RTC the
+             * address to read from, so we actually need to use the write
+             * address.
+             */
             i2c_master_start_wait(DEVRTC + I2C_WRITE);
 
+            /*
+             * Write the address to the RTC, only proceed if it returns no
+             * error condition.
+             */
             if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
 
+                /*
+                 * Request the data using i2c_master_rep_start(), which won't
+                 * release the bus. Only proceed if there is no error
+                 * condition. Use the read address this time.
+                 */
                 if (i2c_master_rep_start(DEVRTC + I2C_READ, &i2c_rtc_status) == 0) {
 
                     rtc = true;
 
+                    /**
+                     * Decrement length until it hits zero
+                     */
                     while (--length) {
 
+                        /*
+                         *  Put data into buffer and post increment the pointer
+                         */
                         *valuep++ = i2c_master_read_ack();
 
                     }
 
+                    /*
+                     * After last byte has been received, a NACK condition has
+                     * to be send.
+                     */
                     *valuep++ = i2c_master_read_nak();
 
                 }
 
             }
 
+            /*
+             * Release the I2C bus.
+             */
             i2c_master_stop();
 
         }
@@ -428,21 +526,35 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
     bool rtc = false;
     uint8_t seconds;
 
+    /*
+     * Initialize status and errorcode
+     */
     *status_p = 0xff;
     *errorcode_p = i2c_master_init();
 
+    /*
+     * Check whether i2c-master module could be initialized successfully.
+     */
     if (*errorcode_p == 0) {
 
         rtc_initialized = true;
-
         uint8_t ctrlreg = CTRL_REG;
 
+        /*
+         * Write control register to the RTC
+         */
         if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
 
             rtc = true;
 
+            /*
+             * Read the first register of RTC
+             */
             if (i2c_rtc_sram_read(0x00, &seconds, 1)) {
 
+                /*
+                 * Check whether CH bit is set and disable it if necessary.
+                 */
                 if (seconds & 0x80) {
 
                     seconds &= ~0x80;
@@ -454,6 +566,10 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 
         } else {
 
+            /*
+             * Something went wrong while trying to write to the RTC. Set
+             * errorcode and status variables accordingly.
+             */
             *errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
             *status_p = i2c_rtc_status;
 
