@@ -254,7 +254,7 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  *  @return     TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-static bool i2c_write_ctrlreg(void)
+static bool i2c_rtc_write_ctrlreg(void)
 {
 
 	uint8_t value[1];
@@ -295,7 +295,7 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 
 		ctrlreg = CTRL_REG_OUT;
 
-		if (i2c_write_ctrlreg()) {
+		if (i2c_rtc_write_ctrlreg()) {
 
 			rtc = true;
 
