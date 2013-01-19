@@ -165,7 +165,8 @@ static uint8_t i2c_rtc_status;
  *
  * This is a combination of the macros defined above. It will set up the RTC
  * according to this options and will store it in the control register of
- * the RTC itself, so it persists even when it is powered off.
+ * the RTC itself, so it persists even when it is powered off. This is done
+ * during the initialization, see i2c_rtc_init().
  *
  * The control register of the DS1307 is located at 0x07, see [1], p. 8.
  *
@@ -176,9 +177,8 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS0
  * @see CTRL_REG_RS0
  * @see i2c_rtc_init()
- * @see i2c_rtc_write_ctrlreg()
  */
-static volatile uint8_t ctrlreg;
+#define CTRL_REG CTRL_REG_OUT
 
 /**
  * @brief Returns the status of the I2C bus of the last operation
@@ -407,34 +407,6 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
 }
 
 /**
- * @brief Writes ctrlreg into the SRAM of the RTC
- *
- * This writes the ctrlreg into the SRAM of the RTC and is pretty much just a
- * wrapper for i2c_rtc_sram_write().
- *
- * @return Result of the operation, true if successful, false else
- * @see ctrlreg
- * @see i2c_rtc_sram_write()
- */
-static bool i2c_rtc_write_ctrlreg(void)
-{
-
-	uint8_t value[1];
-	bool rtc = false;
-
-	value[0] = ctrlreg;
-
-	if (i2c_rtc_sram_write(0x07, value, 1)) {
-
-		rtc = true;
-
-	}
-
-	return rtc;
-
-}
-
-/**
  * @brief Initializes this module as well as the RTC itself
  *
  * This initializes the module by writing the defined options into the control
@@ -462,9 +434,9 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 
 		rtc_initialized = true;
 
-		ctrlreg = CTRL_REG_OUT;
+		uint8_t ctrlreg = CTRL_REG;
 
-		if (i2c_rtc_write_ctrlreg()) {
+		if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
 
 			rtc = true;
 
