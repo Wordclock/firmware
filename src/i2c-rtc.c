@@ -207,7 +207,7 @@ uint8_t i2c_rtc_get_status(void)
  * @return Result of the operation, true if successful, false else
  * @see datetime_t
  */
-bool i2c_rtc_write(const datetime_t * datetime)
+bool i2c_rtc_write(const datetime_t* datetime)
 {
 
     uint8_t rtcbuf[7];
@@ -259,7 +259,7 @@ bool i2c_rtc_write(const datetime_t * datetime)
  * @return Result of the operation, true if successful, false else
  * @see datetime_t
  */
-bool i2c_rtc_read(datetime_t * datetime)
+bool i2c_rtc_read(datetime_t* datetime)
 {
 
     uint8_t rtcbuf[7];
@@ -343,7 +343,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
          * equal to 0. There are only 64 bytes to write to. This boundary
          * shouldn't be exceeded.
          */
-        if (length && addr + length <= 64) {
+        if (length && (addr + length <= 64)) {
 
             /*
              * Start I2C transfer. The write address of the RTC can be
