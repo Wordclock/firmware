@@ -246,7 +246,7 @@ i2c_write_ctrlreg (void)
 
   if (i2c_rtc_sram_write (0x07, value, 1))
   {
-    rtc = 1;
+    rtc = true;
   }
   return rtc;
 }
