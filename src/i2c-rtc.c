@@ -101,7 +101,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_SQWE
  * @see ctrlreg
  */
-#define CTRL_REG_OUT 	0x80
+#define CTRL_REG_OUT 0x80
 
 /**
  * @brief DS1307 Square-Wave Enable (SQWE) bit
@@ -118,7 +118,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS1
  * @see ctrlreg
  */
-#define CTRL_REG_SQWE	0x10
+#define CTRL_REG_SQWE 0x10
 
 /**
  * @brief DS1307 Rate Select (RS1) bit
@@ -146,7 +146,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS0
  * @see ctrlreg
  */
-#define CTRL_REG_RS1    0x02
+#define CTRL_REG_RS1 0x02
 
 /**
  * @brief DS1307 Rate Select (RS0) bit
@@ -158,7 +158,7 @@ static uint8_t i2c_rtc_status;
  * @see ctrlreg
  *
  */
-#define CTRL_REG_RS0    0x01
+#define CTRL_REG_RS0 0x01
 
 /**
  * @brief Holds the value of the control register
@@ -214,15 +214,15 @@ bool i2c_rtc_write(const datetime_t * datetime)
 
 	if (rtc_initialized) {
 
-		rtcbuf[0] = itobcd (datetime->ss);
-		rtcbuf[1] = itobcd (datetime->mm);
-		rtcbuf[2] = itobcd (datetime->hh);
-		rtcbuf[3] = itobcd (datetime->wd) + 1;
-		rtcbuf[4] = itobcd (datetime->DD);
-		rtcbuf[5] = itobcd (datetime->MM);
-		rtcbuf[6] = itobcd (datetime->YY);
+		rtcbuf[0] = itobcd(datetime->ss);
+		rtcbuf[1] = itobcd(datetime->mm);
+		rtcbuf[2] = itobcd(datetime->hh);
+		rtcbuf[3] = itobcd(datetime->wd) + 1;
+		rtcbuf[4] = itobcd(datetime->DD);
+		rtcbuf[5] = itobcd(datetime->MM);
+		rtcbuf[6] = itobcd(datetime->YY);
 
-		if (i2c_rtc_sram_write (0x00, rtcbuf, 7)) {
+		if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
 			rtc = true;
 
@@ -247,20 +247,20 @@ bool i2c_rtc_write(const datetime_t * datetime)
 bool i2c_rtc_read(datetime_t * datetime)
 {
 
-	uint8_t  rtcbuf[7];
-	bool     rtc = false;
+	uint8_t rtcbuf[7];
+	bool rtc = false;
 
 	if (rtc_initialized) {
 
-		if (i2c_rtc_sram_read (0x00, rtcbuf, 7)) {
+		if (i2c_rtc_sram_read(0x00, rtcbuf, 7)) {
 
-			datetime->YY = bcdtoi (rtcbuf[6]);
-			datetime->MM = bcdtoi (rtcbuf[5]);
-			datetime->DD = bcdtoi (rtcbuf[4]);
-			datetime->wd = bcdtoi (rtcbuf[3]) - 1;
-			datetime->hh = bcdtoi (rtcbuf[2]);
-			datetime->mm = bcdtoi (rtcbuf[1]);
-			datetime->ss = bcdtoi (rtcbuf[0]);
+			datetime->YY = bcdtoi(rtcbuf[6]);
+			datetime->MM = bcdtoi(rtcbuf[5]);
+			datetime->DD = bcdtoi(rtcbuf[4]);
+			datetime->wd = bcdtoi(rtcbuf[3]) - 1;
+			datetime->hh = bcdtoi(rtcbuf[2]);
+			datetime->mm = bcdtoi(rtcbuf[1]);
+			datetime->ss = bcdtoi(rtcbuf[0]);
 
 			rtc = true;
 
@@ -455,7 +455,7 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 	bool rtc = false;
 	uint8_t seconds;
 
-	*status_p = 0xFF;
+	*status_p = 0xff;
 	*errorcode_p = i2c_master_init();
 
 	if (*errorcode_p == 0) {
