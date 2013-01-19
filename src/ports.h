@@ -76,7 +76,7 @@
  * [4]: http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=91304
  * [5]: http://homepage.hispeed.ch/peterfleury/group__pfleury__lcd.html
  *
- * \warning This hasn't been thoroughly tested with every AVR yet.
+ * @warning This hasn't been thoroughly tested with every AVR yet.
  */
 
 #ifndef _WC_PORTS_H_

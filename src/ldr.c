@@ -73,7 +73,7 @@ static volatile uint8_t measurements[MEASUREMENTS_ARRAY_SIZE];
  * values in measurements itself, it makes things faster when it comes down to
  * actually returning the "current" brightness with ldr_get_brightness().
  *
- * \warning: Consider that the datatype must be able to store values at least
+ * @warning: Consider that the datatype must be able to store values at least
  * as big as MEASUREMENTS_ARRAY_SIZE * 255.
  *
  * @see measurements
