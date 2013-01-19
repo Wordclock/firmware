@@ -47,7 +47,7 @@
 
 #define DEVRTC                0xD0                                              // device address of RTC DS1307
 
-static uint8_t                rtc_initialized = 0;
+static bool                   rtc_initialized = false;
 static uint8_t                i2c_rtc_status;
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
