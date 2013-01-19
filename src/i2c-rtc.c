@@ -36,8 +36,6 @@
  * @see i2c-master.h
  */
 
-
-
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -46,10 +44,11 @@
 #include "i2c-master.h"
 #include "i2c-rtc.h"
 
-#define DEVRTC                0xD0                                              // device address of RTC DS1307
+#define DEVRTC 0xD0
 
-static bool                   rtc_initialized = false;
-static uint8_t                i2c_rtc_status;
+static bool rtc_initialized = false;
+
+static uint8_t i2c_rtc_status;
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * bits of control register:
@@ -67,24 +66,18 @@ static uint8_t                i2c_rtc_status;
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 
-#define CTRL_REG_OUT          0x80                                              // output control
-#define CTRL_REG_SQWE         0x10                                              // square wave enable
-#define CTRL_REG_RS1          0x02                                              // rate select RS1
-#define CTRL_REG_RS0          0x01                                              // rate select RS0
+#define CTRL_REG_OUT 	0x80
+#define CTRL_REG_SQWE	0x10
+#define CTRL_REG_RS1    0x02
+#define CTRL_REG_RS0    0x01
 
-static volatile uint8_t       ctrlreg;
+static volatile uint8_t ctrlreg;
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Get I2C status
- *  @details  Returns I2C status
- *  @return    i2c rtc status
- *---------------------------------------------------------------------------------------------------------------------------------------------------
- */
-
-uint8_t
-i2c_rtc_get_status (void)
+uint8_t i2c_rtc_get_status(void)
 {
-  return i2c_rtc_status;
+
+	return i2c_rtc_status;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -94,28 +87,32 @@ i2c_rtc_get_status (void)
  *  @return    TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool
-i2c_rtc_write (const datetime_t * datetime)
+bool i2c_rtc_write(const datetime_t * datetime)
 {
-  uint8_t      rtcbuf[7];
-  bool 		   rtc = false;
 
-  if (rtc_initialized)
-  {
-    rtcbuf[0] = itobcd (datetime->ss);                                          // seconds    00-59
-    rtcbuf[1] = itobcd (datetime->mm);                                          // minutes    00-59
-    rtcbuf[2] = itobcd (datetime->hh);                                          // hours    00-23
-    rtcbuf[3] = itobcd (datetime->wd) + 1;                                      // weekday     1-7
-    rtcbuf[4] = itobcd (datetime->DD);                                          // day of month  00-31
-    rtcbuf[5] = itobcd (datetime->MM);                                          // month    00-12
-    rtcbuf[6] = itobcd (datetime->YY);                                          // year      00-99
+	uint8_t rtcbuf[7];
+	bool rtc = false;
 
-    if (i2c_rtc_sram_write (0x00, rtcbuf, 7))
-    {
-      rtc = true;
-    }
-  }
-  return rtc;
+	if (rtc_initialized) {
+
+		rtcbuf[0] = itobcd (datetime->ss);
+		rtcbuf[1] = itobcd (datetime->mm);
+		rtcbuf[2] = itobcd (datetime->hh);
+		rtcbuf[3] = itobcd (datetime->wd) + 1;
+		rtcbuf[4] = itobcd (datetime->DD);
+		rtcbuf[5] = itobcd (datetime->MM);
+		rtcbuf[6] = itobcd (datetime->YY);
+
+		if (i2c_rtc_sram_write (0x00, rtcbuf, 7)) {
+
+			rtc = true;
+
+		}
+
+	}
+
+	return rtc;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,27 +122,32 @@ i2c_rtc_write (const datetime_t * datetime)
  *  @return    TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool
-i2c_rtc_read (datetime_t * datetime)
+bool i2c_rtc_read(datetime_t * datetime)
 {
-  uint8_t  rtcbuf[7];
-  bool     rtc = false;
 
-  if (rtc_initialized)
-  {
-    if (i2c_rtc_sram_read (0x00, rtcbuf, 7))
-    {
-      datetime->YY = bcdtoi (rtcbuf[6]);                                        // year
-      datetime->MM = bcdtoi (rtcbuf[5]);                                        // month
-      datetime->DD = bcdtoi (rtcbuf[4]);                                        // day of month
-      datetime->wd = bcdtoi (rtcbuf[3]) - 1;                                    // weekday 0-6
-      datetime->hh = bcdtoi (rtcbuf[2]);                                        // hours
-      datetime->mm = bcdtoi (rtcbuf[1]);                                        // minutes
-      datetime->ss = bcdtoi (rtcbuf[0]);                                        // seconds
-      rtc = true;
-    }
-  }
-  return rtc;
+	uint8_t  rtcbuf[7];
+	bool     rtc = false;
+
+	if (rtc_initialized) {
+
+		if (i2c_rtc_sram_read (0x00, rtcbuf, 7)) {
+
+			datetime->YY = bcdtoi (rtcbuf[6]);
+			datetime->MM = bcdtoi (rtcbuf[5]);
+			datetime->DD = bcdtoi (rtcbuf[4]);
+			datetime->wd = bcdtoi (rtcbuf[3]) - 1;
+			datetime->hh = bcdtoi (rtcbuf[2]);
+			datetime->mm = bcdtoi (rtcbuf[1]);
+			datetime->ss = bcdtoi (rtcbuf[0]);
+
+			rtc = true;
+
+		}
+
+	}
+
+	return rtc;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -157,36 +159,44 @@ i2c_rtc_read (datetime_t * datetime)
  *  @return    TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool
-i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length)
+bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
 {
-  unsigned char *   valuep = void_valuep;
-  bool              rtc = false;
 
-  if (rtc_initialized)
-  {
-    if (length && addr + length <= 64)
-    {
-      i2c_master_start_wait(DEVRTC+I2C_WRITE);                                  // set device address and write mode
+	unsigned char* valuep = void_valuep;
+	bool rtc = false;
 
-      if (i2c_master_write (addr, &i2c_rtc_status) == 0)                        // write address
-      {
-        rtc = true;                                                             // indicate success
+	if (rtc_initialized) {
 
-        while (length--)
-        {
-          if (i2c_master_write (*valuep++, &i2c_rtc_status) != 0)               // write value
-          {
-            rtc = false;                                                        // indicate errror
-            break;
-          }
-        }
-      }
+		if (length && addr + length <= 64) {
 
-      i2c_master_stop();                                                        // set stop conditon = release bus
-    }
-  }
-  return rtc;
+			i2c_master_start_wait(DEVRTC + I2C_WRITE);
+
+			if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+
+				rtc = true;
+
+				while (length--) {
+
+					if (i2c_master_write(*valuep++, &i2c_rtc_status) != 0) {
+
+						rtc = false;
+
+						break;
+
+					}
+
+				}
+
+			}
+
+			i2c_master_stop();
+
+		}
+
+	}
+
+	return rtc;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -198,36 +208,44 @@ i2c_rtc_sram_write (uint8_t addr, void * void_valuep, uint8_t length)
  *  @return   TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool
-i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length)
+bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
 {
-  unsigned char *  valuep = void_valuep;
-  bool             rtc = false;
 
-  if (rtc_initialized)
-  {
-    if (length && addr + length <= 64)
-    {
-      i2c_master_start_wait(DEVRTC+I2C_WRITE);                                  // set device address and write mode
+	unsigned char* valuep = void_valuep;
+	bool rtc = false;
 
-      if (i2c_master_write (addr, &i2c_rtc_status) == 0)                        // write address
-      {
-        if (i2c_master_rep_start(DEVRTC+I2C_READ, &i2c_rtc_status) == 0)        // set device address and read mode
-        {
-          rtc = true;                                                           // indicate success
+	if (rtc_initialized) {
 
-          while (--length)
-          {
-            *valuep++ = i2c_master_read_ack();                                  // read n'th byte
-          }
-          *valuep++ = i2c_master_read_nak();                                    // read last byte
-        }
-      }
+		if (length && (addr + length <= 64)) {
 
-      i2c_master_stop();                                                        // set stop conditon = release bus
-    }
-  }
-  return rtc;
+			i2c_master_start_wait(DEVRTC + I2C_WRITE);
+
+			if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+
+				if (i2c_master_rep_start(DEVRTC + I2C_READ, &i2c_rtc_status) == 0) {
+
+					rtc = true;
+
+					while (--length) {
+
+						*valuep++ = i2c_master_read_ack();
+
+					}
+
+					*valuep++ = i2c_master_read_nak();
+
+				}
+
+			}
+
+			i2c_master_stop();
+
+		}
+
+	}
+
+	return rtc;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -236,19 +254,22 @@ i2c_rtc_sram_read (uint8_t addr, void * void_valuep, uint8_t length)
  *  @return     TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-static bool
-i2c_write_ctrlreg (void)
+static bool i2c_write_ctrlreg(void)
 {
-  uint8_t     value[1];
-  bool        rtc = false;
 
-  value[0] = ctrlreg;
+	uint8_t value[1];
+	bool rtc = false;
 
-  if (i2c_rtc_sram_write (0x07, value, 1))
-  {
-    rtc = true;
-  }
-  return rtc;
+	value[0] = ctrlreg;
+
+	if (i2c_rtc_sram_write(0x07, value, 1)) {
+
+		rtc = true;
+
+	}
+
+	return rtc;
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -259,39 +280,45 @@ i2c_write_ctrlreg (void)
  *  @return   TRUE = successful, FALSE = failed
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool
-i2c_rtc_init (uint8_t * errorcode_p, uint8_t * status_p)
+bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 {
-  bool        rtc = false;
-  uint8_t     seconds;
 
-  *status_p = 0xFF;
-  *errorcode_p = i2c_master_init();                                             // init I2C interface
+	bool rtc = false;
+	uint8_t seconds;
 
-  if (*errorcode_p == 0)
-  {
-    rtc_initialized = true;
-    ctrlreg = CTRL_REG_OUT;                                                     // set SQWE pin to output and set it to high (deactivated, active low!)
+	*status_p = 0xFF;
+	*errorcode_p = i2c_master_init();
 
-    if (i2c_write_ctrlreg ())
-    {
-      rtc = true;
+	if (*errorcode_p == 0) {
 
-      if (i2c_rtc_sram_read (0x00, &seconds, 1))
-      {
-        if (seconds & 0x80)                                                     // clock stopped?
-        {
-          seconds &= ~0x80;
-          (void) i2c_rtc_sram_write (0x00, &seconds, 1);
-        }
-      }
-    }
-    else
-    {
-      *errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
-      *status_p = i2c_rtc_status;
-    }
-  }
+		rtc_initialized = true;
 
-  return rtc;
+		ctrlreg = CTRL_REG_OUT;
+
+		if (i2c_write_ctrlreg()) {
+
+			rtc = true;
+
+			if (i2c_rtc_sram_read(0x00, &seconds, 1)) {
+
+				if (seconds & 0x80) {
+
+					seconds &= ~0x80;
+					(void)i2c_rtc_sram_write(0x00, &seconds, 1);
+
+				}
+
+			}
+
+		} else {
+
+			*errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
+			*status_p = i2c_rtc_status;
+
+		}
+
+	}
+
+	return rtc;
+
 }
