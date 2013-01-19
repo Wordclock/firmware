@@ -44,8 +44,10 @@
  * ldr_get_brightness() will be the mean value of the values stored in an array
  * of this size.
  *
- * In order to keep the calculations fast this should be an multiple of two,
- * so calculations of the current index can be done by appropriate bit shifts.
+ * This is actually used as a [ring buffer][1], which means that
+ * MEASUREMENTS_ARRAY_SIZE should be a multiple of two to keep things fast.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Circular_buffer
  *
  * @see ldr_get_brightness()
  */
