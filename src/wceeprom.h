@@ -33,7 +33,7 @@
  * [1]: https://en.wikipedia.org/wiki/EEPROM
  *
  * @see WcEepromData
- * @see uart.c
+ * @see wceeprom.c
  */
 
 #ifndef _WC_EEPROM_H_
