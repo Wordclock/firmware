@@ -73,7 +73,7 @@ static bool rtc_initialized = false;
  * @brief Holds the status of the I2C bus of the last operation
  *
  * Various functions can fail for multiple reasons. This variable holds the
- * status of some functions. It can be retrieved using i2c_rtc_get_stats().
+ * status of some functions. It can be retrieved using i2c_rtc_get_status().
  *
  * The possible states can be found at [1], p. 224f, table 22-2 and [1],
  * p. 227f, table 22-3. A more compact overview in form of macros can be
@@ -185,7 +185,7 @@ static uint8_t i2c_rtc_status;
  * @brief Returns the status of the I2C bus of the last operation
  *
  * This returns the status of the last operation performed on the I2C bus in
- * the context of this module. See i2c_rtc_stats for details.
+ * the context of this module. See i2c_rtc_status for details.
  *
  * @see i2c_rtc_status
  */
