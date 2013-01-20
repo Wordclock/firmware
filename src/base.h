@@ -37,7 +37,7 @@
  *
  * This can be used to build up a byte manually by explicitly listing all the
  * bits. For instance in order to build up the byte `01101001`<sub>2</sub>,
- * you would call it like that: BIN8(0, 1, 1, 0, 1, 0, 0, 1).
+ * you would use it like that: BIN8(0, 1, 1, 0, 1, 0, 0, 1).
  *
  * Obviously b7..b0 are expected to be either 0 and/or 1.
  *
