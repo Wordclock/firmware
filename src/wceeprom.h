@@ -90,8 +90,8 @@ typedef struct WcEepromData {
      * in the version number provided by the software itself and the one stored
      * in EEPROM, the EEPROM data will be ignored and overwritten by the
      * default values. This is especially for cases when a new version of the
-     * software has changed the struct WcEeepromData. This guarantees that no
-     * incompatible version of WcEepromData are mixed with each other.
+     * software has changed the struct WcEeepromData. It guarantees that no
+     * incompatible versions of WcEepromData are mixed with each other.
      *
      * @see BUILD_VERSION()
      * @see MAJOR_VERSION()
@@ -110,6 +110,9 @@ typedef struct WcEepromData {
      *
      * The size will be calculated automatically during compilation, so you
      * don't have to worry about it too much.
+     *
+     * @warning This is a 8 bit value, so the size of the struct shouldn't
+     *  exceed 256 bytes.
      */
     uint8_t structSize;
 
@@ -125,8 +128,11 @@ extern void wcEeprom_init(void);
  * used to modify the values. In order for the changes to get written back
  * into EEPROM, wcEeprom_writeback() needs to be called.
  *
- * @warning WcEepromData shouldn't become larger than 254 bytes, as the code
- * right now uses a lot of 8 bit counters.
+ * @warning WcEepromData shouldn't become larger than 254 bytes for now, as
+ *  the code right now uses a lot of 8 bit counters.
+ *
+ * @warning WcEepromData definitely shouldn't become bigger than the size of
+ *  EEPROM itself, which is 512 bytes for the ATmega168.
  *
  * @see WcEepromData
  * @see wcEeprom_writeback()
