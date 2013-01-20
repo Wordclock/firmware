@@ -115,7 +115,7 @@ typedef struct WcEepromData {
 
 } WcEepromData;
 
-void wcEeprom_init(void);
+extern void wcEeprom_init(void);
 
 /**
  * @brief Returns a pointer to a copy of WcEepromData
@@ -143,6 +143,6 @@ static inline WcEepromData* wcEeprom_getData(void)
 
 }
 
-void wcEeprom_writeback(const void* start, uint8_t len);
+extern void wcEeprom_writeback(const void* start, uint8_t len);
 
 #endif /* _WC_EEPROM_H_ */
