@@ -38,6 +38,7 @@
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <stdbool.h>
 
 #include "wceeprom.h"
 #include "uart.h"
@@ -126,7 +127,7 @@ void wcEeprom_init(void)
      #endif
 }
 
-static uint8_t wcEeprom_writeIfChanged(uint8_t index)
+static bool wcEeprom_writeIfChanged(uint8_t index)
 {
 
     uint8_t eepromByte;
@@ -155,11 +156,11 @@ static uint8_t wcEeprom_writeIfChanged(uint8_t index)
 
         eeprom_write_byte(eepromAdress, sdramByte);
 
-        return 1;
+        return true;
 
     }
 
-    return 0;
+    return false;
 
 }
 
