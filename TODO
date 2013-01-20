@@ -60,3 +60,9 @@
 - dcf77.h: Instead of dynamically building the header depending on the value
   of DCF_PRESENT it actually would make more sense to not include the file
   in the first place, when the DCF77 functionality is not needed.
+
+- wceeprom: Use interrupt driven approach for writing data into EEPROM. Right
+  now it is quite possible that interrupts will be missed as writing to 
+  EEPROM takes quite some time.
+
+- wceeprom: Make it possible to let WcEepromData get bigger than 254 byte.
