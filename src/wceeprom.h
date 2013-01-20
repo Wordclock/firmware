@@ -60,13 +60,60 @@
  *
  * @see wcEeprom_writeback()
  */
-typedef struct WcEepromData{
-  UserEepromParams    userParams;    /**< parameters from user interface module               */
-  DisplayEepromParams displayParams; /**< parameters from display module                      */
-  PwmEepromParams     pwmParams;     /**< parameters from pwm module                          */
-  uint8_t             swVersion;     /**< version identifier - for basic data integrity test  */
-  uint8_t             structSize;    /**< size of structure - for basic data integrity test   */
-}WcEepromData;
+typedef struct WcEepromData {
+
+    /**
+     * @brief Parameters to be stored persistently from the user module
+     *
+     * @see user.h
+     */
+    UserEepromParams userParams;
+
+    /**
+     * @brief Parameters to be stored persistently from the display module
+     *
+     * @see display.h
+     */
+    DisplayEepromParams displayParams;
+
+    /**
+     * @brief Parameters to be stored persistently from the PWM module
+     *
+     * @see pwm.h
+     */
+    PwmEepromParams pwmParams;
+
+    /**
+     * @brief Version number
+     *
+     * This is used as a basic integrity check. Whenever there is difference
+     * in the version number provided by the software itself and the one stored
+     * in EEPROM, the EEPROM data will be ignored and overwritten by the
+     * default values. This is especially for cases when a new version of the
+     * software has changed the struct WcEeepromData. This guarantees that no
+     * incompatible version of WcEepromData are mixed with each other.
+     *
+     * @see BUILD_VERSION()
+     * @see MAJOR_VERSION()
+     * @see MINOR_VERSION()
+     *
+     */
+    uint8_t swVersion;
+
+    /**
+     * @brief Size of this struct
+     *
+     * Once again, like WcEepromData::swVersion, this is used as a reference
+     * for integrity. If there is a difference in size between the size
+     * claimed by the firmware itself and the one stored in EEPROM the data
+     * of the EEPROM will be ignored and overwritten.
+     *
+     * The size will be calculated automatically during compilation, so you
+     * don't have to worry about it too much.
+     */
+    uint8_t structSize;
+
+} WcEepromData;
 
 /**
  * @brief Initializes this module by reading data from EEPROM and keeping a
@@ -98,9 +145,15 @@ void wcEeprom_init(void);
  */
 static inline WcEepromData* wcEeprom_getData(void)
 {
-  extern WcEepromData g_epromWorking;
-  return &g_epromWorking;
-};
+
+	/*
+	 * This is actually defined in wceeprom.c
+	 */
+    extern WcEepromData g_epromWorking;
+
+    return &g_epromWorking;
+
+}
 
 /**
  * @brief Writes changes done to the WcEepromData instance in RAM into EEPROM
