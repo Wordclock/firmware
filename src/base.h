@@ -51,8 +51,8 @@
 /**
  * @brief Build short by explicitly setting each bit
  *
- * This can be used to build up a byte manually by explicitly listing all the
- * bits.
+ * This can be used to build up a short manually by explicitly listing all the
+ * bits it contains in sequence.
  *
  * Obviously b15..b0 are expected to be either 0 and/or 1.
  *
