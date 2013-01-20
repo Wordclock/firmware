@@ -71,6 +71,18 @@ static void uart_putHexByte(uint8_t byte)
 }
 #endif
 
+/**
+ * @brief Initializes this module by reading data from EEPROM and keeping a
+ *   copy of it in memory
+ *
+ * This has to be called **before** any other functions of this module can be
+ * used. It copies the data from EEPROM into memory and makes it accessible
+ * with wcEeprom_getData(). Changes to the data done in memory can be written
+ * back to be stored persistently using wcEeprom_writeback().
+ *
+ * @see wcEeprom_getData()
+ * @see wcEeprom_writeback()
+ */
 void wcEeprom_init(void)
 {
   eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
@@ -127,6 +139,28 @@ static uint8_t wcEeprom_writeIfChanged(uint8_t index)
   return 0;
 }
 
+/**
+ * @brief Writes changes done to the WcEepromData instance in RAM into EEPROM
+ *
+ * As stated in the description of WcEepromData there are basically two
+ * "instances" of this variable. One in RAM and one in EEPROM, which the one
+ * in RAM is based on. If any changes are done to the instance in RAM this
+ * function has to be called in order for the changes to be written back to
+ * EEPROM so they are stored persistently.
+ *
+ * Instead of writing the whole struct into EEPROM each and every time again,
+ * it is also possible to only write back bytes that actually have changed,
+ * which not only saves space, but also helps to increase the expected lifetime
+ * of the EEPROM cells involved.
+ *
+ * @warning Because writing to EEPROM takes quite some time it is possible
+ * that interrupts will be missed.
+ *  *
+ * @param start Pointer to the start of the data that has to be written back
+ * @param len The length of the data that has to be written back
+ *
+ * @see WcEepromData
+ */
 void wcEeprom_writeback(const void* start, uint8_t len)
 {
   uint8_t eepromIndex = ( ((uint8_t*)start) - ( (uint8_t*)&g_epromWorking)); 
