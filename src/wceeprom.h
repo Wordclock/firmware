@@ -20,7 +20,7 @@
 
 /**
  * @file wceeprom.h
- * @brief Header allowing for access to persistent storage of various settings
+ * @brief Header enabling access to persistent storage of various settings
  *
  * The microcontroller used in this project provides some amount of
  * [EEPROM][1]. This EEPROM is used to store various settings to be available
