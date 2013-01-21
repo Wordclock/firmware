@@ -810,6 +810,7 @@ static bool dcf77_check(void)
                 && (DCF.Parity % 2 != 0)) {
 
             dcf77_reset();
+
             return false;
 
         }
