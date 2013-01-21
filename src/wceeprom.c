@@ -18,22 +18,36 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file wceeprom.c
+ * @brief Implementation of the header declared in wceeprom.h
  *
- *  This file implements the handling of the persistent data of the wordclock modules
+ * This idea behind this module is to keep a copy of the content of the EEPROM
+ * (see [1]) within the SRAM, see g_epromWorking. g_epromWorking will be
+ * initialized during bootup. It will either contain the content of the EEPROM
+ * and/or if there is some sort of an error regarding the integrity (e.g.
+ * different size and/or different SW_VERSION) it will contain the default
+ * parameters defined in pm_eepromDefaultParams.
  *
- * \version $Id: wceeprom.c 285 2010-03-24 21:43:24Z vt $
+ * g_epromWorking can basically be changed like any other variable.
+ * wcEeprom_writeback() can then be used to write these changes back to EEPROM
+ * in order to make them persistent.
  *
- * \author Copyright (c) 2010 Vlad Tepesch
+ * For further information about the EEPROM memory integrated into the AVR
+ * microcontroller see [2], p. 20f, chapter 8.4. Furhtermore it might be useful
+ * to take a look at [3] as these functions are used quite heavily within this
+ * module.
  *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * [1]: https://en.wikipedia.org/wiki/EEPROM
+ * [2]: http://www.atmel.com/images/doc2545.pdf
+ * [3]: http://www.nongnu.org/avr-libc/user-manual/group__avr__eeprom.html
+ *
+ * @see SW_VERSION
+ * @see WcEepromData::structSize
+ * @see pm_eepromDefaultParams
+ * @see wcEeprom_writeback()
+ * @see wceeprom.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
