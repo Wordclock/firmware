@@ -60,16 +60,52 @@
 
 #if (LOG_EEPROM_WRITEBACK == 1)
 
+    /**
+     * @brief Used to output logging information for changes written back to
+     *  EEPROM
+     *
+     * When the logging is enabled (LOG_EEPROM_WRITEBACK == 1), this macro is
+     * used to output changes that are written back to EEPROM.
+     *
+     * @see LOG_EEPROM_WRITEBACK
+     */
     #define log_eeprom(x) uart_puts_P(x)
 
 #else
 
+    /**
+     * @brief Used to output logging information for changes written back to
+     *  EEPROM
+     *
+     * When the logging is disabled (LOG_EEPROM_WRITEBACK == 0), this macro is
+     * used, so that actually there is nothing being output. This allows to
+     * use log_eeprom(x) in the code without needing to check whether the
+     * logging is enabled over and over again.
+     *
+     * @see LOG_EEPROM_WRITEBACK
+     */
     #define log_eeprom(x)
 
 #endif
 
+/**
+ * @brief Represents the settings to be stored persistently within the EEPROM
+ *
+ * @see wcEeprom_init()
+ * @see wcEeprom_writeback()
+ * @see g_epromWorking
+ */
 WcEepromData EEMEM eepromParams;
 
+/**
+ * @brief The default settings to be used in case the content from EEPROM is
+ *   invalid
+ *
+ * These settings are used whenever the basic integrety check fails, see
+ * wcEeprom_init().
+ *
+ * @see wcEeprom_init()
+ */
 const WcEepromData PROGMEM pm_eepromDefaultParams = {
 
     USEREEPROMPARAMS_DEFAULT,
@@ -80,10 +116,31 @@ const WcEepromData PROGMEM pm_eepromDefaultParams = {
 
 };
 
+/**
+ * @brief Working copy hold in SRAM backed by the content from EEPROM
+ *
+ * This variable is stored in SRAM and can be used just like every other
+ * variable, too. It will filled with the contents from EEPROM during
+ * initialization, see wcEeprom_init(). In order for changes to this variable
+ * to be stored persistently in EEPROM, wcEeprom_writeback() has to be used.
+ *
+ * @see wcEeprom_init()
+ * @see wcEeprom_writeback()
+ * @see eepromParams
+ */
 WcEepromData g_epromWorking;
 
 #if (LOG_EEPROM_INIT == 1) || (LOG_EEPROM_WRITEBACK == 1)
 
+    /**
+     * @brief Outputs a byte to UART in hexadecimal notation
+     *
+     * This can be used for debugging purposes. It will convert the byte into
+     * its hexadecimal notation and will output it using the UART module.
+     *
+     * @see uart_putc()
+     * @see nibbleToHex()
+     */
     static void uart_putHexByte(uint8_t byte)
     {
 
@@ -141,6 +198,21 @@ void wcEeprom_init(void)
      #endif
 }
 
+/**
+ * @brief Writes byte at the given index to EEPROM if it has been changed
+ *
+ * In order to speed up the process of writing to EEPROM we only write bytes
+ * to EEPROM that actually have been changed. This also increases the lifespan
+ * of the EEPROM itself. If logging is enabled (LOG_EEPROM_WRITEBACK == 1) the
+ * difference between the byte in SRAM and the one in EEPROM will be output,
+ * too.
+ *
+ * This function will be invoked by wcEeprom_writeback() automatically.
+ *
+ * @see wcEeprom_writeback()
+ * @see LOG_EEPROM_WRITEBACK
+ * @see uart_putHexByte()
+ */
 static bool wcEeprom_writeIfChanged(uint8_t index)
 {
 
@@ -198,6 +270,7 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @param start Pointer to the start of the data that has to be written back
  * @param len The length of the data that has to be written back
  *
+ * @see wcEeprom_writeIfChanged()
  * @see WcEepromData
  */
 void wcEeprom_writeback(const void* start, uint8_t len)
