@@ -210,6 +210,30 @@ void wcEeprom_init(void)
 }
 
 /**
+ * @brief Returns a pointer to a copy of WcEepromData
+ *
+ * This returns a pointer to a variable of type WcEepromData. This variable
+ * can then be used to get the persistently stored values. It can also be
+ * used to modify the values. In order for the changes to get written back
+ * into EEPROM, wcEeprom_writeback() needs to be called.
+ *
+ * @warning WcEepromData shouldn't become larger than 254 bytes for now, as
+ *  the code right now uses a lot of 8 bit counters.
+ *
+ * @warning WcEepromData definitely shouldn't become bigger than the size of
+ *  EEPROM itself, which is 512 bytes for the ATmega168.
+ *
+ * @see WcEepromData
+ * @see wcEeprom_writeback()
+ */
+WcEepromData* wcEeprom_getData(void)
+{
+
+    return &g_epromWorking;
+
+}
+
+/**
  * @brief Writes byte at the given index to EEPROM if it has been changed
  *
  * In order to speed up the process of writing to EEPROM we only write bytes
