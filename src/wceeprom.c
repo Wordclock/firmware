@@ -126,11 +126,10 @@ void wcEeprom_init(void)
 
     #if (LOG_EEPROM_INIT == 1)
 
-        uint8_t i = 0;
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
         uart_puts_P("EEPROM: ");
 
-        for(; i < sizeof(eepromParams); ++i){
+        for(uint8_t i = 0; i < sizeof(eepromParams); i++){
 
             uart_putHexByte(*ptr++);
 
