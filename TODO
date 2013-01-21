@@ -66,3 +66,6 @@
   EEPROM takes quite some time.
 
 - wceeprom: Make it possible to let WcEepromData get bigger than 254 byte.
+
+- Specify some coding styles for contributers, which will be based upon the
+  K&R indent style
