@@ -220,9 +220,9 @@ void wcEeprom_writeback(const void* start, uint8_t len)
      * TODO: rewrite this to use interupts because of waiting for
      * eeprom-write finish
      */
-    for(; eepromIndex <= eepromIndexEnd; ++eepromIndex) {
+    while(eepromIndex <= eepromIndexEnd) {
 
-        wcEeprom_writeIfChanged(eepromIndex);
+        wcEeprom_writeIfChanged(eepromIndex++);
 
     }
 
