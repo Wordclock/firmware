@@ -27,7 +27,7 @@
  * initialized during bootup. It will either contain the content of the EEPROM
  * and/or if there is some sort of an error regarding the integrity (e.g.
  * different size and/or different SW_VERSION) it will contain the default
- * parameters defined in pm_eepromDefaultParams.
+ * parameters defined in eepromDefaultParams_P.
  *
  * g_epromWorking can basically be changed like any other variable.
  * wcEeprom_writeback() can then be used to write these changes back to EEPROM
@@ -44,7 +44,7 @@
  *
  * @see SW_VERSION
  * @see WcEepromData::structSize
- * @see pm_eepromDefaultParams
+ * @see eepromDefaultParams_P
  * @see wcEeprom_writeback()
  * @see wceeprom.h
  */
@@ -106,7 +106,7 @@ WcEepromData EEMEM eepromParams;
  *
  * @see wcEeprom_init()
  */
-const WcEepromData PROGMEM pm_eepromDefaultParams = {
+const WcEepromData PROGMEM eepromDefaultParams_P = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
@@ -188,7 +188,7 @@ void wcEeprom_init(void)
         /*
          * Copy default settings into g_epromWorking
          */
-        memcpy_P(&g_epromWorking, &pm_eepromDefaultParams, sizeof(WcEepromData));
+        memcpy_P(&g_epromWorking, &eepromDefaultParams_P, sizeof(WcEepromData));
 
     }
 
