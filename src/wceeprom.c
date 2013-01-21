@@ -166,8 +166,16 @@ WcEepromData g_epromWorking;
 void wcEeprom_init(void)
 {
 
+    /*
+     * Copy content from EEPROM into SRAM
+     */
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
 
+    /*
+     * Basic integrity check: Check whether there are differences between
+     * either the SW_VERSION or the size of g_epromWorking between the
+     * version actually running and the one stored in EEPROM.
+     */
     if ((g_epromWorking.swVersion != SW_VERSION)
         || (g_epromWorking.structSize != sizeof(g_epromWorking))) {
 
@@ -177,6 +185,9 @@ void wcEeprom_init(void)
 
         #endif
 
+        /*
+         * Copy default settings into g_epromWorking
+         */
         memcpy_P(&g_epromWorking, &pm_eepromDefaultParams, sizeof(WcEepromData));
 
     }
@@ -290,8 +301,8 @@ void wcEeprom_writeback(const void* start, uint8_t len)
     #endif
 
     /*
-     * TODO: rewrite this to use interupts because of waiting for
-     * eeprom-write finish
+     * TODO: Rewrite this to use interrupts because waiting for EEPROM write
+     *  might take quite some time
      */
     while(eepromIndex <= eepromIndexEnd) {
 
