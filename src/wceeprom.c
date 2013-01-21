@@ -116,7 +116,7 @@ void wcEeprom_init(void)
 
         #if (LOG_EEPROM_INIT == 1)
 
-            uart_puts_P("Using defaults instead eeprom\n");
+            uart_puts_P("Using default settings\n");
 
         #endif
 
@@ -128,7 +128,7 @@ void wcEeprom_init(void)
 
         uint8_t i = 0;
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
-        uart_puts_P("eeprom: ");
+        uart_puts_P("EEPROM: ");
 
         for(; i < sizeof(eepromParams); ++i){
 
@@ -157,12 +157,12 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 
             char buf[5];
 
-            uart_puts_P("EEPROM Byte ");
+            uart_puts_P("EEPROM byte ");
             uint16ToHexStr((uint16_t)eepromAdress, buf);
             uart_puts(buf);
-            uart_puts_P(" differs ");
+            uart_puts_P(", EEPROM: ");
             uart_putHexByte(eepromByte);
-            uart_putc('\t');
+            uart_puts_P(", SRAM: ");
             uart_putHexByte(sdramByte);
             uart_putc('\n');
 
@@ -208,9 +208,9 @@ void wcEeprom_writeback(const void* start, uint8_t len)
 
     #if (LOG_EEPROM_WRITEBACK == 1)
 
-        uart_puts_P("EEpromWrite idx: ");
+        uart_puts_P("EEPROM write: Index: ");
         uart_putHexByte(eepromIndex);
-        uart_puts_P(" len: ");
+        uart_puts_P(", Length: ");
         uart_putHexByte(len);
         uart_putc('\n');
 
