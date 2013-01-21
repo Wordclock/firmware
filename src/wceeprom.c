@@ -126,8 +126,9 @@ void wcEeprom_init(void)
 
     #if (LOG_EEPROM_INIT == 1)
 
-        uint8_t* ptr = (uint8_t*)(&g_epromWorking);
         uart_puts_P("EEPROM: ");
+
+        uint8_t* ptr = (uint8_t*)(&g_epromWorking);
 
         for(uint8_t i = 0; i < sizeof(eepromParams); i++){
 
