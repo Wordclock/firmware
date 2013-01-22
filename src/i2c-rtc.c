@@ -40,7 +40,6 @@
 #include <util/delay.h>
 #include <util/twi.h>
 
-#include "main.h"
 #include "base.h"
 #include "i2c-master.h"
 #include "i2c-rtc.h"
