@@ -42,7 +42,7 @@
  */
 
 #include <inttypes.h>
-#include <compat/twi.h>
+#include <util/twi.h>
 #include <util/delay.h>
 
 #include "main.h"
