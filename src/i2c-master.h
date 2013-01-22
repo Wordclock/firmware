@@ -40,8 +40,8 @@
 
 #include <stdbool.h>
 
-#define I2C_READ                    1
-#define I2C_WRITE                   0
+#define I2C_READ    1
+#define I2C_WRITE   0
 
 /**
  * @brief Indicates that the SCL line is low during initialization
@@ -54,7 +54,7 @@
  *
  * @see i2c_master_init()
  */
-#define I2C_ERROR_SCL_LOW           1
+#define I2C_ERROR_SCL_LOW 1
 
 /**
  * @brief Indicates that the SDA line is low during initialization
@@ -76,7 +76,7 @@
  *
  * @see i2c_master_init()
  */
-#define I2C_ERROR_SDA_LOW           2
+#define I2C_ERROR_SDA_LOW 2
 
 /**
  * @brief Indicates that the given slave could't be found
@@ -86,23 +86,23 @@
  *
  * @see i2c_master_init()
  */
-#define I2C_ERROR_SLAVE_NOT_FOUND   3
+#define I2C_ERROR_SLAVE_NOT_FOUND 3
 
-extern bool                   i2c_master_init (void);
+extern bool i2c_master_init(void);
 
-extern uint8_t                i2c_master_start(uint8_t address, uint8_t * status_p);
+extern uint8_t i2c_master_start(uint8_t address, uint8_t* status_p);
 
-extern void                   i2c_master_start_wait (uint8_t address);
+extern void i2c_master_start_wait(uint8_t address);
 
-extern uint8_t                i2c_master_rep_start (uint8_t address, uint8_t * status_p);
+extern uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p);
 
-extern void                   i2c_master_stop (void);
+extern void i2c_master_stop(void);
 
-extern uint8_t                i2c_master_write (uint8_t data, uint8_t * status_p);
+extern uint8_t i2c_master_write(uint8_t data, uint8_t* status_p);
 
-extern uint8_t                i2c_master_read_ack (void);
+extern uint8_t i2c_master_read_ack(void);
 
-extern uint8_t                i2c_master_read_nak (void);
+extern uint8_t i2c_master_read_nak(void);
 
 /**
  * @brief Requests to read at least one byte
@@ -121,6 +121,6 @@ extern uint8_t                i2c_master_read_nak (void);
  * @see i2c_master_read_ack()
  * @see i2c_master_read_nak()
  */
-#define i2c_master_read(ack)  (ack) ? i2c_master_read_ack() : i2c_master_read_nak();
+#define i2c_master_read(ack) (ack) ? i2c_master_read_ack() : i2c_master_read_nak();
 
 #endif /* _WC_I2C_MASTER_H_ */
