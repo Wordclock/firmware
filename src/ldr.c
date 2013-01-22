@@ -202,7 +202,6 @@ uint8_t ldr_get_brightness(void)
 
 }
 
-
 /**
  * @brief Takes the measurement and recalculates the new value to return
  *
