@@ -43,8 +43,49 @@
 #define I2C_READ                    1
 #define I2C_WRITE                   0
 
+/**
+ * @brief Indicates that the SCL line is low during initialization
+ *
+ * During initialization the line is checked for its level, see
+ * i2c_master_init(). When it is detected that SCL is low, this error code
+ * will be returned. It usually is an indicator for something being badly
+ * wrong, e.g. bad wiring, as the SCL line should totally be in control by
+ * the master.
+ *
+ * @see i2c_master_init()
+ */
 #define I2C_ERROR_SCL_LOW           1
+
+/**
+ * @brief Indicates that the SDA line is low during initialization
+ *
+ * During initialization the line is checked for its level, see
+ * i2c_master_init(). When all is fine, it will be high. However it might be
+ * the case that a device is "stuck". This is described at [1], p. 20, section
+ * 3.1.16. An application Note from Analog Devices (see [2]) describes possible
+ * solutions for this, one of which is "clocking through the problem". This is
+ * exactly what is being tried here.
+ *
+ * However it might be the case that the the line remains low even after that,
+ * which either means could either mean that the slave is still stuck or that
+ * the I2C bus is faulty. In both of these cases this error code will be
+ * returned.
+ *
+ * [1]: http://www.nxp.com/documents/user_manual/UM10204.pdf
+ * [2]: http://www.analog.com/static/imported-files/application_notes/54305147357414AN686_0.pdf
+ *
+ * @see i2c_master_init()
+ */
 #define I2C_ERROR_SDA_LOW           2
+
+/**
+ * @brief Indicates that the given slave could't be found
+ *
+ * In a case where everything seems fine with the I2C bus itself, but the slave
+ * won't answer to our requests, this error code will be returned.
+ *
+ * @see i2c_master_init()
+ */
 #define I2C_ERROR_SLAVE_NOT_FOUND   3
 
 extern bool                   i2c_master_init (void);
