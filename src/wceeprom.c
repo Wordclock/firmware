@@ -252,13 +252,13 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 {
 
     uint8_t eepromByte;
-    uint8_t sdramByte;
+    uint8_t sramByte;
     uint8_t* eepromAdress = ((uint8_t*)&eepromParams) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
-    sdramByte =  *(((uint8_t*)&g_epromWorking) + index);
+    sramByte =  *(((uint8_t*)&g_epromWorking) + index);
 
-    if (eepromByte != sdramByte) {
+    if (eepromByte != sramByte) {
 
         #if (LOG_EEPROM_WRITEBACK == 1)
 
@@ -270,12 +270,12 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
             uart_puts_P(", EEPROM: ");
             uart_putHexByte(eepromByte);
             uart_puts_P(", SRAM: ");
-            uart_putHexByte(sdramByte);
+            uart_putHexByte(sramByte);
             uart_putc('\n');
 
         #endif
 
-        eeprom_write_byte(eepromAdress, sdramByte);
+        eeprom_write_byte(eepromAdress, sramByte);
 
         return true;
 
