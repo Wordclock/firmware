@@ -45,7 +45,6 @@
 #include <util/twi.h>
 #include <util/delay.h>
 
-#include "main.h"
 #include "i2c-master.h"
 #include "ports.h"
 
