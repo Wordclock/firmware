@@ -324,10 +324,6 @@ void wcEeprom_writeback(const void* start_p, uint8_t len)
 
     #endif
 
-    /*
-     * TODO: Rewrite this to use interrupts because waiting for EEPROM write
-     *  might take quite some time
-     */
     while(eepromIndex <= eepromIndexEnd) {
 
         wcEeprom_writeIfChanged(eepromIndex++);
