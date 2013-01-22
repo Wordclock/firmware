@@ -47,6 +47,7 @@
 
 #include "main.h"
 #include "i2c-master.h"
+#include "ports.h"
 
 #define SCL_CLOCK 100000
 
@@ -64,20 +65,14 @@
 
     #define HAS_RESET 1
 
-    #define SCL_PORT    PORTC
-    #define SCL_DDR     DDRC
-    #define SCL_PIN     PINC
-    #define SCL_BIT     PINC5
-    #define SDA_PORT    PORTC
-    #define SDA_DDR     DDRC
-    #define SDA_PIN     PINC
-    #define SDA_BIT     PINC4
+    #define SCL PORTC, 5
+    #define SDA PORTC, 4
 
-    #define SCL_LOW     SCL_DDR |= _BV(SCL_BIT)
-    #define SCL_HIGH    SCL_DDR &= ~_BV(SCL_BIT)
-    #define SDA_IS_HIGH (SDA_PIN & _BV(SDA_BIT))
+    #define SCL_LOW     DDR(SCL) |= _BV(BIT(SCL))
+    #define SCL_HIGH    DDR(SCL) &= ~_BV(BIT(SCL))
+    #define SDA_IS_HIGH (PIN(SDA) & _BV(BIT(SDA)))
     #define SDA_IS_LOW  (!SDA_IS_HIGH)
-    #define SCL_IS_HIGH (SCL_PIN & _BV(SCL_BIT))
+    #define SCL_IS_HIGH (PIN(SCL) & _BV(BIT(SCL)))
     #define SCL_IS_LOW  (!SCL_IS_HIGH)
 
 #else
@@ -101,10 +96,10 @@ static uint8_t i2c_reset(void)
 
         uint8_t idx;
 
-        SCL_PORT &= ~_BV(SCL_BIT);
-        SCL_DDR  &= ~_BV(SCL_BIT);
-        SDA_PORT &= ~_BV(SDA_BIT);
-        SDA_DDR  &= ~_BV(SDA_BIT);
+        PORT(SCL) &= ~_BV(BIT(SCL));
+        DDR(SCL)  &= ~_BV(BIT(SCL));
+        PORT(SDA) &= ~_BV(BIT(SDA));
+        DDR(SDA)  &= ~_BV(BIT(SDA));
 
         _delay_ms(1);
 
@@ -138,7 +133,7 @@ static uint8_t i2c_reset(void)
 
                 }
 
-                SCL_DDR  &= ~_BV(SCL_BIT);
+                DDR(SCL)  &= ~_BV(BIT(SCL));
 
             }
 
