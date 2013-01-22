@@ -50,8 +50,8 @@
 
 #define SCL_CLOCK 100000
 
-#define WAIT_UNTIL_TRANSMISSION_COMPLETED   while (!(TWCR & (1<<TWINT)));
-#define WAIT_UNTIL_STOP_CONDITION_EXECUTED  while (TWCR & (1<<TWSTO));
+#define WAIT_UNTIL_TRANSMISSION_COMPLETED   while (!(TWCR & _BV(TWINT)));
+#define WAIT_UNTIL_STOP_CONDITION_EXECUTED  while (TWCR & _BV(TWSTO));
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * fm: If SDA is low, you can reset the I2C bus by doing following steps:
@@ -73,11 +73,11 @@
     #define SDA_PIN     PINC
     #define SDA_BIT     PINC4
 
-    #define SCL_LOW     SCL_DDR |= (1<<SCL_BIT)
-    #define SCL_HIGH    SCL_DDR &= ~(1<<SCL_BIT)
-    #define SDA_IS_HIGH (SDA_PIN & (1<<SDA_BIT))
+    #define SCL_LOW     SCL_DDR |= _BV(SCL_BIT)
+    #define SCL_HIGH    SCL_DDR &= ~_BV(SCL_BIT)
+    #define SDA_IS_HIGH (SDA_PIN & _BV(SDA_BIT))
     #define SDA_IS_LOW  (!SDA_IS_HIGH)
-    #define SCL_IS_HIGH (SCL_PIN & (1<<SCL_BIT))
+    #define SCL_IS_HIGH (SCL_PIN & _BV(SCL_BIT))
     #define SCL_IS_LOW  (!SCL_IS_HIGH)
 
 #else
@@ -101,10 +101,10 @@ static uint8_t i2c_reset(void)
 
         uint8_t idx;
 
-        SCL_PORT &= ~(1<<SCL_BIT);
-        SCL_DDR  &= ~(1<<SCL_BIT);
-        SDA_PORT &= ~(1<<SDA_BIT);
-        SDA_DDR  &= ~(1<<SDA_BIT);
+        SCL_PORT &= ~_BV(SCL_BIT);
+        SCL_DDR  &= ~_BV(SCL_BIT);
+        SDA_PORT &= ~_BV(SDA_BIT);
+        SDA_DDR  &= ~_BV(SDA_BIT);
 
         _delay_ms(1);
 
@@ -138,7 +138,7 @@ static uint8_t i2c_reset(void)
 
                 }
 
-                SCL_DDR  &= ~(1<<SCL_BIT);
+                SCL_DDR  &= ~_BV(SCL_BIT);
 
             }
 
@@ -205,7 +205,7 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
     uint8_t twst;
 
-    TWCR = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
+    TWCR = _BV(TWINT) | _BV(TWSTA) | _BV(TWEN);
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
@@ -220,7 +220,7 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
     }
 
     TWDR = address;
-    TWCR = (1<<TWINT) | (1<<TWEN);
+    TWCR = _BV(TWINT) | _BV(TWEN);
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED
 
@@ -252,7 +252,7 @@ void i2c_master_start_wait(uint8_t address)
 
     while(1) {
 
-        TWCR = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
+        TWCR = _BV(TWINT) | _BV(TWSTA) | _BV(TWEN);
 
         WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
@@ -265,7 +265,7 @@ void i2c_master_start_wait(uint8_t address)
         }
 
         TWDR = address;
-        TWCR = (1<<TWINT) | (1<<TWEN);
+        TWCR = _BV(TWINT) | _BV(TWEN);
 
         WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
@@ -273,7 +273,7 @@ void i2c_master_start_wait(uint8_t address)
 
         if ((twst == TW_MT_SLA_NACK) || (twst == TW_MR_DATA_NACK)) {
 
-            TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO);
+            TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWSTO);
 
             WAIT_UNTIL_STOP_CONDITION_EXECUTED;
 
@@ -310,7 +310,7 @@ uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p)
 void i2c_master_stop (void)
 {
 
-    TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO);
+    TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWSTO);
 
     WAIT_UNTIL_STOP_CONDITION_EXECUTED;
 
@@ -330,7 +330,7 @@ uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
     uint8_t   twst;
 
     TWDR = data;
-    TWCR = (1<<TWINT) | (1<<TWEN);
+    TWCR = _BV(TWINT) | _BV(TWEN);
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
@@ -357,7 +357,7 @@ uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 uint8_t i2c_master_read_ack(void)
 {
 
-    TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWEA);
+    TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWEA);
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
@@ -374,7 +374,7 @@ uint8_t i2c_master_read_ack(void)
 uint8_t i2c_master_read_nak(void)
 {
 
-    TWCR = (1<<TWINT) | (1<<TWEN);
+    TWCR = _BV(TWINT) | _BV(TWEN);
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
