@@ -19,25 +19,27 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file i2c-master.c
- * 
- *  Interface to I2C Hardware interface
- *  
- *  adapted from Fleury lib - thanks to Peter Fleury
+ * @brief Implementation of the header declared in i2c-master.h
  *
- * \version $Id: i2c-master.c 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This header makes the I2C hardware unit available to other modules of this
+ * project, e.g. for the "i2c-rtc" module, see i2c-rtc.h. This module
+ * implements the master mode in both directions - transmission and reception.
+ *
+ * For an overview of the I2C bus take a look at [1]. The specification
+ * (version 4.0) can be found at [2].
+ *
+ * For details about the hardware unit itself, take a look at [3], p. 222f,
+ * section 22. [3], p. 236f, section 22.9, might be of special interest as it
+ * describes the various registers used here.
+ *
+ * [1]: https://en.wikipedia.org/wiki/I%C2%B2C
+ * [2]: http://www.nxp.com/documents/user_manual/UM10204.pdf
+ * [3]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see i2c-master.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #include <inttypes.h>
 #include <compat/twi.h>
