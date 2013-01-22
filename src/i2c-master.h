@@ -19,24 +19,21 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file i2c-master.h
- * 
- *  Interface to I2C Hardware interface
- *  
- *  adapted from Fleury lib - thanks to Peter Fleury
+ * @brief Header allowing access to the I2C hardware unit in master mode
  *
- * \version $Id: i2c-master.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This header makes the I2C hardware unit available to other modules. It
+ * implements the I2C master mode in both directions - transmission and
+ * reception.
+ *
+ * This library was originally based upon a library named
+ * "I2C Master Interface" from Peter Fleury, see [1].
+ *
+ * [1]: http://homepage.hispeed.ch/peterfleury/avr-software.html
+ *
+ * @see i2c-master.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_I2C_MASTER_H_
 #define _WC_I2C_MASTER_H_
