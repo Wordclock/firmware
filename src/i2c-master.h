@@ -47,66 +47,20 @@
 #define I2C_ERROR_SDA_LOW           2
 #define I2C_ERROR_SLAVE_NOT_FOUND   3
 
-/**
- *  Initializes the I2C hardware
- *  @details  Configures I2C bus in order to operate as I2C master
- *  @return    TRUE if successful, FALSE, if not
- */
 extern bool                   i2c_master_init (void);
 
-/**
- *  Start I2C transfer
- *  @details  Issues a start condition and sends address and transfer direction
- *  @param    address   I2C address
- *  @param    status_p  pointer to byte in order to store I2C status
- *  @return    1 = failed to access device, 0 = device accessible
- */
 extern uint8_t                i2c_master_start(uint8_t address, uint8_t * status_p);
 
-/**
- *  Start I2C transfer and wait until device is ready
- *  @details  Issues a start condition and sends address and transfer direction
- *            If device is busy, use ack polling to wait until device is ready
- *  @param    address I2C address
- */
 extern void                   i2c_master_start_wait (uint8_t address);
 
-/**
- *  Start I2C transfer (repeated)
- *  @details  Issues a repeated start condition and sends address and transfer direction
- *  @param    address   I2C address
- *  @param    status_p  pointer to byte in order to store I2C status
- *  @return    1 = failed to access device, 0 = device accessible
- */
 extern uint8_t                i2c_master_rep_start (uint8_t address, uint8_t * status_p);
 
-/**
- *  Stop I2C transfer
- *  @details  Terminates the data transfer and releases the I2C bus
- */
 extern void                   i2c_master_stop (void);
 
-/**
- *  Send one byte to I2C device
- *  @details  Sends one byte to I2C device
- *  @param    data     byte to be transfered
- *  @param    status_p pointer to byte in order to store I2C status
- *  @return    0 write successful, 1 write failed
- */
 extern uint8_t                i2c_master_write (uint8_t data, uint8_t * status_p);
 
-/**
- *  Read one byte, request more data
- *  @details  Reads one byte from the I2C device, then requests more data from device
- *  @return    byte read
- */
 extern uint8_t                i2c_master_read_ack (void);
 
-/**
- *  Read one byte, followed by a stop condition
- *  @details  Reads one byte from the I2C device, read is followed by a stop condition
- *  @return    byte read
- */
 extern uint8_t                i2c_master_read_nak (void);
 
 /**
