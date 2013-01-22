@@ -121,6 +121,6 @@ extern void wcEeprom_init(void);
 
 extern WcEepromData* wcEeprom_getData(void);
 
-extern void wcEeprom_writeback(const void* start, uint8_t len);
+extern void wcEeprom_writeback(const void* start_p, uint8_t len);
 
 #endif /* _WC_EEPROM_H_ */

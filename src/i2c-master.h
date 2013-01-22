@@ -74,7 +74,7 @@ extern uint8_t                i2c_master_read_nak (void);
  * This macro makes use of this by either expanding to i2c_master_read_ack()
  * or i2c_master_read_nak(), depending upon the given parameter.
  *
- * @parm ack Boolean value: True if another byte should be requested, false
+ * @param ack Boolean value: True if another byte should be requested, false
  *  otherwise
  * @return The requested byte
  * @see i2c_master_read_ack()

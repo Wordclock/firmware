@@ -302,16 +302,16 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @warning Because writing to EEPROM takes quite some time it is possible
  * that interrupts will be missed.
  *  *
- * @param start Pointer to the start of the data that has to be written back
+ * @param start_p Pointer to the start of the data that has to be written back
  * @param len The length of the data that has to be written back
  *
  * @see wcEeprom_writeIfChanged()
  * @see WcEepromData
  */
-void wcEeprom_writeback(const void* start, uint8_t len)
+void wcEeprom_writeback(const void* start_p, uint8_t len)
 {
 
-    uint8_t eepromIndex = (((uint8_t*)start) - ((uint8_t*)&g_epromWorking));
+    uint8_t eepromIndex = (((uint8_t*)start_p) - ((uint8_t*)&g_epromWorking));
     uint8_t eepromIndexEnd = eepromIndex + len - 1;
 
     #if (LOG_EEPROM_WRITEBACK == 1)
