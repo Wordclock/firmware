@@ -209,7 +209,7 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
-    twst = TW_STATUS & 0xF8;
+    twst = TW_STATUS;
 
     if ((twst != TW_START) && (twst != TW_REP_START)) {
 
@@ -224,7 +224,7 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED
 
-    twst = TW_STATUS & 0xF8;
+    twst = TW_STATUS;
 
     if ((twst != TW_MT_SLA_ACK) && (twst != TW_MR_SLA_ACK)) {
 
@@ -256,7 +256,7 @@ void i2c_master_start_wait(uint8_t address)
 
         WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
-        twst = TW_STATUS & 0xF8;
+        twst = TW_STATUS;
 
         if ((twst != TW_START) && (twst != TW_REP_START)) {
 
@@ -269,7 +269,7 @@ void i2c_master_start_wait(uint8_t address)
 
         WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
-        twst = TW_STATUS & 0xF8;
+        twst = TW_STATUS;
 
         if ((twst == TW_MT_SLA_NACK) || (twst == TW_MR_DATA_NACK)) {
 
@@ -334,7 +334,7 @@ uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 
     WAIT_UNTIL_TRANSMISSION_COMPLETED;
 
-    twst = TW_STATUS & 0xF8;
+    twst = TW_STATUS;
 
     if (twst != TW_MT_DATA_ACK) {
 
