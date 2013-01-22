@@ -40,9 +40,6 @@
 
 #include <stdbool.h>
 
-#define I2C_READ    1
-#define I2C_WRITE   0
-
 /**
  * @brief Indicates that the SCL line is low during initialization
  *

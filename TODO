@@ -74,6 +74,3 @@
   current form doesn't make too much sense. This could easily be included
   into wcEeprom_writeback(), which would save some space and make things
   not look more complicated than they actually are.
-  
-- i2c: Remove I2C_READ and I2C_READ by appropriate macros from <util/twi.h>,
-  namely TW_READ and TW_WRITE.

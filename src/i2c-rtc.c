@@ -38,6 +38,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/twi.h>
 
 #include "main.h"
 #include "base.h"
@@ -48,12 +49,12 @@
  * @brief Device address of the DS1307
  *
  * This is the "base" address of the DS1307, see [1], p. 12. In order to write
- * to the device I2C_WRITE needs to be added, for reading use I2C_READ instead.
+ * to the device TW_WRITE needs to be added, for reading use TW_READ instead.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
- * @see I2C_READ
- * @see I2C_WRITE
+ * @see TW_READ
+ * @see TW_WRITE
  */
 #define DEVRTC 0xD0
 
@@ -349,7 +350,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
              * Start I2C transfer. The write address of the RTC can be
              * calculated quite easily using macros defined earlier on.
              */
-            i2c_master_start_wait(DEVRTC + I2C_WRITE);
+            i2c_master_start_wait(DEVRTC + TW_WRITE);
 
             /*
              * Write address requested to write to to the I2C bus. Only proceed
@@ -453,7 +454,7 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
              * address to read from, so we actually need to use the write
              * address.
              */
-            i2c_master_start_wait(DEVRTC + I2C_WRITE);
+            i2c_master_start_wait(DEVRTC + TW_WRITE);
 
             /*
              * Write the address to the RTC, only proceed if it returns no
@@ -466,7 +467,7 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
                  * release the bus. Only proceed if there is no error
                  * condition. Use the read address this time.
                  */
-                if (i2c_master_rep_start(DEVRTC + I2C_READ, &i2c_rtc_status) == 0) {
+                if (i2c_master_rep_start(DEVRTC + TW_READ, &i2c_rtc_status) == 0) {
 
                     rtc = true;
 
