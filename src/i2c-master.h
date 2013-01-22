@@ -64,10 +64,21 @@ extern uint8_t                i2c_master_read_ack (void);
 extern uint8_t                i2c_master_read_nak (void);
 
 /**
- *  Read one byte
- *  @details  Read one byte, requests more data if ack == TRUE, issues a stop condition if ack == FALSE
- *  @param    ack: TRUE or FALSE
- *  @return    byte read
+ * @brief Requests to read at least one byte
+ *
+ * The I2C specification allows to read multiple bytes by simply acknowledging
+ * the transfer with an ACK bit. However after the last byte has been received
+ * a NACK should be sent to the slave informing it about the end of the
+ * transfer.
+ *
+ * This macro makes use of this by either expanding to i2c_master_read_ack()
+ * or i2c_master_read_nak(), depending upon the given parameter.
+ *
+ * @parm ack Boolean value: True if another byte should be requested, false
+ *  otherwise
+ * @return The requested byte
+ * @see i2c_master_read_ack()
+ * @see i2c_master_read_nak()
  */
 #define i2c_master_read(ack)  (ack) ? i2c_master_read_ack() : i2c_master_read_nak();
 
