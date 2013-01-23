@@ -256,7 +256,7 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
     uint8_t* eepromAdress = ((uint8_t*)&eepromParams) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
-    sramByte =  *(((uint8_t*)&g_epromWorking) + index);
+    sramByte = *(((uint8_t*)&g_epromWorking) + index);
 
     if (eepromByte != sramByte) {
 
