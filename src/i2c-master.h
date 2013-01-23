@@ -38,8 +38,6 @@
 #ifndef _WC_I2C_MASTER_H_
 #define _WC_I2C_MASTER_H_
 
-#include <stdbool.h>
-
 /**
  * @brief Indicates that the SCL line is low during initialization
  *
@@ -85,7 +83,7 @@
  */
 #define I2C_ERROR_SLAVE_NOT_FOUND 3
 
-extern bool i2c_master_init(void);
+extern uint8_t i2c_master_init(void);
 
 extern uint8_t i2c_master_start(uint8_t address, uint8_t* status_p);
 

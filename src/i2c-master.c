@@ -44,6 +44,7 @@
 #include <inttypes.h>
 #include <util/twi.h>
 #include <util/delay.h>
+#include <stdbool.h>
 
 #include "i2c-master.h"
 #include "ports.h"
@@ -156,14 +157,14 @@ static uint8_t i2c_reset(void)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  *  Initializes the I2C hardware
  *  @details  Configures I2C bus in order to operate as I2C master
- *  @return    TRUE if successful, FALSE, if not
+ *  @return    0 if successful, anything else if not
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-bool i2c_master_init(void)
+uint8_t i2c_master_init(void)
 {
 
     static bool initialized;
-    bool result;
+    uint8_t result;
 
     if (!initialized) {
 
@@ -176,7 +177,7 @@ bool i2c_master_init(void)
 
     } else {
 
-        result = false;
+        result = 0;
 
     }
 
