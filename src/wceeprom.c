@@ -196,6 +196,10 @@ void wcEeprom_init(void)
 
         uart_puts_P("EEPROM: ");
 
+        /*
+         * Iterate over EEPROM content and output to UART
+         */
+
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
 
         for(uint8_t i = 0; i < sizeof(eepromParams); i++){
@@ -253,6 +257,12 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 
     uint8_t eepromByte;
     uint8_t sramByte;
+
+    /*
+     * Get the content of the byte at the given index from both, the SRAM
+     * and EEPROM
+     */
+
     uint8_t* eepromAdress = ((uint8_t*)&eepromParams) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
@@ -275,6 +285,10 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 
         #endif
 
+        /*
+         * Content of EEPROM and SRAM are different, therefore we need to
+         * write the new value into EEPROM.
+         */
         eeprom_write_byte(eepromAdress, sramByte);
 
         return true;
@@ -311,6 +325,9 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 void wcEeprom_writeback(const void* start_p, uint8_t len)
 {
 
+    /*
+     * Calculate the index represented by the start pointer.
+     */
     uint8_t eepromIndex = (((uint8_t*)start_p) - ((uint8_t*)&g_epromWorking));
     uint8_t eepromIndexEnd = eepromIndex + len - 1;
 
@@ -324,6 +341,9 @@ void wcEeprom_writeback(const void* start_p, uint8_t len)
 
     #endif
 
+    /*
+     * Iterate over each index and write changes back
+     */
     while(eepromIndex <= eepromIndexEnd) {
 
         wcEeprom_writeIfChanged(eepromIndex++);
