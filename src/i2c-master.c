@@ -162,17 +162,17 @@ static uint8_t i2c_reset(void)
 bool i2c_master_init(void)
 {
 
-    static uint8_t already_called;
+    static bool initialized;
     bool result;
 
-    if (!already_called) {
+    if (!initialized) {
 
         result = i2c_reset();
 
         TWSR = 0;
         TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
 
-        already_called = 1;
+        initialized = true;
 
     } else {
 
