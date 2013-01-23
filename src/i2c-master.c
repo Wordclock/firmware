@@ -93,8 +93,6 @@ static uint8_t i2c_reset(void)
 
     #if HAS_RESET == 1
 
-        uint8_t idx;
-
         PORT(SCL) &= ~_BV(BIT(SCL));
         DDR(SCL)  &= ~_BV(BIT(SCL));
         PORT(SDA) &= ~_BV(BIT(SDA));
@@ -114,7 +112,7 @@ static uint8_t i2c_reset(void)
 
                 _delay_ms(1);
 
-                for(idx = 0; idx < 9; idx++) {
+                for(uint8_t i = 0; i < 9; i++) {
 
                     SCL_HIGH;
 
