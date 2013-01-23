@@ -173,7 +173,11 @@ uint8_t i2c_master_init(void)
         TWSR = 0;
         TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
 
-        initialized = true;
+        if (result == 0) {
+
+            initialized = true;
+
+        }
 
     } else {
 
