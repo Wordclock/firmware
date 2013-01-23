@@ -89,7 +89,7 @@
 static uint8_t i2c_reset(void)
 {
 
-    uint8_t rtc = 0;
+    uint8_t result = 0;
 
     #if HAS_RESET == 1
 
@@ -104,7 +104,7 @@ static uint8_t i2c_reset(void)
 
         if (SCL_IS_LOW) {
 
-            rtc = I2C_ERROR_SCL_LOW;
+            result = I2C_ERROR_SCL_LOW;
 
         } else {
 
@@ -142,7 +142,7 @@ static uint8_t i2c_reset(void)
 
             if (SDA_IS_LOW)  {
 
-                rtc = I2C_ERROR_SDA_LOW;
+                result = I2C_ERROR_SDA_LOW;
 
             }
 
@@ -150,7 +150,7 @@ static uint8_t i2c_reset(void)
 
         #endif
 
-        return rtc;
+        return result;
 
 }
 
@@ -165,11 +165,11 @@ bool i2c_master_init(void)
 {
 
     static uint8_t already_called;
-    bool rtc;
+    bool result;
 
     if (!already_called) {
 
-        rtc = i2c_reset();
+        result = i2c_reset();
 
         TWSR = 0;
         TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
@@ -178,11 +178,11 @@ bool i2c_master_init(void)
 
     } else {
 
-        rtc = false;
+        result = false;
 
     }
 
-    return rtc;
+    return result;
 
 }
 
