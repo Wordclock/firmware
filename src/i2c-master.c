@@ -181,6 +181,9 @@ uint8_t i2c_master_init(void)
 
     } else {
 
+        /*
+         * Module has already been initialized successfully
+         */
         result = 0;
 
     }
