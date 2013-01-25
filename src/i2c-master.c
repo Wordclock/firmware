@@ -44,7 +44,6 @@
 #include <inttypes.h>
 #include <util/twi.h>
 #include <util/delay.h>
-#include <stdbool.h>
 
 #include "i2c-master.h"
 #include "ports.h"
@@ -298,7 +297,7 @@ uint8_t i2c_master_init(void)
  * The status of this operation will be stored in the buffer pointed at
  * status_p.
  *
- * If everything was successful 0 will be returned, otherwise 1.
+ * If everything was successful false will be returned, otherwise true.
  *
  * In order to release the I2C bus i2c_master_stop() needs to be used after
  * the transfer is completed. If the bus shouldn't be released,
@@ -308,12 +307,12 @@ uint8_t i2c_master_init(void)
  * @param address The address of the device a start condition should be sent to
  * @param status_p Pointer to a buffer storing the status of the transfer
  *
- * @return 0 if transfer was successful, otherwise 1
+ * @return False if transfer was successful, otherwise true
  *
  * @see i2c_master_stop()
  * @see i2c_master_rep_start()
  */
-unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
+bool i2c_master_start(uint8_t address, uint8_t* status_p)
 {
 
     uint8_t twst;
@@ -328,7 +327,7 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
         *status_p = twst;
 
-        return 1;
+        return true;
 
     }
 
@@ -343,11 +342,11 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
         *status_p = twst;
 
-        return 1;
+        return true;
 
     }
 
-    return 0;
+    return false;
 
 }
 
@@ -417,7 +416,7 @@ void i2c_master_start_wait(uint8_t address)
  * The status of this operation will be stored in the buffer pointed at
  * status_p.
  *
- * If everything was successful 0 will be returned, otherwise 1.
+ * If everything was successful false will be returned, otherwise true.
  *
  * In order to release the I2C bus i2c_master_stop() needs to be used after
  * the transfer is completed.
@@ -425,12 +424,12 @@ void i2c_master_start_wait(uint8_t address)
  * @param address The address of the device a start condition should be sent to
  * @param status_p Pointer to a buffer storing the status of the transfer
  *
- * @return 0 if transfer was successful, otherwise 1
+ * @return False if transfer was successful, otherwise true
  *
  * @see i2c_master_stop()
  * @see i2c_master_start()
  */
-uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p)
+bool i2c_master_rep_start(uint8_t address, uint8_t* status_p)
 {
 
     return i2c_master_start(address, status_p);
@@ -466,15 +465,17 @@ void i2c_master_stop(void)
  * The status of the transfer will be stored in the buffer pointed at by
  * status_p.
  *
+ * If everything was successful false will be returned, otherwise true.
+ *
  * @param data The byte to be transfered
  * @param status_p Pointer to a buffer storing the status of the transfer
  *
- * @return 0 if transfer was successful, otherwise 1
+ * @return False if transfer was successful, otherwise true
  *
  * @see i2c_master_start()
  * @see i2c_master_rep_start()
  */
-uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
+bool i2c_master_write(uint8_t data, uint8_t* status_p)
 {
 
     uint8_t twst;
@@ -490,11 +491,11 @@ uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 
         *status_p = twst;
 
-        return 1;
+        return true;
 
     }
 
-    return 0;
+    return false;
 
 }
 

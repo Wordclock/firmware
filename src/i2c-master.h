@@ -38,6 +38,8 @@
 #ifndef _WC_I2C_MASTER_H_
 #define _WC_I2C_MASTER_H_
 
+#include <stdbool.h>
+
 /**
  * @brief Indicates that the SCL line is low during initialization
  *
@@ -85,15 +87,15 @@
 
 extern uint8_t i2c_master_init(void);
 
-extern uint8_t i2c_master_start(uint8_t address, uint8_t* status_p);
+extern bool i2c_master_start(uint8_t address, uint8_t* status_p);
 
 extern void i2c_master_start_wait(uint8_t address);
 
-extern uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p);
+extern bool i2c_master_rep_start(uint8_t address, uint8_t* status_p);
 
 extern void i2c_master_stop(void);
 
-extern uint8_t i2c_master_write(uint8_t data, uint8_t* status_p);
+extern bool i2c_master_write(uint8_t data, uint8_t* status_p);
 
 extern uint8_t i2c_master_read_ack(void);
 
