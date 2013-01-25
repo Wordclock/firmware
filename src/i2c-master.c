@@ -49,43 +49,132 @@
 #include "i2c-master.h"
 #include "ports.h"
 
+/**
+ * @brief Clock frequency of the I2C bus
+ *
+ * This is the frequency the I2C bus will be operated at in Hz. The default is
+ * 100 kHz, which should be fine in most cases
+ *
+ * @see i2c_master_init()
+ */
 #define SCL_CLOCK 100000
 
+/**
+ * @brief Loop, which will wait for the transmission to complete
+ *
+ * This waits [actively][1] for the current transmission to be completed by
+ * polling the TWINT bit in the TWCR register, see [2], p. 236f, section
+ * 22.9.2 for details.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Busy_waiting
+ * [2]: http://www.atmel.com/images/doc2545.pdf
+ */
 #define WAIT_UNTIL_TRANSMISSION_COMPLETED   while (!(TWCR & _BV(TWINT)));
+
+/**
+ * @brief Loop, which will wait for a stop condition to be executed
+ *
+ * This waits [actively][1] for the stop condition to be executed by
+ * polling the TWSTO bit in the TWCR register, see [2], p. 236f, section
+ * 22.9.2 for details.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Busy_waiting
+ * [2]: http://www.atmel.com/images/doc2545.pdf
+ */
 #define WAIT_UNTIL_STOP_CONDITION_EXECUTED  while (TWCR & _BV(TWSTO));
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * fm: If SDA is low, you can reset the I2C bus by doing following steps:
- * 1. Clock up to 9 cycles.
- * 2. Look for SDA high in each cycle while SCL is high.
- * 3. Create a start condition.
- *---------------------------------------------------------------------------------------------------------------------------------------------------
- */
 #if defined (__AVR_ATmega88P__) || (__AVR_ATmega168P__) || defined (__AVR_ATmega328P__)
 
+    /**
+     * @brief Indicates that the I2C bus can be reset manually
+     *
+     * @see i2c_master_init()
+     */
     #define HAS_RESET 1
 
+    /**
+     * @brief Port and pin of where the SCL line is attached to
+     *
+     * @see i2c_master_init()
+     */
     #define SCL PORTC, 5
+
+    /**
+     * @brief Port and pin of where the SDA line is attached to
+     *
+     * @see i2c_master_init()
+     */
     #define SDA PORTC, 4
 
+    /**
+     * @brief Pulls the SCL line low
+     */
     #define SCL_LOW     DDR(SCL) |= _BV(BIT(SCL))
+
+    /**
+     * @brief Pulls the SCL line high
+     */
     #define SCL_HIGH    DDR(SCL) &= ~_BV(BIT(SCL))
+
+    /**
+     * @brief Checks whether the SDA line is high
+     */
     #define SDA_IS_HIGH (PIN(SDA) & _BV(BIT(SDA)))
+
+    /**
+     * @brief Checks whether the SDA line is low
+     */
     #define SDA_IS_LOW  (!SDA_IS_HIGH)
+
+    /**
+     * @brief Checks whether the SCL line is high
+     */
     #define SCL_IS_HIGH (PIN(SCL) & _BV(BIT(SCL)))
+
+    /**
+     * @brief Checks whether the SCL line is low
+     */
     #define SCL_IS_LOW  (!SCL_IS_HIGH)
 
 #else
 
+    /**
+     * @brief Indicates that the I2C bus cannot be reset manually
+     *
+     * @see i2c_master_init()
+     */
     #define HAS_RESET 0
 
 #endif
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Reset I2C bus
- *  @details  Resets I2C bus by doing the steps above
- *  @return    0 = successful, else failed
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Resets the I2C bus
+ *
+ * This tries to reset the I2C bus and returns 0 if everything went fine.
+ * Otherwise either I2C_ERROR_SCL_LOW and/or I2C_ERROR_SDA_LOW will be
+ * returned.
+ *
+ * It checks both the SDA and the SCL line for its level. If the SCL line is
+ * low, we can do nothing about it and return I2C_ERROR_SCL_LOW.
+ *
+ * If the SDA line is low on the other hand, we try to "clock through the
+ * problem", see [1]. This includes the following steps:
+ *
+ * 1) Try to assert logic one on SDA line
+ * 2) SDA line level is still logic zero and generates a clock pulse on SCL
+ * 3) Examine SDA: If SDA = 0, repeat step 2, otherwise continue with 4
+ * 4) Generate a STOP condition
+ *
+ * If after this procedure SDA is still low, we return I2C_ERROR_SDA_LOW as
+ * we can't do anything about it.
+ *
+ * [1]: http://www.analog.com/static/imported-files/application_notes/54305147357414AN686_0.pdf
+ *
+ * @return 0 if successful, else either I2C_ERROR_SCL_LOW or I2C_ERROR_SDA_LOW
+ *
+ * @see I2C_ERROR_SCL_LOW
+ * @see I2C_ERROR_SDA_LOW
+ * @see i2c_master_init()
  */
 static uint8_t i2c_reset(void)
 {
@@ -153,12 +242,19 @@ static uint8_t i2c_reset(void)
 
 }
 
-
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Initializes the I2C hardware
- *  @details  Configures I2C bus in order to operate as I2C master
- *  @return    0 if successful, anything else if not
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Initializes the I2C unit
+ *
+ * This initializes the I2C unit to operate in master mode by writing to
+ * various registers, see [1], p. 236f, section 22.9.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @return 0 if successful, else anything returned by i2c_reset()
+ *
+ * @see I2C_ERROR_SCL_LOW
+ * @see I2C_ERROR_SDA_LOW
+ * @see i2c_reset()
  */
 uint8_t i2c_master_init(void)
 {
@@ -192,13 +288,30 @@ uint8_t i2c_master_init(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Start I2C transfer
- *  @details  Issues a start condition and sends address and transfer direction
- *  @param    I2C address
- *  @param    pointer to byte in order to store I2C status
- *  @return    1 = failed to access device, 0 = device accessible
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Starts an I2C transfer by generating a start condition
+ *
+ * Generates a start condition addressing the given device. The address
+ * specifies the direction and can be "calculated" using I2C_READ and
+ * I2C_WRITE.
+ *
+ * The status of this operation will be stored in the buffer pointed at
+ * status_p.
+ *
+ * If everything was successful 0 will be returned, otherwise 1.
+ *
+ * In order to release the I2C bus i2c_master_stop() needs to be used after
+ * the transfer is completed. If the bus shouldn't be released,
+ * i2c_master_rep_start() can be used instead, which will generate a repeated
+ * start condition.
+ *
+ * @param address The address of the device a start condition should be sent to
+ * @param status_p Pointer to a buffer storing the status of the transfer
+ *
+ * @return 0 if transfer was successful, otherwise 1
+ *
+ * @see i2c_master_stop()
+ * @see i2c_master_rep_start()
  */
 unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 {
@@ -238,12 +351,19 @@ unsigned char i2c_master_start(uint8_t address, uint8_t* status_p)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Start I2C transfer and wait until device is ready
- *  @details  Issues a start condition and sends address and transfer direction
- *  @details  If device is busy, use ack polling to wait until device is ready
- *  @param    I2C address
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Starts an I2C transfer and waits until the device is ready
+ *
+ * Generates a start condition addressing the given device. The address
+ * specifies the direction and can be "calculated" using I2C_READ and
+ * I2C_WRITE.
+ *
+ * In order to release the I2C bus i2c_master_stop() needs to be used after
+ * the transfer is completed.
+ *
+ * @param address The address of the device a start condition should be sent to
+ *
+ * @see i2c_master_stop()
  */
 void i2c_master_start_wait(uint8_t address)
 {
@@ -287,13 +407,28 @@ void i2c_master_start_wait(uint8_t address)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Start I2C transfer (repeated)
- *  @details  Issues a repeated start condition and sends address and transfer direction
- *  @param    I2C address
- *  @param    pointer to byte in order to store I2C status
- *  @return    1 = failed to access device, 0 = device accessible
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Starts an I2C transfer by generating a repeated start condition
+ *
+ * Generates a repeated start condition addressing the given device. The
+ * address specifies the direction and can be "calculated" using I2C_READ and
+ * I2C_WRITE.
+ *
+ * The status of this operation will be stored in the buffer pointed at
+ * status_p.
+ *
+ * If everything was successful 0 will be returned, otherwise 1.
+ *
+ * In order to release the I2C bus i2c_master_stop() needs to be used after
+ * the transfer is completed.
+ *
+ * @param address The address of the device a start condition should be sent to
+ * @param status_p Pointer to a buffer storing the status of the transfer
+ *
+ * @return 0 if transfer was successful, otherwise 1
+ *
+ * @see i2c_master_stop()
+ * @see i2c_master_start()
  */
 uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p)
 {
@@ -302,10 +437,15 @@ uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Stop I2C transfer
- *  @details  Terminates the data transfer and releases the I2C bus
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Stop the I2C transfer by generating a stop condition
+ *
+ * This generates a stop condition and thus releases the I2C bus. For this to
+ * make actually sense a start condition should be generated prior to that by
+ * either i2c_master_start() and/or i2c_master_rep_start().
+ *
+ * @see i2c_master_start()
+ * @see i2c_master_rep_start()
  */
 void i2c_master_stop (void)
 {
@@ -316,13 +456,23 @@ void i2c_master_stop (void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Send one byte to I2C device
- *  @details  Sends one byte to I2C device
- *  @param    byte to be transfered
- *  @param    pointer to byte in order to store I2C status
- *  @return    0 write successful, 1 write failed
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Sends a byte to the I2C device previously specified
+ *
+ * Prior to calling this function a start condition to the desired device has
+ * to be generated using either i2c_master_start() and/or
+ * i2c_master_rep_start().
+ *
+ * The status of the transfer will be stored in the buffer pointed at by
+ * status_p.
+ *
+ * @param data The byte to be transfered
+ * @param status_p Pointer to a buffer storing the status of the transfer
+ *
+ * @return 0 if transfer was successful, otherwise 1
+ *
+ * @see i2c_master_start()
+ * @see i2c_master_rep_start()
  */
 uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 {
@@ -348,11 +498,26 @@ uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Read one byte, request more data
- *  @details  Reads one byte from the I2C device, then requests more data from device
- *  @return    byte read
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Reads a byte and requests more data
+ *
+ * Prior to calling this function a start condition to the desired device has
+ * to be generated using either i2c_master_start() and/or
+ * i2c_master_rep_start().
+ *
+ * This function, in opposite to i2c_master_read_nak(), requests more data
+ * after receiving the originally requested data.
+ *
+ * i2c_master_read() is a macro, which can be used to easily switch between
+ * i2c_master_read_ack() and i2c_master_read_nak().
+ *
+ * @return The byte read from the device
+ *
+ * @see i2c_master_start()
+ * @see i2c_master_rep_start()
+ * @see i2c_master_stop()
+ * @see i2c_master_read_nak()
+ * @see i2c_master_read()
  */
 uint8_t i2c_master_read_ack(void)
 {
@@ -365,11 +530,27 @@ uint8_t i2c_master_read_ack(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Read one byte, followed by a stop condition
- *  @details  Reads one byte from the I2C device, read is followed by a stop condition
- *  @return    byte read
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Reads a byte and generates a stop condition afterwards
+ *
+ * Prior to calling this function a start condition to the desired device has
+ * to be generated using either i2c_master_start() and/or
+ * i2c_master_rep_start().
+ *
+ * This function, in opposite to i2c_master_read_ack(), doesn't request more
+ * data after receiving the originally requested data, but generates a stop
+ * condition instead.
+ *
+ * i2c_master_read() is a macro, which can be used to easily switch between
+ * i2c_master_read_ack() and i2c_master_read_nak().
+ *
+ * @return The byte read from the device
+ *
+ * @see i2c_master_start()
+ * @see i2c_master_rep_start()
+ * @see i2c_master_stop()
+ * @see i2c_master_read_ack()
+ * @see i2c_master_read()
  */
 uint8_t i2c_master_read_nak(void)
 {
