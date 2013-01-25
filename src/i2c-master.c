@@ -295,7 +295,8 @@ uint8_t i2c_master_init(void)
  * I2C_WRITE.
  *
  * The status of this operation will be stored in the buffer pointed at
- * status_p.
+ * status_p, when something went wrong. Otherwise the buffer will be left
+ * untouched.
  *
  * If everything was successful false will be returned, otherwise true.
  *
@@ -414,7 +415,8 @@ void i2c_master_start_wait(uint8_t address)
  * I2C_WRITE.
  *
  * The status of this operation will be stored in the buffer pointed at
- * status_p.
+ * status_p, when something went wrong. Otherwise the buffer will be left
+ * untouched.
  *
  * If everything was successful false will be returned, otherwise true.
  *
@@ -462,8 +464,9 @@ void i2c_master_stop(void)
  * to be generated using either i2c_master_start() and/or
  * i2c_master_rep_start().
  *
- * The status of the transfer will be stored in the buffer pointed at by
- * status_p.
+ * The status of this operation will be stored in the buffer pointed at
+ * status_p, when something went wrong. Otherwise the buffer will be left
+ * untouched.
  *
  * If everything was successful false will be returned, otherwise true.
  *
