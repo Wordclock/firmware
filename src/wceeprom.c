@@ -202,7 +202,7 @@ void wcEeprom_init(void)
 
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
 
-        for(uint8_t i = 0; i < sizeof(eepromParams); i++){
+        for (uint8_t i = 0; i < sizeof(eepromParams); i++){
 
             uart_putHexByte(*ptr++);
 
@@ -344,7 +344,7 @@ void wcEeprom_writeback(const void* start_p, uint8_t len)
     /*
      * Iterate over each index and write changes back
      */
-    while(eepromIndex <= eepromIndexEnd) {
+    while (eepromIndex <= eepromIndexEnd) {
 
         wcEeprom_writeIfChanged(eepromIndex++);
 

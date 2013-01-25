@@ -69,7 +69,7 @@
  * [1]: https://en.wikipedia.org/wiki/Busy_waiting
  * [2]: http://www.atmel.com/images/doc2545.pdf
  */
-#define WAIT_UNTIL_TRANSMISSION_COMPLETED   while (!(TWCR & _BV(TWINT)));
+#define WAIT_UNTIL_TRANSMISSION_COMPLETED while (!(TWCR & _BV(TWINT)));
 
 /**
  * @brief Loop, which will wait for a stop condition to be executed
@@ -81,7 +81,7 @@
  * [1]: https://en.wikipedia.org/wiki/Busy_waiting
  * [2]: http://www.atmel.com/images/doc2545.pdf
  */
-#define WAIT_UNTIL_STOP_CONDITION_EXECUTED  while (TWCR & _BV(TWSTO));
+#define WAIT_UNTIL_STOP_CONDITION_EXECUTED while (TWCR & _BV(TWSTO));
 
 #if defined (__AVR_ATmega88P__) || (__AVR_ATmega168P__) || defined (__AVR_ATmega328P__)
 
@@ -109,12 +109,12 @@
     /**
      * @brief Pulls the SCL line low
      */
-    #define SCL_LOW     DDR(SCL) |= _BV(BIT(SCL))
+    #define SCL_LOW DDR(SCL) |= _BV(BIT(SCL))
 
     /**
      * @brief Pulls the SCL line high
      */
-    #define SCL_HIGH    DDR(SCL) &= ~_BV(BIT(SCL))
+    #define SCL_HIGH DDR(SCL) &= ~_BV(BIT(SCL))
 
     /**
      * @brief Checks whether the SDA line is high
@@ -124,7 +124,7 @@
     /**
      * @brief Checks whether the SDA line is low
      */
-    #define SDA_IS_LOW  (!SDA_IS_HIGH)
+    #define SDA_IS_LOW (!SDA_IS_HIGH)
 
     /**
      * @brief Checks whether the SCL line is high
@@ -134,7 +134,7 @@
     /**
      * @brief Checks whether the SCL line is low
      */
-    #define SCL_IS_LOW  (!SCL_IS_HIGH)
+    #define SCL_IS_LOW (!SCL_IS_HIGH)
 
 #else
 
@@ -202,7 +202,7 @@ static uint8_t i2c_reset(void)
 
                 _delay_ms(1);
 
-                for(uint8_t i = 0; i < 9; i++) {
+                for (uint8_t i = 0; i < 9; i++) {
 
                     SCL_HIGH;
 
@@ -228,7 +228,7 @@ static uint8_t i2c_reset(void)
 
             _delay_ms(1);
 
-            if (SDA_IS_LOW)  {
+            if (SDA_IS_LOW) {
 
                 result = I2C_ERROR_SDA_LOW;
 
@@ -370,7 +370,7 @@ void i2c_master_start_wait(uint8_t address)
 
     uint8_t twst;
 
-    while(1) {
+    while (1) {
 
         TWCR = _BV(TWINT) | _BV(TWSTA) | _BV(TWEN);
 
@@ -447,7 +447,7 @@ uint8_t i2c_master_rep_start(uint8_t address, uint8_t* status_p)
  * @see i2c_master_start()
  * @see i2c_master_rep_start()
  */
-void i2c_master_stop (void)
+void i2c_master_stop(void)
 {
 
     TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWSTO);
@@ -477,7 +477,7 @@ void i2c_master_stop (void)
 uint8_t i2c_master_write(uint8_t data, uint8_t* status_p)
 {
 
-    uint8_t   twst;
+    uint8_t twst;
 
     TWDR = data;
     TWCR = _BV(TWINT) | _BV(TWEN);

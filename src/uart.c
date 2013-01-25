@@ -151,7 +151,7 @@ void uart_putc(unsigned char c)
 void uart_puts(const char* s)
 {
 
-    while(*s) {
+    while (*s) {
 
         uart_putc(*s++);
 
