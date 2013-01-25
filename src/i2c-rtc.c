@@ -355,7 +355,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
              * Write address requested to write to to the I2C bus. Only proceed
              * if the write operation exits successfully.
              */
-            if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+            if (i2c_master_write(addr, &i2c_rtc_status)) {
 
                 /*
                  * Indicate true. If nothing unexpected happens, this will stay
@@ -374,7 +374,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
                      * If there is some sort of error, the return value will
                      * be set to false and we break out of this loop.
                      */
-                    if (i2c_master_write(*valuep++, &i2c_rtc_status) != 0) {
+                    if (!i2c_master_write(*valuep++, &i2c_rtc_status)) {
 
                         rtc = false;
 
@@ -459,14 +459,14 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
              * Write the address to the RTC, only proceed if it returns no
              * error condition.
              */
-            if (i2c_master_write(addr, &i2c_rtc_status) == 0) {
+            if (i2c_master_write(addr, &i2c_rtc_status)) {
 
                 /*
                  * Request the data using i2c_master_rep_start(), which won't
                  * release the bus. Only proceed if there is no error
                  * condition. Use the read address this time.
                  */
-                if (i2c_master_rep_start(DEVRTC + TW_READ, &i2c_rtc_status) == 0) {
+                if (i2c_master_rep_start(DEVRTC + TW_READ, &i2c_rtc_status)) {
 
                     rtc = true;
 
