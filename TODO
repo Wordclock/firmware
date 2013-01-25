@@ -37,10 +37,6 @@
   called dcf77_enable() and dcf77_disable(), which could be called instead
   of setting the flag directly to true and/or false.
 
-- i2c-master: For whatever reason negative logic is used in various functions,
-  e.g. i2c_master_start() returns true (1) if the access to the device fails.
-  This is confusing as everywhere else in this project "normal" logic is used.
-
 - Rename i2c modules to appropriate TWI modules. AVR calls this protocol
   consequently TWI instead of I2C due to legal concers. Furthermore the header
   file provided by avr-libc is also called "twi.h", so it makes more sense
