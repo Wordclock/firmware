@@ -99,15 +99,9 @@ static uint8_t                base_pwm_idx;                                     
 static uint8_t                brightness_pwm_val;                               ///< current brightness pwm value
 static bool                   brightness_lock;                                  ///< flag that forbids that brightness changes take effect
 #define offset_pwm_idx   (wcEeprom_getData()->pwmParams.brightnessOffset)
-//static int8_t                 offset_pwm_idx;                                   ///< current offset pwm index
 #define g_occupancy               (wcEeprom_getData()->pwmParams.occupancy)
 #define g_ldrBrightness2pwmStep   (wcEeprom_getData()->pwmParams.brightness2pwmStep)
 
-// for testing without messing eeprom:
-//uint8_t g_ldrBrightness2pwmStep[LDR2PWM_COUNT]={
-//  1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-//};
-//LDR2PWM_OCC_TYPE g_occupancy = ((LDR2PWM_OCC_TYPE)1) | (((LDR2PWM_OCC_TYPE)1)<<(LDR2PWM_COUNT-1));
 
 
 static uint8_t                base_ldr_idx;                                     ///< current index to g_ldrBrightness2pwmStep array
@@ -166,24 +160,10 @@ pwm_init (void)
 
   TCCR0A = (1<<WGM01) | (1<<WGM00);                                             // non-inverted PWM, 8 Bit Fast PWM
 
-  //                                                                            // values for Fast PWM:
-  // TCCR0B = (1<<CS00);                                                        // 001: prescaler    1 -> 8 MHz / 256 /    1 = 31250 Hz PWM frequency
-  // TCCR0B = (1<<CS01);                                                        // 010: prescaler    8 -> 8 MHz / 256 /    8 =  3906 Hz PWM frequency
-  // TCCR0B = (1<<CS01) | (1<<CS00);                                            // 011: prescaler   64 -> 8 MHz / 256 /   64 =   488 Hz PWM frequency
-  // TCCR0B = (1<<CS02);                                                        // 100: prescaler  256 -> 8 MHz / 256 /  256 =   122 Hz PWM frequency
-  // TCCR0B = (1<<CS02) | (1<<CS00);                                            // 101: prescaler 1024 -> 8 MHz / 256 / 1024 =    31 Hz PWM frequency
 
   TCCR0B = (1<<CS01) | (1<<CS00);                                               // 011: prescaler   64 -> 8 MHz / 256 /   64 =   488 Hz PWM frequency
 
   TCCR2A = (1<<WGM21) | (1<<WGM20);                                             // non-inverted PWM, 8 Bit Fast PWM
-  //                                                                            // values for Fast PWM:
-  // TCCR2B = (1<<CS20);                                                        // 001: prescaler    1 -> 8 MHz / 256 /    1 = 31250 Hz PWM frequency
-  // TCCR2B = (1<<CS21);                                                        // 010: prescaler    8 -> 8 MHz / 256 /    8 =  3906 Hz PWM frequency
-  // TCCR2B = (1<<CS21) | (1<<CS20);                                            // 011: prescaler   32 -> 8 MHz / 256 /   32 =   977 Hz PWM frequency
-  // TCCR2B = (1<<CS22);                                                        // 100: prescaler   64 -> 8 MHz / 256 /   64 =   488 Hz PWM frequency
-  // TCCR2B = (1<<CS22) | (1<<CS20);                                            // 101: prescaler  128 -> 8 MHz / 256 /  128 =   244 Hz PWM frequency
-  // TCCR2B = (1<<CS22) | (1<<CS21);                                            // 110: prescaler  256 -> 8 MHz / 256 /  256 =   122 Hz PWM frequency
-  // TCCR2B = (1<<CS22) | (1<<CS21) | | (1<<CS20);                              // 111: prescaler 1024 -> 8 MHz / 256 / 1024 =    31 Hz PWM frequency
 
   TCCR2B = (1<<CS22);                                                           // 100: prescaler   64 -> 8 MHz / 256 /   64 =   488 Hz PWM frequency
 
