@@ -50,22 +50,15 @@
 #include "base.h"
 #include "main.h"
 #include "pwm.h"
+#include "ports.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * PWM: constants/variables
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-#define PWM_RED_PORT    PORTD
-#define PWM_RED_DDR     DDRD
-#define PWM_RED_BIT     6
-
-#define PWM_GREEN_PORT  PORTD
-#define PWM_GREEN_DDR   DDRD
-#define PWM_GREEN_BIT   5
-
-#define PWM_BLUE_PORT   PORTD
-#define PWM_BLUE_DDR    DDRD
-#define PWM_BLUE_BIT    3
+#define PWM_RED     PORTD, 6
+#define PWM_GREEN   PORTD, 5
+#define PWM_BLUE    PORTD, 3
 
 #if (MAX_PWM_STEPS == 32)
 
@@ -155,8 +148,8 @@ static void pwm_set_brightness_step(void)
 void pwm_init(void)
 {
 
-    PWM_RED_PORT &= ~(1 << PWM_RED_BIT);
-    PWM_RED_DDR |= (1 << PWM_RED_BIT);
+    PORT(PWM_RED) &= ~(1 << BIT(PWM_RED));
+    DDR(PWM_RED) |= (1 << BIT(PWM_RED));
 
     TCCR0A = (1 << WGM01) | (1 << WGM00);
     TCCR0B = (1 << CS01) | (1 << CS00);
@@ -166,10 +159,10 @@ void pwm_init(void)
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        PWM_GREEN_PORT &= ~(1 << PWM_GREEN_BIT);
-        PWM_GREEN_DDR |= (1 << PWM_GREEN_BIT);
-        PWM_BLUE_PORT &= ~(1 << PWM_BLUE_BIT);
-        PWM_BLUE_DDR |= (1 << PWM_BLUE_BIT);
+        PORT(PWM_GREEN) &= ~(1 << BIT(PWM_GREEN));
+        DDR(PWM_GREEN) |= (1 << BIT(PWM_GREEN));
+        PORT(PWM_BLUE) &= ~(1 << BIT(PWM_BLUE));
+        DDR(PWM_BLUE) |= (1 << BIT(PWM_BLUE));
 
     #endif
 
@@ -203,16 +196,16 @@ void pwm_on(void)
 void pwm_off(void)
 {
 
-    PWM_RED_PORT &= ~(1 << PWM_RED_BIT);
+    PORT(PWM_RED) &= ~(1 << BIT(PWM_RED));
 
     TCCR0A &= ~((1<<COM0A1) | (1<<COM0A0));
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        PWM_GREEN_PORT &= ~(1 << PWM_GREEN_BIT);
+        PORT(PWM_GREEN) &= ~(1 << BIT(PWM_GREEN));
         TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
 
-        PWM_BLUE_PORT  &= ~(1 << PWM_BLUE_BIT);
+        PORT(PWM_BLUE)  &= ~(1 << BIT(PWM_BLUE));
         TCCR2A &= ~((1 << COM2B1) | (1 << COM2B0));
 
     #endif
