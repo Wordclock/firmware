@@ -70,3 +70,9 @@
   current form doesn't make too much sense. This could easily be included
   into wcEeprom_writeback(), which would save some space and make things
   not look more complicated than they actually are.
+
+- pwm: Rename arguments of various functions, e.g. red_step could be named
+  simply "red" as the function itself already implies that it has to do
+  with steps.
+
+- pwm.h: This file needs to be commented in more detail.
