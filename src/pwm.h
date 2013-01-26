@@ -38,70 +38,61 @@
 #ifndef _WC_PWM_H_
 #define _WC_PWM_H_
 
-#define MAX_PWM_STEPS         32                    // 32 PWM steps
-//#define MAX_PWM_STEPS         64                    // 64 PWM steps
+#define MAX_PWM_STEPS 32
 
+#define LDR2PWM_COUNT 32
 
+#define LDR2PWM_OCC_TYPE uint32_t
 
+typedef struct PwmEepromParams {
 
-#define LDR2PWM_COUNT    32           /**< size of look up table brightess -> base_pwm (if changing this you also need to change ldr brightness value*/
-#define LDR2PWM_OCC_TYPE uint32_t     /**< data type for the bitset that marks user defined values of ldr2pwm look up table */
+    int8_t brightnessOffset;
 
-/** contains the persistent data of the pwm module that should be stored in eeprom */
-typedef struct PwmEepromParams{
-  int8_t            brightnessOffset;                  /** The userdefined offset to the brightness control  */
-  uint8_t           brightness2pwmStep[LDR2PWM_COUNT]; /**< mapping of received breighness to pwm steps      */
-  LDR2PWM_OCC_TYPE  occupancy;                         /**< bitset with user set array members               */
-}PwmEepromParams;
+    uint8_t brightness2pwmStep[LDR2PWM_COUNT];
 
-#define PWMEEPROMPARAMS_DEFAULT  {                                                \
-  /* .brightnessOffset   = */ 0,                                                  \
-  /*  brightness2pwmStep = */ { 5, 6, 7, 8, 8, 9,10,11,12,13,13,14,15,16,17,18,   \
-                               18,19,20,21,22,23,23,24,25,26,27,28,28,29,30,31},  \
-  /*  occupancy          = */ ((LDR2PWM_OCC_TYPE)1) | (((LDR2PWM_OCC_TYPE)1)<<(LDR2PWM_COUNT-1))  \
+    LDR2PWM_OCC_TYPE occupancy;
+
+} PwmEepromParams;
+
+#define PWMEEPROMPARAMS_DEFAULT { \
+    0, \
+    {5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 13, 14, 15, 16, 17, 18, \
+    18, 19, 20, 21, 22, 23, 23, 24, 25, 26, 27, 28, 28, 29, 30, 31}, \
+    ((LDR2PWM_OCC_TYPE)1) | (((LDR2PWM_OCC_TYPE)1) << (LDR2PWM_COUNT - 1)) \
 }
-//   1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31
 
+extern void pwm_init(void);
 
-extern void                   pwm_init (void);
+extern void pwm_on(void);
 
-extern void                   pwm_on (void);
+extern void pwm_off(void);
 
-extern void                   pwm_off (void);
-
-extern void                   pwm_on_off (void);
-
+extern void pwm_on_off(void);
 
 #if (MONO_COLOR_CLOCK != 1)
 
-extern void                   pwm_set_colors (uint8_t red, 
-                                              uint8_t green, 
-                                              uint8_t blue);
+    extern void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue);
 
-extern void                   pwm_get_colors (uint8_t * redp, 
-                                              uint8_t * greenp, 
-                                              uint8_t * bluep);
+    extern void pwm_get_colors(uint8_t* redp, uint8_t* greenp, uint8_t* bluep);
 
-extern void                   pwm_set_color_step (uint8_t red_step, 
-                                                  uint8_t green_step, 
-                                                  uint8_t blue_step);
+    extern void pwm_set_color_step(uint8_t red_step, uint8_t green_step,
+            uint8_t blue_step);
 
-extern void                   pwm_get_color_step (uint8_t * red_stepp, 
-                                                  uint8_t * green_stepp, 
-                                                  uint8_t * blue_stepp);
+    extern void pwm_get_color_step(uint8_t* red_stepp, uint8_t* green_stepp,
+            uint8_t* blue_stepp);
+
 #endif
-extern void                   pwm_set_base_brightness_step (uint8_t pwm_idx);
 
+extern void pwm_set_base_brightness_step(uint8_t pwm_idx);
 
-extern void                   pwm_step_up_brightness (void);
+extern void pwm_step_up_brightness(void);
 
-extern void                   pwm_step_down_brightness (void);
+extern void pwm_step_down_brightness(void);
 
+extern void pwm_lock_brightness_val(uint8_t val);
 
-extern void                   pwm_lock_brightness_val(uint8_t val);
+extern void pwm_release_brightness(void);
 
-extern void                   pwm_release_brightness(void);
-
-extern void                   pwm_modifyLdrBrightness2pwmStep(void);
+extern void pwm_modifyLdrBrightness2pwmStep(void);
 
 #endif /* _WC_PWM_H_ */
