@@ -19,27 +19,25 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file pwm.c
- * 
- *  Pwm control.
- *  \details
- *      Written for ATMEGA88 @ 8 MHz. \n
- *      This module implements the initialization and control of the pwm channels
- *      to control the rgb colors and brightness.
+ * @brief Implements the header declared in pwm.h
  *
- * \version $Id: pwm.c 408 2011-12-11 14:10:30Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * \author Copyright (c) 2010 Vlad Tepesch  
+ * Each channel (red, green, blue) is controlled separately and is attached
+ * to a different output compare pin of the microcontroller (Red = OC0A,
+ * Green = OC0B, Blue = OC2B). This means that actually two timers, namely
+ * Timer/Counter0 and Timer/Counter2 are used.
  *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *//*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
+ * In case the software is compiled with monochromatic LED support only
+ * (MONO_COLOR_CLOCK == 1), Timer/Counter2 will be left untouched.
+ *
+ * For details about the various counters and registers involved it might be
+ * useful to take a look at [1].
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see pwm.h
+ */
 
 #include <inttypes.h>
 #include <avr/io.h>
