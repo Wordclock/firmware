@@ -19,26 +19,21 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file pwm.h
- * 
- *  Pwm control.
- *  \details
- *      Written for ATMEGA88 @ 8 MHz. \n
- *      This module declares the interface to the pwm channels
- *      to control the rgb colors and brightness.
+ * @brief Header for manipulating the PWM signal in control of the colors (RGB)
  *
- * \version $Id: pwm.h 341 2010-08-06 18:57:00Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * \author Copyright (c) 2010 Vlad Tepesch  
+ * The color and brightness of the LEDs on the front panel (and/or the optional
+ * Ambilight) is controlled using a [PWM][1] signal for each channel (red,
+ * green, blue) separately.
  *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *//*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+ * This header can be used to manipulate the color itself and/or the
+ * brightness.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Pulse-width_modulation
+ *
+ * @see pwm.c
+ */
 
 #ifndef _WC_PWM_H_
 #define _WC_PWM_H_
