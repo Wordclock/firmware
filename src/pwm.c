@@ -148,21 +148,21 @@ static void pwm_set_brightness_step(void)
 void pwm_init(void)
 {
 
-    PORT(PWM_RED) &= ~(1 << BIT(PWM_RED));
-    DDR(PWM_RED) |= (1 << BIT(PWM_RED));
+    PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
+    DDR(PWM_RED) |= _BV(BIT(PWM_RED));
 
-    TCCR0A = (1 << WGM01) | (1 << WGM00);
-    TCCR0B = (1 << CS01) | (1 << CS00);
+    TCCR0A = _BV(WGM01) | _BV(WGM00);
+    TCCR0B = _BV(CS01) | _BV(CS00);
 
-    TCCR2A = (1 << WGM21) | (1 << WGM20);
-    TCCR2B = (1 << CS22);
+    TCCR2A = _BV(WGM21) | _BV(WGM20);
+    TCCR2B = _BV(CS22);
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        PORT(PWM_GREEN) &= ~(1 << BIT(PWM_GREEN));
-        DDR(PWM_GREEN) |= (1 << BIT(PWM_GREEN));
-        PORT(PWM_BLUE) &= ~(1 << BIT(PWM_BLUE));
-        DDR(PWM_BLUE) |= (1 << BIT(PWM_BLUE));
+        PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
+        DDR(PWM_GREEN) |= _BV(BIT(PWM_GREEN));
+        PORT(PWM_BLUE) &= ~_BV(BIT(PWM_BLUE));
+        DDR(PWM_BLUE) |= _BV(BIT(PWM_BLUE));
 
     #endif
 
@@ -175,12 +175,12 @@ void pwm_init(void)
 void pwm_on(void)
 {
 
-    TCCR0A |= ((1 << COM0A1) | (1 << COM0A0));
+    TCCR0A |= _BV(COM0A1) | _BV(COM0A0);
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        TCCR0A |= ((1<<COM0B1) | (1<<COM0B0));
-        TCCR2A |= ((1<<COM2B1) | (1<<COM2B0));
+        TCCR0A |= _BV(COM0B1) | _BV(COM0B0);
+        TCCR2A |= _BV(COM2B1) | _BV(COM2B0);
 
     #endif
 
@@ -196,17 +196,17 @@ void pwm_on(void)
 void pwm_off(void)
 {
 
-    PORT(PWM_RED) &= ~(1 << BIT(PWM_RED));
+    PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
 
-    TCCR0A &= ~((1<<COM0A1) | (1<<COM0A0));
+    TCCR0A &= ~_BV(COM0A1) | _BV(COM0A0);
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        PORT(PWM_GREEN) &= ~(1 << BIT(PWM_GREEN));
-        TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
+        PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
+        TCCR0A &= ~(_BV(COM0B1) | _BV(COM0B0));
 
-        PORT(PWM_BLUE)  &= ~(1 << BIT(PWM_BLUE));
-        TCCR2A &= ~((1 << COM2B1) | (1 << COM2B0));
+        PORT(PWM_BLUE)  &= ~_BV(BIT(PWM_BLUE));
+        TCCR2A &= ~(_BV(COM2B1) | _BV(COM2B0));
 
     #endif
 
