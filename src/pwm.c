@@ -52,12 +52,25 @@
 #include "pwm.h"
 #include "ports.h"
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- * PWM: constants/variables
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Port and pin definition of the line in control of the red channel
+ *
+ * @see ports.h
  */
 #define PWM_RED     PORTD, 6
+
+/**
+ * @brief Port and pin definition of the line in control of the green channel
+ *
+ * @see ports.h
+ */
 #define PWM_GREEN   PORTD, 5
+
+/**
+ * @brief Port and pin definition of the line in control of the blue channel
+ *
+ * @see ports.h
+ */
 #define PWM_BLUE    PORTD, 3
 
 #if (MAX_PWM_STEPS == 32)
