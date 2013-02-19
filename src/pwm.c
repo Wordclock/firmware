@@ -209,17 +209,16 @@ void pwm_on(void)
 void pwm_off(void)
 {
 
-    PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
-
     TCCR0A &= ~_BV(COM0A1) | _BV(COM0A0);
+    PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
         TCCR0A &= ~(_BV(COM0B1) | _BV(COM0B0));
+        PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
 
-        PORT(PWM_BLUE)  &= ~_BV(BIT(PWM_BLUE));
         TCCR2A &= ~(_BV(COM2B1) | _BV(COM2B0));
+        PORT(PWM_BLUE)  &= ~_BV(BIT(PWM_BLUE));
 
     #endif
 
