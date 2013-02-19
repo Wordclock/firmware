@@ -240,7 +240,7 @@ void pwm_on_off(void)
 
     } else {
 
-        pwm_on ();
+        pwm_on();
         pwm_set_brightness_step();
 
     }
