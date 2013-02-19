@@ -23,7 +23,7 @@
  *
  * These file contains various macros, which will make dealing with ports
  * easier, which basically means that instead of defining up to four different
- * macros for the pin, port and ddr registers of a pin, a single definition
+ * macros for the PINx, PORTx and DDRx registers of a pin, a single definition
  * is enough.
  *
  * Consider this classic example:
@@ -36,7 +36,8 @@
  * \endcode
  *
  * This is kind of ugly for various reasons one of which is the implied
- * redundancy. With the macro defined in this file a simple definitions enough:
+ * redundancy. With the macros defined in this file a simple definitions
+ * enough:
  *
  * \code
  *  #define WHATEVER PORTD, 4
