@@ -164,12 +164,6 @@ void pwm_init(void)
     PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
     DDR(PWM_RED) |= _BV(BIT(PWM_RED));
 
-    TCCR0A = _BV(WGM01) | _BV(WGM00);
-    TCCR0B = _BV(CS01) | _BV(CS00);
-
-    TCCR2A = _BV(WGM21) | _BV(WGM20);
-    TCCR2B = _BV(CS22);
-
     #if (MONO_COLOR_CLOCK != 1)
 
         PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
@@ -177,7 +171,13 @@ void pwm_init(void)
         PORT(PWM_BLUE) &= ~_BV(BIT(PWM_BLUE));
         DDR(PWM_BLUE) |= _BV(BIT(PWM_BLUE));
 
+        TCCR2A = _BV(WGM21) | _BV(WGM20);
+        TCCR2B = _BV(CS22);
+
     #endif
+
+    TCCR0A = _BV(WGM01) | _BV(WGM00);
+    TCCR0B = _BV(CS01) | _BV(CS00);
 
 }
 
