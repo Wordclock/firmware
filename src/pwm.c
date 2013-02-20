@@ -276,12 +276,12 @@ void pwm_on_off(void)
      *  @param    pointer to value of blue pwm: range 0-255
      *---------------------------------------------------------------------------------------------------------------------------------------------------
      */
-    void pwm_get_colors(uint8_t* redp, uint8_t* greenp, uint8_t* bluep)
+    void pwm_get_colors(uint8_t* red, uint8_t* green, uint8_t* blue)
     {
 
-        *redp   = red_pwm;
-        *greenp = green_pwm;
-        *bluep  = blue_pwm;
+        *red   = red_pwm;
+        *green = green_pwm;
+        *blue  = blue_pwm;
 
     }
 
@@ -330,12 +330,12 @@ void pwm_on_off(void)
      *  @param    pointer to blue_step: range 0 to MAX_PWM_STEPS
      *---------------------------------------------------------------------------------------------------------------------------------------------------
      */
-    void pwm_get_color_step(uint8_t* red_stepp, uint8_t* green_stepp, uint8_t* blue_stepp)
+    void pwm_get_color_step(uint8_t* red_step, uint8_t* green_step, uint8_t* blue_step)
     {
 
-        *red_stepp   = red_pwm_idx;
-        *green_stepp = green_pwm_idx;
-        *blue_stepp  = blue_pwm_idx;
+        *red_step   = red_pwm_idx;
+        *green_step = green_pwm_idx;
+        *blue_step  = blue_pwm_idx;
 
     }
 
