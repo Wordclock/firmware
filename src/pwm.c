@@ -112,7 +112,7 @@
     /*
      * For now only 32 and 64 bit step sizes are allowed, see pwm_table.
      */
-    #error unknown pwm step size
+    #error Unknown PWM step size
 
 #endif
 
