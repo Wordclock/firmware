@@ -75,12 +75,32 @@
 
 #if (MAX_PWM_STEPS == 32)
 
+    /**
+     * @brief Table containing values to generate PWM signal
+     *
+     * This table is used to generate a PWM signal. It contains 32 values.
+     * As the human eye perceives the brightness logarithmically, so these
+     * values are calculated appropriately.
+     *
+     * @see pwm_set_brightness_step()
+     * @see pwm_set_color_step()
+     */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
         {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 21, 24, 28, 32, 37,
         42, 48, 55, 63, 72, 83, 96, 111, 129, 153, 182, 216, 255};
 
 #elif (MAX_PWM_STEPS == 64)
 
+    /**
+     * @brief Table containing 64 values to generate PWM signal
+     *
+     * This table is used to generate a PWM signal. It contains 64 values.
+     * As human eye perceives the brightness logarithmically, so these
+     * values are calculated appropriately.
+     *
+     * @see pwm_set_brightness_step()
+     * @see pwm_set_color_step()
+     */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
         {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
         21, 22, 23, 25, 26, 27, 29, 30, 32, 33, 35, 36, 38, 40, 42, 44, 46,
@@ -89,36 +109,188 @@
 
 #else
 
+    /*
+     * For now only 32 and 64 bit step sizes are allowed, see pwm_table.
+     */
     #error unknown pwm step size
 
 #endif
 
+/**
+ * @brief Indicates whether PWM is currently turned on
+ *
+ * This can be used to control whether or not the generation of the PWM
+ * signal(s) is enabled. It will affect most of the functions defined here,
+ * and should only be accessed using the function pwm_on(), pwm_off() and
+ * pwm_on_off().
+ *
+ * @see pwm_on()
+ * @see pwm_off()
+ * @see pwm_on_off()
+ */
 static bool pwm_is_on;
+
+/**
+ * @brief Current base PWM index
+ *
+ * Pointing to value within pwm_table and representing the current base to be
+ * used for various calculations within this module. It ranges from 0 to
+ * MAX_PWM_STEPS - 1 and points to one value within the PWM table, see
+ * pwm_table.
+ *
+ * @see MAX_PWM_STEPS
+ * @see pwm_table
+ * @see pwm_set_brightness_step()
+ * @see pwm_set_base_brightness_step()
+ * @see pwm_step_up_brightness()
+ * @see pwm_step_down_brightness()
+ * @see pwm_modifyLdrBrightness2pwmStep()
+ */
 static uint8_t base_pwm_idx;
+
+/**
+ * @brief Contains the current value for generating the PWM signal
+ *
+ * This contains the value pointed to by base_pwm_idx + offset_pwm_idx from
+ * pwm_table. As the table is stored in program space the value will be read
+ * from the table and stored within this variable for convenience and/or
+ * performance.
+ *
+ * This value is then used to calculate the value for the various compare
+ * registers (OCR0A, OCR0B, OCR2B), which in return is responsible for the
+ * shape of the PWM signal itself.
+ *
+ * @see base_pwm_idx
+ * @see pwm_table
+ * @see pwm_set_brightness_step()
+ * @see pwm_set_colors()
+ * @see pwm_lock_brightness_val()
+ */
 static uint8_t brightness_pwm_val;
+
+/**
+ * @brief Indicates whether brightness can actually be changed
+ *
+ * This variable is used by pwm_lock_brightness_val() and
+ * pwm_release_brightness(). If "locked" the brightness is set to a fixed value
+ * and can't be changed by pwm_set_brightness_step() anymore.
+ *
+ * @see pwm_lock_brightness_val()
+ * @see pwm_release_brightness()
+ * @see pwm_on_off()
+ */
 static bool brightness_lock;
 
+/**
+ * @brief Macro for getting the user defined offset for the PWM index
+ *
+ * This retrieves the user defined offset for the PWM index from the EEPROM.
+ * It makes use of wcEeprom_getData(), which is part of the wceeprom.h
+ *
+ * This offset is added to and/or subtracted from base_pwm_idx.
+ *
+ * @see wcEeprom_getData()
+ * @see wceeprom.h
+ * @see base_pwm_idx
+ */
 #define offset_pwm_idx (wcEeprom_getData()->pwmParams.brightnessOffset)
+
+/**
+ * @brief Macro allowing access to occupancy backed by EEPROM
+ *
+ * @see PwmEepromParams::occupancy
+ */
 #define g_occupancy (wcEeprom_getData()->pwmParams.occupancy)
+
+/**
+ * @brief Macro allowing access to brightness2pwmStep backed by EEPROM
+ *
+ * @see PwmEepromParams::brightness2pwmStep
+ */
 #define g_ldrBrightness2pwmStep (wcEeprom_getData()->pwmParams.brightness2pwmStep)
 
+/**
+ * @brief Current index within g_ldrBrightness2pwmStep
+ *
+ * This is used to keep track of the current index within
+ * g_ldrBrightness2pwmStep, which in turn is used to adjust the brightness
+ * automatically to the value of the LDR.
+ *
+ * @see pwm_set_base_brightness_step()
+ * @see pwm_modifyLdrBrightness2pwmStep()
+ */
 static uint8_t base_ldr_idx;
 
 #if (MONO_COLOR_CLOCK != 1)
 
+    /**
+     * @brief Keeps track of the current PWM index for the red channel
+     *
+     * @see pwm_set_color_step()
+     * @see pwm_get_color_step()
+     */
     static uint8_t red_pwm_idx;
+
+    /**
+     * @brief Keeps track of the current PWM index for the green channel
+     *
+     * @see pwm_set_color_step()
+     * @see pwm_get_color_step()
+     */
     static uint8_t green_pwm_idx;
+
+    /**
+     * @brief Keeps track of the current PWM index for the blue channel
+     *
+     * @see pwm_set_color_step()
+     * @see pwm_get_color_step()
+     */
     static uint8_t blue_pwm_idx;
+
+    /**
+     * @brief Keeps track of the current PWM value for the red channel
+     *
+     * @see pwm_set_colors()
+     * @see pwm_get_colors()
+     */
     static uint8_t red_pwm;
+
+    /**
+     * @brief Keeps track of the current PWM value for the green channel
+     *
+     * @see pwm_set_colors()
+     * @see pwm_get_colors()
+     */
     static uint8_t green_pwm;
+
+    /**
+     * @brief Keeps track of the current PWM value for the blue channel
+     *
+     * @see pwm_set_colors()
+     * @see pwm_get_colors()
+     */
     static uint8_t blue_pwm;
 
 #endif
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Set brightness by step
- *  @details  sets brightness by global step values base_pwm_idx + offset_pwm_idx
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Sets brightness according to a value from pwm_table
+ *
+ * The value is actually taken from pwm_table. The index is calculated by
+ * adding up base_pwm_idx and offset_pwm_idx. If it is out of bounds either the
+ * biggest or smallest value is taken. It will then set brightness_pwm_val
+ * accordingly. Furthermore it will accommodate the colors using
+ * pwm_set_colors() in case of RGB and by setting OCR0A in case of
+ * monochromatic LEDs.
+ *
+ * @warning This will only work if the brightness is not locked.
+ *
+ * @see pwm_table
+ * @see base_pwm_idx
+ * @see offset_pwm_idx
+ * @see brightness_pwm_val
+ * @see pwm_set_colors()
+ * @see brightness_lock()
  */
 static void pwm_set_brightness_step(void)
 {
@@ -153,10 +325,18 @@ static void pwm_set_brightness_step(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Initialize the PWM
- *  @details  Configures 0CR0A, 0CR0B and 0CR2B as PWM channels
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Initializes the PWM module
+ *
+ * This sets up the timers involved (Timer/Counter0 and Timer/Counter2) and the
+ * appropriate ports. It should be called once to setup this module. Afterwards
+ * this module can be used. For details take a look at [1], chapter 15 and 18.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see PWM_RED
+ * @see PWM_GREEN
+ * @see PWM_BLUE
  */
 void pwm_init(void)
 {
@@ -181,9 +361,17 @@ void pwm_init(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Switch PWM on
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Switches the generation of the PWM signal on
+ *
+ * This sets up the timers involved (Timer/Counter0 and Timer/Counter2) in a
+ * way that the generated PWM signal will be output on the appropriate pins.
+ * For details take a look at [1], chapter 15 and 18.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see pwm_is_on
+ * @see pwm_set_brightness_step()
  */
 void pwm_on(void)
 {
@@ -202,9 +390,16 @@ void pwm_on(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Switch PWM off
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Switches the generation of the PWM signal off
+ *
+ * This sets up the timers involved (Timer/Counter0 and Timer/Counter2) and
+ * the appropriate pins in a way that the generation of the PWM signal is
+ * disabled. For details take a look at [1], chapter 15 and 18.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see pwm_is_on
  */
 void pwm_off(void)
 {
@@ -226,9 +421,15 @@ void pwm_off(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Toggle PWM off/on
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Toggles the generation of the PWM signal on and/or off
+ *
+ * Depending on the current value of pwm_is_on this either turns the the
+ * generation of the PWM signal on (pwm_on()) and/or off (pwm_off()).
+ *
+ * @see pwm_is_on
+ * @see pwm_off()
+ * @see pwm_on()
  */
 void pwm_on_off(void)
 {
@@ -247,12 +448,24 @@ void pwm_on_off(void)
 
 #if (MONO_COLOR_CLOCK != 1)
 
-    /*---------------------------------------------------------------------------------------------------------------------------------------------------
-     *  Set RGB colors
-     *  @param    red: range 0-255
-     *  @param    green: range 0-255
-     *  @param    blue: range 0-255
-     *---------------------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * @brief Sets the RGB colors
+     *
+     * This sets the color by providing a value for each channel
+     * (red, green ,blue) separately. Each parameter expects values from 0 up
+     * to 255. It then sets the appropriate output compare registers of the
+     * involved timers/counters. For details take a look at [1].
+     *
+     * [1]: http://www.atmel.com/images/doc2545.pdf
+     *
+     * @param red   Value for the red channel (0 - 255).
+     * @param green Value for the green channel (0 - 255).
+     * @param blue  Value for the blue channel (0 - 255).
+     *
+     * @see red_pwm
+     * @see green_pwm
+     * @see blue_pwm
+     * @see pwm_get_color()
      */
     void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue)
     {
@@ -269,12 +482,20 @@ void pwm_on_off(void)
 
     }
 
-    /*---------------------------------------------------------------------------------------------------------------------------------------------------
-     *  Get RGB colors
-     *  @param    pointer to value of red pwm: range 0-255
-     *  @param    pointer to value of green pwm: range 0-255
-     *  @param    pointer to value of blue pwm: range 0-255
-     *---------------------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * @brief Gets the RGB colors
+     *
+     * This gets the color of each channel (red, green ,blue) and puts them
+     * into the provided buffers.
+     *
+     * @param red   Pointer to store value of the red channel.
+     * @param green Pointer to store value of the green channel.
+     * @param blue  Pointer to store value of the blue channel.
+     *
+     * @see red_pwm
+     * @see green_pwm
+     * @see blue_pwm
+     * @see pwm_set_color()
      */
     void pwm_get_colors(uint8_t* red, uint8_t* green, uint8_t* blue)
     {
@@ -285,12 +506,23 @@ void pwm_on_off(void)
 
     }
 
-    /*---------------------------------------------------------------------------------------------------------------------------------------------------
-     *  Set RGB colors by step values
-     *  @param    red_step: range 0 to MAX_PWM_STEPS
-     *  @param    green_step: range 0 to MAX_PWM_STEPS
-     *  @param    blue_step: range 0 to MAX_PWM_STEPS
-     *---------------------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * @brief Sets the RGB colors by step values
+     *
+     * This sets the color by providing a step value for each channel
+     * (red, green ,blue) separately. A step value is a value between 0
+     * and MAX_PWM_STEPS, that is an index of pwm_table. Internally it makes
+     * use of pwm_set_color() by reading the appropriate value from pwm_table.
+     *
+     * @param red_step   Step for the red channel, range 0 - MAX_PWM_STEPS
+     * @param green_step Step for the green channel, range 0 - MAX_PWM_STEPS
+     * @param blue_step  Step for the blue channel, range 0 - MAX_PWM_STEPS
+     *
+     * @see red_pwm_idx
+     * @see green_pwm_idx
+     * @see blue_pwm_idx
+     * @see pwm_table
+     * @see pwm_set_color()
      */
     void pwm_set_color_step(uint8_t red_step, uint8_t green_step, uint8_t blue_step)
     {
@@ -323,12 +555,21 @@ void pwm_on_off(void)
 
     }
 
-    /*---------------------------------------------------------------------------------------------------------------------------------------------------
-     *  Get RGB color step values
-     *  @param    pointer to red_step: range 0 to MAX_PWM_STEPS
-     *  @param    pointer to green_step: range 0 to MAX_PWM_STEPS
-     *  @param    pointer to blue_step: range 0 to MAX_PWM_STEPS
-     *---------------------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * @brief Gets the RGB color step values
+     *
+     * This gets the color step values of each channel (red, green ,blue) and
+     * puts them into the provided buffers. A step value is a value between 0
+     * and MAX_PWM_STEPS, that is an index of pwm_table.
+     *
+     * @param red_step   Pointer to store step value of the red channel.
+     * @param green_step Pointer to store step value of the green channel.
+     * @param blue_step  Pointer to store step value of the blue channel.
+     *
+     * @see red_pwm_idx
+     * @see green_pwm_idx
+     * @see blue_pwm_idx
+     * @see pwm_table
      */
     void pwm_get_color_step(uint8_t* red_step, uint8_t* green_step, uint8_t* blue_step)
     {
@@ -341,10 +582,20 @@ void pwm_on_off(void)
 
 #endif
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Set base brightness by step 0-31
- *  @param    pwm step 0-31
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Sets the base brightness by step value
+ *
+ * This sets the base brightness by a step value. A step value is a value
+ * between 0 and LDR2PWM_COUNT, that is an index of
+ * g_ldrBrightness2pwmStep (usually 0 - 31). Internally it makes use of
+ * pwm_set_brightness_step().
+ *
+ * @param pwm_idx Step value, range 0 - LDR2PWM_COUNT
+ *
+ * @see g_ldrBrightness2pwmStep
+ * @see base_ldr_idx
+ * @see base_pwm_idx
+ * @see pwm_set_brightness_step()
  */
 void pwm_set_base_brightness_step(uint8_t pwm_idx)
 {
@@ -361,9 +612,21 @@ void pwm_set_base_brightness_step(uint8_t pwm_idx)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Step up brightness
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Increases the overall brightness
+ *
+ * This increases the brightness by a single step. Internally it increments
+ * offset_pwm_idx and calls pwm_set_brightness_step() afterwards. This will
+ * only work when the generation of the PWM signal is actually turned on
+ * (pwm_is_on) and the increase will not lead to an out of bound condition,
+ * meaning that the actual index would be greater than MAX_PWM_STEPS. This is
+ * the analogy to pwm_step_down_brightness().
+ *
+ * @see offset_pwm_idx
+ * @see pwm_set_brightness_step()
+ * @see pwm_is_on
+ * @see MAX_PWM_STEPS
+ * @see pwm_step_down_brightness()
  */
 void pwm_step_up_brightness(void)
 {
@@ -377,9 +640,20 @@ void pwm_step_up_brightness(void)
 
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------
- *  Step down brightness
- *---------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief Decrease the overall brightness
+ *
+ * This decreases the brightness by a single step. Internally it decrements
+ * offset_pwm_idx and calls pwm_set_brightness_step() afterwards. This will
+ * only work when the generation of the PWM signal is actually turned on
+ * (pwm_is_on) and the increase will not lead to an out of bound condition,
+ * meaning that the actual index would be smaller than zero. This is the
+ * analogy to pwm_step_up_brightness().
+ *
+ * @see offset_pwm_idx
+ * @see pwm_set_brightness_step()
+ * @see pwm_is_on
+ * @see pwm_step_up_brightness()
  */
 void pwm_step_down_brightness(void)
 {
@@ -393,6 +667,18 @@ void pwm_step_down_brightness(void)
 
 }
 
+/**
+ * @brief Locks the brightness to a specific value
+ *
+ * This locks the brightness to a specific value, so it can't be changed by
+ * pwm_set_brightness_step() anymore, unless it is released again by calling
+ * pwm_release_brightness().
+ *
+ * @param val The value you want to lock the brightness to, range: 0 to 255
+ *
+ * @see pwm_set_brightness_step()
+ * @see pwm_release_brightness()
+ */
 void pwm_lock_brightness_val(uint8_t val)
 {
 
@@ -402,6 +688,16 @@ void pwm_lock_brightness_val(uint8_t val)
 
 }
 
+/**
+ * @brief Unlocks the previously locked brightness
+ *
+ * This unlocks the brightness. It should be called after the brightness
+ * has actually been locked to a specific value using
+ * pwm_lock_brightness_val() and it should be changed automatically once again.
+ *
+ * @see pwm_set_brightness_step()
+ * @see pwm_lock_brightness_val()
+ */
 void pwm_release_brightness(void)
 {
 
@@ -412,8 +708,21 @@ void pwm_release_brightness(void)
 
 #if (LOG_LDR2PWM == 1)
 
+    /**
+     * @brief Outputs values of g_ldrBrightness2pwmStep & g_occupancy via UART
+     *
+     * This outputs the values stored in the array
+     * PwmEepromParams::brightness2pwmStep and the bitfield
+     * PwmEepromParams::occupancy via UART. For g_occupancy an "x" is output
+     * when the appropriate bit is set, otherwise " " is output.
+     *
+     * @see g_ldrBrightness2pwmStep
+     * @see PwmEepromParams::occupancy
+     * @see uart.h
+     */
     void outputVals()
     {
+
         char buf[4];
 
         for (uint8_t i = 0; i < LDR2PWM_COUNT; i++) {
@@ -447,6 +756,25 @@ void pwm_release_brightness(void)
 
     }
 
+    /**
+     * @brief Outputs a representation of values from 0 up to LDR2PWM_COUNT
+     *
+     * This function iterates from 0 to LDR2PWM_COUNT. It compares the current
+     * counter value against "ind", "l" and "r". Whenever it is equal to
+     * one of those parameters it will output an charachter (either "<", "^" or
+     * ">"). Otherwise it will just output " ".
+     *
+     * This function can be used for debugging purposes within
+     * modifyLdrBrightness2pwmStep()
+     *
+     * @param ind Index
+     * @param l Left boundary
+     * @param r Right boundary
+     *
+     * @see LDR2PWM_COUNT
+     * @see uart.h
+     * @see modifyLdrBrightness2pwmStep()
+     */
     void outputPointer(uint8_t ind, uint8_t l, uint8_t r)
     {
 
@@ -490,6 +818,17 @@ void pwm_release_brightness(void)
 
 #endif
 
+/**
+ * @brief Gets the left and right boundary for the given index and value
+ *
+ * This iterates over g_occupancy (multiple times) and looks for both the left
+ * and the right boundary.
+ *
+ * @param ind Index
+ * @param val Value
+ * @param left Pointer to variable that will hold the left boundary
+ * @param right Pointer to variable that will hold the right boundary
+ */
 static void getBounds(uint8_t ind, uint8_t val, uint8_t* left, uint8_t* right)
 {
 
@@ -573,6 +912,21 @@ static void getBounds(uint8_t ind, uint8_t val, uint8_t* left, uint8_t* right)
 
 }
 
+/**
+ * @brief Interpolates linearly between two values from g_ldrBrightness2pwmStep
+ *
+ * Both parameters are actually indexes for values from
+ * g_ldrBrightness2pwmStep. The corresponding value for both of these indexes
+ * is taken and a linear interpolation between these two points and their
+ * values is performed, see [1] for details.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Linear_interpolation
+ *
+ * @param left The left point
+ * @param right The right point
+ *
+ * @see g_ldrBrightness2pwmStep
+ */
 static void interpolate(uint8_t left, uint8_t right)
 {
 
@@ -605,7 +959,28 @@ static void interpolate(uint8_t left, uint8_t right)
 
 }
 
-
+/**
+ * @brief Glues together various function defined in this module to be
+ *   easily accessible by pwm_modifyLdrBrightness2pwmStep()
+ *
+ * This function puts the given value into g_ldrBrightness2pwmStep at the given
+ * index and calculates the associated boundaries using getBounds(). It then
+ * interpolates the values for both the left and the right boundary using
+ * interpolate(). Furthermore it shifts g_occupancy by the amount defined by
+ * "ind" to the left.
+ *
+ * When debugging is enabled (LOG_LDR2PWM) it will output the changes made
+ * using outputVals() and outputPointer().
+ *
+ * @see pwm_modifyLdrBrightness2pwmStep()
+ * @see g_ldrBrightness2pwmStep
+ * @see getBounds()
+ * @see interpolate()
+ * @see g_occupancy
+ * @see LOG_LDR2PWM
+ * @see outputVals()
+ * @see outputPointer()
+ */
 static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
 {
 
@@ -644,6 +1019,24 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
 
 }
 
+/**
+ * @brief Takes over current PWM settings in order to be considered by changes
+ *   due to LDR measurements
+ *
+ * This makes it possible for the LDR measurements to be relative to previously
+ * made settings. So rather than the LDR measurements changing the brightness
+ * in absolute terms, they will be applied "on top" of the settings previously
+ * made.
+ *
+ * Internally it checks whether the current values for base_pwm_idx and
+ * offset_pwm_idx are within boundaries (0 - MAX_PWM_STEPS - 1), and sets it
+ * to the maximum if necessary. It then makes use of
+ * modifyLdrBrightness2pwmStep() with the calculated values.
+ *
+ * @see base_pwm_idx
+ * @see offset_pwm_idx
+ * @see modifyLdrBrightness2pwmStep()
+ */
 void pwm_modifyLdrBrightness2pwmStep(void)
 {
 
