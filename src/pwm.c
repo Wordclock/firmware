@@ -57,21 +57,21 @@
  *
  * @see ports.h
  */
-#define PWM_RED     PORTD, 6
+#define PWM_RED PORTD, 6
 
 /**
  * @brief Port and pin definition of the line in control of the green channel
  *
  * @see ports.h
  */
-#define PWM_GREEN   PORTD, 5
+#define PWM_GREEN PORTD, 5
 
 /**
  * @brief Port and pin definition of the line in control of the blue channel
  *
  * @see ports.h
  */
-#define PWM_BLUE    PORTD, 3
+#define PWM_BLUE PORTD, 3
 
 #if (MAX_PWM_STEPS == 32)
 
@@ -207,7 +207,8 @@ static bool brightness_lock;
  *
  * @see PwmEepromParams::brightness2pwmStep
  */
-#define g_ldrBrightness2pwmStep (wcEeprom_getData()->pwmParams.brightness2pwmStep)
+#define g_ldrBrightness2pwmStep \
+    (wcEeprom_getData()->pwmParams.brightness2pwmStep)
 
 /**
  * @brief Current index within g_ldrBrightness2pwmStep
@@ -458,9 +459,9 @@ void pwm_on_off(void)
      *
      * [1]: http://www.atmel.com/images/doc2545.pdf
      *
-     * @param red   Value for the red channel (0 - 255).
+     * @param red Value for the red channel (0 - 255).
      * @param green Value for the green channel (0 - 255).
-     * @param blue  Value for the blue channel (0 - 255).
+     * @param blue Value for the blue channel (0 - 255).
      *
      * @see red_pwm
      * @see green_pwm
@@ -488,9 +489,9 @@ void pwm_on_off(void)
      * This gets the color of each channel (red, green ,blue) and puts them
      * into the provided buffers.
      *
-     * @param red   Pointer to store value of the red channel.
+     * @param red Pointer to store value of the red channel.
      * @param green Pointer to store value of the green channel.
-     * @param blue  Pointer to store value of the blue channel.
+     * @param blue Pointer to store value of the blue channel.
      *
      * @see red_pwm
      * @see green_pwm
@@ -514,9 +515,9 @@ void pwm_on_off(void)
      * and MAX_PWM_STEPS, that is an index of pwm_table. Internally it makes
      * use of pwm_set_color() by reading the appropriate value from pwm_table.
      *
-     * @param red   Step for the red channel, range 0 - MAX_PWM_STEPS
+     * @param red Step for the red channel, range 0 - MAX_PWM_STEPS
      * @param green Step for the green channel, range 0 - MAX_PWM_STEPS
-     * @param blue  Step for the blue channel, range 0 - MAX_PWM_STEPS
+     * @param blue Step for the blue channel, range 0 - MAX_PWM_STEPS
      *
      * @see red_pwm_idx
      * @see green_pwm_idx
@@ -562,9 +563,9 @@ void pwm_on_off(void)
      * puts them into the provided buffers. A step value is a value between 0
      * and MAX_PWM_STEPS, that is an index of pwm_table.
      *
-     * @param red   Pointer to store step value of the red channel.
+     * @param red Pointer to store step value of the red channel.
      * @param green Pointer to store step value of the green channel.
-     * @param blue  Pointer to store step value of the blue channel.
+     * @param blue Pointer to store step value of the blue channel.
      *
      * @see red_pwm_idx
      * @see green_pwm_idx
@@ -943,7 +944,8 @@ static void interpolate(uint8_t left, uint8_t right)
         int8_t leftVal  = (int8_t)(g_ldrBrightness2pwmStep[left]);
         int8_t rightVal = (int8_t)(g_ldrBrightness2pwmStep[right]);
 
-        int16_t l = (((int16_t)leftVal) << SHIFT) + (((uint16_t)1) << (SHIFT - 1));
+        int16_t l =
+                (((int16_t)leftVal) << SHIFT) + (((uint16_t)1) << (SHIFT - 1));
 
         int16_t slope = ((int16_t)(rightVal - leftVal )) << SHIFT;
         slope /= d;
