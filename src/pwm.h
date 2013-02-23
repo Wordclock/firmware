@@ -59,7 +59,7 @@
  *
  * By increasing the size of this table the brightness can be controlled with
  * more granularity in respect to the measured LDR values (which represent the
- * ambient light conditions). However this table is stored in program space, 
+ * ambient light conditions). However this table is stored in program space,
  * which is limited.
  */
 #define LDR2PWM_COUNT 32
