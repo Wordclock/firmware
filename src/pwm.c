@@ -514,9 +514,9 @@ void pwm_on_off(void)
      * and MAX_PWM_STEPS, that is an index of pwm_table. Internally it makes
      * use of pwm_set_color() by reading the appropriate value from pwm_table.
      *
-     * @param red_step   Step for the red channel, range 0 - MAX_PWM_STEPS
-     * @param green_step Step for the green channel, range 0 - MAX_PWM_STEPS
-     * @param blue_step  Step for the blue channel, range 0 - MAX_PWM_STEPS
+     * @param red   Step for the red channel, range 0 - MAX_PWM_STEPS
+     * @param green Step for the green channel, range 0 - MAX_PWM_STEPS
+     * @param blue  Step for the blue channel, range 0 - MAX_PWM_STEPS
      *
      * @see red_pwm_idx
      * @see green_pwm_idx
@@ -524,34 +524,34 @@ void pwm_on_off(void)
      * @see pwm_table
      * @see pwm_set_color()
      */
-    void pwm_set_color_step(uint8_t red_step, uint8_t green_step, uint8_t blue_step)
+    void pwm_set_color_step(uint8_t red, uint8_t green, uint8_t blue)
     {
 
-        if (red_step >= MAX_PWM_STEPS) {
+        if (red >= MAX_PWM_STEPS) {
 
-            red_step = MAX_PWM_STEPS - 1;
-
-        }
-
-        if (green_step >= MAX_PWM_STEPS) {
-
-            green_step = MAX_PWM_STEPS - 1;
+            red = MAX_PWM_STEPS - 1;
 
         }
 
-        if (blue_step >= MAX_PWM_STEPS) {
+        if (green >= MAX_PWM_STEPS) {
 
-            blue_step = MAX_PWM_STEPS - 1;
+            green = MAX_PWM_STEPS - 1;
 
         }
 
-        red_pwm_idx   = red_step;
-        green_pwm_idx = green_step;
-        blue_pwm_idx  = blue_step;
+        if (blue >= MAX_PWM_STEPS) {
 
-        pwm_set_colors(pgm_read_byte(pwm_table + red_step),
-                pgm_read_byte(pwm_table + green_step),
-                pgm_read_byte (pwm_table + blue_step));
+            blue = MAX_PWM_STEPS - 1;
+
+        }
+
+        red_pwm_idx   = red;
+        green_pwm_idx = green;
+        blue_pwm_idx  = blue;
+
+        pwm_set_colors(pgm_read_byte(pwm_table + red),
+                pgm_read_byte(pwm_table + green),
+                pgm_read_byte (pwm_table + blue));
 
     }
 
@@ -562,21 +562,21 @@ void pwm_on_off(void)
      * puts them into the provided buffers. A step value is a value between 0
      * and MAX_PWM_STEPS, that is an index of pwm_table.
      *
-     * @param red_step   Pointer to store step value of the red channel.
-     * @param green_step Pointer to store step value of the green channel.
-     * @param blue_step  Pointer to store step value of the blue channel.
+     * @param red   Pointer to store step value of the red channel.
+     * @param green Pointer to store step value of the green channel.
+     * @param blue  Pointer to store step value of the blue channel.
      *
      * @see red_pwm_idx
      * @see green_pwm_idx
      * @see blue_pwm_idx
      * @see pwm_table
      */
-    void pwm_get_color_step(uint8_t* red_step, uint8_t* green_step, uint8_t* blue_step)
+    void pwm_get_color_step(uint8_t* red, uint8_t* green, uint8_t* blue)
     {
 
-        *red_step   = red_pwm_idx;
-        *green_step = green_pwm_idx;
-        *blue_step  = blue_pwm_idx;
+        *red   = red_pwm_idx;
+        *green = green_pwm_idx;
+        *blue  = blue_pwm_idx;
 
     }
 
