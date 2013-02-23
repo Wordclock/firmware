@@ -130,13 +130,11 @@ extern void pwm_on_off(void);
 
     extern void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue);
 
-    extern void pwm_get_colors(uint8_t* redp, uint8_t* greenp, uint8_t* bluep);
+    extern void pwm_get_colors(uint8_t* red, uint8_t* green, uint8_t* blue);
 
-    extern void pwm_set_color_step(uint8_t red_step, uint8_t green_step,
-            uint8_t blue_step);
+    extern void pwm_set_color_step(uint8_t red, uint8_t green, uint8_t blue);
 
-    extern void pwm_get_color_step(uint8_t* red_stepp, uint8_t* green_stepp,
-            uint8_t* blue_stepp);
+    extern void pwm_get_color_step(uint8_t* red, uint8_t* green, uint8_t* blue);
 
 #endif
 
