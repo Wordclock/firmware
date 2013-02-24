@@ -71,8 +71,18 @@
   into wcEeprom_writeback(), which would save some space and make things
   not look more complicated than they actually are.
 
-- pwm: Rename arguments of various functions, e.g. red_step could be named
-  simply "red" as the function itself already implies that it has to do
-  with steps.
+- pwm.c: pwm_modifyLdrBrightness2pwmStep(): The indication for applying the
+  settings successfully should not be part of the function itself, but moved
+  to user.c.
 
-- pwm.h: This file needs to be commented in more detail.
+- color: Check whether HUE_MANUAL_STEPS is really needed or whether it should
+  be outsourced to usermodes.c itself, as it is only used there anyway and at
+  first glance it doesn't make too much sense to define something like this
+  "globally".
+
+- color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
+  needed or if it would make more sense to not include it in the first place
+  when dealing with monochromatic clocks.
+
+- color: Make hueWaveform() more general with a 2nd parameter asking for the
+  color, so its not working with green only.
