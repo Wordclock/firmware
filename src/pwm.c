@@ -82,7 +82,7 @@
      * As the human eye perceives the brightness logarithmically, so these
      * values are calculated appropriately.
      *
-     * @see pwm_set_brightness_step()
+     * @see pwm_set_brightness()
      * @see pwm_set_color_step()
      */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
@@ -98,7 +98,7 @@
      * As human eye perceives the brightness logarithmically, so these
      * values are calculated appropriately.
      *
-     * @see pwm_set_brightness_step()
+     * @see pwm_set_brightness()
      * @see pwm_set_color_step()
      */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
@@ -140,7 +140,7 @@ static bool pwm_is_on;
  *
  * @see MAX_PWM_STEPS
  * @see pwm_table
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_set_base_brightness_step()
  * @see pwm_step_up_brightness()
  * @see pwm_step_down_brightness()
@@ -162,7 +162,7 @@ static uint8_t base_pwm_idx;
  *
  * @see base_pwm_idx
  * @see pwm_table
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_set_colors()
  * @see pwm_lock_brightness_val()
  */
@@ -173,7 +173,7 @@ static uint8_t brightness_pwm_val;
  *
  * This variable is used by pwm_lock_brightness_val() and
  * pwm_release_brightness(). If "locked" the brightness is set to a fixed value
- * and can't be changed by pwm_set_brightness_step() anymore.
+ * and can't be changed by pwm_set_brightness() anymore.
  *
  * @see pwm_lock_brightness_val()
  * @see pwm_release_brightness()
@@ -293,7 +293,7 @@ static uint8_t base_ldr_idx;
  * @see pwm_set_colors()
  * @see brightness_lock()
  */
-static void pwm_set_brightness_step(void)
+static void pwm_set_brightness(void)
 {
 
     if (!brightness_lock) {
@@ -372,7 +372,7 @@ void pwm_init(void)
  * [1]: http://www.atmel.com/images/doc2545.pdf
  *
  * @see pwm_is_on
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  */
 void pwm_on(void)
 {
@@ -387,7 +387,7 @@ void pwm_on(void)
     #endif
 
     pwm_is_on = true;
-    pwm_set_brightness_step();
+    pwm_set_brightness();
 
 }
 
@@ -589,14 +589,14 @@ void pwm_on_off(void)
  * This sets the base brightness by a step value. A step value is a value
  * between 0 and LDR2PWM_COUNT, that is an index of
  * g_ldrBrightness2pwmStep (usually 0 - 31). Internally it makes use of
- * pwm_set_brightness_step().
+ * pwm_set_brightness().
  *
  * @param pwm_idx Step value, range 0 - LDR2PWM_COUNT
  *
  * @see g_ldrBrightness2pwmStep
  * @see base_ldr_idx
  * @see base_pwm_idx
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  */
 void pwm_set_base_brightness_step(uint8_t pwm_idx)
 {
@@ -609,7 +609,7 @@ void pwm_set_base_brightness_step(uint8_t pwm_idx)
 
     base_ldr_idx = pwm_idx;
     base_pwm_idx = g_ldrBrightness2pwmStep[pwm_idx];
-    pwm_set_brightness_step();
+    pwm_set_brightness();
 
 }
 
@@ -617,14 +617,14 @@ void pwm_set_base_brightness_step(uint8_t pwm_idx)
  * @brief Increases the overall brightness
  *
  * This increases the brightness by a single step. Internally it increments
- * offset_pwm_idx and calls pwm_set_brightness_step() afterwards. This will
+ * offset_pwm_idx and calls pwm_set_brightness() afterwards. This will
  * only work when the generation of the PWM signal is actually turned on
  * (pwm_is_on) and the increase will not lead to an out of bound condition,
  * meaning that the actual index would be greater than MAX_PWM_STEPS. This is
  * the analogy to pwm_step_down_brightness().
  *
  * @see offset_pwm_idx
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_is_on
  * @see MAX_PWM_STEPS
  * @see pwm_step_down_brightness()
@@ -635,7 +635,7 @@ void pwm_step_up_brightness(void)
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx + 1 < MAX_PWM_STEPS)) {
 
         offset_pwm_idx++;
-        pwm_set_brightness_step();
+        pwm_set_brightness();
 
     }
 
@@ -645,14 +645,14 @@ void pwm_step_up_brightness(void)
  * @brief Decrease the overall brightness
  *
  * This decreases the brightness by a single step. Internally it decrements
- * offset_pwm_idx and calls pwm_set_brightness_step() afterwards. This will
+ * offset_pwm_idx and calls pwm_set_brightness() afterwards. This will
  * only work when the generation of the PWM signal is actually turned on
  * (pwm_is_on) and the increase will not lead to an out of bound condition,
  * meaning that the actual index would be smaller than zero. This is the
  * analogy to pwm_step_up_brightness().
  *
  * @see offset_pwm_idx
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_is_on
  * @see pwm_step_up_brightness()
  */
@@ -662,7 +662,7 @@ void pwm_step_down_brightness(void)
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx > 0)) {
 
         offset_pwm_idx--;
-        pwm_set_brightness_step();
+        pwm_set_brightness();
 
     }
 
@@ -672,12 +672,12 @@ void pwm_step_down_brightness(void)
  * @brief Locks the brightness to a specific value
  *
  * This locks the brightness to a specific value, so it can't be changed by
- * pwm_set_brightness_step() anymore, unless it is released again by calling
+ * pwm_set_brightness() anymore, unless it is released again by calling
  * pwm_release_brightness().
  *
  * @param val The value you want to lock the brightness to, range: 0 to 255
  *
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_release_brightness()
  */
 void pwm_lock_brightness_val(uint8_t val)
@@ -685,7 +685,7 @@ void pwm_lock_brightness_val(uint8_t val)
 
     brightness_lock = true;
     brightness_pwm_val = val;
-    pwm_set_brightness_step();
+    pwm_set_brightness();
 
 }
 
@@ -696,14 +696,14 @@ void pwm_lock_brightness_val(uint8_t val)
  * has actually been locked to a specific value using
  * pwm_lock_brightness_val() and it should be changed automatically once again.
  *
- * @see pwm_set_brightness_step()
+ * @see pwm_set_brightness()
  * @see pwm_lock_brightness_val()
  */
 void pwm_release_brightness(void)
 {
 
     brightness_lock = false;
-    pwm_set_brightness_step();
+    pwm_set_brightness();
 
 }
 
@@ -1055,7 +1055,7 @@ void pwm_modifyLdrBrightness2pwmStep(void)
         modifyLdrBrightness2pwmStep(base_ldr_idx, val);
         base_pwm_idx = val;
         offset_pwm_idx = 0;
-        pwm_set_brightness_step();
+        pwm_set_brightness();
 
         pwm_on_off();
         _delay_ms(500);
