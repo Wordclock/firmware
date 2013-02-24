@@ -1057,6 +1057,9 @@ void pwm_modifyLdrBrightness2pwmStep(void)
         offset_pwm_idx = 0;
         pwm_set_brightness();
 
+        /*
+         * Indicate that the settings have been applied successfully
+         */
         pwm_on_off();
         _delay_ms(500);
         pwm_on_off();
