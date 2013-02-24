@@ -68,8 +68,8 @@
  * @brief Data type for various user defined values
  *
  * This defines the data type for various variables containing user defined
- * values throughout regarding the mapping between the measured LDR values
- * and the PWM signal. This is organized as a bitfield.
+ * values throughout this module regarding the mapping between the measured
+ * LDR values and the PWM signal.
  */
 #define LDR2PWM_OCC_TYPE uint32_t
 
