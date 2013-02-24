@@ -19,21 +19,21 @@
  */
 
 /**
- * @file i2c-rtc.c
- * @brief Implementation of header declared in i2c-rtc.h
+ * @file i2c_rtc.c
+ * @brief Implementation of header declared in i2c_rtc.h
  *
  * The [RTC][1] (Real-time clock) is connected to the microcontroller via the
  * [I2C][2] bus. This module implements functions, which can then be used to
  * access the [DS1307][3].
  *
- * Internally it makes use of i2c-master.h quite heavily.
+ * Internally it makes use of i2c_master.h quite heavily.
  *
  * [1]: https://en.wikipedia.org/wiki/Real-time_clock
  * [2]: https://en.wikipedia.org/wiki/I2c
  * [3]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
- * @see i2c-rtc.h
- * @see i2c-master.h
+ * @see i2c_rtc.h
+ * @see i2c_master.h
  */
 
 #include <avr/io.h>
@@ -41,8 +41,8 @@
 #include <util/twi.h>
 
 #include "base.h"
-#include "i2c-master.h"
-#include "i2c-rtc.h"
+#include "i2c_master.h"
+#include "i2c_rtc.h"
 
 /**
  * @brief Device address of the DS1307
@@ -317,7 +317,7 @@ bool i2c_rtc_read(datetime_t* datetime)
  * registers of the RTC itself, see [1], p. 8.
  *
  * This function internally makes use of various function declared in
- * i2c-master.h and will return false if there is some kind of an error with
+ * i2c_master.h and will return false if there is some kind of an error with
  * the I2C bus.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
@@ -414,7 +414,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * registers of the RTC itself, see [1], p. 8.
  *
  * This function internally makes use of various function declared in
- * i2c-master.h and will return false if there is some kind of an error with
+ * i2c_master.h and will return false if there is some kind of an error with
  * the I2C bus.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
@@ -539,7 +539,7 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
     *errorcode_p = i2c_master_init();
 
     /*
-     * Check whether i2c-master module could be initialized successfully.
+     * Check whether i2c_master module could be initialized successfully.
      */
     if (*errorcode_p == 0) {
 

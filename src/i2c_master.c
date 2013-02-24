@@ -20,11 +20,11 @@
  */
 
 /**
- * @file i2c-master.c
- * @brief Implementation of the header declared in i2c-master.h
+ * @file i2c_master.c
+ * @brief Implementation of the header declared in i2c_master.h
  *
  * This header makes the I2C hardware unit available to other modules of this
- * project, e.g. for the "i2c-rtc" module, see i2c-rtc.h. This module
+ * project, e.g. for the "i2c_rtc" module, see i2c_rtc.h. This module
  * implements the master mode in both directions - transmission and reception.
  *
  * For an overview of the I2C bus take a look at [1]. The specification
@@ -38,14 +38,14 @@
  * [2]: http://www.nxp.com/documents/user_manual/UM10204.pdf
  * [3]: http://www.atmel.com/images/doc2545.pdf
  *
- * @see i2c-master.h
+ * @see i2c_master.h
  */
 
 #include <inttypes.h>
 #include <util/twi.h>
 #include <util/delay.h>
 
-#include "i2c-master.h"
+#include "i2c_master.h"
 #include "ports.h"
 
 /**

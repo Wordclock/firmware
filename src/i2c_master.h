@@ -20,7 +20,7 @@
  */
 
 /**
- * @file i2c-master.h
+ * @file i2c_master.h
  * @brief Header allowing access to the I2C hardware unit in master mode
  *
  * This header makes the I2C hardware unit available to other modules. It
@@ -32,7 +32,7 @@
  *
  * [1]: http://homepage.hispeed.ch/peterfleury/avr-software.html
  *
- * @see i2c-master.c
+ * @see i2c_master.c
  */
 
 #ifndef _WC_I2C_MASTER_H_

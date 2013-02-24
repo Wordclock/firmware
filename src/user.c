@@ -68,7 +68,7 @@
 #include "user.h"
 #include "Irmp/irmp.h"
 #include "pwm.h"
-#include "i2c-rtc.h"
+#include "i2c_rtc.h"
 #include "display.h"
 #include "dcf77.h"
 

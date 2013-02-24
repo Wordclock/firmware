@@ -19,7 +19,7 @@
  */
 
 /**
- * @file i2c-rtc.h
+ * @file i2c_rtc.h
  * @brief Header for handling access to the DS1307 RTC
  *
  * This header makes functions of the DS1307 RTC available to other modules.
@@ -29,7 +29,7 @@
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
- * @see i2c-rtc.c
+ * @see i2c_rtc.c
  */
 
 #ifndef _WC_I2C_RTC_H_
