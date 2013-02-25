@@ -34,15 +34,13 @@
 #define _WC_COLOR_EFFECTS_H_
 
 #define HUE_STEPS 256
-#define HUE_MAX (HUE_STEPS * 6)      // 192 @ 32 PWM Steps /// 384 @ 64 PWM Steps
+#define HUE_MAX (HUE_STEPS * 6)
 #define HUE_MANUAL_STEPS 10
 #define SetPWMs pwm_set_colors
+
 typedef uint16_t Hue_t;
 
-extern void hue2rgb(
-              Hue_t h, /*uint8  s, uint8  v,*/
-              uint8_t* r, uint8_t* g, uint8_t* b
-              /* ,sint32 relsat= -1 */ );
+extern void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
 
 extern uint8_t pulseWaveForm(uint8_t step);
 
