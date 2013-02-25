@@ -36,7 +36,6 @@
 #define HUE_STEPS 256
 #define HUE_MAX (HUE_STEPS * 6)
 #define HUE_MANUAL_STEPS 10
-#define SetPWMs pwm_set_colors
 
 typedef uint16_t Hue_t;
 

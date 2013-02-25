@@ -354,7 +354,7 @@ static uint8_t NormalState_handleIR(  uint8_t cmdCode )
         mode_normalState.curHue += dir*HUE_MANUAL_STEPS;
       }
       hue2rgb(mode_normalState.curHue, &r, &g, &b);
-      SetPWMs(r,g,b);
+      pwm_set_colors(r, g, b);
     }
   }else
 
@@ -391,7 +391,7 @@ static void AutoHueState_10Hz( void )
     uint8_t b;
     mode_autoHueState.curHue %= (HUE_MAX+1);
     hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
-    SetPWMs(r,g,b);
+    pwm_set_colors(r, g, b);
     mode_autoHueState.delay100ms = g_params->hueChangeIntervall;
   }
 }
