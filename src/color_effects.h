@@ -18,22 +18,17 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file color_effects.h
- * 
- *  This file contains the routines for some color animations.
+ * @brief Header containing functions for various color animations
  *
- * \version $Id: color_effects.h 403 2011-11-13 00:08:32Z sm $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * These functions are based upon the hue of the color. Hue is a main property
+ * of a color. Take a look at [1] for more details about it.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Hue
+ *
+ * @see color_effects.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_COLOR_EFFECTS_H_
 #define _WC_COLOR_EFFECTS_H_
