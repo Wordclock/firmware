@@ -33,39 +33,11 @@
 #ifndef _WC_COLOR_EFFECTS_H_
 #define _WC_COLOR_EFFECTS_H_
 
-#include "pwm.h"
-
-#if 1
-// direkt pwm for Hue fading
 #define HUE_STEPS 256
 #define HUE_MAX (HUE_STEPS * 6)      // 192 @ 32 PWM Steps /// 384 @ 64 PWM Steps
 #define HUE_MANUAL_STEPS 10
 #define SetPWMs pwm_set_colors
 typedef uint16_t Hue_t;
-
-#else
-#  if (MAX_PWM_STEPS==32)
-
-     // 32Step Pwm
-     typedef uint8_t Hue_t;
-#    define HUE_STEPS MAX_PWM_STEPS
-#    define HUE_MAX (HUE_STEPS * 6)
-#    define SetPWMs pwm_set_color_step
-#    define HUE_MANUAL_STEPS 1
-
-#  elif (MAX_PWM_STEPS==64)
-     // 64 Step PWM
-     typedef uint16_t Hue_t;
-#    define HUE_STEPS MAX_PWM_STEPS
-#    define HUE_MAX (HUE_STEPS * 6)
-#    define SetPWMs pwm_set_color_step
-#    define HUE_MANUAL_STEPS 5
-
-#  else
-#    error unknown pwm step size
-#  endif
-#endif
-
 
 /**
  * generates rgb from hue with saturation 1 and brightness 1
