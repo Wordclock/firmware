@@ -39,22 +39,11 @@
 #define SetPWMs pwm_set_colors
 typedef uint16_t Hue_t;
 
-/**
- * generates rgb from hue with saturation 1 and brightness 1
- * @param  h   the hue value to transform [0..HUE_MAX)
- * @param  r   retreives the calculated red value
- * @param  g   retreives the calculated green value
- * @param  b   retreives the calculated blue value
- */
 extern void hue2rgb(
               Hue_t h, /*uint8  s, uint8  v,*/
               uint8_t* r, uint8_t* g, uint8_t* b
               /* ,sint32 relsat= -1 */ );
 
-/** 
- *  generates a spiky symmetric cubic waveform 
- *  @param step   current step of animation [0..255]
- */
 extern uint8_t pulseWaveForm(uint8_t step);
 
 #endif /* _WC_COLOR_EFFECTS_H_ */
