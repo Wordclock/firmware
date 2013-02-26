@@ -33,6 +33,8 @@
 #ifndef _WC_COLOR_EFFECTS_H_
 #define _WC_COLOR_EFFECTS_H_
 
+#include <stdint.h>
+
 /**
  * @brief Number of different hue steps
  *

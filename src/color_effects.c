@@ -32,7 +32,6 @@
  */
 
 
-#include <stdint.h>
 
 #include "main.h"
 #include "color_effects.h"
