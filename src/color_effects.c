@@ -36,6 +36,32 @@
 
 #if (MONO_COLOR_CLOCK != 1)
 
+/**
+ * @brief Returns the green portion of a given hue
+ *
+ * The color space can be understood as a spectrum from 0 to 360 degrees, see
+ * [1]. Colors from 0 to 240 degrees contain green portions (green hue) with
+ * varying values of saturation and brightness.
+ *
+ * From 0 up to 60 degrees the hue increases linearly, from 60 up to 180
+ * degrees the hue is at a maximum. From 180 up to 240 degrees the hue
+ * decreases linearly again. From 240 degrees up to 360 degrees there is no
+ * green portion (hue) left. The various degrees are calculated using
+ * HUE_STEPS and HUE_MAX.
+ *
+ * This function will return a value from 0 up to 255, where 0 means there is
+ * no green portion, and 255 represents completely green.
+ *
+ * @see Hue_t The given hue
+ *
+ * @return The green portion of the given hue, ranges from 0 up to 255
+ *
+ * @see HUE_STEPS
+ * @see HUE_MAX
+ * @see hue2rgb()
+ *
+ * [1]: https://en.wikipedia.org/wiki/File:HueScale.svg
+ */
 static uint8_t hueWaveform(Hue_t x)
 {
 
@@ -59,6 +85,22 @@ static uint8_t hueWaveform(Hue_t x)
 
 }
 
+/**
+ * @brief Generates RGB values for a given hue
+ *
+ * The hue is interpreted as Hue_t and ranges from 0 up to HUE_MAX. This
+ * calculations will always consider the brightness and saturation to be 1.
+ * Internally after some basic calculations it makes use of hueWaveform().
+ *
+ * @param h The hue value to transform, range 0 up to HUE_MAX
+ * @param r Pointer to variable to store the calculated red value
+ * @param g Pointer to variable to store the calculated green value
+ * @param b Pointer to variable to store the calculated blue value
+ *
+ * @see Hue_t
+ * @see HUE_MAX
+ * @see hueWaveform()
+ */
 void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 {
 
@@ -85,6 +127,16 @@ void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 
 #endif /* (MONO_COLOR_CLOCK != 1) */
 
+/**
+ * @brief Generates a cyclic spiky signal
+ *
+ * The function expects a single parameter representing the current step. The
+ * signal is generated based upon this step.
+ *
+ * @param step Current step of animation, ranges from 0 up to 255
+ *
+ *  @return The calculated value for the given step
+ */
 uint8_t pulseWaveForm(uint8_t step)
 {
 
