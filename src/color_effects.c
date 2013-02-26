@@ -31,67 +31,73 @@
  * @see color_effects.h
  */
 
-
-
-#include "main.h"
 #include "color_effects.h"
+#include "main.h"
 
 #if (MONO_COLOR_CLOCK != 1)
 
-
-/**
- *  generates the waveform for the green color
- */
 static uint8_t hueWaveform(Hue_t x)
 {
-  if(x < HUE_MAX/6){
-    return x*((HUE_STEPS*6)/HUE_MAX);
-  }else if(x< (HUE_MAX*3)/6){
-    return HUE_STEPS-1;
-  }else if(x< (HUE_MAX*4)/6){
-    return (((HUE_MAX*4)/6)-1-x)*((HUE_STEPS*6)/HUE_MAX);
-  }else{
-    return 0;
-  }
+
+    if (x < (HUE_MAX / 6)) {
+
+        return x * ((HUE_STEPS * 6) / HUE_MAX);
+
+    } else if (x < ((HUE_MAX * 3) / 6)) {
+
+        return HUE_STEPS - 1;
+
+    } else if (x < ((HUE_MAX * 4) / 6)) {
+
+        return (((HUE_MAX * 4) / 6) - 1 - x) * ((HUE_STEPS * 6) / HUE_MAX);
+
+    } else {
+
+        return 0;
+
+    }
+
 }
 
-
-/**
- * generates rgb from hue with saturation 1 and brightness 1
- */
-void hue2rgb(
-              Hue_t h, /*uint8  s, uint8  v,*/
-              uint8_t* r, uint8_t* g, uint8_t* b
-              /* ,sint32 relsat= -1 */ )
+void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 {
-  uint16_t barg = (((uint16_t)h)+2*HUE_MAX/3);
-  uint16_t rarg = (((uint16_t)h)+HUE_MAX/3);
 
-  if(barg>=HUE_MAX){
-    barg-=HUE_MAX;
-  }
-  if(rarg>=HUE_MAX){
-    rarg-=HUE_MAX;
-  }
+    uint16_t barg = (((uint16_t)h) + 2 * HUE_MAX / 3);
+    uint16_t rarg = (((uint16_t)h) + HUE_MAX / 3);
 
-  *g = hueWaveform(h);
-  *b = hueWaveform( (Hue_t)barg );
-  *r = hueWaveform( (Hue_t)rarg );
+    if (barg >= HUE_MAX) {
+
+        barg -= HUE_MAX;
+
+    }
+
+    if (rarg >= HUE_MAX) {
+
+        rarg -= HUE_MAX;
+
+    }
+
+    *g = hueWaveform(h);
+    *b = hueWaveform((Hue_t)barg);
+    *r = hueWaveform((Hue_t)rarg);
+
 }
 
-
-
-#endif  // (MONO_COLOR_CLOCK != 1)
+#endif /* (MONO_COLOR_CLOCK != 1) */
 
 uint8_t pulseWaveForm(uint8_t step)
 {
-  #define   COLOR_PULSE_SCALE          128
+
+    #define COLOR_PULSE_SCALE 128
+
     uint16_t x;
     uint8_t val;
-    uint8_t  t = step+COLOR_PULSE_SCALE; //start on bright time
-    t = (t>127) ? (255-t) : t;
-    x = ( ((uint16_t)t) *(256-COLOR_PULSE_SCALE)/128)+COLOR_PULSE_SCALE;
-    val = (((x*x)/256)*x)/256;
-    return val;
-}
+    uint8_t t = step + COLOR_PULSE_SCALE;
 
+    t = (t > 127) ? (255 - t) : t;
+    x = (((uint16_t)t) * (256 - COLOR_PULSE_SCALE) / 128) + COLOR_PULSE_SCALE;
+    val = (((x * x) / 256) * x) / 256;
+
+    return val;
+
+}
