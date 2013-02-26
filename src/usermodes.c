@@ -346,14 +346,14 @@ static uint8_t NormalState_handleIR(  uint8_t cmdCode )
       pwm_set_color_step( rgb[0], rgb[1], rgb[2] );
     }else{     // handle HUE-Changes
       uint8_t r,g,b;
-      if( dir<0 && mode_normalState.curHue < HUE_MANUAL_STEPS ){
-        mode_normalState.curHue = HUE_MAX;
-      }else if( dir>0 && mode_normalState.curHue >= HUE_MAX-HUE_MANUAL_STEPS){
+      if( dir<0 && mode_normalState.curHue < COLOR_HUE_MANUAL_STEPS ){
+        mode_normalState.curHue = COLOR_HUE_MAX;
+      }else if( dir>0 && mode_normalState.curHue >= COLOR_HUE_MAX-COLOR_HUE_MANUAL_STEPS){
         mode_normalState.curHue = 0;
       }else{
-        mode_normalState.curHue += dir*HUE_MANUAL_STEPS;
+        mode_normalState.curHue += dir*COLOR_HUE_MANUAL_STEPS;
       }
-      hue2rgb(mode_normalState.curHue, &r, &g, &b);
+      color_hue2rgb(mode_normalState.curHue, &r, &g, &b);
       pwm_set_colors(r, g, b);
     }
   }else
@@ -389,8 +389,8 @@ static void AutoHueState_10Hz( void )
     uint8_t r;
     uint8_t g;
     uint8_t b;
-    mode_autoHueState.curHue %= (HUE_MAX+1);
-    hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
+    mode_autoHueState.curHue %= (COLOR_HUE_MAX+1);
+    color_hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
     pwm_set_colors(r, g, b);
     mode_autoHueState.delay100ms = g_params->hueChangeIntervall;
   }
@@ -684,7 +684,7 @@ static void PulseState_100Hz( void )
   ++mode_pulseState.delay100ms;
   if( mode_pulseState.delay100ms >= (volatile uint8_t)(g_params->pulseUpdateInterval) )
   {
-    pwm_lock_brightness_val(pulseWaveForm(mode_pulseState.curBrightness));
+    pwm_lock_brightness_val(color_pulse_waveform(mode_pulseState.curBrightness));
     ++mode_pulseState.curBrightness;
     mode_pulseState.delay100ms = 0;
   }

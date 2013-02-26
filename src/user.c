@@ -75,7 +75,7 @@
 #include "base.h"
 #include "wceeprom.h"
 #include "uart.h"
-#include "color_effects.h"
+#include "color.h"
 
 
 #define USER_AMBILIGHT_PORT PORTB

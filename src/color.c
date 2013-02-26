@@ -19,19 +19,19 @@
  */
 
 /**
- * @file color_effects.c
- * @brief Actual implementation of the header declared in color_effects.h
+ * @file color.c
+ * @brief Actual implementation of the header declared in color.h
  *
- * This implements the function declared in color_effects.h. To understand
- * the functions a bit of knowledge about the math concerning hues is needed.
+ * This implements the function declared in color.h. To understand the
+ * functions a bit of knowledge about the math concerning hues is needed.
  * Details can be found at [1].
  *
  * [1]: https://en.wikipedia.org/wiki/Hue
  *
- * @see color_effects.h
+ * @see color.h
  */
 
-#include "color_effects.h"
+#include "color.h"
 #include "main.h"
 
 #if (MONO_COLOR_CLOCK != 1)
@@ -47,7 +47,7 @@
  * degrees the hue is at a maximum. From 180 up to 240 degrees the hue
  * decreases linearly again. From 240 degrees up to 360 degrees there is no
  * green portion (hue) left. The various degrees are calculated using
- * HUE_STEPS and HUE_MAX.
+ * COLOR_HUE_STEPS and COLOR_HUE_MAX.
  *
  * This function will return a value from 0 up to 255, where 0 means there is
  * no green portion, and 255 represents completely green.
@@ -56,26 +56,27 @@
  *
  * @return The green portion of the given hue, ranges from 0 up to 255
  *
- * @see HUE_STEPS
- * @see HUE_MAX
- * @see hue2rgb()
+ * @see COLOR_HUE_STEPS
+ * @see COLOR_HUE_MAX
+ * @see color_hue2rgb()
  *
  * [1]: https://en.wikipedia.org/wiki/File:HueScale.svg
  */
-static uint8_t hueWaveform(Hue_t x)
+static uint8_t color_hue_waveform(Hue_t x)
 {
 
-    if (x < (HUE_MAX / 6)) {
+    if (x < (COLOR_HUE_MAX / 6)) {
 
-        return x * ((HUE_STEPS * 6) / HUE_MAX);
+        return x * ((COLOR_HUE_STEPS * 6) / COLOR_HUE_MAX);
 
-    } else if (x < ((HUE_MAX * 3) / 6)) {
+    } else if (x < ((COLOR_HUE_MAX * 3) / 6)) {
 
-        return HUE_STEPS - 1;
+        return COLOR_HUE_STEPS - 1;
 
-    } else if (x < ((HUE_MAX * 4) / 6)) {
+    } else if (x < ((COLOR_HUE_MAX * 4) / 6)) {
 
-        return (((HUE_MAX * 4) / 6) - 1 - x) * ((HUE_STEPS * 6) / HUE_MAX);
+        return (((COLOR_HUE_MAX * 4) / 6) - 1 - x)
+                    * ((COLOR_HUE_STEPS * 6) / COLOR_HUE_MAX);
 
     } else {
 
@@ -88,40 +89,41 @@ static uint8_t hueWaveform(Hue_t x)
 /**
  * @brief Generates RGB values for a given hue
  *
- * The hue is interpreted as Hue_t and ranges from 0 up to HUE_MAX. This
+ * The hue is interpreted as Hue_t and ranges from 0 up to COLOR_HUE_MAX. This
  * calculations will always consider the brightness and saturation to be 1.
- * Internally after some basic calculations it makes use of hueWaveform().
+ * Internally after some basic calculations it makes use of
+ * color_hue_waveform().
  *
- * @param h The hue value to transform, range 0 up to HUE_MAX
+ * @param h The hue value to transform, range 0 up to COLOR_HUE_MAX
  * @param r Pointer to variable to store the calculated red value
  * @param g Pointer to variable to store the calculated green value
  * @param b Pointer to variable to store the calculated blue value
  *
  * @see Hue_t
- * @see HUE_MAX
- * @see hueWaveform()
+ * @see COLOR_HUE_MAX
+ * @see color_hue_waveform()
  */
-void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
+void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 {
 
-    uint16_t barg = (((uint16_t)h) + 2 * HUE_MAX / 3);
-    uint16_t rarg = (((uint16_t)h) + HUE_MAX / 3);
+    uint16_t barg = (((uint16_t)h) + 2 * COLOR_HUE_MAX / 3);
+    uint16_t rarg = (((uint16_t)h) + COLOR_HUE_MAX / 3);
 
-    if (barg >= HUE_MAX) {
+    if (barg >= COLOR_HUE_MAX) {
 
-        barg -= HUE_MAX;
-
-    }
-
-    if (rarg >= HUE_MAX) {
-
-        rarg -= HUE_MAX;
+        barg -= COLOR_HUE_MAX;
 
     }
 
-    *g = hueWaveform(h);
-    *b = hueWaveform((Hue_t)barg);
-    *r = hueWaveform((Hue_t)rarg);
+    if (rarg >= COLOR_HUE_MAX) {
+
+        rarg -= COLOR_HUE_MAX;
+
+    }
+
+    *g = color_hue_waveform(h);
+    *b = color_hue_waveform((Hue_t)barg);
+    *r = color_hue_waveform((Hue_t)rarg);
 
 }
 
@@ -137,7 +139,7 @@ void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
  *
  *  @return The calculated value for the given step
  */
-uint8_t pulseWaveForm(uint8_t step)
+uint8_t color_pulse_waveform(uint8_t step)
 {
 
     #define COLOR_PULSE_SCALE 128

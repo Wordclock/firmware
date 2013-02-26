@@ -19,7 +19,7 @@
  */
 
 /**
- * @file color_effects.h
+ * @file color.h
  * @brief Header containing functions for various color animations
  *
  * These functions are based upon the hue of the color. Hue is a main property
@@ -27,7 +27,7 @@
  *
  * [1]: https://en.wikipedia.org/wiki/Hue
  *
- * @see color_effects.c
+ * @see color.c
  */
 
 #ifndef _WC_COLOR_EFFECTS_H_
@@ -45,21 +45,21 @@
  * [1]: https://en.wikipedia.org/wiki/Hue#Computing_hue_from_RGB
  *
  */
-#define HUE_STEPS 256
+#define COLOR_HUE_STEPS 256
 
 /**
  * @brief Largest value for hue
  *
  * There are six different hue regions (Red-Yellow, Yellow-Green, Green-Cyan,
  * Cyan-Blue, Blue-Magenta, Magenta-Red, see [1]). For each region there are
- * HUE_STEPS different hues, so the largest possible value is a simple
+ * COLOR_HUE_STEPS different hues, so the largest possible value is a simple
  * multiplication.
  *
  * [1]: https://en.wikipedia.org/wiki/Hue#Computing_hue_from_RGB
  *
- * @see HUE_STEPS
+ * @see COLOR_HUE_STEPS
  */
-#define HUE_MAX (HUE_STEPS * 6)
+#define COLOR_HUE_MAX (COLOR_HUE_STEPS * 6)
 
 /**
  * @brief Amount of steps to change when requested manually
@@ -68,20 +68,20 @@
  * this defines the amount of steps to change the hue by. It basically is a
  * tradeoff between granular control and an actual visible change to the color.
  */
-#define HUE_MANUAL_STEPS 10
+#define COLOR_HUE_MANUAL_STEPS 10
 
 /**
  * @brief The actual type when dealing with hues
  *
  * When dealing with hues this is the type which will be used. Note that it
- * must at least hold values from 0 up to HUE_MAX.
+ * must at least hold values from 0 up to COLOR_HUE_MAX.
  *
- * @see HUE_MAX
+ * @see COLOR_HUE_MAX
  */
 typedef uint16_t Hue_t;
 
-extern void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
+extern void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
 
-extern uint8_t pulseWaveForm(uint8_t step);
+extern uint8_t color_pulse_waveform(uint8_t step);
 
 #endif /* _WC_COLOR_EFFECTS_H_ */
