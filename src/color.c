@@ -34,6 +34,14 @@
 #include "color.h"
 #include "main.h"
 
+/**
+ * @brief Scale factor used for calculation of the signal within
+ * color_pulse_waveform().
+ *
+ * @see color_pulse_waveform()
+ */
+#define COLOR_PULSE_WAVEFORM_SCALE 128
+
 #if (MONO_COLOR_CLOCK != 1)
 
 /**
@@ -142,14 +150,13 @@ void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 uint8_t color_pulse_waveform(uint8_t step)
 {
 
-    #define COLOR_PULSE_SCALE 128
-
     uint16_t x;
     uint8_t val;
-    uint8_t t = step + COLOR_PULSE_SCALE;
+    uint8_t t = step + COLOR_PULSE_WAVEFORM_SCALE;
 
     t = (t > 127) ? (255 - t) : t;
-    x = (((uint16_t)t) * (256 - COLOR_PULSE_SCALE) / 128) + COLOR_PULSE_SCALE;
+    x = (((uint16_t)t) * (256 - COLOR_PULSE_WAVEFORM_SCALE) / 128)
+               + COLOR_PULSE_WAVEFORM_SCALE;
     val = x * x * x / 256 / 256;
 
     return val;
