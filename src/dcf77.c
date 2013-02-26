@@ -1160,4 +1160,4 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
 
 }
 
-#endif /** (DCF_PRESENT == 1) */
+#endif /* (DCF_PRESENT == 1) */
