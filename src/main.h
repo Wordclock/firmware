@@ -19,29 +19,16 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file main.h
- * 
- *  The main configuration file.
- *  \details
- *      Written for ATMEGA88 @ 8 MHz. \n
- *      This File contains the most important configuration options.
- *      The hardware dependet defines are in the individual files
- *      because the hardware is relativly fix.
+ * @brief The main configuration file
  *
- * \version $Id: main.h 407 2011-11-24 21:55:09Z vt $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * \author Copyright (c) 2010 Vlad Tepesch  
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This file contains the most important configuration options of the project.
+ * It gets included by various other modules to read back the options and
+ * depending upon their value actually change the compilation.
+ *
+ * @see main.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #ifndef _WC_MAIN_H_
 #define _WC_MAIN_H_
