@@ -33,10 +33,49 @@
 #ifndef _WC_COLOR_EFFECTS_H_
 #define _WC_COLOR_EFFECTS_H_
 
+/**
+ * @brief Number of different hue steps
+ *
+ * A hue is basically only a number. This defines the amount of different hues
+ * for a specific region ((Red-Yellow, Yellow-Green, Green-Cyan, Cyan-Blue,
+ * Blue-Magenta, Magenta-Red, see [1]).
+ *
+ * [1]: https://en.wikipedia.org/wiki/Hue#Computing_hue_from_RGB
+ *
+ */
 #define HUE_STEPS 256
+
+/**
+ * @brief Largest value for hue
+ *
+ * There are six different hue regions (Red-Yellow, Yellow-Green, Green-Cyan,
+ * Cyan-Blue, Blue-Magenta, Magenta-Red, see [1]). For each region there are
+ * HUE_STEPS different hues, so the largest possible value is a simple
+ * multiplication.
+ *
+ * [1]: https://en.wikipedia.org/wiki/Hue#Computing_hue_from_RGB
+ *
+ * @see HUE_STEPS
+ */
 #define HUE_MAX (HUE_STEPS * 6)
+
+/**
+ * @brief Amount of steps to change when requested manually
+ *
+ * Whenever a hue change is requested (up and/or down) manually by the user
+ * this defines the amount of steps to change the hue by. It basically is a
+ * tradeoff between granular control and an actual visible change to the color.
+ */
 #define HUE_MANUAL_STEPS 10
 
+/**
+ * @brief The actual type when dealing with hues
+ *
+ * When dealing with hues this is the type which will be used. Note that it
+ * must at least hold values from 0 up to HUE_MAX.
+ *
+ * @see HUE_MAX
+ */
 typedef uint16_t Hue_t;
 
 extern void hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
