@@ -2,6 +2,8 @@
   variables as well as documenting the source code extensively. The current
   documentation is full of misspellings and a mix of English and German.
 
+- Cross-Read and correct comments (PG). Finished files:
+
 - Log output of DCF77 is buggy as the same timings are output various time,
   although internally nothing changed, see below:
   
