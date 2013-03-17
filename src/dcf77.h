@@ -22,8 +22,8 @@
  * @file dcf77.h
  * @brief Header file for access to the DCF77 time signal
  *
- * DCF77 is used to get the current date and time automatically. This contains
- * the header declaration to get access to the date and time information.
+ * DCF77 is used to receive the current date and time automatically. This contains
+ * the header declaration that provide access to the date and time information.
  *
  * In order for this module to work a DCF77 receiver is needed, which looks
  * something like [this][1].
@@ -35,7 +35,7 @@
  * * [DCF 77 Empfängermodul][4] from reichelt.de
  *
  * All these receivers output the demodulated signal digitally. It then needs
- * to be decoded, which is what this module is all about.
+ * to be decoded, which is done within this module.
  *
  * [1]: https://en.wikipedia.org/wiki/File:Low_cost_DCF77_receiver.jpg
  * [2]: http://www.pollin.de/shop/dt/NTQ5OTgxOTk-/Bausaetze_Module/Module/DCF_Empfangsmodul_DCF1.html

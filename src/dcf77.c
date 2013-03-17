@@ -23,15 +23,15 @@
  * @brief Implementation of the header declared in dcf77.h
  *
  * This file contains the implementation of the header declared in dcf77.h. In
- * order to understand the source code completely, a basic understanding of the
+ * order to understand the source code completely, basic knowledge about the
  * DCF77 signal is needed. Take a look at the Wikipedia [article][1] for an
  * overview of the concept. For a detailed description of the the time signal,
- * see [2].
+ * refer to [2].
  *
- * This module can detect the availability of the receiver and determine
+ * This module is able to detect the availability of the receiver and determine
  * whether it is active high or low. Furthermore it checks whether the internal
- * pull up resistor of the microcontroller is needed. Take a look at
- * dcf77_check_receiver_type() for details.
+ * pull up resistor of the microcontroller is needed. For further details take
+ * a look at dcf77_check_receiver_type().
  *
  * [1]: https://en.wikipedia.org/wiki/DCF77
  * [2]: https://en.wikipedia.org/wiki/DCF77#Time_code_interpretation
@@ -49,7 +49,7 @@
 #include "ports.h"
 
 /*
- * Check whether DCF77 functionality is enabled
+ * Only compile the following if DCF77 functionality is enabled
  */
 #if (DCF_PRESENT == 1)
 
@@ -83,11 +83,10 @@
 #endif
 
 /**
- * @brief Contains various flags used within this module
+ * @brief Stores various flags used within this module
  *
- * These flags are mainly used to enable a basic form of communication between
- * the various functions of this module. To save some space they are combined
- * into an enumeration.
+ * These flags are mainly used to keep up of the current state of
+ * this module. To save some space they are combined into an enumeration.
  *
  * @see FLAGS_e
  * @see getFlag()
@@ -132,13 +131,13 @@ typedef enum FLAGS_e {
     DEFINED,
 
     /**
-     * @brief Indicates whether or not there actually is a DCF77 receiver
+     * @brief Indicates if a DCF77 receiver is present
      *
-     * When a receiver could successfully be detected, this gets set. Otherwise
-     * it might be cleared, when no receiver could be found.
+     * When a receiver could successfully be detected, it is set. when no
+     * receiver could be found it is be cleared.
      *
-     * This in combination with FLAGS_e::DEFINED allows to tell whether there
-     * actually is a receiver.
+     * In combination with FLAGS_e::DEFINED tells whether there
+     * is a usable receiver available or not.
      *
      * @ſee FLAGS_e::DEFINED
      * @see dcf77_check_receiver_type()
@@ -203,7 +202,7 @@ static inline void clearFlag(FLAGS flag)
 }
 
 /**
- * @brief Port and pin of where the DCF77 receiver is attached to
+ * @brief Port and pin of the DCF77 receiver connection
  *
  * @see ports.h
  */
@@ -218,7 +217,7 @@ static inline void clearFlag(FLAGS flag)
  *
  * Furthermore it is possible to get an idea of the quality of the signal.
  * If there is a lot of noise in the proximity of the receiver the LED will
- * blink abnormally fast and/or often.
+ * blink to fast and/or often.
  *
  * @see ports.h
  */
@@ -255,11 +254,11 @@ volatile typedef struct {
      *
      * There are 58 bits being broadcasted every minute. This is a counter,
      * which keeps track which number currently is being broadcast and used
-     * quite heavily in dcf77_check() to enable various case differentiations
+     * extensive in dcf77_check() to enable various case differentiations
      * based upon the number of the bit.
      *
-     * It is reset either when an error is detected or when bit 0 is received,
-     * which is recognized by a pause length of at least 1800 ms.
+     * It is reset either when an error is detected or when a new frame
+     * starts which is recognized by a pause length of at least 1800 ms.
      *
      * @see dcf77_check()
      */
@@ -316,9 +315,9 @@ volatile typedef struct {
      * @brief Identifies which data is currently being broadcasted
      *
      * This variable is used to keep track of the "block" that is currently
-     * being broadcasted. Such "blocks" are: Minutes, Hour, Day of month, Day
-     * of week, Month number, Year within century. Once the transfer of a new
-     * "block" starts this counter is incremented.
+     * being broadcasted. Blocks are: Minutes, Hour, Day of month, Day
+     * of week, Month number, Year within century. Once the transfer of a
+     * new "block" starts this counter is incremented.
      *
      * This is effectively used as an index for DCF_Struct::NewTime.
      *
@@ -523,7 +522,7 @@ static void dcf77_check_receiver_type(void)
                 count_switch++;
 
                 /*
-                 * Check whether pull up resistor is activated right now
+                 * Check whether the pull up resistor is activated right now
                  */
                 if ((PIN(DCF_INPUT) & _BV(BIT(DCF_INPUT)))) {
 
@@ -620,9 +619,9 @@ static void dcf77_check_receiver_type(void)
             }
 
             /*
-             * Check which of both counters is bigger, which is an indicator
-             * for the type of the receiver, as one of both should be
-             * significantly bigger than the other.
+             * Check which of both counter values is larger, which is an indicator
+             * for the type of the receiver, as one of both should be significantly
+             * larger than the other.
              *
              * Remember: The pulse length is 100 ms and/or 200 ms, but the
              * pause between two pulses is at least 800 ms long.
@@ -766,12 +765,12 @@ static bool dcf77_check(void)
     }
 
     /*
-     * Check whether either 0 or 1 have been received.
+     * Check whether 0 or 1 have been received.
      */
     if ((DCF.PauseCounter >= 78) && (DCF.PauseCounter <= 95)) {
 
         /*
-         * Check whether 1 has been received
+         * Check if 1 has been received
          */
         if (DCF.PauseCounter <= 86) {
 
@@ -798,13 +797,13 @@ static bool dcf77_check(void)
         }
 
         /*
-         * Increment BCD shift counter in preparation for the next iteration
+         * Increment BCD shift counter to prepare the next iteration
          */
         DCF.BCDShifter++;
 
         /*
-         * Check whether parity data is valid in case we just received bit 28
-         * and/or 35
+         * Bit 28 and/or 35 contain parity data. In case we are currently
+         * processing one of these bits perform parity check.
          */
         if (((DCF.BitCounter == 28) || (DCF.BitCounter == 35))
                 && (DCF.Parity % 2 != 0)) {
@@ -932,7 +931,7 @@ static bool dcf77_check(void)
 /**
  * @brief Initializes the DCF77 module
  *
- * This function initializes the DCF77 port. Among other things it sets the
+ * This function initializes the DCF77 module. Among other things it sets the
  * data direction registers for the input and output. Furthermore some flags
  * are set and/or cleared to trigger further initilization tasks, such as the
  * detection of the receiver type.
@@ -976,8 +975,8 @@ void dcf77_init(void)
 /**
  * @brief ISR counting the pause length between two pulses
  *
- * This ISR needs to be called every 10 ms. This is achieved by putting it
- * into the macro INTERRUPT_100HZ. It will then count the pause between
+ * This ISR needs to be called every 10 ms. This is achieved by including it
+ * into the macro INTERRUPT_100HZ. It will count the pause length between
  * two pulses, which in return makes it possible to determine the length of the
  * pulse itself and therefore decode the signal afterwards.
  *
@@ -1029,7 +1028,7 @@ void dcf77_ISR(void)
              */
 
             /*
-             * Check whether the receiver is enabled after all
+             * Check whether dcf receiving is currently enabled
              */
             if (enable_dcf77_ISR) {
 
@@ -1071,7 +1070,8 @@ void dcf77_ISR(void)
                      */
 
                     /*
-                     * Set check flag to analyze signal
+                     * Set check flag to indicate that the signal
+                     * can be analyzed
                      */
                     setFlag(CHECK);
 
@@ -1093,9 +1093,10 @@ void dcf77_ISR(void)
 /**
  * @brief Puts the received date & time into a buffer
  *
- * When a valid pulse has been received, this functions puts the current date
+ * When a valid frame has been received, this functions puts the current date
  * & time into a buffer of type datetime_t and returns true. Otherwise it will
- * return false and do nothing to the buffer at all.
+ * return false and do nothing to the buffer at all. This method has to be
+ * called at least once every second in order to analyze the dcf data properly.
  *
  * @param DateTime_p Pointer to buffer where the resulting date & time should
  *           be stored

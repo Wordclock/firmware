@@ -2,7 +2,9 @@
   variables as well as documenting the source code extensively. The current
   documentation is full of misspellings and a mix of English and German.
 
-- Cross-Read and correct comments (PG). Finished files:
+- Cross-Read and correct comments. Finished files:
+        - dcf77.h
+        - dcf77.c
 
 - Log output of DCF77 is buggy as the same timings are output various time,
   although internally nothing changed, see below:
