@@ -35,7 +35,7 @@
 #include "shift.h"
 
 /**
- * @brief The port the SPI is attached to
+ * @brief The port used for SPI
  */
 #define SHIFT_SR_SPI_PORT PORTB
 
@@ -78,9 +78,8 @@
  * @brief Initializes this module
  *
  * This function has to be called once before using shift24_output(). It sets
- * up the hardware by writing the right values into various registers in
- * control of the SPI module. Afterwards data can be output using
- * shift24_output().
+ * up the hardware by writing the proper values into all relevant SPI control
+ * registers. Afterwards data can be output using shift24_output().
  *
  * You'll find a description of the various registers used in this function at
  * [1], p. 168f, section 19.5.1.
@@ -129,16 +128,16 @@ void shift24_init(void) {
 /**
  * @brief Outputs the given data over the Serial Peripheral Interface (SPI)
  *
- * This function is responsible for the actual output. It takes the given data
- * at blocks of eight bits and puts them into the appropriate register (SPDR).
- * After the transfer has completed it takes the next byte.
+ * This function is responsible for the actual output. It splits the given data
+ * in blocks of eight bits and puts them into the appropriate register (SPDR).
+ * After the transfer of the current byte it proceeds with the next one.
  *
  * Before this function can be used, the module needs to be initialized by
  * calling shift24_init().
  *
- * Although the argument accepts 32 bits (uint32_t), only 24 of the least
- * significant bits will be output. The eight most significant bits are
- * completely ignored.
+ * Although the argument accepts 32 bits (uint32_t), only the 24 least
+ * significant bits will be output. The eight most significant bits will
+ * be ignored.
  *
  * @param data Data to be output
  * @see shift24_init()

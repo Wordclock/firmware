@@ -8,6 +8,8 @@
         - datetime.h
         - base.c
         - base.h
+        - shift.c
+        - shift.h
 
 - Log output of DCF77 is buggy as the same timings are output various time,
   although internally nothing changed, see below:
