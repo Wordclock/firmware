@@ -24,11 +24,10 @@
  * @brief Implements the header defined in ldr.h
  *
  * This file contains the implementation of the header declared in ldr.h. It
- * makes use of the ADC unit, so it might be useful to take a look at [1],
- * p. 244f, chapter 24.
+ * uses the ADC unit. For further refer to [1], p. 244f, chapter 24.
  *
  * Before you can actually retrieve the "current" brightness using
- * ldr_get_brightness() you need to initialize the module **once** by simply
+ * ldr_get_brightness() you need to initialize the module **once** by
  * calling ldr_init().
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
@@ -49,11 +48,11 @@
 #include "base.h"
 
 /**
- * @brief Contains the last measurements taken
+ * @brief Stores the last measurements taken
  *
  * This effectively acts as a low pass filter, as the brightness calculated by
  * ldr_get_brightness() will be the mean value of the values stored in this
- * array. The array is as big as defined in MEASUREMENTS_ARRAY_SIZE.
+ * array. The size of the array is defined in MEASUREMENTS_ARRAY_SIZE.
  *
  * This is actually a [ring buffer][1], which means that
  * MEASUREMENTS_ARRAY_SIZE should be a multiple of two.
@@ -67,10 +66,10 @@
 static volatile uint8_t measurements[MEASUREMENTS_ARRAY_SIZE];
 
 /**
- * @brief Contains the sum of all elements in measurements
+ * @brief Contains the sum of all elements in the measurements array
  *
  * Although this is redundant and could be calculated by simply adding up the
- * values in measurements itself, it makes things faster when it comes down to
+ * values in measurements itself, it speeds things up when it comes down to
  * actually returning the "current" brightness with ldr_get_brightness().
  *
  * @warning: Consider that the datatype must be able to store values at least
@@ -179,11 +178,11 @@ void ldr_init(void)
  * @brief Returns the "current" brightness - calculated from the last taken
  * measurements
  *
- * Before this function can be called, the module first needs to be initialized
+ * Before this function can be called, the module needs to be initialized
  * by calling ldr_init().
  *
  * This function returns the "current" brightness. "Current" means that it
- * is actually calculated from the last taken measurements. The number of
+ * is actually the mean of the last taken measurements. The number of
  * measurements taken into account is defined in MEASUREMENTS_ARRAY_SIZE.
  *
  * The returned value is actually the mean value of the last measurements.
@@ -205,7 +204,7 @@ uint8_t ldr_get_brightness(void)
 /**
  * @brief Takes the measurement and recalculates the new value to return
  *
- * This function is the actual workhorse. It should be called regularly, e.g.
+ * This function does the actual work. It should be called regularly, e.g.
  * once every second. This is achieved by using the various macros defined in
  * timer.c, namely INTERRUPT_1HZ.
  *

@@ -24,12 +24,12 @@
  * @brief Header file allowing to access brightness measurements from the LDR
  *
  * This module handles the access to the brightness measured by the LDR sensor.
- * The returned brightness is the mean value of the last couple of
- * measurements, defined by MEASUREMENTS_ARRAY_SIZE.
+ * The returned brightness is the mean value of the last n measurements,
+ * where n = MEASUREMENTS_ARRAY_SIZE.
  *
- * It is used to enable the reaction to changes of the ambient light, e.g.
- * increasing the brightness of the LEDs involved when the light in the room
- * the Wordclock is in is switched on.
+ * It is used to provide ambient light influenced behaviour, e.g. increasing the
+ * brightness of the LEDs involved when the light in the room the Wordclock is in
+ * is switched on.
  *
  * @see ldr.c
  */
