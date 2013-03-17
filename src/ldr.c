@@ -24,7 +24,7 @@
  * @brief Implements the header defined in ldr.h
  *
  * This file contains the implementation of the header declared in ldr.h. It
- * uses the ADC unit. For further refer to [1], p. 244f, chapter 24.
+ * uses the ADC unit. For further details refer to [1], p. 244f, chapter 24.
  *
  * Before you can actually retrieve the "current" brightness using
  * ldr_get_brightness() you need to initialize the module **once** by
