@@ -133,11 +133,11 @@ typedef enum FLAGS_e {
     /**
      * @brief Indicates if a DCF77 receiver is present
      *
-     * When a receiver could successfully be detected, it is set. when no
-     * receiver could be found it is be cleared.
+     * When a receiver could successfully be detected, it is set. When no
+     * receiver could be found it is cleared.
      *
-     * In combination with FLAGS_e::DEFINED tells whether there
-     * is a usable receiver available or not.
+     * In combination with FLAGS_e::DEFINED it tells whether there is a usable
+     * receiver available or not.
      *
      * @ſee FLAGS_e::DEFINED
      * @see dcf77_check_receiver_type()
@@ -217,7 +217,7 @@ static inline void clearFlag(FLAGS flag)
  *
  * Furthermore it is possible to get an idea of the quality of the signal.
  * If there is a lot of noise in the proximity of the receiver the LED will
- * blink to fast and/or often.
+ * blink too fast and/or often.
  *
  * @see ports.h
  */
@@ -254,7 +254,7 @@ volatile typedef struct {
      *
      * There are 58 bits being broadcasted every minute. This is a counter,
      * which keeps track which number currently is being broadcast and used
-     * extensive in dcf77_check() to enable various case differentiations
+     * extensively in dcf77_check() to enable various case differentiations
      * based upon the number of the bit.
      *
      * It is reset either when an error is detected or when a new frame
@@ -1028,7 +1028,7 @@ void dcf77_ISR(void)
              */
 
             /*
-             * Check whether dcf receiving is currently enabled
+             * Check whether DCF receiving is currently enabled
              */
             if (enable_dcf77_ISR) {
 
