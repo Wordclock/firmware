@@ -141,7 +141,7 @@ void byteToStr(uint8_t val, char str[4])
 }
 
 /**
- * @brief Converts a byte smaller then 100 into a string
+ * @brief Converts a byte smaller than 100 into a string
  *
  * This function converts a given byte to a string - similar to byteToStr().
  * However this function is restricted to input values from 0 to 99. Therefore
