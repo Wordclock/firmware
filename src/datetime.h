@@ -21,9 +21,9 @@
  * @file datetime.h
  * @brief Contains the datetime_t type definition
  *
- * The datetime_t type is used throughout the whole project in various places
- * where access to time is needed. Every module that needs access to this is
- * supposed to include this header.
+ * The datetime_t type is used throughout the whole project whenever a date
+ * and/or time has to be represented. Every module that needs access to this
+ * is supposed to include this header.
  */
 
 #ifndef _WC_DATETIME_H_
@@ -33,7 +33,7 @@
  * @brief Type definition describing a point in time
  *
  * This type describes an arbitrary point in time, including the date and
- * time by combining these properties in a struct.
+ * time combined within one struct.
  */
 typedef struct
 {

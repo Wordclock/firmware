@@ -5,6 +5,7 @@
 - Cross-Read and correct comments. Finished files:
         - dcf77.h
         - dcf77.c
+        - datetime.h
 
 - Log output of DCF77 is buggy as the same timings are output various time,
   although internally nothing changed, see below:
