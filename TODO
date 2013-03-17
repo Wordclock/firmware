@@ -12,7 +12,7 @@
         - shift.h
 
 - Log output of DCF77 is buggy as the same timings are output various time,
-  although internally nothing changed, see below:
+  although internally nothing changed (check boundaries for fix), see below:
   
         low active DCF77 Module detected!
          45  88  78  88  79  89  88  89  88  78  78  88  78  77  78  89  88
