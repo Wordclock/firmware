@@ -33,11 +33,11 @@
 #include "base.h"
 
 /**
- * @brief Converts a pair of BCD values into an integer
+ * @brief Converts a pair of BCD values into an integer representation
  *
- * This function expects a pair of BCD values. Both of these values are
- * expected to be in a single byte. The first BCD value should take up the
- * first four bits (0-3), the second BCD value the next four bits (4-7).
+ * This function expects a pair of BCD values in one single byte.
+ * The first BCD value should take up the first four bits (0-3),
+ * the second BCD value the next four bits (4-7).
  *
  * The first BCD value (bits 0-3) is considered to represent the least
  * significant digit. The second BCD value (bits 4-7) on the other hand
@@ -49,7 +49,7 @@
  * digit `5`<sub>10</sub>, which stands just for itself in this context (least
  * significant digit). The result then would be `35`<sub>10</sub>.
  *
- * This function obviously returns only values from 0 up to 99.
+ * This function obviously returns only values between 0 and 99.
  *
  * @param bcd Pair of BCD values
  * @return Converted integer
@@ -68,9 +68,8 @@ uint8_t bcdtoi(uint8_t bcd)
  * @brief Converts an integer into a pair of BCD values
  *
  * This function expects an integer, which it will then convert into a pair of
- * BCD values. Both of these values will be returned in a single byte. The
- * first BCD value will take up the first four bits (0-3), the second BCD
- * value will take up the remaining bits (4-7).
+ * BCD values stored in one single byte. The first BCD value will take up the
+ * first four bits (0-3), the second BCD value will take up the remaining bits (4-7).
  *
  * The first BCD value (bits 0-3) will represent the least significant digit.
  * The second BCD value (bits 4-7) on the other hand will represent the most
@@ -105,9 +104,9 @@ uint8_t itobcd(uint8_t i)
  * @brief Converts a byte into a string
  *
  * This function converts a given byte to a string. It takes up considerable
- * less program space than the adequate printf() equivalent.
+ * less program space than the printf() equivalent.
  *
- * The buffer needs to be big enough to hold at least 4 bytes. The string
+ * The buffer needs to be large enough to hold at least 4 bytes. The string
  * will be NULL terminated automatically.
  *
  * @param val The byte to convert into a string
@@ -142,11 +141,12 @@ void byteToStr(uint8_t val, char str[4])
 }
 
 /**
- * @brief Converts a byte with values below 100 into a string
+ * @brief Converts a byte smaller then 100 into a string
  *
  * This function converts a given byte to a string - similar to byteToStr().
- * However it works only with values from 0 to 99. Therefore the size of the
- * buffer only needs to be 3 bytes big and the implementation is easier.
+ * However this function is restricted to input values from 0 to 99. Therefore
+ * the size of the buffer only needs to be 3 bytes big and the implementation
+ * is easier.
  *
  * The string will be NULL terminated automatically.
  *

@@ -21,9 +21,9 @@
 
 /**
  * @file base.h
- * @brief Provides some common useful and quite basic functions and/or macros
+ * @brief Provides some common, useful and basic functions and/or macros
  *
- * The functions and macros declared here might be useful to various parts and
+ * The functions and macros declared here are useful on various occasions and
  * are therefore put into a separate module.
  *
  * @see base.c
@@ -39,7 +39,7 @@
  * bits. For instance in order to build up the byte `01101001`<sub>2</sub>,
  * you would use it like that: BIN8(0, 1, 1, 0, 1, 0, 0, 1).
  *
- * Obviously b7..b0 are expected to be either 0 and/or 1.
+ * b7..b0 are expected to be either 0 and/or 1.
  *
  * @return Byte represented by the given bits.
  * @see BIN16()
@@ -54,7 +54,7 @@
  * This can be used to build up a short manually by explicitly listing all the
  * bits it contains in sequence.
  *
- * Obviously b15..b0 are expected to be either 0 and/or 1.
+ * b15..b0 are expected to be either 0 and/or 1.
  *
  * @return Short represented by the given bits.
  * @see BIN8()
@@ -68,11 +68,11 @@
  *
  * This function divides the given parameter by ten and returns the resulting
  * integer directly. The remainder of the division will be stored at the
- * location in memory provided by the second argument.
+ * location provided by the second argument.
  *
- * This function makes use of an approximation, which multiplies the given
- * parameter by a constant and shifts it to the right afterwards. This holds
- * true for 0-255 at least.
+ * This function uses an approximation, which multiplies the given parameter
+ * by a constant and shifts it to the right afterwards. The results are valid
+ * for input values 0-255 at least.
  *
  * This is only applicable to integers stored in a single byte (uint8_t).
  *
@@ -94,7 +94,7 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
  * @brief Returns the hex digit representation of a nibble
  *
  * This function expects a nibble - handed over in the four least significant
- * bits of a byte. It then returns the hex digit representation of it. The
+ * bits of a byte. It then returns the hex representation of it. The
  * byte `00001011`<sub>2</sub> for instance would become `B`<sub>16</sub>.
  *
  * This function expects the upper four bits always to be zero.
@@ -114,7 +114,7 @@ static inline char nibbleToHex(uint8_t nibble)
  *
  * This function will convert the given data into a string containing the
  * hexadecimal representation of that given data. The result will be stored
- * at the given buffer. The string will be NULL terminated automatically, so
+ * at the passed buffer. The string will be NULL terminated automatically, so
  * the buffer needs to have a length of 5 bytes at least.
  *
  * @param data Data to convert
