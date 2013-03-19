@@ -76,22 +76,15 @@
 #include "wceeprom.h"
 #include "uart.h"
 #include "color.h"
+#include "ports.h"
 
 
-#define USER_AMBILIGHT_PORT PORTB
-#define USER_AMBILIGHT_DDR  DDRB
-#define USER_AMBILIGHT_PIN  PINB
-#define USER_AMBILIGHT_BIT  PIN1
+#define USER_AMBILIGHT PORTB, 1
 
-#define USER_BLUETOOTH_PORT PORTC
-#define USER_BLUETOOTH_DDR  DDRC
-#define USER_BLUETOOTH_PIN  PINC
-#define USER_BLUETOOTH_BIT  PIN1
+#define USER_BLUETOOTH PORTC, 1
 
-#define USER_AUXPOWER_PORT PORTD
-#define USER_AUXPOWER_DDR  DDRD
-#define USER_AUXPOWER_PIN  PIND
-#define USER_AUXPOWER_BIT  PIN2
+#define USER_AUXPOWER PORTD, 2
+
 /** 
  * leaves the given substate and all following states on stack 
  * @param   indexOfStateToLeave   stack position of State to leave
@@ -462,17 +455,17 @@ handle_ir_code (void)
 #           if (AMBILIGHT_PRESENT == 1)
               }else if( UI_AMBIENT_LIGHT == ir_code ){
                 log_state("AL\n");
-                USER_AMBILIGHT_PIN |= (1<< USER_AMBILIGHT_BIT);
+                PIN(USER_AMBILIGHT) |= (1<< BIT(USER_AMBILIGHT));
 #           endif
 #           if (BLUETOOTH_PRESENT == 1)
               }else if( UI_BLUETOOTH == ir_code ){
                   log_state("BT\n");
-                  USER_BLUETOOTH_PIN |= (1<< USER_BLUETOOTH_BIT);
+                  PIN(USER_BLUETOOTH) |= (1<< BIT(USER_BLUETOOTH));
 #           endif
 #           if (AUXPOWER_PRESENT == 1)
               }else if( UI_AUXPOWER == ir_code ){
                   log_state("AUX\n");
-                USER_AUXPOWER_PIN |= (1<< USER_AUXPOWER_BIT);
+                PIN(USER_AUXPOWER) |= (1<< BIT(USER_AUXPOWER));
 #           endif
         //    }else if( g_params->irCommandCodes[] == ir_code ){
             }else{
@@ -513,13 +506,13 @@ void user_init(void)
   addState(MS_irTrain,    NULL);
 
 # if (AMBILIGHT_PRESENT == 1)
-    USER_AMBILIGHT_DDR |= (1 << USER_AMBILIGHT_BIT);
+    DDR(USER_AMBILIGHT) |= (1 << BIT(USER_AMBILIGHT));
 # endif
 # if (BLUETOOTH_PRESENT == 1)
-    USER_BLUETOOTH_DDR |= (1 << USER_BLUETOOTH_BIT);
+    DDR(USER_BLUETOOTH) |= (1 << BIT(USER_BLUETOOTH));
 # endif
 # if (AUXPOWER_PRESENT == 1)
-    USER_AUXPOWER_DDR |= (1 << USER_AUXPOWER_BIT);
+    DDR(USER_AUXPOWER) |= (1 << BIT(USER_AUXPOWER));
 # endif
 }
 
@@ -549,7 +542,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
             {
 #         if (AMBILIGHT_PRESENT == 1)
             g_userSwitchedOff = USO_NORMAL_ON;
-            USER_AMBILIGHT_PORT |= g_settingOfAmbilightBeforeAutoOff;  // pin is off before this call in each case so no need to clear it before OR
+            PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;  // pin is off before this call in each case so no need to clear it before OR
 #         endif
             pwm_on();
         }
@@ -563,8 +556,8 @@ extern void  user_setNewTime( const datetime_t* i_time)
         {
             g_userSwitchedOff = USO_AUTO_OFF;
 #         if (AMBILIGHT_PRESENT == 1)
-            g_settingOfAmbilightBeforeAutoOff = USER_AMBILIGHT_PORT & (1<<USER_AMBILIGHT_BIT); // save io state
-            USER_AMBILIGHT_PORT &= ~(1<<USER_AMBILIGHT_BIT); // switch off 
+            g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & (1<<BIT(USER_AMBILIGHT)); // save io state
+            PORT(USER_AMBILIGHT) &= ~(1<<BIT(USER_AMBILIGHT)); // switch off
 #         endif
             if( !g_params->useAutoOffAnimation ){
               pwm_off();
