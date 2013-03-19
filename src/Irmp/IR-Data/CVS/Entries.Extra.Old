@@ -5,8 +5,6 @@
 /denon1_kurz_10khz.txt////
 /denon3_kurz_10khz.txt////
 /jvc-nec.txt////
-/sharp_kurz_10khz.txt////
-/sharp_lang_10khz.txt////
 /t-home-mediareceiver-15kHz.txt////
 /t-home-mediareceiver.txt////
 /kaseikyo-15kHz.txt////
@@ -73,6 +71,9 @@
 /xbox360-15kHz.txt////
 /a1tvbox-15kHz.txt////
 /a1tvbox-20kHz.txt////
-/test-suite.sh////
 /sharp-denon.txt////
 /sharp-denon2.txt////
+/sharp_15khz.txt////
+/sharp_kurz_10khz.txt////
+/sharp_lang_10khz.txt////
+/test-suite.sh////
