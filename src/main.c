@@ -51,20 +51,83 @@
 #include "base.h"
 #include "wceeprom.h"
 
+/**
+ * @brief Interval to (re)read the time from the RTC
+ *
+ * This defines the interval (in seconds) to (re)read the time from the RTC.
+ * Between those reads there is a software clock running (see soft_seconds).
+ *
+ * @see soft_seconds
+ * @see handle_datetime()
+ */
 #define READ_DATETIME_INTERVAL 15
 
+/**
+ * @brief Counter for seconds of software clock
+ *
+ * This variable is actually needed to run a software clock. It is incremented
+ * each second by main_ISR() and used within handle_datetime() quite heavily.
+ * After READ_DATETIME_INTERVAL seconds have passed, the time is (re)read from
+ * the RTC again.
+ *
+ * @see main_ISR()
+ * @see handle_datetime()
+ * @see READ_DATETIME_INTERVAL
+ */
 static volatile uint8_t soft_seconds;
 
 #if (LOG_MAIN == 1)
 
+    /**
+     * @brief Used to output logging information of this module
+     *
+     * When the logging for this module is enabled (LOG_MAIN = 1), this macro
+     * is used to output various kinds of information.
+     *
+     * @see LOG_MAIN
+     */
     #define log_main(x) uart_puts_P(x)
 
 #else
 
+    /**
+     * @brief Used to output logging information of this module
+     *
+     * This makes sure that nothing is being output when the logging for this
+     * module is deactivated (LOG_MAIN = 0).
+     *
+     * @see LOG_MAIN
+     */
     #define log_main(x)
 
 #endif
 
+/**
+ * @brief Handles the synchronization between the RTC and the software clock
+ *
+ * The time itself will only be (re)read from the RTC every
+ * READ_DATETIME_INTERVAL seconds. Between those intervals the timekeeping
+ * is done by a software clock (see soft_seconds).
+ *
+ * The software clock can "adjust" itself:
+ *
+ * - In case it runs too slow (for instance
+ * due to the RC oscillator) this function will call i2c_rtc_read() every
+ * second in the last part of a minute in order to reach the next full minute
+ * as close as possible.
+ *
+ * - On the other hand it will be slowdowned if the software clock runs too
+ * fast, so that the software clock is only updated every
+ * READ_DATETIME_INTERVAL - softclock_too_fast_seconds seconds.
+ *
+ * This function sets the enable_dcf77_ISR flag once a hour to signal to the
+ * DCF77 module that it should try to retrieve the current time.
+ *
+ * @see READ_DATETIME_INTERVAL
+ * @see soft_seconds
+ * @see i2c_rtc_read()
+ * @see enable_dcf77_ISR
+ */
 static void handle_datetime(datetime_t* datetime)
 {
 
@@ -148,6 +211,20 @@ static void handle_datetime(datetime_t* datetime)
 
 }
 
+/**
+ * @brief Handles changes to the brightness due to changes in the ambient light
+ *
+ * This functions retrieves the brightness measured by the LDR (only using the
+ * most upper five bits) and if there are any changes to the last measurement
+ * it sets the base brightness according to the measured value.
+ *
+ * If logging for this aspect is enabled (LOG_MAIN_BRIGHTNESS = 1) then the
+ * measured brightness will also be output.
+ *
+ * @see ldr_get_brightness()
+ * @see LOG_MAIN_BRIGHTNESS
+ * @see ldr.h
+ */
 static void handle_brightness()
 {
 
@@ -179,6 +256,16 @@ static void handle_brightness()
 
     void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
 
+    /**
+     * @brief Makes sure that the watchdog is turned of after a watchdog reset
+     *
+     * In the case that a watchdog reset occured this makes actually sure that
+     * the watchdog is turned off to prevent the microcontroller from resetting
+     * itself all the time.
+     *
+     * @note This function is not actually called, but included in the "init3"
+     * section automatically.
+     */
     void wdt_init()
     {
 
@@ -189,6 +276,15 @@ static void handle_brightness()
 
 #endif
 
+/**
+ * @brief Entry point to start execution at
+ *
+ * This is the entry point where execution will start. It will initialize the
+ * hardware and enter an infinite loop, which will handle any upcoming events
+ * not yet covered and/or initiated by various interrupts.
+ *
+ * @return This function should actually never reach its end
+ */
 int main()
 {
 
@@ -256,6 +352,16 @@ int main()
 
 }
 
+/**
+ * @brief ISR of the main module
+ *
+ * This basically only increases the "soft_seconds" by one each time it is
+ * executed. Therefore it should be called every second by adding it
+ * to INTERRUPT_1HZ within timer.c.
+ *
+ * @see INTERRUPT_1HZ
+ * @see timer.c
+ */
 void main_ISR()
 {
 
