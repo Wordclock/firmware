@@ -177,7 +177,7 @@ static void handle_brightness()
 
 #if (BOOTLOADER_RESET_WDT == 1)
 
-    void wdt_init() __attribute__((naked)) __attribute__((section(".init1")));
+    void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
 
     void wdt_init()
     {
