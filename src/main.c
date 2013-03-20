@@ -18,26 +18,17 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file main.c
- * 
- *  The main program file.
- *  \details
- *      Written for ATMEGA88 @ 8 MHz. \n
- *      This File contains main routine with top level and initialization stuff.
+ * @brief The main program file
  *
- * \version $Id: main.c 403 2011-11-13 00:08:32Z sm $
- * 
- * \author Copyright (c) 2010 Frank Meyer - frank(at)fli4l.de
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This file contains the main function, which is responsible for
+ * initialization and actually running the hardware by "gluing" together
+ * various modules of the project.
+ *
+ * @see main()
+ * @see main.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
-
 
 #include <inttypes.h>
 #include <avr/io.h>
