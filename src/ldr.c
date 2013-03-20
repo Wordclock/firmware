@@ -246,7 +246,7 @@ void ldr_ISR(void)
         /*
          * Check whether logging is enabled
          */
-        # if (LOG_LDR == 1)
+        #if (LOG_LDR == 1)
 
             char buff[5];
 
@@ -255,7 +255,7 @@ void ldr_ISR(void)
             uart_puts(buff);
             uart_putc('\n');
 
-        # endif
+        #endif
 
         /*
          * As we are going to replace the value at curr_index with the value
