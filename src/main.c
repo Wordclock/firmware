@@ -65,7 +65,7 @@ static volatile uint8_t soft_seconds;
 
 #endif
 
-static void handle_datetime(datetime_t* datetimep)
+static void handle_datetime(datetime_t* datetime)
 {
 
     static uint8_t last_hour = 0xff;
@@ -79,23 +79,23 @@ static void handle_datetime(datetime_t* datetimep)
 
         if (soft_seconds >= next_read_seconds) {
 
-            rtc = i2c_rtc_read(datetimep);
+            rtc = i2c_rtc_read(datetime);
 
         } else {
 
-            datetimep->ss = soft_seconds;
+            datetime->ss = soft_seconds;
             rtc = true;
 
         }
 
         if (rtc) {
 
-            if (last_minute != datetimep->mm) {
+            if (last_minute != datetime->mm) {
 
-                user_setNewTime(datetimep);
-                last_minute = datetimep->mm;
+                user_setNewTime(datetime);
+                last_minute = datetime->mm;
 
-                if (last_hour != datetimep->hh) {
+                if (last_hour != datetime->hh) {
 
                     #if (DCF_PRESENT == 1)
 
@@ -103,19 +103,19 @@ static void handle_datetime(datetime_t* datetimep)
 
                     #endif
 
-                    last_hour = datetimep->hh;
+                    last_hour = datetime->hh;
 
                 }
 
             }
 
-            if (last_seconds != 0xff && soft_seconds > datetimep->ss) {
+            if (last_seconds != 0xff && soft_seconds > datetime->ss) {
 
-                softclock_too_fast_seconds = soft_seconds - datetimep->ss;
+                softclock_too_fast_seconds = soft_seconds - datetime->ss;
 
             }
 
-            last_seconds = soft_seconds = datetimep->ss;
+            last_seconds = soft_seconds = datetime->ss;
 
             if (softclock_too_fast_seconds > 0) {
 
