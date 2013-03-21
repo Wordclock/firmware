@@ -76,6 +76,9 @@
  */
 static volatile uint8_t soft_seconds;
 
+/*
+ * Check whether logging for this module is enabled
+ */
 #if (LOG_MAIN == 1)
 
     /**
@@ -131,55 +134,119 @@ static volatile uint8_t soft_seconds;
 static void handle_datetime(datetime_t* datetime)
 {
 
+    /*
+     * Value of last hour, minute and seconds evaluated during last call
+     */
     static uint8_t last_hour = 0xff;
     static uint8_t last_minute = 0xff;
     static uint8_t last_seconds = 0xff;
+
+    /*
+     * Time in seconds when to (re)read the RTC
+     */
     static uint8_t next_read_seconds = 0;
+
+    /*
+     * Difference of seconds when software clock is running too fast
+     */
     uint8_t softclock_too_fast_seconds = 0;
+
+    /*
+     * Variable for storing status of various RTC operations
+     */
     uint8_t rtc;
 
+    /*
+     * Check if time has changed
+     */
     if (last_seconds != soft_seconds) {
 
+        /*
+         * Check if RTC should be (re)read again
+         */
         if (soft_seconds >= next_read_seconds) {
 
+            /*
+             * (Re)read the RTC
+             */
             rtc = i2c_rtc_read(datetime);
 
         } else {
 
+            /*
+             * Time has changed, bu RTC was not (re)read. Set the new time and
+             * set status of RTC operation to true.
+             */
             datetime->ss = soft_seconds;
             rtc = true;
 
         }
 
+        /*
+         * Check if last RTC operation was successful
+         */
         if (rtc) {
 
+            /*
+             * Check whether the minute has changed
+             */
             if (last_minute != datetime->mm) {
 
+                /*
+                 * Set new time and take over the new minute into last_minute
+                 */
                 user_setNewTime(datetime);
                 last_minute = datetime->mm;
 
+                /*
+                 * Check if the hour has changed
+                 */
                 if (last_hour != datetime->hh) {
 
+                    /*
+                     * Check if software is compiled with DCF77 functionality
+                     */
                     #if (DCF_PRESENT == 1)
 
+                        /*
+                         * Set DCF77 flag to indicate that the time should
+                         * be synchronized using DCF77
+                         */
                         enable_dcf77_ISR = true;
 
                     #endif
 
+                    /*
+                     * Take over the new hour into last_hour
+                     */
                     last_hour = datetime->hh;
 
                 }
 
             }
 
+            /*
+             * Check if software clock is running too fast
+             */
             if (last_seconds != 0xff && soft_seconds > datetime->ss) {
 
+                /*
+                 * Calculate difference between soft_seconds actual seconds and
+                 * assign it to softclock_too_fast_seconds
+                 */
                 softclock_too_fast_seconds = soft_seconds - datetime->ss;
 
             }
 
+            /*
+             * Take over the actual value for seconds into last_seconds
+             */
             last_seconds = soft_seconds = datetime->ss;
 
+            /*
+             * Set next time the RTC should be (re)read by calculating the
+             * amount of seconds by some simple math.
+             */
             if (softclock_too_fast_seconds > 0) {
 
                 next_read_seconds = soft_seconds + READ_DATETIME_INTERVAL
@@ -191,6 +258,10 @@ static void handle_datetime(datetime_t* datetime)
 
             }
 
+            /*
+             * Reset next_read_seconds to 0 (meaning the next minute) whenever
+             * it is equal to and/or bigger than 60
+             */
             if (next_read_seconds >= 60) {
 
                 next_read_seconds = 0;
@@ -199,6 +270,10 @@ static void handle_datetime(datetime_t* datetime)
 
         } else {
 
+            /*
+             * Output error message indicating there was an error during the
+             * last operation.
+             */
             log_main("RTC error\n");
 
         }
@@ -224,12 +299,25 @@ static void handle_datetime(datetime_t* datetime)
 static void handle_brightness()
 {
 
+    /*
+     * Value of the last measured LDR brightness
+     */
     static uint8_t last_ldr_brightness = 0xff;
 
+    /*
+     * Get measured LDR brightness and use only the most upper 5 bits (0 - 31)
+     */
     uint8_t ldr_brightness = ldr_get_brightness() >> 3;
 
+    /*
+     * Check if there was a difference in brightness
+     */
     if (last_ldr_brightness != ldr_brightness) {
 
+        /*
+         * Check if logging for this aspect is enabled and output some
+         * debugging if necessary.
+         */
         #if (LOG_MAIN_BRIGHTNESS == 1)
 
             char buff[5];
@@ -241,13 +329,25 @@ static void handle_brightness()
 
         #endif
 
+        /*
+         * Set the base brightness of the PWM generation according to the
+         * measured brightness from the LDR.
+         */
         pwm_set_base_brightness_step(ldr_brightness);
+
+        /*
+         * Assign the just measured brightness from the LDR to
+         * "last_ldr_brightness" preparing it for the next time it is called.
+         */
         last_ldr_brightness = ldr_brightness;
 
     }
 
 }
 
+/*
+ * Check whether software is compiled with watchdog reset functionality
+ */
 #if (BOOTLOADER_RESET_WDT == 1)
 
     void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
@@ -284,29 +384,64 @@ static void handle_brightness()
 int main()
 {
 
+    /*
+     * Holds the current date & time
+     */
     static datetime_t datetime;
 
+    /*
+     * Initialize UART module (mainly used for debugging purposes)
+     */
     uart_init();
 
+    /*
+     * Output debugging information in case it is enabled
+     */
     log_main("Init...\n");
 
+    /*
+     * Initialize the EEPROM module
+     */
     wcEeprom_init();
 
+    /*
+     * Check whether DCF77 is enabled
+     */
     #if (DCF_PRESENT == 1)
 
+        /*
+         * Initialize DCF77 module
+         */
         dcf77_init();
 
     #endif
 
+    /*
+     * Initialize display module
+     */
     display_init();
 
+    /*
+     * The following segment is declared as "local" as it saves some space
+     * on the stack as the variables used therein are only needed for a short
+     * period of time and should not occupy place on the stack all the time.
+     */
     {
 
+        /*
+         * Variables used to keep track of the status of the RTC module
+         */
         uint8_t i2c_errorcode;
         uint8_t i2c_status;
 
+        /*
+         * Initialize RTC module and check if there were any errors
+         */
         if (!i2c_rtc_init(&i2c_errorcode, &i2c_status)) {
 
+            /*
+             * Output error message indicating there was an error
+             */
             // TODO: error handling
             log_main("RTC init failed\n");
 
@@ -314,28 +449,63 @@ int main()
 
     }
 
+    /*
+     * Initialize various other modules
+     */
     ldr_init();
     pwm_init();
     irmp_init();
     timer_init();
     user_init();
 
+    /*
+     * Enable interrupts globally
+     */
     sei();
 
+    /*
+     * Enable generation of PWM signals
+     */
     pwm_on();
 
+    /*
+     * Output debugging information in case it is enabled
+     */
     log_main("Init finished\n");
 
+    /*
+     * Main loop, which will be where the program should be most of the time
+     */
     while (1) {
 
+        /*
+         * Check for changes in the brightness and response to them
+         */
         handle_brightness();
+
+        /*
+         * Check for changes in time and response to them
+         */
         handle_datetime(&datetime);
+
+        /*
+         * Check for received IR codes and response to them
+         */
         handle_ir_code();
 
+        /*
+         * Check if DCF77 functionality is enabled
+         */
         #if (DCF_PRESENT == 1)
 
+            /*
+             * Check if a valid DCF77 time frame has been received
+             */
             if (dcf77_getDateTime(&datetime)) {
 
+                /*
+                 * Set the time according to the just received DCF77 time frame
+                 */
                 i2c_rtc_write(&datetime);
                 soft_seconds = datetime.ss;
                 user_setNewTime(&datetime);
