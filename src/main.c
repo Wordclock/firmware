@@ -431,13 +431,13 @@ int main()
         /*
          * Variables used to keep track of the status of the RTC module
          */
-        uint8_t i2c_errorcode;
-        uint8_t i2c_status;
+        uint8_t i2c_rtc_errorcode;
+        uint8_t i2c_rtc_status;
 
         /*
          * Initialize RTC module and check if there were any errors
          */
-        if (!i2c_rtc_init(&i2c_errorcode, &i2c_status)) {
+        if (!i2c_rtc_init(&i2c_rtc_errorcode, &i2c_rtc_status)) {
 
             /*
              * Output error message indicating there was an error
