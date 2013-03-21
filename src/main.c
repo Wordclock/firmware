@@ -203,10 +203,6 @@ static void handle_datetime(datetime_t* datetime)
 
         }
 
-    } else {
-
-        rtc = true;
-
     }
 
 }
