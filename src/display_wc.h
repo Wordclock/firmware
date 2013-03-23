@@ -18,27 +18,24 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display_wc.h
- * 
- *  The display-module is the interface to the word clock display hardware.
- *  \details
- *    The display-module its to convert the given time to the binary data 
- *    to controll the status of the leds.\n
- *    This file should be left unchanged if making adaptions to other languages. \n
- *    The language specific things resides in display_wc_[language].h/c
+ * @brief Header file of the display module for the display hardware
  *
- * \version $Id: display_wc.h 285 2010-03-24 21:43:24Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The display module converts a given time into binary data, which then can be
+ * shifted out to the registers in control of the LEDs using functions declared
+ * in shift.h.
+ *
+ * Language and/or front panel related constants are defined within their
+ * appropriate display_wc_[language].h file.
+ *
+ * @note This file should be left untouched if making adaptations to other
+ * languages. Language specific things reside in their own files, e.g.
+ * display_wc_[language].h/c.
+ *
+ * @see display_wc.c
+ * @see shift.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DISPLAY_WC_H_
 #define _WC_DISPLAY_WC_H_
