@@ -47,21 +47,23 @@
 
 #include "uart.h"
 
+#include "ports.h"
+
 #if (WC_DISP_ENG == 1) || (WC_DISP_GER == 1) || (WC_DISP_GER3 == 1)
 
 
 void display_init (void)
 {
   shift24_init();
-  DISPLAY_MIN1_DDR |= (1 << DISPLAY_MIN1_PIN);
-  DISPLAY_MIN2_DDR |= (1 << DISPLAY_MIN2_PIN);
-  DISPLAY_MIN3_DDR |= (1 << DISPLAY_MIN3_PIN);
-  DISPLAY_MIN4_DDR |= (1 << DISPLAY_MIN4_PIN);
+  DDR(DISPLAY_MIN1) |= (1 << BIT(DISPLAY_MIN1));
+  DDR(DISPLAY_MIN2) |= (1 << BIT(DISPLAY_MIN2));
+  DDR(DISPLAY_MIN3) |= (1 << BIT(DISPLAY_MIN3));
+  DDR(DISPLAY_MIN4) |= (1 << BIT(DISPLAY_MIN4));
 
-  DISPLAY_MIN1_PORT &= ~(1 << DISPLAY_MIN1_PIN);
-  DISPLAY_MIN2_PORT &= ~(1 << DISPLAY_MIN2_PIN);
-  DISPLAY_MIN3_PORT &= ~(1 << DISPLAY_MIN3_PIN);
-  DISPLAY_MIN4_PORT &= ~(1 << DISPLAY_MIN4_PIN);
+  PORT(DISPLAY_MIN1) &= ~(1 << BIT(DISPLAY_MIN1));
+  PORT(DISPLAY_MIN2) &= ~(1 << BIT(DISPLAY_MIN2));
+  PORT(DISPLAY_MIN3) &= ~(1 << BIT(DISPLAY_MIN3));
+  PORT(DISPLAY_MIN4) &= ~(1 << BIT(DISPLAY_MIN4));
 
   DISPLAY_TIMER_ENABLE_INTS();
 }
@@ -75,27 +77,27 @@ void display_outputData(DisplayState state)
   shift24_output(state);
 
   if( state & (1L<<DWP_min1)){
-    DISPLAY_MIN1_PORT |=  (1 << DISPLAY_MIN1_PIN);
+    PORT(DISPLAY_MIN1) |=  (1 << BIT(DISPLAY_MIN1));
   }else{
-    DISPLAY_MIN1_PORT &= ~(1 << DISPLAY_MIN1_PIN);
+    PORT(DISPLAY_MIN1) &= ~(1 << BIT(DISPLAY_MIN1));
   }
 
   if( state & (1L<<DWP_min2)){
-    DISPLAY_MIN2_PORT |=  (1 << DISPLAY_MIN2_PIN);
+    PORT(DISPLAY_MIN2) |=  (1 << BIT(DISPLAY_MIN2));
   }else{
-    DISPLAY_MIN2_PORT &= ~(1 << DISPLAY_MIN2_PIN);
+    PORT(DISPLAY_MIN2) &= ~(1 << BIT(DISPLAY_MIN2));
   }
 
   if( state & (1L<<DWP_min3)){
-    DISPLAY_MIN3_PORT |=  (1 << DISPLAY_MIN3_PIN);
+    PORT(DISPLAY_MIN3) |=  (1 << BIT(DISPLAY_MIN3));
   }else{
-    DISPLAY_MIN3_PORT &= ~(1 << DISPLAY_MIN3_PIN);
+    PORT(DISPLAY_MIN3) &= ~(1 << BIT(DISPLAY_MIN3));
   }
 
   if( state & (1L<<DWP_min4)){
-    DISPLAY_MIN4_PORT |=  (1 << DISPLAY_MIN4_PIN);
+    PORT(DISPLAY_MIN4) |=  (1 << BIT(DISPLAY_MIN4));
   }else{
-    DISPLAY_MIN4_PORT &= ~(1 << DISPLAY_MIN4_PIN);
+    PORT(DISPLAY_MIN4) &= ~(1 << BIT(DISPLAY_MIN4));
   }
 
 #if (LOG_DISPLAY_STATE==1)
