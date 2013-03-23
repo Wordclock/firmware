@@ -40,52 +40,35 @@
 #ifndef _WC_DISPLAY_WC_H_
 #define _WC_DISPLAY_WC_H_
 
-/*
- * For language/front related constants look at the approriate display_wc_[language].h
- */
-
 #if (WC_DISP_ENG == 1)
-#  include "display_wc_eng.h"
+
+    #include "display_wc_eng.h"
+
 #elif (WC_DISP_GER == 1)
-#  include "display_wc_ger.h" 
+
+    #include "display_wc_ger.h"
+
 #elif (WC_DISP_GER3 == 1)
-#  include "display_wc_ger3.h" 
-#else   /* default to german */
-#  define WC_DISP_GER 1
-#  include "display_wc_ger.h" 
+
+    #include "display_wc_ger3.h"
+
+#else
+
+    #error "A language for the front panel must be selected"
+
 #endif
 
-/* ports, pins and ddrs for minute LEDs*/
 #define DISPLAY_MIN1 PORTB, 0
 #define DISPLAY_MIN2 PORTD, 7
 #define DISPLAY_MIN3 PORTC, 2
 #define DISPLAY_MIN4 PORTC, 3
 
-/**
- * This Enum defines how the led words are connected to the Board and the position 
- * in the state data (	that's why the minutes (gpio, not shift register) are also in this enum )
- * @details In different languages at least the constants for the 
- *          hours (DWP_one to DWP_twelve), the it-is (DWP_itis), the four minutes (DWP_min[1234]) and 
- *          clock (DWP_clock) have to exist, so they can be used for interface
- *          the minute words are too diffrent and should not be used outside of display_[language].h/c
- *          Following two preconditions were made:
- *          - the eight Minute words are placed consecutively
- *            (but not neccessaryly ordered)
- *            and DWP_MIN_FIRST defines the first of them
- *          - the twelve hours are orderd consecutively
- *            and DWP_HOUR_BEGIN defines the first of them
- */
 typedef enum e_displayWordPos e_displayWordPos;
 
-
-
-/* for documentation see prototype in display.h */
 static inline DisplayState display_getIndicatorMask(void)
 {
-  return   ( 1L<< DWP_min1    )
-         | ( 1L<< DWP_min2    ) 
-         | ( 1L<< DWP_min3    )
-         | ( 1L<< DWP_min4    );
+
+    return (1L << DWP_min1) | (1L << DWP_min2) | (1L << DWP_min3) | (1L << DWP_min4);
 }
 
 #endif /* _WC_DISPLAY_WC_H_ */
