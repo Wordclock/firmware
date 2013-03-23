@@ -40,6 +40,9 @@
 #ifndef _WC_DISPLAY_WC_H_
 #define _WC_DISPLAY_WC_H_
 
+/*
+ * Check which language has been selected and include appropriate header file
+ */
 #if (WC_DISP_ENG == 1)
 
     #include "display_wc_eng.h"
