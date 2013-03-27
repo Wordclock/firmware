@@ -123,13 +123,13 @@ static volatile uint8_t soft_seconds;
  * fast, so that the software clock is only updated every
  * READ_DATETIME_INTERVAL - softclock_too_fast_seconds seconds.
  *
- * This function sets the enable_dcf77_ISR flag once a hour to signal to the
+ * This function enables the DCF77 reception once a hour to signal to the
  * DCF77 module that it should try to retrieve the current time.
  *
  * @see READ_DATETIME_INTERVAL
  * @see soft_seconds
  * @see i2c_rtc_read()
- * @see enable_dcf77_ISR
+ * @see dcf77_enable()
  */
 static void handle_datetime(datetime_t* datetime)
 {
@@ -209,10 +209,10 @@ static void handle_datetime(datetime_t* datetime)
                     #if (DCF_PRESENT == 1)
 
                         /*
-                         * Set DCF77 flag to indicate that the time should
-                         * be synchronized using DCF77
+                         * Enable DCF77 reception to indicate that the time
+                         * should be synchronized using DCF77
                          */
-                        enable_dcf77_ISR = true;
+                        dcf77_enable();
 
                     #endif
 

@@ -54,9 +54,11 @@
 
 #if (DCF_PRESENT == 1)
 
-extern bool enable_dcf77_ISR;
-
 extern void dcf77_init(void);
+
+extern void dcf77_enable(void);
+
+extern void dcf77_disable(void);
 
 extern void dcf77_ISR(void);
 

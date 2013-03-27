@@ -55,11 +55,6 @@
   be an option to enable and/or disable the ambilight depending on the
   time, so it can be activated in the evening.
 
-- Right now "enable_dcf77_ISR" is used to indicate whether or not the DCF77
-  module is "enabled". Maybe this should be reworked so there are functions
-  called dcf77_enable() and dcf77_disable(), which could be called instead
-  of setting the flag directly to true and/or false.
-
 - Rename i2c modules to appropriate TWI modules. AVR calls this protocol
   consequently TWI instead of I2C due to legal concers. Furthermore the header
   file provided by avr-libc is also called "twi.h", so it makes more sense

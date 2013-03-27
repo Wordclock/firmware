@@ -20,13 +20,13 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------*//**
  * @file user.c
- * 
+ *
  *  This file contains implementation of the user interface.
  *
  * \version $Id: user.c 424 2013-03-14 18:51:07Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
+ *
+ * \author Copyright (c) 2010 Vlad Tepesch
+ *
  * \remarks
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@
     An/Ausschaltlogik:
     ==================
 
-    Z {normal_on, auto_off, user_off, override_on, }  
+    Z {normal_on, auto_off, user_off, override_on, }
     E {ontime, offtime, IROnOff}
-      
+
         Z            E          Z'
      normal_on    ontime     normal_on
      normal_on    offTime    auto_off
@@ -85,14 +85,14 @@
 
 #define USER_AUXPOWER PORTD, 2
 
-/** 
- * leaves the given substate and all following states on stack 
+/**
+ * leaves the given substate and all following states on stack
  * @param   indexOfStateToLeave   stack position of State to leave
  */
 static uint8_t leaveSubState( int8_t indexOfStateToLeave);
 
-/** 
- *  adds a state top of the stack 
+/**
+ *  adds a state top of the stack
  *  @param mode   the state to add
  *  @param param  parameter for the sub state
  */
@@ -171,7 +171,7 @@ static uint8_t checkActivation(void);
 static uint8_t curTimeIsBetween ( uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 
-#if (LOG_USER_STATE == 1) 
+#if (LOG_USER_STATE == 1)
 static void printStateStack(){
   uint8_t i=0;
   uart_puts_P("stack: [");
@@ -195,7 +195,7 @@ static void printStateStack(){
 
 #define PRINT_STATE_STACK() do{printStateStack();}while(0)
 #else
-#define PRINT_STATE_STACK() 
+#define PRINT_STATE_STACK()
 #endif
 
 
@@ -204,7 +204,7 @@ static void printStateStack(){
 #if (LOG_USER_STATE == 1)
 #  define   log_state(x)  uart_puts_P(x)
 #else
-#  define   log_state(x)  
+#  define   log_state(x)
 #endif
 
 
@@ -221,11 +221,11 @@ void putTime( const datetime_t* time)
   uart_putc('\n');
 }
 #else
-#  define   log_time(x)  
+#  define   log_time(x)
 #  define   putTime(x)
 #endif
 
-// just include file here to give compiler more possibilities for optimizing 
+// just include file here to give compiler more possibilities for optimizing
 /// @todo consider making normal interface and using whole program optimization
 #include "usermodes.c"
 
@@ -279,7 +279,7 @@ static uint8_t leaveSubState( int8_t indexOfStateToLeave)
   {
       uint8_t canLeave = ! UserState_prohibitLeave( g_stateStack[i] );
       success = success && canLeave;
-#     if (LOG_USER_STATE == 1) 
+#     if (LOG_USER_STATE == 1)
       {
         char buff[5];
         byteToStrLessOneHundred(g_stateStack[i], buff);
@@ -393,7 +393,7 @@ handle_ir_code (void)
           }
 
           if( !handled )                                     // command was not handled by subState
-          {   
+          {
             if( UI_BRIGHTNESS_UP == ir_code ){
                 log_state("B+\n");
                 pwm_step_up_brightness();
@@ -450,7 +450,7 @@ handle_ir_code (void)
 #           if (DCF_PRESENT == 1)
               }else if( UI_DCF_GET_TIME == ir_code ){
                   log_state("DCF\n");
-                  enable_dcf77_ISR = true;
+                  dcf77_enable();
 #           endif  /** (DCF_PRESENT == 1) */
 #           if (AMBILIGHT_PRESENT == 1)
               }else if( UI_AMBIENT_LIGHT == ir_code ){
@@ -472,7 +472,7 @@ handle_ir_code (void)
               return;
             }// if( xxx == ir_code)
           }//if( i <0 )  // command was not handled by subState
-        }// if( UI_ONOFF == ir_code ) else 
+        }// if( UI_ONOFF == ir_code ) else
         g_params->mode = g_stateStack[0];
         if(  MS_pulse == g_stateStack[1]){
           g_params->mode |= 0x80;
@@ -542,7 +542,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
         if( g_userSwitchedOff != USO_MANUAL_OFF )
         {
 #         if (AMBILIGHT_PRESENT == 1)
-            if (g_userSwitchedOff == USO_AUTO_OFF) 
+            if (g_userSwitchedOff == USO_AUTO_OFF)
             {
               PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;  // pin is off before this call in each case so no need to clear it before OR
             }
@@ -561,7 +561,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
             g_userSwitchedOff = USO_AUTO_OFF;
 #         if (AMBILIGHT_PRESENT == 1)
             g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & (1<<BIT(USER_AMBILIGHT)); // save io state
-            PORT(USER_AMBILIGHT) &= ~(1<<BIT(USER_AMBILIGHT)); // switch off 
+            PORT(USER_AMBILIGHT) &= ~(1<<BIT(USER_AMBILIGHT)); // switch off
 #         endif
             if( !g_params->useAutoOffAnimation ){
               pwm_off();
@@ -572,7 +572,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
   }
 
 
-  if(   ! UserState_prohibitTimeDisplay(g_stateStack[g_topOfStack - 1]) 
+  if(   ! UserState_prohibitTimeDisplay(g_stateStack[g_topOfStack - 1])
       && (g_userSwitchedOff != USO_AUTO_OFF) )
   {
       log_time("disp Time ");
@@ -641,7 +641,7 @@ void  user_isr1Hz(void)
     {
       display_autoOffAnimStep1Hz(g_animPreview);
       useAutoOffAnimation = 1;
-    } 
+    }
   }
 }
 
@@ -651,9 +651,9 @@ static uint8_t curTimeIsBetween ( uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2
 {
   uint8_t h = g_dateTime.hh;
   uint8_t m = g_dateTime.mm;
-  uint8_t largert1  =     (h > h1)  
+  uint8_t largert1  =     (h > h1)
                       || ((h == h1) && (m >= m1));
-  uint8_t lesst2    =     (h < h2) 
+  uint8_t lesst2    =     (h < h2)
                       || ((h == h2) && (m < m2));
 
   if(  h2<h1 ){ // overflow over midnight

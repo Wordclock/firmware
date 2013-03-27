@@ -366,8 +366,11 @@ static DCF_Struct DCF;
  *
  * Keep in mind that this only will deactivate the decoding within this module.
  * The receiver, however, will stay enabled.
+ *
+ * @see dcf77_enable()
+ * @see dcf77_disable()
  */
-bool enable_dcf77_ISR;
+static bool enable_dcf77_ISR;
 
 /**
  * @brief Counter keeping track of the amount of low pulses received
@@ -407,6 +410,42 @@ static uint8_t count_high;
  * @see DCF_Struct::BCDShifter
  */
 const static uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
+
+/**
+ * @brief Enables the DCF77 reception
+ *
+ * This sets enable_dcf77_ISR to true, which in return will enable the
+ * appropriate ISR to decode the received time frames.
+ *
+ * @see enable_dcf77_ISR
+ * @see dcf77_disable()
+ * @see dcf77_ISR()
+ */
+void dcf77_enable(void)
+{
+
+    enable_dcf77_ISR = true;
+
+}
+
+/**
+ * @brief Disables the DCF77 reception
+ *
+ * This sets enable_dcf77_ISR to false, which disables the DCF77 decoding
+ * within the appropriate ISR. This can be used to disable the DCF77 processing
+ * temporarily, e.g. once a valid time frame has already been received within
+ * a hour.
+ *
+ * @see enable_dcf77_ISR
+ * @see dcf77_enable()
+ * @see dcf77_ISR()
+ */
+void dcf77_disable(void)
+{
+
+    enable_dcf77_ISR = false;
+
+}
 
 /**
  * @brief Resets the state of the DCF77 module
@@ -1138,7 +1177,7 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
              * DCF77 module gets deactivated. It can be reenabled by the
              * main program, e.g. once every hour.
              */
-            enable_dcf77_ISR = false;
+            dcf77_disable();
 
             /*
              * Deactivate the output since the ISR is deactivated, too
