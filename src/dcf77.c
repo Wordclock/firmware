@@ -357,18 +357,18 @@ volatile typedef struct {
 static DCF_Struct DCF;
 
 /**
- * @brief Indicates whether the DCF77 reception should be enabled or not
+ * @brief Indicates whether the DCF77 decoding should be enabled or not
  *
- * Setting this to false will deactivate the DCF77 reception temporarily. This,
- * for instance, can be used to deactivate the DCF77 reception once a
- * successful time frame has been successfully received in a row, within in a
- * hour.
+ * Setting this to false will deactivate the DCF77 decoding temporarily. This,
+ * for instance, can be used to deactivate the DCF77 decoding once two valid
+ * time frames have been received successfully in a row, within in a hour.
  *
- * Keep in mind that this only will deactivate the decoding within this module.
- * The receiver, however, will stay enabled.
+ * @note Keep in mind that this only will deactivate the decoding within this
+ * module. The receiver itself, however, will stay enabled.
  *
  * @see dcf77_enable()
  * @see dcf77_disable()
+ * @see dcf77_ISR()
  */
 static bool enable_dcf77_ISR;
 
