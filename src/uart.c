@@ -70,7 +70,7 @@
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  */
-void uart_init(void)
+void uart_init()
 {
 
     /*

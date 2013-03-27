@@ -421,7 +421,7 @@ const static uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
  * @see dcf77_disable()
  * @see dcf77_ISR()
  */
-void dcf77_enable(void)
+void dcf77_enable()
 {
 
     enable_dcf77_ISR = true;
@@ -440,7 +440,7 @@ void dcf77_enable(void)
  * @see dcf77_enable()
  * @see dcf77_ISR()
  */
-void dcf77_disable(void)
+void dcf77_disable()
 {
 
     enable_dcf77_ISR = false;
@@ -456,7 +456,7 @@ void dcf77_disable(void)
  *
  * @see DCF_Struct
  */
-static void dcf77_reset(void)
+static void dcf77_reset()
 {
 
     log_dcf77("DCF77 Reset\n");
@@ -492,7 +492,7 @@ static void dcf77_reset(void)
  *
  * @see FLAGS_e
  */
-static void dcf77_check_receiver_type(void)
+static void dcf77_check_receiver_type()
 {
 
     /*
@@ -732,7 +732,7 @@ static void dcf77_check_receiver_type(void)
  * @see DCF_Struct
  * @see dcf77_reset()
  */
-static bool dcf77_check(void)
+static bool dcf77_check()
 {
 
     /*
@@ -978,7 +978,7 @@ static bool dcf77_check(void)
  * @see dcf77_check_receiver_type()
  * @see FLAGS_e
  */
-void dcf77_init(void)
+void dcf77_init()
 {
 
     /*
@@ -1028,7 +1028,7 @@ void dcf77_init(void)
  * @see FLAGS_e
  * @see INTERRUPT_100HZ
  */
-void dcf77_ISR(void)
+void dcf77_ISR()
 {
 
     /*

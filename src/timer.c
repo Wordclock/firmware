@@ -115,7 +115,7 @@
  *
  * @see ISR(TIMER1_CAPT_vect)
  */
-void timer_init(void)
+void timer_init()
 {
 
     /*

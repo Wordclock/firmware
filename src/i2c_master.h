@@ -85,7 +85,7 @@
  */
 #define I2C_ERROR_SLAVE_NOT_FOUND 3
 
-extern uint8_t i2c_master_init(void);
+extern uint8_t i2c_master_init();
 
 extern bool i2c_master_start(uint8_t address, uint8_t* status_p);
 
@@ -93,13 +93,13 @@ extern void i2c_master_start_wait(uint8_t address);
 
 extern bool i2c_master_rep_start(uint8_t address, uint8_t* status_p);
 
-extern void i2c_master_stop(void);
+extern void i2c_master_stop();
 
 extern bool i2c_master_write(uint8_t data, uint8_t* status_p);
 
-extern uint8_t i2c_master_read_ack(void);
+extern uint8_t i2c_master_read_ack();
 
-extern uint8_t i2c_master_read_nak(void);
+extern uint8_t i2c_master_read_nak();
 
 /**
  * @brief Requests to read at least one byte

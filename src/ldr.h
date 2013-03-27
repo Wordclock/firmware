@@ -53,10 +53,10 @@
  */
 #define MEASUREMENTS_ARRAY_SIZE 16
 
-extern void ldr_init(void);
+extern void ldr_init();
 
-extern uint8_t ldr_get_brightness(void);
+extern uint8_t ldr_get_brightness();
 
-extern void ldr_ISR(void);
+extern void ldr_ISR();
 
 #endif /* _WC_LDR_H_ */

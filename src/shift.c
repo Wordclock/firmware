@@ -88,7 +88,7 @@
  *
  * @see shift24_output()
  */
-void shift24_init(void) {
+void shift24_init() {
 
     /*
      * Set the data direction registers to enable SPI master mode

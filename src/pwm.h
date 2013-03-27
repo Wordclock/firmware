@@ -118,13 +118,13 @@ typedef struct PwmEepromParams {
     ((LDR2PWM_OCC_TYPE)1) | (((LDR2PWM_OCC_TYPE)1) << (LDR2PWM_COUNT - 1)) \
 }
 
-extern void pwm_init(void);
+extern void pwm_init();
 
-extern void pwm_on(void);
+extern void pwm_on();
 
-extern void pwm_off(void);
+extern void pwm_off();
 
-extern void pwm_on_off(void);
+extern void pwm_on_off();
 
 #if (MONO_COLOR_CLOCK != 1)
 
@@ -140,14 +140,14 @@ extern void pwm_on_off(void);
 
 extern void pwm_set_base_brightness_step(uint8_t pwm_idx);
 
-extern void pwm_step_up_brightness(void);
+extern void pwm_step_up_brightness();
 
-extern void pwm_step_down_brightness(void);
+extern void pwm_step_down_brightness();
 
 extern void pwm_lock_brightness_val(uint8_t val);
 
-extern void pwm_release_brightness(void);
+extern void pwm_release_brightness();
 
-extern void pwm_modifyLdrBrightness2pwmStep(void);
+extern void pwm_modifyLdrBrightness2pwmStep();
 
 #endif /* _WC_PWM_H_ */

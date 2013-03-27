@@ -39,7 +39,7 @@
 
 #include "datetime.h"
 
-extern uint8_t i2c_rtc_get_status(void);
+extern uint8_t i2c_rtc_get_status();
 
 extern bool i2c_rtc_write(const datetime_t* datetime);
 

@@ -54,13 +54,13 @@
 
 #if (DCF_PRESENT == 1)
 
-extern void dcf77_init(void);
+extern void dcf77_init();
 
-extern void dcf77_enable(void);
+extern void dcf77_enable();
 
-extern void dcf77_disable(void);
+extern void dcf77_disable();
 
-extern void dcf77_ISR(void);
+extern void dcf77_ISR();
 
 extern bool dcf77_getDateTime(datetime_t* DateTime_p);
 

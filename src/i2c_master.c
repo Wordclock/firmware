@@ -175,7 +175,7 @@
  * @see I2C_ERROR_SDA_LOW
  * @see i2c_master_init()
  */
-static uint8_t i2c_reset(void)
+static uint8_t i2c_reset()
 {
 
     uint8_t result = 0;
@@ -255,7 +255,7 @@ static uint8_t i2c_reset(void)
  * @see I2C_ERROR_SDA_LOW
  * @see i2c_reset()
  */
-uint8_t i2c_master_init(void)
+uint8_t i2c_master_init()
 {
 
     static bool initialized;
@@ -448,7 +448,7 @@ bool i2c_master_rep_start(uint8_t address, uint8_t* status_p)
  * @see i2c_master_start()
  * @see i2c_master_rep_start()
  */
-void i2c_master_stop(void)
+void i2c_master_stop()
 {
 
     TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWSTO);
@@ -523,7 +523,7 @@ bool i2c_master_write(uint8_t data, uint8_t* status_p)
  * @see i2c_master_read_nak()
  * @see i2c_master_read()
  */
-uint8_t i2c_master_read_ack(void)
+uint8_t i2c_master_read_ack()
 {
 
     TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWEA);
@@ -556,7 +556,7 @@ uint8_t i2c_master_read_ack(void)
  * @see i2c_master_read_ack()
  * @see i2c_master_read()
  */
-uint8_t i2c_master_read_nak(void)
+uint8_t i2c_master_read_nak()
 {
 
     TWCR = _BV(TWINT) | _BV(TWEN);

@@ -117,9 +117,9 @@ typedef struct WcEepromData {
 
 } WcEepromData;
 
-extern void wcEeprom_init(void);
+extern void wcEeprom_init();
 
-extern WcEepromData* wcEeprom_getData(void);
+extern WcEepromData* wcEeprom_getData();
 
 extern void wcEeprom_writeback(const void* start_p, uint8_t len);
 

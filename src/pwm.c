@@ -293,7 +293,7 @@ static uint8_t base_ldr_idx;
  * @see pwm_set_colors()
  * @see brightness_lock()
  */
-static void pwm_set_brightness(void)
+static void pwm_set_brightness()
 {
 
     if (!brightness_lock) {
@@ -339,7 +339,7 @@ static void pwm_set_brightness(void)
  * @see PWM_GREEN
  * @see PWM_BLUE
  */
-void pwm_init(void)
+void pwm_init()
 {
 
     PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
@@ -374,7 +374,7 @@ void pwm_init(void)
  * @see pwm_is_on
  * @see pwm_set_brightness()
  */
-void pwm_on(void)
+void pwm_on()
 {
 
     TCCR0A |= _BV(COM0A1) | _BV(COM0A0);
@@ -402,7 +402,7 @@ void pwm_on(void)
  *
  * @see pwm_is_on
  */
-void pwm_off(void)
+void pwm_off()
 {
 
     TCCR0A &= ~_BV(COM0A1) | _BV(COM0A0);
@@ -432,7 +432,7 @@ void pwm_off(void)
  * @see pwm_off()
  * @see pwm_on()
  */
-void pwm_on_off(void)
+void pwm_on_off()
 {
 
     if (pwm_is_on) {
@@ -629,7 +629,7 @@ void pwm_set_base_brightness_step(uint8_t pwm_idx)
  * @see MAX_PWM_STEPS
  * @see pwm_step_down_brightness()
  */
-void pwm_step_up_brightness(void)
+void pwm_step_up_brightness()
 {
 
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx + 1 < MAX_PWM_STEPS)) {
@@ -656,7 +656,7 @@ void pwm_step_up_brightness(void)
  * @see pwm_is_on
  * @see pwm_step_up_brightness()
  */
-void pwm_step_down_brightness(void)
+void pwm_step_down_brightness()
 {
 
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx > 0)) {
@@ -699,7 +699,7 @@ void pwm_lock_brightness_val(uint8_t val)
  * @see pwm_set_brightness()
  * @see pwm_lock_brightness_val()
  */
-void pwm_release_brightness(void)
+void pwm_release_brightness()
 {
 
     brightness_lock = false;
@@ -1039,7 +1039,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
  * @see offset_pwm_idx
  * @see modifyLdrBrightness2pwmStep()
  */
-void pwm_modifyLdrBrightness2pwmStep(void)
+void pwm_modifyLdrBrightness2pwmStep()
 {
 
     if (offset_pwm_idx) {

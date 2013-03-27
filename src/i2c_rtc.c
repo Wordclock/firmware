@@ -189,7 +189,7 @@ static uint8_t i2c_rtc_status;
  *
  * @see i2c_rtc_status
  */
-uint8_t i2c_rtc_get_status(void)
+uint8_t i2c_rtc_get_status()
 {
 
     return i2c_rtc_status;

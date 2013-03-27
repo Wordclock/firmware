@@ -37,7 +37,7 @@
 
 #include <avr/pgmspace.h>
 
-extern void uart_init(void);
+extern void uart_init();
 
 extern void uart_putc(unsigned char c);
 

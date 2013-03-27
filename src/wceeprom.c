@@ -163,7 +163,7 @@ WcEepromData g_epromWorking;
  * @see wcEeprom_getData()
  * @see wcEeprom_writeback()
  */
-void wcEeprom_init(void)
+void wcEeprom_init()
 {
 
     /*
@@ -230,7 +230,7 @@ void wcEeprom_init(void)
  * @see WcEepromData
  * @see wcEeprom_writeback()
  */
-WcEepromData* wcEeprom_getData(void)
+WcEepromData* wcEeprom_getData()
 {
 
     return &g_epromWorking;

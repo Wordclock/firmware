@@ -103,7 +103,7 @@ static volatile uint16_t curr_sum;
  * @see curr_sum
  * @see LOG_LDR
  */
-void ldr_init(void)
+void ldr_init()
 {
 
     uint8_t result;
@@ -194,7 +194,7 @@ void ldr_init(void)
  * @return Eight bit value containing the brightness. 255 represents the
  *     maximum brightness, 0 represents darkness.
  */
-uint8_t ldr_get_brightness(void)
+uint8_t ldr_get_brightness()
 {
 
     return  255 - (curr_sum / MEASUREMENTS_ARRAY_SIZE);
@@ -225,7 +225,7 @@ uint8_t ldr_get_brightness(void)
  * @see LOG_LDR
  * @see MEASUREMENTS_ARRAY_SIZE
  */
-void ldr_ISR(void)
+void ldr_ISR()
 {
 
     /*
