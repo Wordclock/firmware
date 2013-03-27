@@ -99,7 +99,7 @@ static uint8_t i2c_rtc_status;
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @see CTRL_REG_SQWE
- * @see ctrlreg
+ * @see CTRL_REG
  */
 #define CTRL_REG_OUT 0x80
 
@@ -116,7 +116,7 @@ static uint8_t i2c_rtc_status;
  *
  * @see CTRL_REG_RS0
  * @see CTRL_REG_RS1
- * @see ctrlreg
+ * @see CTRL_REG
  */
 #define CTRL_REG_SQWE 0x10
 
@@ -144,7 +144,7 @@ static uint8_t i2c_rtc_status;
  * \endcode
  *
  * @see CTRL_REG_RS0
- * @see ctrlreg
+ * @see CTRL_REG
  */
 #define CTRL_REG_RS1 0x02
 
@@ -155,7 +155,7 @@ static uint8_t i2c_rtc_status;
  * CTRL_REG_RS0 for details.
  *
  * @see CTRL_REG_RS0
- * @see ctrlreg
+ * @see CTRL_REG
  *
  */
 #define CTRL_REG_RS0 0x01
@@ -204,7 +204,9 @@ uint8_t i2c_rtc_get_status()
  * struct datetime_t, which holds the date & time to write.
  *
  * @param datetime Pointer to memory location holding the date & time to write
+ *
  * @return Result of the operation, true if successful, false else
+ *
  * @see datetime_t
  */
 bool i2c_rtc_write(const datetime_t* datetime)
@@ -256,7 +258,9 @@ bool i2c_rtc_write(const datetime_t* datetime)
  * memory in form of the struct datetime_t.
  *
  * @param datetime Pointer to buffer in memory for storing the read date & time
+ *
  * @return Result of the operation, true if successful, false else
+ *
  * @see datetime_t
  */
 bool i2c_rtc_read(datetime_t* datetime)
@@ -327,7 +331,9 @@ bool i2c_rtc_read(datetime_t* datetime)
  * @param addr The address in SRAM of the RTC you want start to write to
  * @param void_valuep Pointer to buffer in memory containing the data to store
  * @param length The length the data you want to store
+ *
  * @return Result of the operation, true if successful, false else
+ *
  * @see i2c_rtc_sram_read()
  */
 bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
@@ -424,7 +430,9 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * @param addr The address in SRAM of the RTC you want start to read from
  * @param void_valuep Pointer to buffer in memory for holding the data
  * @param length The length the data you want to read
+ *
  * @return Result of the operation, true if successful, false else
+ *
  * @see i2c_rtc_sram_write()
  * @see i2c_master_write()
  */
@@ -522,7 +530,11 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @return Result of the operation, true if successful, false else
- * @see ctrlreg
+ *
+ * @param errorcode_p Pointer to memory for holding possible error codes
+ * @param status_p Pointer to memory for holding status codes
+ *
+ * @see CTRL_REG
  * @see rtc_initialized
  * @see i2c_rtc_sram_write()
  */
