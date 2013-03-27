@@ -18,21 +18,25 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file simple_random.c
+ * @brief Implementation of the header declared in simple_random.h
  *
- *  This file implements a very simple 8bit random number generator
- * \version $Id: $
+ * This module will generate **pseudo** random numbers. The principle is based
+ * upon a concept known as Linear congruential generator, refer to [1] for
+ * details.
  *
- * \author Copyright (c) 2013 Vlad Tepesch
+ * This is based upon Simon Küppers code posted at [2]. However the posted
+ * version has a bug in regards to the multiplier that makes it unusable. This
+ * version fixes it by using 17 as a multiplier, see [3]. The periodicity of
+ * this implementation of a RNG is 256.
  *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * [1]: https://en.wikipedia.org/wiki/Linear_congruential_generator
+ * [2]: http://www.mikrocontroller.net/topic/112114#998347
+ * [3]: https://www.mikrocontroller.net/topic/112114#998667
+ *
+ * @see simple_random.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #include "simple_random.h"
 
