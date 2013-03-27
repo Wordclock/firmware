@@ -95,6 +95,7 @@
  * Furthermore it enables the use of a single macro definition.
  *
  * @return Port with the given name
+ *
  * @see PORT_()
  */
 #define PORT(...) PORT_(__VA_ARGS__)
@@ -104,6 +105,7 @@
  *
  * @param a Name of the port
  * @param b Number of the pin
+ *
  * @see PORT()
  */
 #define PORT_(a, b) (a)
@@ -120,6 +122,7 @@
  * itself, only separated by one.
  *
  * @return DDR referenced by the port with the provided name
+ *
  * @see DDR_()
  */
 #define DDR(...) DDR_(__VA_ARGS__)
@@ -129,6 +132,7 @@
  *
  * @param a Name of the port
  * @param b Number of the pin
+ *
  * @see DDR()
  */
 #define DDR_(a, b) (*(&a - 1))
@@ -148,6 +152,7 @@
  * accommodates for this.
  *
  * @return PIN register referenced by the port with the provided name
+ *
  * @see PIN_()
  */
 #define PIN(...) PIN_(__VA_ARGS__)
@@ -163,6 +168,7 @@
     *
     * @param a Name of the port
     * @param b Number of the pin
+    *
     * @see PIN()
     */
     #define PIN_(a, b) ((&PORTF == &(x)) ? _SFR_IO8(0x00) : (*(&a - 2)))
@@ -174,6 +180,7 @@
     *
     * @param a Name of the port
     * @param b Number of the pin
+    *
     * @see PIN()
     */
     #define PIN_(a, b) (*(&a - 2))
@@ -192,6 +199,7 @@
  * Furthermore it enables the use of a single macro definition.
  *
  * @return BIT number provided with the port name and pin number
+ *
  * @see BIT_()
  */
 #define BIT(...) BIT_(__VA_ARGS__)
@@ -201,6 +209,7 @@
  *
  * @param a Name of the port
  * @param b Number of the pin
+ *
  * @see BIT()
  */
 #define BIT_(a, b) b
