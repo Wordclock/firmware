@@ -729,6 +729,7 @@ static void dcf77_check_receiver_type()
  * otherwise it will return false.
  *
  * @return True if valid time frame was received, false otherwise
+ *
  * @see DCF_Struct
  * @see dcf77_reset()
  */
@@ -1139,7 +1140,9 @@ void dcf77_ISR()
  *
  * @param DateTime_p Pointer to buffer where the resulting date & time should
  *           be stored
+ *
  * @return True if date & time has been put into buffer, false otherwise
+ *
  * @see FLAGS_e
  */
 bool dcf77_getDateTime(datetime_t * DateTime_p)
