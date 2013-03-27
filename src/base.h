@@ -41,7 +41,7 @@
  *
  * b7..b0 are expected to be either 0 and/or 1.
  *
- * @return Byte represented by the given bits.
+ * @return Byte represented by the given bits
  * @see BIN16()
  */
 #define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
@@ -56,7 +56,7 @@
  *
  * b15..b0 are expected to be either 0 and/or 1.
  *
- * @return Short represented by the given bits.
+ * @return Short represented by the given bits
  * @see BIN8()
  */
 #define BIN16(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
