@@ -114,7 +114,9 @@ extern uint8_t i2c_master_read_nak();
  *
  * @param ack Boolean value: True if another byte should be requested, false
  *  otherwise
+ *
  * @return The requested byte
+ *
  * @see i2c_master_read_ack()
  * @see i2c_master_read_nak()
  */
