@@ -42,6 +42,7 @@
  * b7..b0 are expected to be either 0 and/or 1.
  *
  * @return Byte represented by the given bits
+ *
  * @see BIN16()
  */
 #define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
@@ -57,6 +58,7 @@
  * b15..b0 are expected to be either 0 and/or 1.
  *
  * @return Short represented by the given bits
+ *
  * @see BIN8()
  */
 #define BIN16(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
@@ -78,6 +80,7 @@
  *
  * @param x Value to divide (dividend)
  * @param remainder Pointer to store the remainder at
+ *
  * @return Integer result
  */
 static inline uint8_t div10(uint8_t x, uint8_t* remainder)
@@ -100,6 +103,7 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
  * This function expects the upper four bits always to be zero.
  *
  * @param nibble Nibble to convert
+ *
  * @return char Hex digit representation
  */
 static inline char nibbleToHex(uint8_t nibble)
@@ -119,7 +123,9 @@ static inline char nibbleToHex(uint8_t nibble)
  *
  * @param data Data to convert
  * @param str Pointer to a buffer where the resulting string is stored
+ *
  * @return void
+ *
  * @see nibbleToHex()
  */
 static inline void uint16ToHexStr(uint16_t data, char* str)
