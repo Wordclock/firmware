@@ -146,6 +146,7 @@ void uart_putc(unsigned char c)
  * transmitted individually.
  *
  * @param s Pointer to string to transmit
+ *
  * @see uart_putc()
  */
 void uart_puts(const char* s)
@@ -167,6 +168,7 @@ void uart_puts(const char* s)
  * pgm_read_byte() to retrieve the data and uart_putc() to transmit it.
  *
  * @param s Pointer to string stored in program memory to transmit
+ *
  * @see uart_putc()
  * @see pgm_read_byte()
  */
