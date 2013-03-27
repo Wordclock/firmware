@@ -139,7 +139,7 @@ typedef enum FLAGS_e {
      * In combination with FLAGS_e::DEFINED it tells whether there is a usable
      * receiver available or not.
      *
-     * @ſee FLAGS_e::DEFINED
+     * @see FLAGS_e::DEFINED
      * @see dcf77_check_receiver_type()
      */
     AVAILABLE,
