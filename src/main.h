@@ -118,7 +118,6 @@
  *
  * @see WC_DISP_GER3
  * @see WC_DISP_ENG
- *
  * @see display_wc_ger.h
  */
 #define WC_DISP_GER 0
@@ -140,7 +139,6 @@
  *
  * @see WC_DISP_GER
  * @see WC_DISP_ENG
- *
  * @see display_wc_ger3.h
  */
 #define WC_DISP_GER3 1
@@ -157,7 +155,6 @@
  *
  * @see WC_DISP_GER
  * @see WC_DISP_GER3
- *
  * @see display_wc_eng.h
  */
 #define WC_DISP_ENG 0
@@ -174,6 +171,8 @@
  * is set to 1.
  *
  * @note When set to 1 only the red PWM channel will actually work.
+ *
+ * @see pwm.h
  */
 #define MONO_COLOR_CLOCK 0
 
@@ -286,7 +285,6 @@
  * @see AMBILIGHT_PRESENT
  * @see BLUETOOTH_PRESENT
  * @see AUXPOWER_PRESENT
- *
  * @see e_userCommands
  * @see user.h
  * @see user.c
