@@ -114,6 +114,7 @@ static inline DisplayState display_getIndicatorMask()
 {
 
     return (1L << DWP_min1) | (1L << DWP_min2) | (1L << DWP_min3) | (1L << DWP_min4);
+
 }
 
 #endif /* _WC_DISPLAY_WC_H_ */
