@@ -32,10 +32,8 @@
 
 #include <stdint.h>
 
-/** initializes the RNG with the given value*/
 void simpleRand_setSeed(uint8_t i_seed);
 
-/** returns a pseudo random byte */
 uint8_t simpleRand_get();
 
-#endif //_WC_SIMPLE_RNG_H_
+#endif /* _WC_SIMPLE_RNG_H_ */
