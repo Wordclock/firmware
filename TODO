@@ -2,6 +2,20 @@
   variables as well as documenting the source code extensively. The current
   documentation is full of misspellings and a mix of English and German.
 
+    Files left:        
+        - display_wc_eng.c
+        - display_wc_eng.h
+        - display_wc_ger.c
+        - display_wc_ger.h
+        - display_wc_ger3.c
+        - display_wc_ger3.h
+        - display_wc.c
+        - display.c
+        - display.h
+        - user.c
+        - user.h
+        - usermodes.c
+
 - Cross-Read and correct comments. Finished files:
         - dcf77.h
         - dcf77.c
