@@ -41,18 +41,22 @@
 #include "simple_random.h"
 
 #define SR_PRIME_MULT 17
-#define SR_PRIME_ADD  37
+#define SR_PRIME_ADD 37
 
-static uint8_t g_lastVal=1;
+static uint8_t g_lastVal = 1;
 
 void simpleRand_setSeed(uint8_t i_seed)
 {
-  g_lastVal = i_seed;
+
+    g_lastVal = i_seed;
+
 }
 
 uint8_t simpleRand_get()
 {
-  g_lastVal = (g_lastVal*SR_PRIME_MULT) + SR_PRIME_ADD; // modulo 255 is implicit
-  return g_lastVal;
-}
 
+    g_lastVal = (g_lastVal * SR_PRIME_MULT) + SR_PRIME_ADD;
+
+    return g_lastVal;
+
+}
