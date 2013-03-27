@@ -72,8 +72,8 @@ static volatile uint8_t measurements[MEASUREMENTS_ARRAY_SIZE];
  * values in measurements itself, it speeds things up when it comes down to
  * actually returning the "current" brightness with ldr_get_brightness().
  *
- * @warning: Consider that the datatype must be able to store values at least
- * as big as MEASUREMENTS_ARRAY_SIZE * 255.
+ * @note: Consider that the datatype must be able to store values at least as
+ *   big as MEASUREMENTS_ARRAY_SIZE * 255.
  *
  * @see measurements
  * @see ldr_get_brightness()
@@ -188,11 +188,11 @@ void ldr_init()
  * The returned value is actually the mean value of the last measurements.
  * This makes it more robust against sudden changes of the ambient light.
  *
+ * @return Eight bit value containing the brightness. 255 represents the
+ *   maximum brightness, 0 represents darkness.
  *
  * @see ldr_init()
  * @see MEASUREMENTS_ARRAY_SIZE
- * @return Eight bit value containing the brightness. 255 represents the
- *     maximum brightness, 0 represents darkness.
  */
 uint8_t ldr_get_brightness()
 {
