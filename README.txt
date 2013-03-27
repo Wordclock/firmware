@@ -9,6 +9,7 @@ Projektteam
    Torsten Giese (wawibu)
    Frank M. (ukw)
    Simon Mahler (edimahler)
+   Phillip N. (phillipn)
 
   
 wichtige Ressourcen

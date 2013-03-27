@@ -23,7 +23,7 @@
  * 
  *  This file contains implementation of the user interface.
  *
- * \version $Id: user.c 409 2011-12-11 20:16:21Z vt $
+ * \version $Id: user.c 424 2013-03-14 18:51:07Z vt $
  * 
  * \author Copyright (c) 2010 Vlad Tepesch    
  * 
@@ -533,18 +533,22 @@ extern void  user_setNewTime( const datetime_t* i_time)
     g_dateTime = *i_time;
     if(    (g_checkIfAutoOffDelay >= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_s))
     {
-      if( checkActivation() ){
+      if( checkActivation() )
+      {
         //  normal_on    ontime     normal_on
         //  override_on  ontime     normal_on
         //  auto_off     ontime     normal_on
         //  user_off     ontime     user_off  ??
         if( g_userSwitchedOff != USO_MANUAL_OFF )
-            {
+        {
 #         if (AMBILIGHT_PRESENT == 1)
-            g_userSwitchedOff = USO_NORMAL_ON;
-            PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;  // pin is off before this call in each case so no need to clear it before OR
+            if (g_userSwitchedOff == USO_AUTO_OFF) 
+            {
+              PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;  // pin is off before this call in each case so no need to clear it before OR
+            }
 #         endif
-            pwm_on();
+          g_userSwitchedOff = USO_NORMAL_ON;
+          pwm_on();
         }
       }else{
         //  normal_on    offTime    auto_off
@@ -557,7 +561,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
             g_userSwitchedOff = USO_AUTO_OFF;
 #         if (AMBILIGHT_PRESENT == 1)
             g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & (1<<BIT(USER_AMBILIGHT)); // save io state
-            PORT(USER_AMBILIGHT) &= ~(1<<BIT(USER_AMBILIGHT)); // switch off
+            PORT(USER_AMBILIGHT) &= ~(1<<BIT(USER_AMBILIGHT)); // switch off 
 #         endif
             if( !g_params->useAutoOffAnimation ){
               pwm_off();
@@ -578,7 +582,13 @@ extern void  user_setNewTime( const datetime_t* i_time)
   }
 }
 
-
+/**
+ * @see INTERRUPT_1000HZ
+ */
+void user_isr1000Hz(void)
+{                       //@EDI: State machine should also be updated when clock off!
+  UserState_Isr1000Hz(g_stateStack[g_topOfStack-1]);
+}
 
 /**
  * @see INTERRUPT_100HZ

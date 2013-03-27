@@ -90,7 +90,7 @@
  * @see MAJOR_VERSION
  * @see SW_VERSION
  */
-#define MINOR_VERSION 12
+#define MINOR_VERSION 13
 
 /**
  * @brief Actual version number

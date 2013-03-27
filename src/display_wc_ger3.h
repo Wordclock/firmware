@@ -64,7 +64,7 @@
  *               - es ist zwanzig vor zwei
  *               - es ist viertel vor zwei
  *               - es ist zehn vor zwei
- *               - es ist f�nf vor zwei
+ *               - es ist fünf vor zwei
  *             -# Ossi-Modus:
  *               - es ist ein uhr
  *               - es ist fünf nach eins
@@ -92,7 +92,14 @@
  *               - es ist zehn vor zwei
  *               - es ist fünf vor zwei
  *
- * \version $Id: display_wc_ger3.h 412 2012-01-10 20:03:08Z vt $
+ * \par Adding own language variants:
+ *    -# add a enum entry to e_WcGerModes in this header
+ *    -# adds a SELECT_MODE line to s_modes in c file\n
+ -       for each 5 minute block there is an index to s_minData
+ -       that defines wich wording should be used
+ -    -# finished
+ * 
+ * \version $Id: display_wc_ger3.h 425 2013-03-14 19:05:31Z vt $
  * 
  * \author Copyright (c) 2012 Vlad Tepesch    
  * \author Copyright (c) 2012 Uwe Höß
@@ -114,6 +121,20 @@
  * - 1 = on  tm_wessi -> tm_wessi "it is" off -> tm_rheinRuhr -> tm_rheinRuhr "it is" off -> ossi -> ossi "it is" off,
  */
 #define DISPLAY_DEACTIVATABLE_ITIS 1
+
+/**
+ * This adds the so called 'Jester Mode' to the mode list to allow manual selection of that mode.
+ *
+ * The 'Jester Mode' randomly choses one of any possible way to display a time.
+ * For example instead of 'viertel nach h' it may diplays "dreiviertel nach halb h"
+ */
+#define DISPLAY_ADD_JESTER_MODE 1
+
+/**
+ * If DCF_PRESENT is set the clock uses 'Jester Moode' (\see DISPLAY_ADD_JESTER_MODE for description of that mode) on 1st April.
+ * This option is independent of DISPLAY_ADD_JESTER_MODE and may be used even if the other is switched off.
+ */
+#define DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL 1
 
 /**
  * This Enum defines how the led words are connected to the Board and the position 
@@ -173,6 +194,9 @@ typedef enum e_WcGerModes{
   tm_rheinRuhr,    /**<  Rhein-Ruhr-Mode                  */
   tm_ossi,         /**<  Ossi-Mode                        */
   tm_swabian,      /**<  Swabian-Mode                     */
+# if (DISPLAY_ADD_JESTER_MODE==1)
+  tm_jesterMode,
+# endif
   TM_COUNT         /**<  the number of different modes    */
 }e_WcGerModes;
 

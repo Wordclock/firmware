@@ -79,7 +79,7 @@
 /**
  * @brief List of functions that should be called 1000 times a second
  */
-#define INTERRUPT_1000HZ { }
+#define INTERRUPT_1000HZ { user_isr1000Hz(); }
 
 /**
  * @brief List of functions that should be called 100 times a second

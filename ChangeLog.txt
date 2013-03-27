@@ -1,6 +1,13 @@
 WordClock Change Log
 ====================
 
+V 0.13 (428)
+  * gefixt BUG012_031 (Fehler in der Logik des Ambilight bei der automatischen Deaktivierung)
+  * PCB Version 2.0 hinzugefügt
+  * verbessertes Fading durch 4kHz-PWM
+  * verbesserter Demo-Modus (Umschaltung zwischen altem Modus und Aktivierung aller Segmente)
+  * flexiblere Implementierung display_wc_ger3
+  * Narren-Modus
 
 V 0.12 (416)
   * Schwaben-Modus (ossi + 20 vor/nach)
@@ -21,10 +28,58 @@ V 0.12 (416)
     --> "2.1 Übersicht der möglichen Kommandos" enthält nun platz für Benutzer zum Eintragen seiner Tastennamen
 
 
+V 0.11 (354)
+  * gefixt BUG08_002 (Helligkeitskontrolle funktioniert nicht)
+  * Kalibrierung der automatischen Helligkeitsanpassung
+    --> neues IR-Kommando
+    --> neuer Eeprom-Parameter
+    --> neue Loggingoption
+  * an Code-Konfig anpassendes latex-basiertes Handbuch (siehe readme)
+  * IOs per IR ein/abschaltbar
+    --> neue IR-Kommandos
+    --> neue Eeprom-Parameter
+  * gefixt BUG09_022 (Automatische Abschaltung) geänderte Logik (-> Handbuch)
+  * Autosave optional (user.h USER_AUTOSAVE)
+  * Eeprom-parameter-Sicherung bei An/Aus IR-cmd
+  * signalisierung im Auto-Aus-Zustand
+  * gefixt BUG010_023 (schnelle Modus-Umschaltung verhindert Fading)
+  * Schrittweite der Auschaltzeiten als define
 
-    
-    
+
+V 0.10 (339)
+  * abschaltbares "ES IST" via Sprach-Wahl-Taste (beide deutsche Front designs)
+    (übernommen von wichtel - aber Reihenfolge geändert -> Handbuch)
+  * Bootloader Support:
+    Wenn 'R' über die UART empfangen wird, wird ein Watchdog-Reset ausgelöst.
+    Der Watchdog wird direkt nach Systemstart deaktiviert.
+  * Indikator für Zeiteingabe definiert -> blinkendes 'Uhr', wenn keine Minutenwörter aktiv
+  * Helligkeit für Nachtstunden bei Zeiteingabe reduziert.
+  * Sicherung des Hauptmodus (Einfarb-, Farbwechsel- und Pulse-Modus) und des aktiven Farbprofils im EEPROM
+  * BAUD_ERROR Makro aktualisiert
+  * atmega88 Konfiguration entfernt
+  * DCF77 geändert, zwei erfolgreich empfangene Frames vor Zeitübernahme notwendig
+  * IRMP-Version 1.7.2: Bugfix: Timeout vor NEC repetition frames um "Geister-Kommandos" zu vermeiden
+                        einige weniger wichtige Protokolle hinzugefügt
+  * gefixt BUG09_018 (Zeitupdate während Zeiteingabe beinträchtigt Anzeige)
+  * gefixt BUG09_019 (gemeldet von Wichtel) ("Gesiter-Kommandos" siehe neue IRMP-Version)
+  * gefixt BUG09_020 (gemeldet von Roman) DCF-Initialisierung <=6 anstatt <=7
+  * gefixt BUG09_021 (Ambilight in SW an OUTG2 anstatt OUTG1)
+  * gefixt Fehler der in Mono-Color-Variante: zurückschalten in Normal-Mode forciert kein Display-Update
+
+
+
+
 complete (mixed english/german)
+
+V 0.13 (428)
+  * manual: updateddemo mode and added jester mode to mode descriptions added phillip to authors
+  * reworked internal implementation of display_wc_ger3 to make adding variants very easy also added jester mode
+  * improved demo mode: reacts on Up/Down keys and switches between old style (one segment lit up at a time) 
+    and fast multiplexing of 4 segments (1 on each driver) st a time so they all appear as switched on
+  * 4kHz-PWM & New display fading
+  * New: PCB Version 2.09
+  * fixed bug that after an auto-off auto-on cycle a manually switched off ambilight will be activeated again, 
+    without users interaction (thanks to bernd_m)
 
 V 0.12 (416)
   * swabian idiom selectable

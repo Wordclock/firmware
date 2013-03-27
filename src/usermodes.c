@@ -26,7 +26,7 @@
  *       This file is designed to be included in user.c.
  *       SO DO NOT ADD IT TO PROJECT OR MAKEFILE!
  *
- * \version $Id: usermodes.c 403 2011-11-13 00:08:32Z sm $
+ * \version $Id: usermodes.c 424 2013-03-14 18:51:07Z vt $
  * 
  * \author Copyright (c) 2010 Vlad Tepesch    
  * 
@@ -86,8 +86,9 @@ static AutoHueState mode_autoHueState;
 
 /** contains Data for demo state */
 typedef struct DemoState{
-  uint8_t   demoStep;       /**< current step in demo animation             */
-  uint8_t   delay100ms;     /**< current prescaler for animation progress   */
+  uint8_t   demoStep;       /**< current step in demo animation                                                      */
+  uint8_t   delay100ms;     /**< current prescaler for animation progress                                            */
+  uint8_t   fastMode;       /**< if active the whole display is lit by multiplexing one bit of each driver at a time */
 }DemoState;
 static DemoState mode_demoState;
 
@@ -133,6 +134,9 @@ static uint8_t UserState_prohibitLeave( e_MenuStates state );
 
 /** Dispatcher routine to determine if the new time can be displayed now */
 static uint8_t UserState_prohibitTimeDisplay( e_MenuStates state );
+
+/** Dispatcher routine for the 1kHz timer event */
+static void UserState_Isr1000Hz( e_MenuStates state );
 
 /** Dispatcher routine for the 100Hz timer event */
 static void UserState_Isr100Hz( e_MenuStates state );
@@ -434,12 +438,26 @@ static void AutoHueState_init( void )
 /*********************************************************************************/
 /*********************************************************************************/
 
+static void DemoState_1000Hz( void )
+{
+  if(!mode_demoState.fastMode){
+    return;
+  }
+  pwm_lock_brightness_val(255);
+  display_setDisplayState((0x01010101L << (mode_demoState.demoStep)), 0);
+  ++mode_demoState.demoStep;
+  mode_demoState.demoStep %= 8;
+}
+
 static void DemoState_10Hz( void )
 {
+  if(mode_demoState.fastMode){
+    return;
+  }
   ++mode_demoState.delay100ms;
   if( mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100ms )
   {
-    display_setDisplayState((1L << mode_demoState.demoStep), 0);
+    display_setDisplayState( ((uint32_t)1) << (mode_demoState.demoStep), 0);
     ++mode_demoState.demoStep;
     mode_demoState.demoStep %= 32;
     mode_demoState.delay100ms = 0;
@@ -447,8 +465,29 @@ static void DemoState_10Hz( void )
 
 }
 
+static uint8_t DemoState_handleIR(  uint8_t cmdCode )
+{
+  if(    UI_UP == cmdCode
+      || UI_DOWN == cmdCode)
+  {
+    log_state("DMF\n");
+    mode_demoState.fastMode = !mode_demoState.fastMode;
+  }else{
+    return false;
+  }
+   
+  return true;
+
+}
+
+
 static void DemoState_init( void )
 {
+}
+
+static void DemoState_leave( void )
+{
+  pwm_release_brightness();
 }
 
 /*********************************************************************************/
@@ -782,6 +821,9 @@ static uint8_t UserState_HanbdleIr (e_MenuStates state, uint8_t cmdCode)
   }else if( MS_normalMode == state ){
     handled = NormalState_handleIR( cmdCode);
 
+  }else if( MS_demoMode == state ){
+    handled = DemoState_handleIR( cmdCode);
+
   }else if( MS_pulse == state ){
     handled = PulseState_handleIR( cmdCode);
 
@@ -804,6 +846,8 @@ static void UserState_LeaveState( e_MenuStates state )
 {
   if( MS_pulse == state ){
     PulseState_leave();
+  }else  if( MS_demoMode  == state ){
+    DemoState_leave();
   }
 
 }
@@ -819,11 +863,11 @@ static void UserState_Isr1Hz( e_MenuStates state )
 
 static void UserState_Isr10Hz( e_MenuStates state )
 {
-  if( MS_demoMode  == state ){
-    DemoState_10Hz();
-
-  }else if( MS_showNumber  == state ){
+  if( MS_showNumber  == state ){
     ShowNumberState_10Hz();
+
+  }else if( MS_demoMode  == state ){
+    DemoState_10Hz();
 
   }else if( MS_pulse  == state ){
     PulseState_10Hz();
@@ -843,7 +887,12 @@ static void UserState_Isr100Hz( e_MenuStates state )
   }
 }
 
-
+static void UserState_Isr1000Hz( e_MenuStates state )
+{
+  if( MS_demoMode  == state ){
+    DemoState_1000Hz();
+  }
+}
 
 static uint8_t UserState_prohibitTimeDisplay( e_MenuStates state )
 {

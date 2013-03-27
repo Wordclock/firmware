@@ -26,7 +26,7 @@
  *    This includes the reaction on the input via IR-RC as well as
  *    the output of the time.
  *
- * \version $Id: user.h 403 2011-11-13 00:08:32Z sm $
+ * \version $Id: user.h 424 2013-03-14 18:51:07Z vt $
  * 
  * \author Copyright (c) 2010 Vlad Tepesch    
  * 
@@ -318,6 +318,13 @@ extern void    handle_ir_code ();
  * @param i_time  the new time to set
  */
 extern void  user_setNewTime( const datetime_t* i_time);
+
+
+/**
+ * does an animation step in different modes
+ * Has to be called with 1kHz.
+ */
+extern void  user_isr1000Hz(void);
 
 
 /**

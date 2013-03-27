@@ -28,7 +28,7 @@
  *    This file should be left unchanged if making adaptions to other displays or languages. \n
  *    Theese things should be changed in display_[displaytype].h/c
  *
- * \version $Id: display.h 403 2011-11-13 00:08:32Z sm $
+ * \version $Id: display.h 423 2012-03-20 18:43:53Z pn $
  * 
  * \author Copyright (c) 2010 Vlad Tepesch    
  * 
@@ -49,7 +49,7 @@
 #define DISPLAY_BLINK_INT_100ms 7
 
 /** how fast the fading between two times will be */
-#define DISPLAY_FADE_TIME_ms 2000
+#define DISPLAY_FADE_TIME_ms 500
 #define DISPLAY_FADE_TIME_ANIM_ms 1000
 
 
@@ -57,7 +57,9 @@
 #define DISPLAY_TIMER_OVF_vect TIMER2_OVF_vect
 #define DISPLAY_TIMER_OCR_vect TIMER2_COMPA_vect
 #define DISPLAY_TIMER_ENABLE_INTS() do{ TIMSK2 |= (1<<TOIE2) | (1<<OCIE2A);}while(0)
-#define F_TIMER2 488  /* 1/s */
+#define F_TIMER2 3906  /* 1/s */
+
+
 
 
 
