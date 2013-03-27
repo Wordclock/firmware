@@ -140,6 +140,7 @@ void shift24_init() {
  * be ignored.
  *
  * @param data Data to be output
+ *
  * @see shift24_init()
  */
 void shift24_output(uint32_t data) {
