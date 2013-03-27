@@ -5,20 +5,20 @@ WordClock Change Log
 V 0.12 (416)
   * Schwaben-Modus (ossi + 20 vor/nach)
   * Auto-Aus-Animation konfigurierbar mit Vorschau
-  * Deaktivierbares "IT IS" für englische Front
-  * Demo modus kann über Demo-Modus-Taste wieder verlassen werden
-  * PWM modus für bessere Darstellung dunklerer Farben geändert (siehe BUG011_027)
-  * PWM Stufen für linearere Erscheinung geändert 
-  * optisches Feedback bei "Helligkeit übernehmen" hinzugefügt (kurzzeitige Displayabschaltung)
+  * Deaktivierbares "IT IS" fÃ¼r englische Front
+  * Demo modus kann Ã¼ber Demo-Modus-Taste wieder verlassen werden
+  * PWM modus fÃ¼r bessere Darstellung dunklerer Farben geÃ¤ndert (siehe BUG011_027)
+  * PWM Stufen fÃ¼r linearere Erscheinung geÃ¤ndert 
+  * optisches Feedback bei "Helligkeit Ã¼bernehmen" hinzugefÃ¼gt (kurzzeitige Displayabschaltung)
   * gefixt BUG011_025 (Absturz bei Helligkeitskalibrierung)
   * gefixt BUG011_026 (Ambilight wird beim automatischen Ausschalten nicht (in jedem Fall) mit ausgeschaltet) 
-  * gefixt BUG011_027 (Niedrige Farbqualität bei niedrigen Helligkeiten)
-  * gefixt BUG011_028 Fehler bei Zeitüberblendung - Auto-off-Animation ist nun unabhängig von Zeitüberblendung
-  * verbessert BUG011_29 Flackern be Zeitüberblendung reduziert (immer noch nicht perfekt!)
-  * gefixt BUG011_030 (SW Absturz wenn "flasche" Taste im Aus-Zustand gedrückt wurde (Statemachine wird nun immer geupdated))
+  * gefixt BUG011_027 (Niedrige FarbqualitÃ¤t bei niedrigen Helligkeiten)
+  * gefixt BUG011_028 Fehler bei ZeitÃ¼berblendung - Auto-off-Animation ist nun unabhÃ¤ngig von ZeitÃ¼berblendung
+  * verbessert BUG011_29 Flackern be ZeitÃ¼berblendung reduziert (immer noch nicht perfekt!)
+  * gefixt BUG011_030 (SW Absturz wenn "flasche" Taste im Aus-Zustand gedrÃ¼ckt wurde (Statemachine wird nun immer geupdated))
   * aktualisiertes Handbuch
     --> neue Features
-    --> "2.1 Übersicht der möglichen Kommandos" enthält nun platz für Benutzer zum Eintragen seiner Tastennamen
+    --> "2.1 Ãœbersicht der mÃ¶glichen Kommandos" enthÃ¤lt nun platz fÃ¼r Benutzer zum Eintragen seiner Tastennamen
 
 
 
@@ -106,8 +106,8 @@ V 0.9 Patch 2 (302)
 V 0.9 Patch 1 (300)
     * fixt BUG09_008 (falsche Zeitanzeige) 
 V 0.9  (298)
-    * Unterstützung für neue (3 sprachige) deutsche Front
-    * Unterstützung für TIX-Clock
+    * UnterstÃ¼tzung fÃ¼r neue (3 sprachige) deutsche Front
+    * UnterstÃ¼tzung fÃ¼r TIX-Clock
     * kurze Anzeige von Submodi (Farbprofilauswahl, Sprachvariante)
     * Helligkeits-Offset wird abgespeichert
     * 24h Zeiteingabe (8-20Uhr: hell, 20-8Uhr: dunkel)
