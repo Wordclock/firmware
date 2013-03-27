@@ -40,11 +40,55 @@
 
 #include "simple_random.h"
 
+/**
+ * @brief The prime multiplier used for calculating the next random number
+ *
+ * This is used within  simpleRand_get() to calculate the next random number
+ * based upon the last generated number and/or the initial seed value.
+ *
+ * @see SR_PRIME_ADD
+ * @see simpleRand_get()
+ */
 #define SR_PRIME_MULT 17
+
+/**
+ * @brief The prime summand used for calculating the next random number
+ *
+ * This is used within  simpleRand_get() to calculate the next random number
+ * based upon the last generated number and/or the initial seed value.
+ *
+ * @see SR_PRIME_MULT
+ * @see simpleRand_get()
+ *
+ */
 #define SR_PRIME_ADD 37
 
+/**
+ * @brief The last generated random number and/or the initial seed value
+ *
+ * This contains either the last generated random number (simpleRand_get())
+ * and/or the initial seed value (simpleRand_setSeed()). In either case it
+ * is used as the basis for the next random number requested by
+ * simpleRand_get().
+ *
+ * @see simpleRand_setSeed()
+ * @see simpleRand_get()
+ *
+ */
 static uint8_t g_lastVal = 1;
 
+/**
+ * @brief Sets the initial seed value
+ *
+ * This sets the initial seed value, which the next requested random number (vy
+ * simpleRand_get()) will be based upon.
+ *
+ * @param i_seed The seed value you want to set
+ *
+ * @see g_lastVal
+ * @see simpleRand_get()
+ *
+ */
 void simpleRand_setSeed(uint8_t i_seed)
 {
 
@@ -52,6 +96,20 @@ void simpleRand_setSeed(uint8_t i_seed)
 
 }
 
+/**
+ * @brief Returns a pseudo random number
+ *
+ * The pseudo random number is based upon the last value and/or seed value
+ * (g_lastVal).
+ *
+ * @note The modulo 256 operation is done implicitly as the used data type of
+ * g_lastVal is uint8_t.
+ *
+ * @return The calculated pseudo random number
+ *
+ * @see g_lastVal
+ *
+ */
 uint8_t simpleRand_get()
 {
 
