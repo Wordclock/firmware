@@ -131,7 +131,7 @@
  * @param b Number of the pin
  * @see DDR()
  */
-#define DDR_(a, b)     (*(&a - 1))
+#define DDR_(a, b) (*(&a - 1))
 
 /**
  * @brief References the PIN register of a port given its name followed by the
