@@ -53,7 +53,9 @@
  * This function obviously returns only values between 0 and 99.
  *
  * @param bcd Pair of BCD values
+ *
  * @return Converted integer
+ *
  * @see itobcd()
  */
 uint8_t bcdtoi(uint8_t bcd)
@@ -85,7 +87,9 @@ uint8_t bcdtoi(uint8_t bcd)
  * This function obviously can only work with values from 0 up to 99.
  *
  * @param i Integer to convert
+ *
  * @return Pair of BCD values
+ *
  * @see bcdtoi()
  */
 uint8_t itobcd(uint8_t i)
@@ -112,6 +116,7 @@ uint8_t itobcd(uint8_t i)
  *
  * @param val The byte to convert into a string
  * @param str Pointer to a buffer where the resulting string is stored
+ *
  * @see byteToStrLessOneHundred()
  */
 void byteToStr(uint8_t val, char str[4])
@@ -153,6 +158,7 @@ void byteToStr(uint8_t val, char str[4])
  *
  * @param val The byte to convert into a string
  * @param str Pointer to a buffer where the resulting string is stored
+ *
  * @see byteToStr()
  */
 void byteToStrLessOneHundred(uint8_t val, char str[3])
