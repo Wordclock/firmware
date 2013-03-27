@@ -32,8 +32,8 @@
 
 #include <stdint.h>
 
-void simpleRand_setSeed(uint8_t i_seed);
+extern void simpleRand_setSeed(uint8_t i_seed);
 
-uint8_t simpleRand_get();
+extern uint8_t simpleRand_get();
 
 #endif /* _WC_SIMPLE_RNG_H_ */
