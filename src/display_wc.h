@@ -20,11 +20,11 @@
 
 /**
  * @file display_wc.h
- * @brief Header file of the display module for the display hardware
+ * @brief Header file for the display module specific to the Wordclock
  *
- * The display module converts a given time into binary data, which then can be
- * shifted out to the registers in control of the LEDs using functions declared
- * in shift.h.
+ * This header file is specific to the display type "Wordclock" and will be
+ * included within display.h along with the approriate language specific file,
+ * see WC_DISP_ENG, WC_DISP_GER and/or WC_DISP_GER3.
  *
  * Language and/or front panel related constants are defined within their
  * appropriate display_wc_[language].h file.
@@ -33,8 +33,8 @@
  * languages. Language specific things reside in their own files, e.g.
  * display_wc_[language].h/c.
  *
+ * @see display.h
  * @see display_wc.c
- * @see shift.h
  */
 
 #ifndef _WC_DISPLAY_WC_H_
