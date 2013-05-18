@@ -18,27 +18,24 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display.h
- * 
- *  The display-module is main interface to the display hardware of the clock.
- *  \details
- *    The display-module its to convert the given time to the binary data 
- *    to controll the status of the leds.\n
- *    This file should be left unchanged if making adaptions to other displays or languages. \n
- *    Theese things should be changed in display_[displaytype].h/c
+ * @brief Header file for the display module generic to all types of clocks
  *
- * \version $Id: display.h 423 2012-03-20 18:43:53Z pn $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The display module is the main interface for the display hardware of the
+ * clock. It converts a given time into binary data, which then for instance
+ * can be shifted out to the registers in control of the LEDs.
+ *
+ * Display type related constants are defined within their appropriate
+ * display_wc_[type].h file.
+ *
+ * @note This file should be left untouched if making adaptations to other
+ * display types. Display type specific things reside in their own files, e.g.
+ * display_[displaytype].h/c.
+ *
+ * @see display_wc.c
+ * @see shift.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DISPLAY_H_
 #define _WC_DISPLAY_H_
@@ -82,7 +79,7 @@ typedef struct DisplayEepromParams DisplayEepromParams;
 /**
  *  global instance of display Params.
  *  @TODO: consider creating access functions
- *  to use this macro you have to include the 
+ *  to use this macro you have to include the
  *  wceeprom.h (not included here because circular include)
  */
 #define g_displayParams (&(wcEeprom_getData()->displayParams))
@@ -118,7 +115,7 @@ extern DisplayState display_getTimeState (const datetime_t* i_newDateTime);
  *           f_call: extern irregularly  (internal: when called setNewTime)
  *  @param    i_showStates   defined which words should be shown at all
  *  @param    i_blinkstates  defines which words should blink with DISPLAY_BLINK_INT_ms
- *                           only words that should be displayed will blink 
+ *                           only words that should be displayed will blink
  *                           words_that_will_blink = blinkstates & showStates
  */
 extern void    display_setDisplayState( DisplayState i_showStates, DisplayState i_blinkstates);
@@ -135,7 +132,7 @@ static inline void display_setNewTime (const datetime_t* i_newDateTime)
   display_setDisplayState( display_getTimeState(i_newDateTime), 0 );
 };
 
-/** 
+/**
  * fades from one Display state to another
  * @param i_showStates  the new state that should be displayed
  */
@@ -163,7 +160,7 @@ extern void    display_blinkStep (void);
 
 
 /**
- * does one step of the auto-OnOff animation 
+ * does one step of the auto-OnOff animation
  * also handles the current step
  * @param number  If 1, the preview-mode is displayed. If 0, normal animation starts
  * @details  assumed to be called with 1Hz
@@ -174,36 +171,36 @@ extern void display_autoOffAnimStep1Hz(uint8_t animPreview);
 /**
  * Returns a State that contains an indicator that can be used for user interactions.
  * For example the minute points on the WC.
- * @return bitset as used in display_setDisplayState with activated indicators 
+ * @return bitset as used in display_setDisplayState with activated indicators
  */
 static inline DisplayState display_getIndicatorMask(void);
 
 /**
- * Returns a State that contains an indicator that indicates a time set mode 
+ * Returns a State that contains an indicator that indicates a time set mode
  * and that can be used for user interactions.
  * For example the 'o'clock' word on the WC.
- * @return bitset as used in display_setDisplayState with activated indicators 
+ * @return bitset as used in display_setDisplayState with activated indicators
  */
 static inline DisplayState display_getTimeSetIndicatorMask(void);
 
 /**
  * Returns a State that contains all minuts
  *  @details Can be used to set minutes to blink in display_setDisplayState
- * @return bitset as used in display_setDisplayState with activated minutes 
+ * @return bitset as used in display_setDisplayState with activated minutes
  */
 static inline DisplayState display_getMinuteMask(void);
 
 /**
  * Returns a State that contains all hours
  * @details Can be used to set hours to blink in display_setDisplayState
- * @return bitset as used in display_setDisplayState with activated hours 
+ * @return bitset as used in display_setDisplayState with activated hours
  */
 static inline DisplayState display_getHoursMask(void);
 
 
 /**
  *  returns a State that visualizes the given number and can be used for user interactions.
- *  @details   The display is limited by hardware. 
+ *  @details   The display is limited by hardware.
  *             So the number may be the result of some modulo operation.
  *  @param number  the number to visualize
  *  @return bitset as used in display_setDisplayState with the given number
@@ -216,10 +213,10 @@ static inline DisplayState display_getNumberDisplayState( uint8_t number );
  */
 
 #if (WC_DISP_ENG == 1) || (WC_DISP_GER == 1)|| (WC_DISP_GER3 == 1)
-#  include "display_wc.h" 
+#  include "display_wc.h"
 #else   /* default to german */
 #  define WC_DISP_GER 1
-#  include "display_wc.h" 
+#  include "display_wc.h"
 #endif
 
 #endif /* _WC_DISPLAY_H_ */
