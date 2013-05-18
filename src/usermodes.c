@@ -342,8 +342,8 @@ static uint8_t NormalState_handleIR(  uint8_t cmdCode )
   }else if(    UI_UP == cmdCode
             || UI_DOWN == cmdCode)
   {
-    log_state("CC\n");
     int8_t dir = UI_UP == cmdCode?1:-1;
+    log_state("CC\n");
     if( mode_normalState.colorToSet < 4 ){  // handle RGB-Changes
       uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[ g_params->curColorProfile ]);
       incDecRange(&rgb[ mode_normalState.colorToSet ], dir,0,  MAX_PWM_STEPS-1);
@@ -388,11 +388,11 @@ static void AutoHueState_10Hz( void )
   --mode_autoHueState.delay100ms;
   if( mode_autoHueState.delay100ms >= (volatile uint8_t)(g_params->hueChangeIntervall) )
   {
-    ++mode_autoHueState.curHue;
-    //AutoHueStat_enter(0);
     uint8_t r;
     uint8_t g;
     uint8_t b;
+    ++mode_autoHueState.curHue;
+    //AutoHueStat_enter(0);
     mode_autoHueState.curHue %= (COLOR_HUE_MAX+1);
     color_hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
     pwm_set_colors(r, g, b);
@@ -410,8 +410,8 @@ static uint8_t AutoHueState_handleIR(  uint8_t cmdCode )
   if(    UI_UP == cmdCode
       || UI_DOWN == cmdCode)
   {
-    log_state("CHS \n");
     int8_t dir = UI_UP == cmdCode?-1:1;
+    log_state("CHS \n");
     incDecRange(    &g_params->hueChangeIntervall
                   , dir
                   , USER_HUE_CHANGE_INT_100ms_MIN
@@ -534,8 +534,8 @@ static uint8_t EnterTimeState_handleIr(  uint8_t cmdCode )
   }else if(    UI_UP   == cmdCode
             || UI_DOWN == cmdCode)
   {
-    log_state("CHS\n");
     int8_t dir = UI_UP == cmdCode?1:-1;
+    log_state("CHS\n");
     if( ETS_hour == mode_enterTimeState.curSubState )
     {
       incDecRangeOverflow(&(mode_enterTimeState.time.hh), dir, 23);
@@ -699,8 +699,8 @@ static uint8_t PulseState_handleIR(  uint8_t cmdCode )
   if(    UI_UP == cmdCode
       || UI_DOWN == cmdCode)
   {
-    log_state("CPS \n");
     int8_t dir = UI_UP == cmdCode?-1:1;
+    log_state("CPS \n");
     incDecRange(    &g_params->pulseUpdateInterval
                   , dir
                   , USER_PULSE_CHANGE_INT_10ms_MIN

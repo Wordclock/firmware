@@ -37,33 +37,69 @@
  *
  * This can be used to build up a byte manually by explicitly listing all the
  * bits. For instance in order to build up the byte `01101001`<sub>2</sub>,
- * you would use it like that: BIN8(0, 1, 1, 0, 1, 0, 0, 1).
+ * you would use it like that: BIN8(01101001), which represents
+ * `105`<sub>10</sub>.
  *
- * b7..b0 are expected to be either 0 and/or 1.
+ * This is based upon an idea from Yalu X. Refer to [1] for details.
  *
- * @return Byte represented by the given bits
+ * [1]: https://www.mikrocontroller.net/topic/180830#1744760
+ *
+ * @param byte The bit pattern of the byte you want to build
+ *
+ * @return Byte represented by the given bit pattern
  *
  * @see BIN16()
+ * @see BIN32()
  */
-#define BIN8(b7, b6, b5, b4, b3, b2, b1, b0) \
-    ((b7 << 7) | (b6 << 6) | (b5 << 5) | (b4 << 4) \
-    | (b3 << 3) | (b2 << 2) | (b1 << 1) | (b0 << 0))
+#define BIN8(byte) ( \
+    0##byte /        01 % 010 << 0 | \
+    0##byte /       010 % 010 << 1 | \
+    0##byte /      0100 % 010 << 2 | \
+    0##byte /     01000 % 010 << 3 | \
+    0##byte /    010000 % 010 << 4 | \
+    0##byte /   0100000 % 010 << 5 | \
+    0##byte /  01000000 % 010 << 6 | \
+    0##byte / 010000000 % 010 << 7 )
 
 /**
  * @brief Build short by explicitly setting each bit
  *
  * This can be used to build up a short manually by explicitly listing all the
- * bits it contains in sequence.
+ * bits it contains in sequence as a pattern. Internally it makes use of
+ * BIN8().
  *
- * b15..b0 are expected to be either 0 and/or 1.
+ * Example usage: BIN16(10010101, 00111100) = 0x953C = 38204
  *
- * @return Short represented by the given bits
+ * @param msb The most significant byte
+ * @param lsb The least significant byte
+ *
+ * @return Short represented by the two given bit patterns
  *
  * @see BIN8()
  */
-#define BIN16(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0) \
-    ((((uint16_t)BIN8(b15, b14, b13, b12, b11, b10, b9, b8)) << 8) \
-    | BIN8(b7, b6, b5, b4, b3, b2, b1, b0))
+#define BIN16(msb, lsb) ((BIN8(msb) << 8) | (BIN8(lsb)))
+
+/**
+ * @brief Build short by explicitly setting each bit
+ *
+ * This can be used to build up a 32 bit constant (Integer) manually by
+ * explicitly listing all the bits it contains in sequence as a pattern spit
+ * into four bytes.. Internally it makes use of BIN8().
+ *
+ * Example usage: BIN32(10010101, 00111100, 10101010, 11010101) = 0x953CAAD5
+ *  = 2503781077
+ *
+ * @param b3 Fourth byte (most significant)
+ * @param b2 Third byte
+ * @param b1 Second byte
+ * @param b0 First byte (least significant)
+ *
+ * @return 32 bit constant (Integer) represented by the given bit patterns
+ *
+ * @see BIN8()
+ */
+#define BIN32(b3, b2, b1, b0)( \
+    (BIN8(b3) << 24) | (BIN8(b2) << 16) | (BIN8(b1) << 8) | (BIN8(b0)))
 
 /**
  * @brief Divides an integer by ten while also keeping track of the remainder

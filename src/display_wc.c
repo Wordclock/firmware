@@ -114,7 +114,7 @@ void display_outputData(DisplayState state)
 }
 
 
-void display_autoOffAnimStep1Hz(uint8_t g_animPreview)
+void display_autoOffAnimStep1Hz(uint8_t animPreview)
 {
    static uint8_t s_state = 0;
    ++s_state;
@@ -122,7 +122,7 @@ void display_autoOffAnimStep1Hz(uint8_t g_animPreview)
    if(s_state &1)
    {
      DisplayState state = ((DisplayState) 1) << ((s_state>>1)+DWP_MIN_LEDS_BEGIN);
-     if( g_animPreview ){
+     if( animPreview ){
        state |= display_getNumberDisplayState(2);
      }
      display_fadeDisplayState( state );

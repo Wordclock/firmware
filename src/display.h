@@ -168,7 +168,7 @@ extern void    display_blinkStep (void);
  * @param number  If 1, the preview-mode is displayed. If 0, normal animation starts
  * @details  assumed to be called with 1Hz
  */
-extern void display_autoOffAnimStep1Hz(uint8_t g_animPreview);
+extern void display_autoOffAnimStep1Hz(uint8_t animPreview);
 
 
 /**

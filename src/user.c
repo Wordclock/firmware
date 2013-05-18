@@ -85,6 +85,8 @@
 
 #define USER_AUXPOWER PORTD, 2
 
+uint8_t useAutoOffAnimation;
+
 /**
  * leaves the given substate and all following states on stack
  * @param   indexOfStateToLeave   stack position of State to leave
@@ -307,9 +309,10 @@ static uint8_t leaveSubState( int8_t indexOfStateToLeave)
 
 static void quitMyself( e_MenuStates state, const void* result)
 {
+  uint8_t success;
   int8_t currentIdx = g_currentIdxs[state];
   log_state( "quit self\n");
-  uint8_t success = leaveSubState( currentIdx );
+  success = leaveSubState( currentIdx );
   if( ! success ){
     log_state( "ERROR: leaving substates failed\n");
   }
@@ -411,8 +414,8 @@ handle_ir_code (void)
               addState(MS_setOnOffTime, NULL);
 
             }else if( UI_DEMO_MODE == ir_code ){
-              log_state("BS\n");
               e_MenuStates curTop = g_stateStack[g_topOfStack-1];
+              log_state("BS\n");
               if( MS_demoMode == curTop )
               {
                 quitMyself(MS_demoMode, NULL);

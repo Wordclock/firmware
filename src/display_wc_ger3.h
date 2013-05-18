@@ -210,7 +210,7 @@ struct DisplayEepromParams{
 };
 
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
-  /* .mode = */ 0 \
+  /* .mode = */ (e_WcGerModes)0 \
 }
 
 // declare toggle ossi functionality

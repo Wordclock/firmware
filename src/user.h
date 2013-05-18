@@ -256,7 +256,7 @@ typedef struct UserEepromParams{
 
 
 
-uint8_t useAutoOffAnimation;
+extern uint8_t useAutoOffAnimation;
 
 
 
