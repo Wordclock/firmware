@@ -99,10 +99,6 @@ void display_fadeDisplayState( DisplayState i_showStates)
 
 
 //void fadeTimerOCR(void)
-ISR( DISPLAY_TIMER_OCR_vect )
-{
-                                                   // PN: Überblendung nur im OVF
-}
 
 
 //void displayFadeTimerOvf (void)
