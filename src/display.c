@@ -53,8 +53,8 @@
 /** the amount of pwm cycles after that the dutycycle has to be adapted */
 /** Stuff for fading display */
 #define DISPLAY_FADE_STEPS  20                 // PN: Anzahl der Schritte beim Überblenden
-#define DISPLAY_FADE_PERIOD      ((uint16_t)((( ((uint32_t)F_TIMER2)*DISPLAY_FADE_TIME_MS )/1000)/DISPLAY_FADE_STEPS))
-#define DISPLAY_FADE_PERIOD_ANIM ((uint16_t)((( ((uint32_t)F_TIMER2)*DISPLAY_FADE_TIME_ANIM_MS )/1000)/DISPLAY_FADE_STEPS))
+#define DISPLAY_FADE_PERIOD      ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY)*DISPLAY_FADE_TIME_MS )/1000)/DISPLAY_FADE_STEPS))
+#define DISPLAY_FADE_PERIOD_ANIM ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY)*DISPLAY_FADE_TIME_ANIM_MS )/1000)/DISPLAY_FADE_STEPS))
                                                // PN: Anzahl der PWM-Zyklen pro Schritt
 											   // PN: !!! VORSICHT !!! Als Schrittdauer muss mindestens
 											   // PN: die Dauer eine PWM-Periode zur Verfügung stehen  !!!

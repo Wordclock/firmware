@@ -49,7 +49,7 @@
 #define DISPLAY_TIMER_OVF_vect TIMER2_OVF_vect
 #define DISPLAY_TIMER_OCR_vect TIMER2_COMPA_vect
 #define DISPLAY_TIMER_ENABLE_INTS() TIMSK2 |= _BV(TOIE2) | _BV(OCIE2A);
-#define F_TIMER2 3906
+#define DISPLAY_TIMER_FREQUENCY 3906
 #define g_displayParams (&(wcEeprom_getData()->displayParams))
 
 typedef uint32_t DisplayState;
