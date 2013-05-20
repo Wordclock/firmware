@@ -65,9 +65,10 @@
 
 - Make the determination of the DCF77 module type optional. Although this is
   a nice gimmick, it only takes up program space and doesn't provide any real
-  use, as the module type should be known when actually building the clock,
-  so it can be compiled with the support for the right module, which in return
-  would save some program space and fasten up the initialization.
+  use, as the module type should be known when actually building the clock
+  (basically all DCF77 receiver have an inverted output anyway), so it can be
+  compiled with the support for the right module, which in return would save
+  some considerable amount of program space and fasten up the initialization.
 
 - Fix header includes: It seems that various includes are actually not needed.
 
@@ -104,3 +105,20 @@
 
 - color: Make hueWaveform() more general with a 2nd parameter asking for the
   color, so its not working with green only.
+
+- Define and implement an UART protocol to control the Wordclock. This could
+  then be used for a smartphone application or something similar like that.
+
+- Replace UART module with an interrupt based one, e.g. UART-avr
+  (https://gitorious.org/johnpatcher/uart-avr)
+
+- Add support for motion sensors, so that the Wordclock can be disabled and
+  will enable itself once there is someone in the surrounding.
+
+- display.h: DisplayState: Move type declaration to specific clock definitions
+
+- display.h: displayParams: Consider creating access functions
+
+- Combine display.* and display_wc.* files, as there is only a single
+  display type (wc), due to the fact that the display type "tix" has
+  been removed in the past.
