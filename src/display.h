@@ -81,16 +81,6 @@ static inline void display_fadeNewTime(const datetime_t* i_newDateTime)
 
 }
 
-#if (WC_DISP_ENG == 1) || (WC_DISP_GER == 1)|| (WC_DISP_GER3 == 1)
-
-    #include "display_wc.h"
-
-#else
-
-    #define WC_DISP_GER 1
-
-    #include "display_wc.h"
-
-#endif
+#include "display_wc.h"
 
 #endif /* _WC_DISPLAY_H_ */
