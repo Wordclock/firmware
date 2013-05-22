@@ -49,7 +49,6 @@
 
 #include "ports.h"
 
-#if (WC_DISP_ENG == 1) || (WC_DISP_GER == 1) || (WC_DISP_GER3 == 1)
 
 
 void display_init (void)
@@ -132,4 +131,3 @@ void display_autoOffAnimStep1Hz(uint8_t animPreview)
 }
 
 
-#endif
