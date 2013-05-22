@@ -59,7 +59,7 @@ static uint8_t g_curFadeCounter;
 static uint8_t g_curFadeStep;
 static uint16_t g_curFadeStepTimer;
 
-void display_setDisplayState(DisplayState i_showStates, uint32_t i_blinkstates)
+void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates)
 {
 
     g_blinkState = i_blinkstates & i_showStates;
