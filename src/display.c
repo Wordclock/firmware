@@ -44,128 +44,128 @@
 #include "display.h"
 #include "user.h"
 #include "uart.h"
-
 #include "pwm.h"
 
-
-/** the amount of pwm cycles after that the dutycycle has to be adapted */
-/** Stuff for fading display */
-#define DISPLAY_FADE_STEPS  20                 // PN: Anzahl der Schritte beim Überblenden
-#define DISPLAY_FADE_PERIOD      ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY)*DISPLAY_FADE_TIME_MS )/1000)/DISPLAY_FADE_STEPS))
-#define DISPLAY_FADE_PERIOD_ANIM ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY)*DISPLAY_FADE_TIME_ANIM_MS )/1000)/DISPLAY_FADE_STEPS))
-                                               // PN: Anzahl der PWM-Zyklen pro Schritt
-											   // PN: !!! VORSICHT !!! Als Schrittdauer muss mindestens
-											   // PN: die Dauer eine PWM-Periode zur Verfügung stehen  !!!
-
-
+#define DISPLAY_FADE_STEPS 20
+#define DISPLAY_FADE_PERIOD \
+    ((uint16_t)(((((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_MS) / 1000) / DISPLAY_FADE_STEPS))
+#define DISPLAY_FADE_PERIOD_ANIM \
+    ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_ANIM_MS) / 1000) / DISPLAY_FADE_STEPS))
 
 static uint32_t g_oldDispState;
 static uint32_t g_curDispState;
 static uint32_t g_blinkState;
-static uint8_t g_curFadeCounter;             // PN
-static uint8_t g_curFadeStep;                // PN
-static uint16_t g_curFadeStepTimer;          // PN
+static uint8_t g_curFadeCounter;
+static uint8_t g_curFadeStep;
+static uint16_t g_curFadeStepTimer;
 
-
-void display_setDisplayState( DisplayState i_showStates, uint32_t i_blinkstates)
+void display_setDisplayState(DisplayState i_showStates, uint32_t i_blinkstates)
 {
-  g_blinkState   = i_blinkstates & i_showStates;
-  g_oldDispState = g_curDispState;
-  g_curDispState = i_showStates;
-  g_curFadeStep  = 0;
-  display_outputData(g_curDispState); 
+
+    g_blinkState = i_blinkstates & i_showStates;
+    g_oldDispState = g_curDispState;
+    g_curDispState = i_showStates;
+    g_curFadeStep = 0;
+
+    display_outputData(g_curDispState);
+
 }
 
-
-void display_fadeDisplayState( DisplayState i_showStates)
+void display_fadeDisplayState(DisplayState i_showStates)
 {
-  g_blinkState   = 0;
-  g_oldDispState = g_curDispState;
-  g_curDispState = i_showStates;
-  g_curFadeStep = DISPLAY_FADE_STEPS - 1;                                   // PN
-  if(useAutoOffAnimation)
-    {
-	g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM/DISPLAY_FADE_STEPS) - 1; // PN
-	}
-  else
-    {
-	g_curFadeStepTimer = (DISPLAY_FADE_PERIOD/DISPLAY_FADE_STEPS) - 1;      // PN
-	}
-  g_curFadeCounter = DISPLAY_FADE_STEPS - 1;                                // PN 
+
+    g_blinkState = 0;
+    g_oldDispState = g_curDispState;
+    g_curDispState = i_showStates;
+    g_curFadeStep = DISPLAY_FADE_STEPS - 1;
+
+    if (useAutoOffAnimation) {
+
+        g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM / DISPLAY_FADE_STEPS) - 1;
+
+    } else {
+
+        g_curFadeStepTimer = (DISPLAY_FADE_PERIOD / DISPLAY_FADE_STEPS) - 1;
+
+    }
+
+    g_curFadeCounter = DISPLAY_FADE_STEPS - 1;
+
 }
 
-
-
-//void fadeTimerOCR(void)
-
-
-//void displayFadeTimerOvf (void)
-ISR( DISPLAY_TIMER_OVF_vect )
+ISR(DISPLAY_TIMER_OVF_vect)
 {
-  // PN: Neue Überblendung
-  if (g_curFadeStep > 0)
-    {
-    if (g_curFadeCounter >= g_curFadeStep)
-      {
-	  display_outputData( g_curDispState );
-	  }
-    else
-      {
-	  display_outputData( g_oldDispState );
-	  }
 
-    if (g_curFadeCounter)
-      {
-	  g_curFadeCounter--;
-	  }
-    else
-      {
-	  g_curFadeCounter = DISPLAY_FADE_STEPS - 1;
+    if (g_curFadeStep > 0) {
 
-	  if (g_curFadeStepTimer)
-	    {
-	    g_curFadeStepTimer--;
-		}
-      else 
-	    {
-		if(useAutoOffAnimation)
-          {
-	      g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM/DISPLAY_FADE_STEPS) - 1;
-	      }
-        else
-          {
-	      g_curFadeStepTimer = (DISPLAY_FADE_PERIOD/DISPLAY_FADE_STEPS) - 1;
-		  }
-		g_curFadeStep--;
-	    }
-	  }
+        if (g_curFadeCounter >= g_curFadeStep) {
 
-	}
-  else
-    {
-	display_outputData( g_curDispState );
-	}
-  // PN: Ende neue Überblendung
+            display_outputData(g_curDispState);
+
+        } else {
+
+            display_outputData(g_oldDispState);
+
+        }
+
+        if (g_curFadeCounter) {
+
+            g_curFadeCounter--;
+
+        } else {
+
+            g_curFadeCounter = DISPLAY_FADE_STEPS - 1;
+
+            if (g_curFadeStepTimer) {
+
+                g_curFadeStepTimer--;
+
+            } else {
+
+                if(useAutoOffAnimation) {
+
+                    g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM / DISPLAY_FADE_STEPS) - 1;
+
+                } else {
+
+                    g_curFadeStepTimer = (DISPLAY_FADE_PERIOD / DISPLAY_FADE_STEPS) - 1;
+
+                }
+
+                g_curFadeStep--;
+
+            }
+
+        }
+
+    } else {
+
+        display_outputData(g_curDispState);
+
+    }
+
 }
-
-
 
 /**
  * @see INTERRUPT_10HZ
  */
-void display_blinkStep (void)
+void display_blinkStep()
 {
-  if(    g_blinkState 
-     && (g_curFadeStep == 0))
-  {
-    static uint8_t s_blinkPrescale = DISPLAY_BLINK_INT_100MS;
-    if( ! (--s_blinkPrescale) )
-    {
-      g_curDispState ^= g_blinkState;
-      display_outputData(g_curDispState);
-      s_blinkPrescale = DISPLAY_BLINK_INT_100MS;
+
+    if(g_blinkState && (g_curFadeStep == 0)) {
+
+        static uint8_t s_blinkPrescale = DISPLAY_BLINK_INT_100MS;
+
+        if(!(--s_blinkPrescale)) {
+
+            g_curDispState ^= g_blinkState;
+
+            display_outputData(g_curDispState);
+
+            s_blinkPrescale = DISPLAY_BLINK_INT_100MS;
+
+        }
+
     }
-  }
+
 }
-
-
