@@ -121,3 +121,7 @@
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
   been removed in the past.
+
+- display.c: Check whether display_outputData() can be removed within
+  display_setDisplayState() as the data is output by the timer ISR
+  anyway.
