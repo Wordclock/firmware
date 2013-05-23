@@ -52,9 +52,9 @@
 #define DISPLAY_FADE_PERIOD_ANIM \
     ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_ANIM_MS) / 1000) / DISPLAY_FADE_STEPS))
 
-static uint32_t g_oldDispState;
-static uint32_t g_curDispState;
-static uint32_t g_blinkState;
+static DisplayState g_oldDispState;
+static DisplayState g_curDispState;
+static DisplayState g_blinkState;
 static uint8_t g_curFadeCounter;
 static uint8_t g_curFadeStep;
 static uint16_t g_curFadeStepTimer;
