@@ -67,8 +67,6 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
     g_curDispState = i_showStates;
     g_curFadeStep = 0;
 
-    display_outputData(g_curDispState);
-
 }
 
 void display_fadeDisplayState(DisplayState i_showStates)
