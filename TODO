@@ -121,3 +121,7 @@
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
   been removed in the past.
+
+- Demo mode: When switching from the multiplexing demo mode into the classical
+  one, the brightness seems to be at a maximum, although it wasn't before
+  entering this mode.
