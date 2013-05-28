@@ -157,7 +157,7 @@ uint8_t color_pulse_waveform(uint8_t step)
     t = (t > 127) ? (255 - t) : t;
     x = (((uint16_t)t) * (256 - COLOR_PULSE_WAVEFORM_SCALE) / 128)
                + COLOR_PULSE_WAVEFORM_SCALE;
-    val = x * x * x / 256 / 256;
+    val = (((x * x) / 256) * x) / 256;
 
     return val;
 
