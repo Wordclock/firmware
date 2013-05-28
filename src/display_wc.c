@@ -46,6 +46,17 @@
 #include "uart.h"
 #include "ports.h"
 
+/**
+ * @brief Initializes the display module
+ *
+ * This will initialize the module by initializing the involved shift module.
+ * Furthermore it will set up the appropriate registers for the minute LEDs
+ * (which are attached to the microcontroller directly) as well as enable
+ * the involved timer interrupt.
+ *
+ * @see shift24_init()
+ * @see DISPLAY_TIMER_ENABLE_INTS()
+ */
 void display_init()
 {
 
@@ -65,6 +76,21 @@ void display_init()
 
 }
 
+/**
+ * @brief Outputs a display state
+ *
+ * This will output a given display state, which involves enabling and/or
+ * disabling the minute LEDs and shifting out the bit pattern. When logging
+ * for this particular module is enabled (LOG_DISPLAY_STATE), some debugging
+ * information will be output via UART.
+ *
+ * @param state The DisplayState that should be output
+ *
+ * @see shift24_output()
+ *
+ * @note The display module should be enabled before this function can be
+ * used.
+ */
 void display_outputData(DisplayState state)
 {
 
@@ -130,6 +156,21 @@ void display_outputData(DisplayState state)
 
 }
 
+/**
+ * @brief Responsible for the auto on off animation
+ *
+ * This function is expected to be called on a regular basis with a frequency
+ * of 1 Hz. This is usually done via user_isr1Hz(). It will let the minute
+ * LEDs appear to blink alternately. When the parameter animPreview is set, the
+ * word corresponding to "two" (hour) will be enabled on top of that. This is
+ * referred to as "preview mode" and can be useful in case when setting up the
+ * auto on off animation up to give the user some form of indication, which
+ * mode he actually has selected and how it will look like.
+ *
+ * @param animPreview Defines whether "two" (hour) will be displayed
+ *
+ * @see display_getNumberDisplayState()
+ */
 void display_autoOffAnimStep1Hz(uint8_t animPreview)
 {
 
