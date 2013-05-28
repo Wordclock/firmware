@@ -9,8 +9,6 @@
         - display_wc_ger.h
         - display_wc_ger3.c
         - display_wc_ger3.h
-        - display_wc.c
-        - display.c
         - user.c
         - user.h
         - usermodes.c
