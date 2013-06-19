@@ -3,8 +3,6 @@
   documentation is full of misspellings and a mix of English and German.
 
     Files left:        
-        - display_wc_eng.c
-        - display_wc_eng.h
         - display_wc_ger.c
         - display_wc_ger.h
         - display_wc_ger3.c
