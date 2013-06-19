@@ -46,7 +46,7 @@
 
 #if (WC_DISP_ENG == 1)
 
-    #define DISP_SETBIT(x) (1L << ((x) - DWP_MIN_FIRST))
+    #define DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
 
     static const uint8_t minData[11] = {
 
@@ -73,7 +73,7 @@
         uint8_t minutes = i_newDateTime->mm;
         uint8_t minuteLeds = minutes % 5;
         minutes = minutes / 5;
-        uint32_t leds;
+        DisplayState leds;
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
@@ -81,13 +81,13 @@
 
             if (((g_displayParams->mode & 1) == 0) || (minutes == 0)) {
 
-                leds |= (1L << DWP_itis);
+                leds |= ((DisplayState)1 << DWP_itis);
 
             }
 
         #else
 
-            leds = (1L << DWP_itis);
+            leds = ((DisplayState)1 << DWP_itis);
 
         #endif
 
@@ -114,17 +114,17 @@
 
             }
 
-            leds |= ((uint32_t)minState) << DWP_MIN_FIRST;
+            leds |= ((DisplayState)minState) << DWP_MIN_FIRST;
 
         } else {
 
-            leds |= (1L << DWP_clock);
+            leds |= ((DisplayState)1 << DWP_clock);
 
         }
 
         for (; minuteLeds; --minuteLeds) {
 
-            leds |= (1L << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
+            leds |= ((DisplayState)1 << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
 
         }
 
@@ -134,7 +134,7 @@
 
         }
 
-        leds |= (1L << (DWP_HOUR_BEGIN - 1 + hour));
+        leds |= ((DisplayState)1 << (DWP_HOUR_BEGIN - 1 + hour));
 
         return leds;
 
