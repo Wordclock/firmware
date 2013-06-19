@@ -140,42 +140,42 @@ enum e_displayWordPos
 static inline DisplayState display_getMinuteMask()
 {
 
-    return (1L << DWP_fiveMin)
-        | (1L << DWP_tenMin)
-        | (1L << DWP_quarter)
-        | (1L << DWP_twenty)
-        | (1L << DWP_half)
-        | (1L << DWP_to)
-        | (1L << DWP_past)
-        | (1L << DWP_min1)
-        | (1L << DWP_min2)
-        | (1L << DWP_min3)
-        | (1L << DWP_min4);
+    return ((DisplayState)1 << DWP_fiveMin)
+        | ((DisplayState)1 << DWP_tenMin)
+        | ((DisplayState)1 << DWP_quarter)
+        | ((DisplayState)1 << DWP_twenty)
+        | ((DisplayState)1 << DWP_half)
+        | ((DisplayState)1 << DWP_to)
+        | ((DisplayState)1 << DWP_past)
+        | ((DisplayState)1 << DWP_min1)
+        | ((DisplayState)1 << DWP_min2)
+        | ((DisplayState)1 << DWP_min3)
+        | ((DisplayState)1 << DWP_min4);
 
 }
 
 static inline DisplayState display_getHoursMask()
 {
 
-    return (1L << DWP_one)
-        | (1L << DWP_two)
-        | (1L << DWP_three)
-        | (1L << DWP_four)
-        | (1L << DWP_five)
-        | (1L << DWP_six)
-        | (1L << DWP_seven)
-        | (1L << DWP_eight)
-        | (1L << DWP_nine)
-        | (1L << DWP_ten)
-        | (1L << DWP_eleven)
-        | (1L << DWP_twelve);
+    return ((DisplayState)1 << DWP_one)
+        | ((DisplayState)1 << DWP_two)
+        | ((DisplayState)1 << DWP_three)
+        | ((DisplayState)1 << DWP_four)
+        | ((DisplayState)1 << DWP_five)
+        | ((DisplayState)1 << DWP_six)
+        | ((DisplayState)1 << DWP_seven)
+        | ((DisplayState)1 << DWP_eight)
+        | ((DisplayState)1 << DWP_nine)
+        | ((DisplayState)1 << DWP_ten)
+        | ((DisplayState)1 << DWP_eleven)
+        | ((DisplayState)1 << DWP_twelve);
 
 }
 
 static inline DisplayState display_getTimeSetIndicatorMask()
 {
 
-    return (1L << DWP_clock);
+    return ((DisplayState)1 << DWP_clock);
 
 }
 
@@ -190,7 +190,7 @@ static inline DisplayState display_getNumberDisplayState(uint8_t number)
 
     }
 
-    return (1L << (number + DWP_HOUR_BEGIN - 1));
+    return ((DisplayState)1 << (number + DWP_HOUR_BEGIN - 1));
 
 }
 
