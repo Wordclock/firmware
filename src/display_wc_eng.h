@@ -18,22 +18,20 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display_wc_eng.h
+ * @brief Header file containing definitions specific to the English frontpanel
  *
- *  This files contain the english language specific definitions that are required for display.
+ * This header file contains various definitions specific to the English
+ * frontpanel. Among other things this includes the positioning of the words,
+ * see e_displayWordPos.
  *
- * \version $Id: display_wc_eng.h 411 2012-01-09 20:46:26Z vt $
+ * @note This file should be left untouched if making general adaptations to
+ * the display module. Only things specific to the English language should be
+ * put inside this file.
  *
- * \author Copyright (c) 2010 Vlad Tepesch
- *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * @see display_wc_eng.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DISPLAY_ENG_H_
 #define _WC_DISPLAY_ENG_H_
