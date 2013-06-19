@@ -141,7 +141,23 @@ typedef struct DisplayEepromParams DisplayEepromParams;
 
 extern void display_init();
 extern void display_outputData(DisplayState state);
+
+/**
+ * @brief Returns a display state for the given datetime
+ *
+ * This functions returns a display state for the given datetime. As this is
+ * something specific to the frontpanel, it is actually implemented by the
+ * language specific file itself.
+ *
+ * @param i_newDateTime The datetime to get a display state for
+ *
+ * @return The display state for the given datetime
+ *
+ * @see datetime_t
+ * @see DisplayState
+ */
 extern DisplayState display_getTimeState(const datetime_t* i_newDateTime);
+
 extern void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates);
 extern void display_fadeDisplayState(DisplayState i_showStates);
 extern void display_blinkStep();
