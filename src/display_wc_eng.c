@@ -46,25 +46,25 @@
 
 #if (WC_DISP_ENG == 1)
 
-    #define DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
+    #define _DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
 
     static const uint8_t minData[11] = {
 
-        (DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_tenMin) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_quarter) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_half) | DISP_SETBIT(DWP_past)),
-        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_to)),
-        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_to)),
-        (DISP_SETBIT(DWP_quarter) | DISP_SETBIT(DWP_to)),
-        (DISP_SETBIT(DWP_tenMin) | DISP_SETBIT(DWP_to)),
-        (DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_to))
+        (_DISP_SETBIT(DWP_fiveMin) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_tenMin) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_quarter) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_twenty) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_twenty) | _DISP_SETBIT(DWP_fiveMin) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_half) | _DISP_SETBIT(DWP_past)),
+        (_DISP_SETBIT(DWP_twenty) | _DISP_SETBIT(DWP_fiveMin) | _DISP_SETBIT(DWP_to)),
+        (_DISP_SETBIT(DWP_twenty) | _DISP_SETBIT(DWP_to)),
+        (_DISP_SETBIT(DWP_quarter) | _DISP_SETBIT(DWP_to)),
+        (_DISP_SETBIT(DWP_tenMin) | _DISP_SETBIT(DWP_to)),
+        (_DISP_SETBIT(DWP_fiveMin) | _DISP_SETBIT(DWP_to))
 
     };
 
-    #undef DISP_SETBIT
+    #undef _DISP_SETBIT
 
     DisplayState display_getTimeState(const datetime_t* i_newDateTime)
     {
