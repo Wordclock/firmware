@@ -73,10 +73,11 @@
         uint8_t minutes = i_newDateTime->mm;
         uint8_t minuteLeds = minutes % 5;
         minutes = minutes / 5;
+        uint32_t leds;
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
-            uint32_t leds = 0;
+            leds = 0;
 
             if (((g_displayParams->mode & 1) == 0) || (minutes == 0)) {
 
@@ -86,7 +87,7 @@
 
         #else
 
-            uint32_t leds = (1L << DWP_itis);
+            leds = (1L << DWP_itis);
 
         #endif
 
