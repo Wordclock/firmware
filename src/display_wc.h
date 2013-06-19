@@ -90,7 +90,7 @@
 #define DISPLAY_MIN4 PORTC, 3
 
 /**
- * @brief Typedef defining the order in which the LEDs are connected to the
+ * @brief Typedef defining the way in which the LEDs are connected to the
  *   display
  *
  * This enumeration itself is actually defined in the language specific files,
