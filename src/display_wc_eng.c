@@ -46,8 +46,35 @@
 
 #if (WC_DISP_ENG == 1)
 
+    /**
+     * @brief Macro making it easier to set single bits within a display state
+     *
+     * This makes it easier to deal with display state, whenever single bits
+     * need to be set. It is used quite heavily within minData to define
+     * the single values.
+     *
+     * The position is simply calculated by subtracting DWP_MIN_FIRST from
+     * the given parameter, which is expected to be from e_displayWordPos and
+     * shifting a one by this amount.
+     *
+     * @see minData
+     * @see DWP_MIN_FIRST
+     * @see e_displayWordPos
+     * @see DisplayState
+     */
     #define _DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
 
+    /**
+     * @brief Containing the display states for the minute blocks
+     *
+     * There are eleven "five-minute" blocks (5, 10, 15, 20, 25, 30, 35, 40,
+     * 45, 50, 55), which are defined ascendingly here. To make it easier,
+     * _DISP_SETBIT() is used quite heavily.
+     *
+     * @see _DISP_SETBIT()
+     * @see e_displayWordPos
+     * @see DisplayState
+     */
     static const uint8_t minData[11] = {
 
         (_DISP_SETBIT(DWP_fiveMin) | _DISP_SETBIT(DWP_past)),
@@ -64,8 +91,14 @@
 
     };
 
+    /*
+     * Undefine helper macro as it is no longer neede
+     */
     #undef _DISP_SETBIT
 
+    /**
+     * @see display.h
+     */
     DisplayState display_getTimeState(const datetime_t* i_newDateTime)
     {
 
