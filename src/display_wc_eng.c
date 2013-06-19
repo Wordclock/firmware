@@ -44,81 +44,98 @@
 
 #include "wceeprom.h"
 
-
 #if (WC_DISP_ENG == 1)
 
-/* TODO: make PROGMEM if more ram is needed (+10B Progmem)*/
-/* TODO: make more flexible */
-#define DISP_SETBIT(x) ( 1L << ( (x) -DWP_MIN_FIRST))
-/* consider to put translationmatrix to flash  */
-static const uint8_t minData[11] =  {
-  (DISP_SETBIT(DWP_fiveMin)  | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_tenMin)   | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_quarter)  | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_twenty )  | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_twenty )  | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_half)     | DISP_SETBIT(DWP_past) ),
-  (DISP_SETBIT(DWP_twenty )  | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_to) ),
-  (DISP_SETBIT(DWP_twenty )  | DISP_SETBIT(DWP_to) ),
-  (DISP_SETBIT(DWP_quarter)  | DISP_SETBIT(DWP_to) ),
-  (DISP_SETBIT(DWP_tenMin)   | DISP_SETBIT(DWP_to) ),
-  (DISP_SETBIT(DWP_fiveMin)  | DISP_SETBIT(DWP_to) ),
+    #define DISP_SETBIT(x) (1L << ((x) - DWP_MIN_FIRST))
 
+    static const uint8_t minData[11] = {
 
-};
+        (DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_tenMin) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_quarter) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_half) | DISP_SETBIT(DWP_past)),
+        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_to)),
+        (DISP_SETBIT(DWP_twenty) | DISP_SETBIT(DWP_to)),
+        (DISP_SETBIT(DWP_quarter) | DISP_SETBIT(DWP_to)),
+        (DISP_SETBIT(DWP_tenMin) | DISP_SETBIT(DWP_to)),
+        (DISP_SETBIT(DWP_fiveMin) | DISP_SETBIT(DWP_to))
 
-#undef DISP_SETBIT
+    };
 
+    #undef DISP_SETBIT
 
+    DisplayState display_getTimeState(const datetime_t* i_newDateTime)
+    {
 
-DisplayState display_getTimeState (const datetime_t* i_newDateTime)
-{
-  uint8_t hour    = i_newDateTime->hh;
-  uint8_t minutes = i_newDateTime->mm;
+        uint8_t hour = i_newDateTime->hh;
+        uint8_t minutes = i_newDateTime->mm;
+        uint8_t minuteLeds = minutes % 5;
+        minutes = minutes / 5;
 
-  uint8_t minuteLeds = minutes%5;
+        #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
-  minutes = minutes/5;
+            uint32_t leds = 0;
 
-#if DISPLAY_DEACTIVATABLE_ITIS == 1
-  uint32_t leds     = 0;
-  if(   ((g_displayParams->mode & 1) == 0 ) // Es ist zur halb/vollen Stunde oder bei gerader Modusnummer
-      || (0 == minutes))
-  {    
-    leds |= (1L << DWP_itis);
-  }
-#else
-  uint32_t leds     = (1L << DWP_itis);
-#endif
+            if (((g_displayParams->mode & 1) == 0) || (minutes == 0)) {
 
+                leds |= (1L << DWP_itis);
 
-  if(hour>12)
-    hour-=12;
+            }
 
-  if(hour==0)
-    hour = 12;
+        #else
 
-  if(minutes>0){
-    uint8_t minState ;
-    minState = ( minData[minutes-1]);
-    if(minutes>6)
-      ++hour;
-    leds |= ((uint32_t)minState)<<DWP_MIN_FIRST;
-  }else{
-    leds |= (1L << DWP_clock);
-  }
+            uint32_t leds = (1L << DWP_itis);
 
-  for(;minuteLeds;--minuteLeds){
-    leds |= (1L << (minuteLeds-1 + DWP_MIN_LEDS_BEGIN));
-  }
+        #endif
 
+        if (hour > 12) {
 
-  if(hour>12)
-    hour-=12;
+            hour -= 12;
 
-  leds |= (1L<< (DWP_HOUR_BEGIN-1 + hour));
+        }
 
-  return leds;
+        if (hour == 0) {
+
+            hour = 12;
+
+        }
+
+        if (minutes > 0) {
+
+            uint8_t minState;
+            minState = minData[minutes - 1];
+
+            if (minutes > 6) {
+
+                ++hour;
+
+            }
+
+            leds |= ((uint32_t)minState) << DWP_MIN_FIRST;
+
+        } else {
+
+            leds |= (1L << DWP_clock);
+
+        }
+
+        for (; minuteLeds; --minuteLeds) {
+
+            leds |= (1L << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
+
+        }
+
+        if (hour > 12) {
+
+            hour -= 12;
+
+        }
+
+        leds |= (1L << (DWP_HOUR_BEGIN - 1 + hour));
+
+        return leds;
 
 }
 

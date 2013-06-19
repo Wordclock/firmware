@@ -97,7 +97,9 @@ enum e_displayWordPos
     };
 
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
+    \
         0 \
+    \
     }
 
     #define DISPLAY_SPECIAL_USER_COMMANDS \
@@ -124,9 +126,9 @@ enum e_displayWordPos
     };
 
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
-
+    \
         0 \
-
+    \
     }
 
     #define DISPLAY_SPECIAL_USER_COMMANDS
