@@ -18,66 +18,69 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display_wc_ger.h
- * 
- *  This files contain the german language specific definitions that are required for display.
+ * @brief Header file containing definitions specific to the German frontpanel
  *
- * \version $Id: display_wc_ger.h 389 2011-10-18 10:59:38Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
+ * This header file contains various definitions specific to the German
+ * frontpanel. Keep in mind that this is the "old" German frontpanel, which
+ * only supporst two different modes, whereas the new one (ger3) supports
+ * three different modes.
  *
- *       \details
- *            This version of the german language supports two regional differences in speking.
-
-            \verbatim 
-                E S K I S T A F Ü N F    ==> ES IST FÜNF
-                U Z E H N F M V O R G    ==> ZEHN VOR
-                D R E I V I E R T E L    ==> DREI VIERTEL
-                N A C H V O R H A L B    ==> NACH VOR HALB
-                X F Ü N F R S Z W E I    ==> FÜNF ZWEI
-                S I E B E N A V I E R    ==> SIEBEN VIER
-                Z E H N T G S E C H S    ==> ZEHN SECHS
-                L D R E I U A C H T J    ==> DREI ACHT
-                E L F N E U N E I N S    ==> ELF NEUN EIN|S
-                B Z W Ö L F R H U H R    ==> ZWÖLF UHR
-            \endverbatim 
-
- *             -# Wessi-Modus:
- *                - es ist ein uhr
- *                - es ist fünf nach eins
- *                - es ist zehn nach eins
- *                - es ist viertel nach eins
- *                - es ist zehn vor halb zwei
- *                - es ist fünf vor halb zwei
- *                - es ist halb zwei
- *                - es ist fünf nach halb zwei
- *                - es ist zehn nach halb zwei
- *                - es ist viertel vor zwei
- *                - es ist zehn vor zwei
- *                - es ist fünf vor zwei
- *             -# Ossi-Modus:
- *               - es ist ein uhr
- *               - es ist fünf nach eins
- *               - es ist zehn nach eins
- *               - es ist viertel zwei
- *               - es ist zehn vor halb zwei
- *               - es ist fünf vor halb zwei
- *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
- *               - es ist zehn nach halb zwei
- *               - es ist dreiviertel zwei
- *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
-
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The frontpanel looks basically like this:
+ *
+ * \verbatim
+ *  E S K I S T A F Ü N F   => ES IST FÜNF
+ *  U Z E H N F M V O R G   => ZEHN VOR
+ *  D R E I V I E R T E L   => DREI VIERTEL
+ *  N A C H V O R H A L B   => NACH VOR HALB
+ *  X F Ü N F R S Z W E I   => FÜNF ZWEI
+ *  S I E B E N A V I E R   => SIEBEN VIER
+ *  Z E H N T G S E C H S   => ZEHN SECHS
+ *  L D R E I U A C H T J   => DREI ACHT
+ *  E L F N E U N E I N S   => ELF NEUN EIN|S
+ *  B Z W Ö L F R H U H R   => ZWÖLF UHR
+ * \endverbatim
+ *
+ * This basically enables the following modes:
+ *
+ * - "Wessi":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL NACH EINS
+ *  - ES IST ZEHN VOR HALB ZWEI
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZEHN NACH HALB ZWEI
+ *  - ES IST VIERTEL VOR ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI
+ *
+ * - "Ossi":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL ZWEI
+ *  - ES IST ZEHN VOR HALB ZWEI
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZEHN NACH HALB ZWEI
+ *  - ES IST DREIVIERTEL ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI
+ *
+ * Support to disable the phrase "ES IST" (it is) during runtime can optionally
+ * be compiled in, see DISPLAY_DEACTIVATABLE_ITIS.
+ *
+ * @note This file should be left untouched if making general adaptations to
+ * the display module. Only things specific to the German language should be
+ * put inside this file.
+ *
+ * @see display_wc_ger.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DISPLAY_GER_H_
 #define _WC_DISPLAY_GER_H_
