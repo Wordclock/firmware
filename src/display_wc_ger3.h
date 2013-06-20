@@ -344,18 +344,18 @@ struct DisplayEepromParams {
 static inline DisplayState display_getMinuteMask()
 {
 
-    return (1L << DWP_fuenfMin)
-        | (1L << DWP_zehnMin)
-        | (1L << DWP_zwanzigMin)
-        | (1L << DWP_dreiMin)
-        | (1L << DWP_viertel)
-        | (1L << DWP_nach)
-        | (1L << DWP_vor)
-        | (1L << DWP_halb)
-        | (1L << DWP_min1)
-        | (1L << DWP_min2)
-        | (1L << DWP_min3)
-        | (1L << DWP_min4);
+    return ((DisplayState)1 << DWP_fuenfMin)
+        | ((DisplayState)1 << DWP_zehnMin)
+        | ((DisplayState)1 << DWP_zwanzigMin)
+        | ((DisplayState)1 << DWP_dreiMin)
+        | ((DisplayState)1 << DWP_viertel)
+        | ((DisplayState)1 << DWP_nach)
+        | ((DisplayState)1 << DWP_vor)
+        | ((DisplayState)1 << DWP_halb)
+        | ((DisplayState)1 << DWP_min1)
+        | ((DisplayState)1 << DWP_min2)
+        | ((DisplayState)1 << DWP_min3)
+        | ((DisplayState)1 << DWP_min4);
 }
 
 /**
@@ -364,20 +364,20 @@ static inline DisplayState display_getMinuteMask()
 static inline DisplayState display_getHoursMask()
 {
 
-    return (1L << DWP_zw)
-        | (1L << DWP_ei)
-        | (1L << DWP_n)
-        | (1L << DWP_s)
-        | (1L << DWP_ieben)
-        | (1L << DWP_drei)
-        | (1L << DWP_vier)
-        | (1L << DWP_fuenf)
-        | (1L << DWP_sechs)
-        | (1L << DWP_acht)
-        | (1L << DWP_neun)
-        | (1L << DWP_zehn)
-        | (1L << DWP_elf)
-        | (1L << DWP_zwoelf);
+    return ((DisplayState)1 << DWP_zw)
+        | ((DisplayState)1 << DWP_ei)
+        | ((DisplayState)1 << DWP_n)
+        | ((DisplayState)1 << DWP_s)
+        | ((DisplayState)1 << DWP_ieben)
+        | ((DisplayState)1 << DWP_drei)
+        | ((DisplayState)1 << DWP_vier)
+        | ((DisplayState)1 << DWP_fuenf)
+        | ((DisplayState)1 << DWP_sechs)
+        | ((DisplayState)1 << DWP_acht)
+        | ((DisplayState)1 << DWP_neun)
+        | ((DisplayState)1 << DWP_zehn)
+        | ((DisplayState)1 << DWP_elf)
+        | ((DisplayState)1 << DWP_zwoelf);
 
 }
 
@@ -387,7 +387,7 @@ static inline DisplayState display_getHoursMask()
 static inline DisplayState display_getTimeSetIndicatorMask()
 {
 
-    return (1L << DWP_clock);
+    return ((DisplayState)1 << DWP_clock);
 
 }
 
