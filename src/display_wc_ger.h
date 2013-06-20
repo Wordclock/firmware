@@ -134,6 +134,7 @@ enum e_displayWordPos
 {
 
     DWP_itis = 0,
+
     DWP_fuenfMin,
     DWP_zehnMin,
     DWP_vorMin,
@@ -142,6 +143,7 @@ enum e_displayWordPos
     DWP_nach,
     DWP_vorHour,
     DWP_halb,
+
     DWP_s,
     DWP_one,
     DWP_two,
@@ -155,8 +157,11 @@ enum e_displayWordPos
     DWP_ten,
     DWP_eleven,
     DWP_twelve,
+
     DWP_clock,
+
     DWP_sr_nc,
+
     DWP_min1,
     DWP_min2,
     DWP_min3,
