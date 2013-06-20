@@ -68,7 +68,7 @@
 
     static const uint8_t minWessiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_nach));
 
-    static const uint8_t minWessidreiVirtel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_vorHour));
+    static const uint8_t minWessidreiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_vorHour));
 
     #undef DISP_SETBIT
 
@@ -123,7 +123,7 @@
 
                 } else if (minutes == 9) {
 
-                    minState = minWessidreiVirtel;
+                    minState = minWessidreiViertel;
 
                 }
 
