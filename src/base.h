@@ -98,7 +98,7 @@
  *
  * @see BIN8()
  */
-#define BIN32(b3, b2, b1, b0)( \
+#define BIN32(b3, b2, b1, b0) ( \
     (BIN8(b3) << 24) | (BIN8(b2) << 16) | (BIN8(b1) << 8) | (BIN8(b0)))
 
 /**
