@@ -51,7 +51,7 @@
 #include "main.h"
 #include "timer.h"
 #include "dcf77.h"
-#include "Irmp/irmp.h"
+#include "IRMP/irmp.h"
 #include "ldr.h"
 #include "user.h"
 #include "display.h"
