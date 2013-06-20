@@ -171,7 +171,7 @@ enum e_displayWordPos
     * If the LED group representing "It is" can be deactivated
     * (DISPLAY_DEACTIVATABLE_ITIS) there are two modes: The first one will
     * have this phrase enabled, the second one disabled. The user might
-    * choose on of these modes. The setting will be stored persisentely
+    * choose on of these modes. The setting can be stored persistently
     * within the EEPROM, see DisplayEepromParams.
     *
     * @see DISPLAY_DEACTIVATABLE_ITIS
@@ -191,6 +191,7 @@ enum e_displayWordPos
     *
     * @see DISPLAYEEPROMPARAMS_DEFAULT
     * @see wceeprom.h
+    * @see e_WcEngModes
     */
     struct DisplayEepromParams {
 
