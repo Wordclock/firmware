@@ -91,7 +91,7 @@
 
 /**
  * @brief Typedef defining the way in which the LEDs are connected to the
- *   display
+ *   board
  *
  * This enumeration itself is actually defined in the language specific files,
  * e.g. display_wc_[language].h.

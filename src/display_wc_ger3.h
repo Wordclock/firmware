@@ -169,7 +169,7 @@
 
 /**
  * @brief Enumeration defining the way in which the LEDs are connected to the
- *   display.
+ *   board.
  *
  * To make various operations regarding the display state more efficient,
  * some implicit assumptions about the ordering of the items within this
