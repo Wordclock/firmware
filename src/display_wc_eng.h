@@ -57,9 +57,16 @@
  *
  * To make various operations regarding the display state more efficient,
  * some implicit assumptions about the ordering of the items within this
- * enumrations are made. Keep that in mind when actually trying to customizing
- * it. Refer to DWP_MIN_FIRST, DWP_HOUR_BEGIN, DWP_LAST_SR_POS and
- * DWP_MIN_LEDS_BEGIN for some more details.
+ * enumerations are made:
+ *
+ * - The "five minute" blocks (5, 10, ...) are placed one after the other
+ *   and are ordered consecutively.
+ *
+ * - The hours are placed one after the other and are ordered consecutively.
+ *
+ * You should keep that in mind when actually trying to customizing it.  Refer
+ * to DWP_MIN_FIRST, DWP_HOUR_BEGIN, DWP_LAST_SR_POS and DWP_MIN_LEDS_BEGIN for
+ * some more details.
  *
  * @warning The order of these items cannot be mixed arbitrarily.
  *
