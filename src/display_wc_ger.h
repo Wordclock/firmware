@@ -96,6 +96,10 @@
  * when this functionality is not needed. The default value is 1, so it will
  * be compiled into the binary.
  *
+ * When this is enabled the amount of modes is actually doubled as each mode
+ * ("Ossi" & "Wessi) is also offered with either the phrase "Es ist" (it is)
+ * enabled and/or disabled.
+ *
  * @see e_WcGerModes
  */
 #define DISPLAY_DEACTIVATABLE_ITIS 1
