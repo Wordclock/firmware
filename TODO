@@ -136,5 +136,6 @@
     - Consider to put translationmatrix to flash
 	
 - display.h: display_getNumberDisplayState() Add indicator once the counter
-  wraps around. The minute LEDs can be used, so the range covered can be five
-  times as big (0-4).
+  wraps around. The minute LEDs can be used, so the range covered can be four
+  times as big (1, 2, 3 or 4 minute LEDs enabled). This would make it possible
+  to display ranges from 1 to 48.
