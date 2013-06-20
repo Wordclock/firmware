@@ -173,9 +173,73 @@ extern void display_autoOffAnimStep1Hz(uint8_t animPreview);
  * @return A display state with activated indicators
  */
 static inline DisplayState display_getIndicatorMask();
+
+/**
+ * @brief Returns a display state indicating the the time is being set
+ *
+ * The returned indication can be used as feedback to the user when interacting
+ * with the clock while setting the time itself. In case of the Wordclock it
+ * makes sense to use the phrase "clock" for that purpose.
+ *
+ * This is effectively implemented in the language specific files, as it
+ * is depending upon the way the LEDs are connected to the frontpanel, see
+ * e_displayWordPos.
+ *
+ * @return A display state with activated indicators
+ */
 static inline DisplayState display_getTimeSetIndicatorMask();
+
+/**
+ * @brief Returns a display state with all bits representing minutes enabled
+ *
+ * This functions returns a display state with all bits, which represent a
+ * minute ("five-minute" as well as the four separate minute LEDs) enabled.
+ *
+ * This is effectively implemented in the language specific files, as it
+ * is depending upon the way the LEDs are connected to the frontpanel, see
+ * e_displayWordPos.
+ *
+ * @return Display state with all bits representing minutes enabled
+ *
+ * @see DisplayState
+ * @see e_displayWordPos
+ */
 static inline DisplayState display_getMinuteMask();
+
+/**
+ * @brief Returns a display state with all bits representing a hour enabled
+ *
+ * This functions returns a display state with all bits, which represent a
+ * hour (1-12) enabled.
+ *
+ * This is effectively implemented in the language specific files, as it
+ * is depending upon the way the LEDs are connected to the frontpanel, see
+ * e_displayWordPos.
+ *
+ * @return Display state with all bits representing hours enabled
+ *
+ * @see DisplayState
+ * @see e_displayWordPos
+ */
 static inline DisplayState display_getHoursMask();
+
+/**
+ * @brief Returns a display state with a representation for the given number
+ *
+ * This functions returns a display state which will represent the given
+ * number. This can be used to interact with the user by offering him an
+ * visual feedback within certain menus.
+ *
+ * This is effectively implemented in the language specific files, as it
+ * is depending upon the way the LEDs are connected to the frontpanel, see
+ * e_displayWordPos.
+ *
+ * @param number The number you want to show a representation of to the user
+ *
+ * @return Display state with a representation of the given number
+ *
+ * @see DisplayState
+ */
 static inline DisplayState display_getNumberDisplayState(uint8_t number);
 
 /**
