@@ -212,7 +212,7 @@ enum e_displayWordPos
     */
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
     \
-        0 \
+        (e_WcEngModes)0 \
     \
     }
 
