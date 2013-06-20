@@ -22,10 +22,8 @@
  * @file display_wc_ger.h
  * @brief Header file containing definitions specific to the German frontpanel
  *
- * This header file contains various definitions specific to the German
- * frontpanel. Keep in mind that this is the "old" German frontpanel, which
- * only supporst two different modes, whereas the new one (ger3) supports
- * three different modes.
+ * This header file contains various definitions specific to the "old" German
+ * frontpanel.
  *
  * The frontpanel looks basically like this:
  *
@@ -74,6 +72,10 @@
  *
  * Support to disable the phrase "ES IST" (it is) during runtime can optionally
  * be compiled in, see DISPLAY_DEACTIVATABLE_ITIS.
+ *
+ * @note Keep in mind that this is the "old" German frontpanel, which only
+ * supports two different modes, whereas the new one (ger3) supports three
+ * different modes.
  *
  * @note This file should be left untouched if making general adaptations to
  * the display module. Only things specific to the German language should be
