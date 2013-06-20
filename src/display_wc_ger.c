@@ -48,8 +48,43 @@
 
 #if (WC_DISP_GER == 1)
 
+    /**
+     * @brief Macro making it easier to set single bits within a display state
+     *
+     * This makes it easier to deal with display state, whenever single bits
+     * need to be set. It is used quite heavily within minData to define
+     * the single values.
+     *
+     * The position is simply calculated by subtracting DWP_MIN_FIRST from
+     * the given parameter, which is expected to be from e_displayWordPos and
+     * shifting a one by this amount.
+     *
+     * @see minData
+     * @see DWP_MIN_FIRST
+     * @see e_displayWordPos
+     * @see DisplayState
+     */
     #define DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
 
+    /**
+     * @brief Containing the display states for the minute blocks
+     *
+     * There are eleven "five-minute" blocks (5, 10, 15, 20, 25, 30, 35, 40,
+     * 45, 50, 55), which are defined ascendingly here. To make it easier,
+     * _DISP_SETBIT() is used quite heavily.
+     *
+     * This defines the display states for the "Ossi" mode. As there are
+     * only subtle differences between the "Ossi" and the "Wessi" mode, the
+     * "Wessi" mode is actually also using these definitions. However in the
+     * case of "viertel" (quarter past) and "dreiviertel" (quarter to)
+     * minWessiViertel and minWessidreiViertel are used.
+     *
+     * @see _DISP_SETBIT()
+     * @see e_displayWordPos
+     * @see DisplayState
+     * @see minWessiViertel
+     * @see minWessidreiViertel
+     */
     static const uint8_t minDataOssi[11] = {
 
         (DISP_SETBIT(DWP_fuenfMin) | DISP_SETBIT(DWP_nach)),
@@ -66,12 +101,39 @@
 
     };
 
+    /**
+     * @brief Containing the display state for "viertel nach" (quarter past)
+     *
+     * This defines the display state for the "Wessi" mode in case of
+     * "viertel nach" (quarter past).
+     *
+     * @see _DISP_SETBIT()
+     * @see e_displayWordPos
+     * @see DisplayState
+     * @see minDataOssi
+     * @see minWessidreiViertel
+     */
     static const uint8_t minWessiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_nach));
 
+    /**
+     * @brief Containing the display state for "dreiviertel" (quarter to)
+     *
+     * This defines the display state for the "Wessi" mode in case of
+     * "dreiviertel" (quarter to).
+     *
+     * @see _DISP_SETBIT()
+     * @see e_displayWordPos
+     * @see DisplayState
+     * @see minDataOssi
+     * @see minWessiViertel
+     */
     static const uint8_t minWessidreiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_vorHour));
 
     #undef DISP_SETBIT
 
+    /**
+     * @see display.h
+     */
     DisplayState display_getTimeState(const datetime_t* i_newDateTime)
     {
 
