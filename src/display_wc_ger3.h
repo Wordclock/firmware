@@ -116,12 +116,73 @@
 #ifndef _WC_DISPLAY_GER3_H_
 #define _WC_DISPLAY_GER3_H_
 
+/**
+ * @brief Defines whether the phrase "Es ist" (it is) should be deactivatable
+ *
+ * This controls whether the code to make the phrase "Es ist" (it is)
+ * deactivatable during runtime. This makes it possible to offer different
+ * modes, see e_WcGerModes, the user can choose from.
+ *
+ * To actually be deactivatable some extra code is needed, which can be saved
+ * when this functionality is not needed. The default value is 1, so it will
+ * be compiled into the binary.
+ *
+ * When this is enabled the amount of modes is actually doubled as each mode
+ * is also offered with either the phrase "Es ist" (it is) enabled and/or
+ * disabled.
+ *
+ * @see e_WcGerModes
+ */
 #define DISPLAY_DEACTIVATABLE_ITIS 1
 
+/**
+ * @brief Controls whether the "Jester mode" should be added
+ *
+ * If set to 1, the "Jester mode" is added to the list of available modes and
+ * can be choosen by the user. The mode itself chooses randomly one of any
+ * possible ways to display the time. This even includes some strange options
+ * like "dreiviertel nach halb neun" ("quarter after half ten") instead of
+ * "viertel nach neun" ("quarter past nine")
+ *
+ * This controls whether the code to make the phrase "Es ist" (it is)
+ * deactivatable during runtime. This makes it possible to offer different
+ * modes, see e_WcGerModes, the user can choose from.
+ *
+ * @see DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL
+ */
 #define DISPLAY_ADD_JESTER_MODE 1
 
+/**
+ * @brief Controls whether the "Jester mode" should be activated on April 1st
+ *
+ * This will enable the "Jester mode" on April 1st each year as kind of an
+ * April fools' joke. It will only work when a DCF receiver is present
+ * (DCF_PRESENT) to make sure the current date is set and valid.
+ *
+ * The mode itself is described at DISPLAY_ADD_JESTER_MODE. This option can
+ * be turned on and/or off independently of DISPLAY_ADD_JESTER_MODE itself.
+ *
+ * @see DCF_PRESENT
+ * @see DISPLAY_ADD_JESTER_MODE
+ */
 #define DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL 1
 
+/**
+ * @brief Enumeration defining the way in which the LEDs are connected to the
+ *   display.
+ *
+ * To make various operations regarding the display state more efficient,
+ * some implicit assumptions about the ordering of the items within this
+ * enumerations are made. You should keep that in mind when actually trying to
+ * customizing it.  Refer to DWP_MIN_FIRST, DWP_HOUR_BEGIN, DWP_LAST_SR_POS and
+ * DWP_MIN_LEDS_BEGIN for some more details.
+ *
+ * @warning The order of these items may not be mixed arbitrarily.
+ *
+ * @see DWP_MIN_FIRST
+ * @see DWP_HOUR_BEGIN
+ * @see DWP_MIN_LEDS_BEGIN
+ */
 enum e_displayWordPos
 {
 
@@ -161,12 +222,53 @@ enum e_displayWordPos
 
 };
 
+/**
+ * @brief First item within e_displayWordPos representing a minute "block"
+ *
+ * This is expected to "point" at the first item within e_displayWordPos which
+ * represents a word regarding the minutes (five, ten, ...).
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_MIN_FIRST DWP_fuenfMin
 
+/**
+ * @brief First item within e_displayWordPos representing a hour
+ *
+ * This is expected to "point" at the first item within e_displayWordPost which
+ * represents a word regarding the hour (1 to 12).
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_HOUR_BEGIN DWP_zw
 
+/**
+ * @brief First item within e_displayWordPost representing the four minute LEDs
+ *
+ * This is expected to "point" at the first item within e_displayWordPost which
+ * represents a minute LED. There are four of these and they are controlled
+ * directly instead of indirectly via the shift registers. The minute LEDs are
+ * expected to be ordered ascendingly, so various operations regarding this can
+ * be implemented more efficiently.
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_MIN_LEDS_BEGIN DWP_min1
 
+ /**
+ * @brief Containing different modes the user might choose from
+ *
+ * There are various modes of operation, which are explained in more detail
+ * in the header of this file. This enumerations contains constants to
+ * work with these modes internally. The chosen setting can be stored
+ * persistently within the EEPROM, see DisplayEepromParams.
+ *
+ * If enabled (DISPLAY_ADD_JESTER_MODE) the "Jester mode" will be added along
+ * with the others.
+ *
+ * @see DISPLAY_ADD_JESTER_MODE
+ * @see DisplayEepromParams
+ */
 typedef enum e_WcGerModes {
 
     tm_wessi = 0,
@@ -184,33 +286,61 @@ typedef enum e_WcGerModes {
 
 } e_WcGerModes;
 
+/**
+ * @brief Containing the parameters of this module to be stored persistently
+ *
+ * @see DISPLAYEEPROMPARAMS_DEFAULT
+ * @see wceeprom.h
+ * @see e_WcGerModes
+ */
 struct DisplayEepromParams {
 
     e_WcGerModes mode;
 
 };
 
+/**
+ * @brief Default settings of this module to be stored persistently
+ *
+ * @see DisplayEepromParams
+ * @see wceeprom.h
+*/
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \
     (e_WcGerModes)0 \
 \
 }
 
+/**
+ * @see user.h
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS \
     UI_SELECT_DISP_MODE,
 
+/**
+ * @see user.h
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS_CODES \
     0x0008,
 
+/**
+ * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
+ */
 #define _DISP_TOGGLE_DISPMODE_CODE \
     ++g_displayParams->mode; \
     g_displayParams->mode %= (TM_COUNT * (DISPLAY_DEACTIVATABLE_ITIS + 1)); \
     addState(MS_showNumber, (void*)(g_displayParams->mode + 1)); \
     log_state("WRO\n");
 
+/**
+ * @see user.c
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
     USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getMinuteMask()
 {
 
@@ -228,6 +358,9 @@ static inline DisplayState display_getMinuteMask()
         | (1L << DWP_min4);
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getHoursMask()
 {
 
@@ -248,6 +381,9 @@ static inline DisplayState display_getHoursMask()
 
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getTimeSetIndicatorMask()
 {
 
@@ -255,6 +391,9 @@ static inline DisplayState display_getTimeSetIndicatorMask()
 
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getNumberDisplayState(uint8_t number)
 {
 
