@@ -80,12 +80,12 @@
         uint8_t minuteLeds = minutes % 5;
         minutes = minutes / 5;
         DisplayState leds;
-        uint8_t langMode;
+        uint8_t langMode = g_displayParams->mode;
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
             leds = 0;
-            langMode = g_displayParams->mode / 2;
+            langMode /= 2;
 
             if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
@@ -96,7 +96,6 @@
         #else
 
             leds = ((DisplayState)1 << DWP_itis);
-            langMode = g_displayParams->mode;
 
         #endif
 
