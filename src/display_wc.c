@@ -96,7 +96,7 @@ void display_outputData(DisplayState state)
 
     shift24_output(state);
 
-    if (state & (1L << DWP_min1)) {
+    if (state & ((DisplayState)1 << DWP_min1)) {
 
         PORT(DISPLAY_MIN1) |= _BV(BIT(DISPLAY_MIN1));
 
@@ -106,7 +106,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if (state & (1L << DWP_min2)) {
+    if (state & ((DisplayState)1 << DWP_min2)) {
 
         PORT(DISPLAY_MIN2) |= _BV(BIT(DISPLAY_MIN2));
 
@@ -116,7 +116,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if (state & (1L << DWP_min3)) {
+    if (state & ((DisplayState)1 << DWP_min3)) {
 
         PORT(DISPLAY_MIN3) |= _BV(BIT(DISPLAY_MIN3));
 
@@ -126,7 +126,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if(state & (1L << DWP_min4)) {
+    if(state & ((DisplayState)1 << DWP_min4)) {
 
         PORT(DISPLAY_MIN4) |= _BV(BIT(DISPLAY_MIN4));
 
