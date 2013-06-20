@@ -129,6 +129,9 @@
      */
     static const uint8_t minWessidreiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_vorHour));
 
+    /*
+     * Undefine helper macro as it is no longer neede
+     */
     #undef DISP_SETBIT
 
     /**
@@ -137,67 +140,151 @@
     DisplayState display_getTimeState(const datetime_t* i_newDateTime)
     {
 
+        /*
+         * Get a local copy of hour and minutes
+         */
         uint8_t hour = i_newDateTime->hh;
         uint8_t minutes = i_newDateTime->mm;
+
+        /*
+         * Get the number of minutes past the current "five-minute" block.
+         * This will later on be used to setup the minute LEDs
+         */
         uint8_t minuteLeds = minutes % 5;
+
+        /*
+         * Get the current "five-minute" block
+         */
         minutes = minutes / 5;
+
+        /*
+         * The variable which will be returned later on
+         */
         DisplayState leds;
+
+        /*
+         * Get the chosen language mode
+         */
         uint8_t langMode = g_displayParams->mode;
 
+        /*
+         * Check whether code for deactivating the phrase "Es ist" (it is)
+         * should be compiled in.
+         */
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
+            /*
+             * Initialize the display state
+             */
             leds = 0;
+
+            /*
+             * As DISPLAY_DEACTIVATABLE_ITIS == 1 the amount of states is
+             * actually doubled, as each mode is offered with and/or without
+             * the phrase "Es ist" (it is), so this division deal with it.
+             */
             langMode /= 2;
 
+            /*
+             * Check whether the phrase "Es ist" (it is) should actually be
+             * displayed. This is the case when either the mode is even or
+             * when the hour is "full" and/or half full.
+             */
             if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
                 leds |= ((DisplayState)1 << DWP_itis);
 
             }
 
+        /*
+         * The phrase "Es ist" (it is) should always be enabled and is
+         * not deactivatable.
+         */
         #else
 
+            /*
+             * Enable the phrase "Es ist" (it is)
+             */
             leds = ((DisplayState)1 << DWP_itis);
 
         #endif
 
+        /*
+         * Check whether it is p.m.: In case the hour is bigger than twelve
+         * it needs to be decremented by twelve, as only hours between one and
+         * twelve can be displayed.
+         */
         if (hour > 12) {
 
             hour -= 12;
 
         }
 
+        /*
+         * Zero equals twelve
+         */
         if (hour == 0) {
 
             hour = 12;
 
         }
 
+        /*
+         * Check whether the hour is "full" or whether the time has actually
+         * progressed so far that a "five-minute" block needs to be displayed.
+         */
         if (minutes > 0) {
 
+            /*
+             * Holding the "state" for the current "five-minute" block
+             */
             uint8_t minState;
             minState = (minDataOssi[minutes - 1]);
 
+            /*
+             * Checking whether "Wessi" mode is selected
+             */
             if (tm_wessi == langMode) {
 
+                /*
+                 * Use state defined in minWessiViertel when the time is
+                 * "viertel nach" (quarter past)
+                 */
                 if (minutes == 3) {
 
                     minState = minWessiViertel;
 
+                /*
+                 * Use state defined in minWessidreiViertel when the time is
+                 * "dreiviertel" (quarter to)
+                 */
                 } else if (minutes == 9) {
 
                     minState = minWessidreiViertel;
 
                 }
 
+                /*
+                 * Increment the hour in case the time is being displayed
+                 * relative to the next full hour, e.g. "9:30" would actually
+                 * be called "halb zehn" ("half ten") in this mode.
+                 */
                 if (minutes >= 4) {
 
                     hour++;
 
                 }
 
+            /*
+             * "Ossi" mode is selected
+             */
             } else {
 
+                /*
+                 * Increment the hour in case the time is being displayed
+                 * relative to the next full hour, e.g. "9:15" would actually
+                 * be called "viertel zehn" ("quarter ten") in this mode.
+                 */
                 if (minutes >= 3) {
 
                     hour++;
@@ -206,32 +293,59 @@
 
             }
 
+            /*
+             * Add minState to the result to be returned
+             */
             leds |= ((DisplayState)minState) << DWP_MIN_FIRST;
 
+        /*
+         * The hour is "full" and no "five-minute" block needs to be
+         * displayed, e.g. 9:00 - 9:04
+         */
         } else {
 
+            /*
+             * Activate the phrase "Uhr" (clock)
+             */
             leds |= ((DisplayState)1 << DWP_clock);
 
         }
 
+        /*
+         * Iteratove over minute LEDs and enable them if necessary
+         */
         for (; minuteLeds; minuteLeds--) {
 
             leds |= ((DisplayState)1 << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
 
         }
 
+        /*
+         * Once again check whether the hour is bigger than twelve and
+         * decrement it if necessary, as we potentially have increased the hour
+         * in the previous passage when displaying the time relative to the
+         * next hour, e.g. "halb zehn" ("half ten").
+         */
         if (hour > 12) {
 
             hour -= 12;
 
         }
 
+        /*
+         * Check whether the "s" from "Eins" needs to be enabled to be
+         * correct German. This is needed in case the hour is not "full" and
+         * a "five-minute" block needs to be displayed.
+         */
         if (hour == 1 && minutes >= 1) {
 
             leds |= ((DisplayState)1 << DWP_s);
 
         }
 
+        /*
+         * Enable the LED group corresponding to the hour
+         */
         leds |= ((DisplayState)1 << (DWP_HOUR_BEGIN - 1 + hour));
 
         return leds;
