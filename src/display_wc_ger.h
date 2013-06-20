@@ -260,7 +260,7 @@ struct DisplayEepromParams {
 */
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \
-    0 \
+    (e_WcGerModes)0 \
 \
 }
 
