@@ -19,98 +19,99 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display_wc_ger3.h
- * 
- *  This files contain the german language specific definitions that are required for display.
- *  \details
- *           This version of the german language supports four regional differences in speking.
+ * @brief Header file containing definitions specific to the German frontpanel
  *
-            \verbatim 
-                E S K I S T L F Ü N F    ==> ES IST FÜNF
-                Z E H N Z W A N Z I G    ==> ZEHN ZWANZIG
-                D R E I V I E R T E L    ==> DREI|VIERTEL
-                T G N A C H V O R J M    ==> NACH VOR
-                H A L B Q Z W Ö L F P    ==> HALB ZWÖLF
-                Z W E I N S I E B E N    ==> ZW|EI|N|S|IEBEN
-                K D R E I R H F Ü N F    ==> DREI FÜNF
-                E L F N E U N V I E R    ==> ELF NEUN VIER
-                W A C H T Z E H N R S    ==> ACHT ZEHN
-                B S E C H S F M U H R    ==> SECHS UHR
-            \endverbatim 
-
- *             -# Wessi-Modus:
- *                - es ist ein uhr
- *                - es ist fünf nach eins
- *                - es ist zehn nach eins
- *                - es ist viertel nach eins
- *                - es ist zehn vor halb zwei
- *                - es ist fünf vor halb zwei
- *                - es ist halb zwei
- *                - es ist fünf nach halb zwei
- *                - es ist zehn nach halb zwei
- *                - es ist viertel vor zwei
- *                - es ist zehn vor zwei
- *                - es ist fünf vor zwei
- *             -# Rhein-Ruhr-Modus:
- *               - es ist ein uhr
- *               - es ist fünf nach eins
- *               - es ist zehn nach eins
- *               - es ist viertel nach eins
- *               - es ist zwanzig nach eins
- *               - es ist fünf vor halb zwei
- *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
- *               - es ist zwanzig vor zwei
- *               - es ist viertel vor zwei
- *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
- *             -# Ossi-Modus:
- *               - es ist ein uhr
- *               - es ist fünf nach eins
- *               - es ist zehn nach eins
- *               - es ist viertel zwei
- *               - es ist zehn vor halb zwei
- *               - es ist fünf vor halb zwei
- *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
- *               - es ist zehn nach halb zwei
- *               - es ist dreiviertel zwei
- *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
- *             -# Swabian-Modus:
- *               - es ist ein uhr
- *               - es ist fünf nach eins
- *               - es ist zehn nach eins
- *               - es ist viertel zwei
- *               - es ist zwanzig nach eins
- *               - es ist fünf vor halb zwei
- *               - es ist halb zwei
- *               - es ist fünf nach halb zwei
- *               - es ist zwanzig vor zwei
- *               - es ist dreiviertel zwei
- *               - es ist zehn vor zwei
- *               - es ist fünf vor zwei
+ * This header file contains various definitions specific to the "new" German
+ * frontpanel, which supports four different modes.
  *
- * \par Adding own language variants:
- *    -# add a enum entry to e_WcGerModes in this header
- *    -# adds a SELECT_MODE line to s_modes in c file\n
- -       for each 5 minute block there is an index to s_minData
- -       that defines wich wording should be used
- -    -# finished
- * 
- * \version $Id: display_wc_ger3.h 425 2013-03-14 19:05:31Z vt $
- * 
- * \author Copyright (c) 2012 Vlad Tepesch    
- * \author Copyright (c) 2012 Uwe Höß
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The frontpanel looks basically like this:
+ *
+ * \verbatim
+ *  E S K I S T L F Ü N F   => ES IST FÜNF
+ *  Z E H N Z W A N Z I G   => ZEHN ZWANZIG
+ *  D R E I V I E R T E L   => DREI|VIERTEL
+ *  T G N A C H V O R J M   => NACH VOR
+ *  H A L B Q Z W Ö L F P   => HALB ZWÖLF
+ *  Z W E I N S I E B E N   => ZW|EI|N|S|IEBEN
+ *  K D R E I R H F Ü N F   => DREI FÜNF
+ *  E L F N E U N V I E R   => ELF NEUN VIER
+ *  W A C H T Z E H N R S   => ACHT ZEHN
+ *  B S E C H S F M U H R   => SECHS UHR
+ * \endverbatim
+ *
+ * This basically enables the following modes:
+ *
+ * - "Wessi":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL NACH EINS
+ *  - ES IST ZEHN VOR HALB ZWEI
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZEHN NACH HALB ZWEI
+ *  - ES IST VIERTEL VOR ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI
+ *
+ * - "Rhein-Ruhr":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL NACH EINS
+ *  - ES IST ZWANZIG NACH EINS
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZWANZIG VOR ZWEI
+ *  - ES IST VIERTEL VOR ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI
+ *
+ * - "Ossi":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL ZWEI
+ *  - ES IST ZEHN VOR HALB ZWEI
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZEHN NACH HALB ZWEI
+ *  - ES IST DREIVIERTEL ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI *
+ *
+ * - "Schwaben":
+ *  - ES IST EIN UHR
+ *  - ES IST FÜNF NACH EINS
+ *  - ES IST ZEHN NACH EINS
+ *  - ES IST VIERTEL ZWEI
+ *  - ES IST ZWANZIG NACH EINS
+ *  - ES IST FÜNF VOR HALB ZWEI
+ *  - ES IST HALB ZWEI
+ *  - ES IST FÜNF NACH HALB ZWEI
+ *  - ES IST ZWANZIG VOR ZWEI
+ *  - ES IST DREIVIERTEL ZWEI
+ *  - ES IST ZEHN VOR ZWEI
+ *  - ES IST FÜNF VOR ZWEI
+ *
+ * Support to disable the phrase "ES IST" (it is) during runtime can optionally
+ * be compiled in, see DISPLAY_DEACTIVATABLE_ITIS.
+ *
+ * @note Keep in mind that this is the "new" German frontpanel, which
+ * supports four different modes, whereas the "old" one (ger) supports only two
+ * different modes.
+ *
+ * @note This file should be left untouched if making general adaptations to
+ * the display module. Only things specific to the German language should be
+ * put inside this file.
+ *
+ * @see display_wc_ger3.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef _WC_DISPLAY_GER3_H_
 #define _WC_DISPLAY_GER3_H_
