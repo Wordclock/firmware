@@ -2,9 +2,7 @@
   variables as well as documenting the source code extensively. The current
   documentation is full of misspellings and a mix of English and German.
 
-    Files left:        
-        - display_wc_ger.c
-        - display_wc_ger.h
+    Files left:
         - display_wc_ger3.c
         - display_wc_ger3.h
         - user.c
