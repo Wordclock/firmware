@@ -163,6 +163,15 @@ extern void display_fadeDisplayState(DisplayState i_showStates);
 extern void display_blinkStep();
 extern void display_autoOffAnimStep1Hz(uint8_t animPreview);
 
+/**
+ * @brief Returns a display state that contains a visual indication
+ *
+ * The returned indication can be used as feedback to the user when interacting
+ * with the clock. In case of the Wordclock it makes sense to use the minute
+ * LEDs as an indicator.
+ *
+ * @return A display state with activated indicators
+ */
 static inline DisplayState display_getIndicatorMask();
 static inline DisplayState display_getTimeSetIndicatorMask();
 static inline DisplayState display_getMinuteMask();

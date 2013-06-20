@@ -102,15 +102,9 @@
  */
 typedef enum e_displayWordPos e_displayWordPos;
 
- /**
-  * @brief Returns a state that contains an indication
-  *
-  * The returned indication can be used for informing the user about any
-  * interactions. In case of the Wordclock it makes sense to use the minute
-  * LEDs as an indicator.
-  *
-  * @return A display state with activated indicators
-  */
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getIndicatorMask()
 {
 
