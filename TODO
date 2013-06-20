@@ -117,6 +117,11 @@
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
   been removed in the past.
+  
+- The whole conditional inclusion process within the display module is an ugly
+  hack. This should be done right by including only the file actually needed,
+  e.g. "display_wc_ger3.h" where ever functions of this file are needed. This
+  file should then in return include other files, e.g. "display.h", if needed.
 
 - Demo mode: When switching from the multiplexing demo mode into the classical
   one, the brightness seems to be at a maximum, although it wasn't before
