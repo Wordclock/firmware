@@ -85,8 +85,45 @@
 #ifndef _WC_DISPLAY_GER_H_
 #define _WC_DISPLAY_GER_H_
 
+/**
+ * @brief Defines whether the phrase "Es ist" (it is) should be deactivatable
+ *
+ * This controls whether the code to make the phrase "Es ist" (it is)
+ * deactivatable during runtime. This makes it possible to offer different
+ * modes, see e_WcGerModes, the user can choose from.
+ *
+ * To actually be deactivatable some extra code is needed, which can be saved
+ * when this functionality is not needed. The default value is 1, so it will
+ * be compiled into the binary.
+ *
+ * @see e_WcGerModes
+ */
 #define DISPLAY_DEACTIVATABLE_ITIS 1
 
+/**
+ * @brief Enumeration defining the way in which the LEDs are connected to the
+ *   display.
+ *
+ * To make various operations regarding the display state more efficient,
+ * some implicit assumptions about the ordering of the items within this
+ * enumerations are made:
+ *
+ * - The "five minute" blocks (5, 10, ...) are placed one after the other
+ *   and are ordered consecutively.
+ *
+ * - The hours are placed one after the other and are ordered consecutively.
+ *
+ * You should keep that in mind when actually trying to customizing it.  Refer
+ * to DWP_MIN_FIRST, DWP_HOUR_BEGIN, DWP_LAST_SR_POS and DWP_MIN_LEDS_BEGIN for
+ * some more details.
+ *
+ * @warning The order of these items cannot be mixed arbitrarily.
+ *
+ * @see DWP_MIN_FIRST
+ * @see DWP_HOUR_BEGIN
+ * @see DWP_LAST_SR_POS
+ * @see DWP_MIN_LEDS_BEGIN
+ */
 enum e_displayWordPos
 {
 
@@ -123,14 +160,65 @@ enum e_displayWordPos
 
 };
 
+/**
+ * @brief First item within e_displayWordPos representing a minute "block"
+ *
+ * This is expected to "point" at the first item within e_displayWordPos which
+ * represents a "five-minute" block (5, 10, 15, 20, 30). The items within this
+ * group of blocks itself are expected to be ordered ascendingly, so various
+ * operations regarding this can be implemented more efficiently.
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_MIN_FIRST DWP_fuenfMin
 
+/**
+ * @brief First item within e_displayWordPos representing a hour
+ *
+ * This is expected to "point" at the first item within e_displayWordPost which
+ * represents a hour (1 to 12). The items within this group itself are expected
+ * to be ordered ascendingly, so various operations regarding this can be
+ * implemented more efficiently.
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_HOUR_BEGIN DWP_one
 
+/**
+ * @brief Last item within e_displayWordPost connected to the shift registers
+ *
+ * This is expected to "point" at the last item within e_displayWordPost which
+ * is actually controlled by the shift register cascade. Items following this
+ * one are then in return controlled directly by I/O operations on the
+ * appropriate pins.
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_LAST_SR_POS DWP_clock
 
+/**
+ * @brief First item within e_displayWordPost representing the four minute LEDs
+ *
+ * This is expected to "point" at the first item within e_displayWordPost which
+ * represents a minute LED. There are four of these and they are controlled
+ * directly instead of indirectly via the shift registers. The minute LEDs are
+ * expected to be ordered ascendingly, so various operations regarding this can
+ * be implemented more efficiently.
+ *
+ * @see e_displayWordPos
+ */
 #define DWP_MIN_LEDS_BEGIN DWP_min1
 
+/**
+* @brief Containing different modes the user might choose from
+*
+* There are two modes of operation referred to as "Wessi" and "Ossi". See the
+* header of this file for details. This enumerations contains constants to
+* work with these modes internally. The chosen setting can be stored
+* persistently within the EEPROM, see DisplayEepromParams.
+*
+* @see DisplayEepromParams
+*/
 typedef enum e_WcGerModes {
 
     tm_wessi = 0,
@@ -140,33 +228,61 @@ typedef enum e_WcGerModes {
 
 } e_WcGerModes;
 
+/**
+ * @brief Containing the parameters of this module to be stored persistently
+ *
+ * @see DISPLAYEEPROMPARAMS_DEFAULT
+ * @see wceeprom.h
+ * @see e_WcGerModes
+ */
 struct DisplayEepromParams {
 
     e_WcGerModes mode;
 
 };
 
+/**
+ * @brief Default settings of this module to be stored persistently
+ *
+ * @see DisplayEepromParams
+ * @see wceeprom.h
+*/
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \
     0 \
 \
 }
 
+/**
+ * @see user.h
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS \
     UI_SELECT_DISP_MODE,
 
+/**
+ * @see user.h
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS_CODES \
     0x0008,
 
+/**
+ * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
+ */
 #define _DISP_TOGGLE_DISPMODE_CODE \
     ++g_displayParams->mode; \
     g_displayParams->mode %= (TM_COUNT*(DISPLAY_DEACTIVATABLE_ITIS + 1)); \
     addState( MS_showNumber, (void*)(g_displayParams->mode + 1)); \
     log_state("WO\n");
 
+/**
+ * @see user.c
+ */
 #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
     USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getMinuteMask()
 {
 
@@ -185,6 +301,9 @@ static inline DisplayState display_getMinuteMask()
 
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getHoursMask()
 {
 
@@ -204,6 +323,9 @@ static inline DisplayState display_getHoursMask()
 
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getTimeSetIndicatorMask()
 {
 
@@ -211,6 +333,9 @@ static inline DisplayState display_getTimeSetIndicatorMask()
 
 }
 
+/**
+ * @see display.h
+ */
 static inline DisplayState display_getNumberDisplayState(uint8_t number)
 {
 
