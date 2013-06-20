@@ -116,178 +116,153 @@
 #ifndef _WC_DISPLAY_GER3_H_
 #define _WC_DISPLAY_GER3_H_
 
-/** 
- * wether "it is" can be deactivated via remote or not 
- * - 0 = off tm_wessi -> tm_rheinRuhr -> ossi,
- * - 1 = on  tm_wessi -> tm_wessi "it is" off -> tm_rheinRuhr -> tm_rheinRuhr "it is" off -> ossi -> ossi "it is" off,
- */
 #define DISPLAY_DEACTIVATABLE_ITIS 1
 
-/**
- * This adds the so called 'Jester Mode' to the mode list to allow manual selection of that mode.
- *
- * The 'Jester Mode' randomly choses one of any possible way to display a time.
- * For example instead of 'viertel nach h' it may diplays "dreiviertel nach halb h"
- */
 #define DISPLAY_ADD_JESTER_MODE 1
 
-/**
- * If DCF_PRESENT is set the clock uses 'Jester Moode' (\see DISPLAY_ADD_JESTER_MODE for description of that mode) on 1st April.
- * This option is independent of DISPLAY_ADD_JESTER_MODE and may be used even if the other is switched off.
- */
 #define DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL 1
 
-/**
- * This Enum defines how the led words are connected to the Board and the position 
- * in the state data ( that's why the minutes (gpio, not shift register) are also in this enum )
- */
 enum e_displayWordPos
 {
-  DWP_zw  = 0,
-  DWP_ei     ,
-  DWP_n      ,
-  DWP_s      ,
-  DWP_ieben  ,
-  DWP_drei   ,
-  DWP_vier   ,
-  DWP_fuenf  ,
-  DWP_sechs  ,
-  DWP_acht   ,
-  DWP_neun   ,
-  DWP_zehn   ,
-  DWP_elf    ,
-  DWP_zwoelf  ,
 
-  DWP_itis  ,
-  DWP_clock ,
+    DWP_zw  = 0,
+    DWP_ei,
+    DWP_n,
+    DWP_s,
+    DWP_ieben,
+    DWP_drei,
+    DWP_vier,
+    DWP_fuenf,
+    DWP_sechs,
+    DWP_acht,
+    DWP_neun,
+    DWP_zehn,
+    DWP_elf,
+    DWP_zwoelf,
 
-  DWP_fuenfMin   ,
-  DWP_zehnMin    ,
-  DWP_zwanzigMin ,
-  DWP_dreiMin    ,
-  DWP_viertel    ,
-  DWP_nach       ,
-  DWP_vor        ,
-  DWP_halb       ,
+    DWP_itis,
+    DWP_clock,
 
-  DWP_min1,
-  DWP_min2,
-  DWP_min3,
-  DWP_min4,
+    DWP_fuenfMin,
+    DWP_zehnMin,
+    DWP_zwanzigMin,
+    DWP_dreiMin,
+    DWP_viertel,
+    DWP_nach,
+    DWP_vor,
+    DWP_halb,
 
-  DWP_WORDSCOUNT  
+    DWP_min1,
+    DWP_min2,
+    DWP_min3,
+    DWP_min4,
+
+    DWP_WORDSCOUNT
+
 };
 
-/** the first of the minute words */
-#define DWP_MIN_FIRST       DWP_fuenfMin
-/** the first hour word */
-#define DWP_HOUR_BEGIN      DWP_zw
-/** the first of the dots that reside on gpio */
-#define DWP_MIN_LEDS_BEGIN  DWP_min1
+#define DWP_MIN_FIRST DWP_fuenfMin
 
+#define DWP_HOUR_BEGIN DWP_zw
 
-/**  
- *  enumerates the modes how the time senteces will be build
- *  For desciptions of the modes see display_wc_ger3.h
- */
-typedef enum e_WcGerModes{
-  tm_wessi = 0,    /**<  Wess-Mode                        */
-  tm_rheinRuhr,    /**<  Rhein-Ruhr-Mode                  */
-  tm_ossi,         /**<  Ossi-Mode                        */
-  tm_swabian,      /**<  Swabian-Mode                     */
-# if (DISPLAY_ADD_JESTER_MODE==1)
-  tm_jesterMode,
-# endif
-  TM_COUNT         /**<  the number of different modes    */
-}e_WcGerModes;
+#define DWP_MIN_LEDS_BEGIN DWP_min1
 
-/**
- * contains display parameters
- */
-struct DisplayEepromParams{
+typedef enum e_WcGerModes {
 
-  /** the idom to use for time display */
-  e_WcGerModes mode;
+    tm_wessi = 0,
+    tm_rheinRuhr,
+    tm_ossi,
+    tm_swabian,
+
+    #if (DISPLAY_ADD_JESTER_MODE == 1)
+
+        tm_jesterMode,
+
+    #endif
+
+    TM_COUNT
+
+} e_WcGerModes;
+
+struct DisplayEepromParams {
+
+    e_WcGerModes mode;
+
 };
 
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
-  /* .mode = */ (e_WcGerModes)0 \
+\
+    (e_WcGerModes)0 \
+\
 }
 
-// declare toggle ossi functionality
-#define DISPLAY_SPECIAL_USER_COMMANDS  \
-  UI_SELECT_DISP_MODE     ,
+#define DISPLAY_SPECIAL_USER_COMMANDS \
+    UI_SELECT_DISP_MODE,
 
-// give default IR-Code
-#define DISPLAY_SPECIAL_USER_COMMANDS_CODES  \
- /* [UI_Select_Disp_Mode    ] =  */  0x0008  /* 8     */,
+#define DISPLAY_SPECIAL_USER_COMMANDS_CODES \
+    0x0008,
 
+#define _DISP_TOGGLE_DISPMODE_CODE \
+    ++g_displayParams->mode; \
+    g_displayParams->mode %= (TM_COUNT * (DISPLAY_DEACTIVATABLE_ITIS + 1)); \
+    addState(MS_showNumber, (void*)(g_displayParams->mode + 1)); \
+    log_state("WRO\n");
 
-// code to execute on keypress
-#define _DISP_TOGGLE_DISPMODE_CODE                                                \
-              ++g_displayParams->mode;                                            \
-              g_displayParams->mode %= (TM_COUNT*(DISPLAY_DEACTIVATABLE_ITIS+1)); \
-              addState( MS_showNumber, (void*)(g_displayParams->mode+1));         \
-              log_state("WRO\n");
-
-// declare the ir-handler for the Key
 #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
-   USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
+    USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
+static inline DisplayState display_getMinuteMask()
+{
 
-
-/* for documentation see prototype in display.h */
-static inline DisplayState display_getMinuteMask(void)
-{ 
-  return 
-       ( 1L<< DWP_fuenfMin  ) 
-     | ( 1L<< DWP_zehnMin   ) 
-     | ( 1L<< DWP_zwanzigMin) 
-     | ( 1L<< DWP_dreiMin   ) 
-     | ( 1L<< DWP_viertel   ) 
-     | ( 1L<< DWP_nach      ) 
-     | ( 1L<< DWP_vor       ) 
-     | ( 1L<< DWP_halb      ) 
-     | ( 1L<< DWP_min1    ) 
-     | ( 1L<< DWP_min2    ) 
-     | ( 1L<< DWP_min3    ) 
-     | ( 1L<< DWP_min4    );
+    return (1L << DWP_fuenfMin)
+        | (1L << DWP_zehnMin)
+        | (1L << DWP_zwanzigMin)
+        | (1L << DWP_dreiMin)
+        | (1L << DWP_viertel)
+        | (1L << DWP_nach)
+        | (1L << DWP_vor)
+        | (1L << DWP_halb)
+        | (1L << DWP_min1)
+        | (1L << DWP_min2)
+        | (1L << DWP_min3)
+        | (1L << DWP_min4);
 }
 
-
-
-/* for documentation see prototype in display.h */
-static inline DisplayState display_getHoursMask(void)
+static inline DisplayState display_getHoursMask()
 {
-  return
-       ( 1L<< DWP_zw     ) 
-     | ( 1L<< DWP_ei     ) 
-     | ( 1L<< DWP_n      ) 
-     | ( 1L<< DWP_s      ) 
-     | ( 1L<< DWP_ieben  ) 
-     | ( 1L<< DWP_drei   ) 
-     | ( 1L<< DWP_vier   ) 
-     | ( 1L<< DWP_fuenf  ) 
-     | ( 1L<< DWP_sechs  ) 
-     | ( 1L<< DWP_acht   ) 
-     | ( 1L<< DWP_neun   ) 
-     | ( 1L<< DWP_zehn   ) 
-     | ( 1L<< DWP_elf    ) 
-     | ( 1L<< DWP_zwoelf );
+
+    return (1L << DWP_zw)
+        | (1L << DWP_ei)
+        | (1L << DWP_n)
+        | (1L << DWP_s)
+        | (1L << DWP_ieben)
+        | (1L << DWP_drei)
+        | (1L << DWP_vier)
+        | (1L << DWP_fuenf)
+        | (1L << DWP_sechs)
+        | (1L << DWP_acht)
+        | (1L << DWP_neun)
+        | (1L << DWP_zehn)
+        | (1L << DWP_elf)
+        | (1L << DWP_zwoelf);
+
 }
 
-/* for documentation see prototype in display.h */
-static inline DisplayState display_getTimeSetIndicatorMask(void)
+static inline DisplayState display_getTimeSetIndicatorMask()
 {
-  return (1L<<DWP_clock);
+
+    return (1L << DWP_clock);
+
 }
 
-/* for documentation see prototype in display.h */
-static inline DisplayState display_getNumberDisplayState( uint8_t number )
+static inline DisplayState display_getNumberDisplayState(uint8_t number)
 {
+
     extern const uint16_t s_numbers[12];
-    number = number%12;
+    number = number % 12;
+
     return ((DisplayState)(s_numbers[number])) << DWP_HOUR_BEGIN;
+
 }
 
 #endif /* _WC_DISPLAY_GER3_H_ */
