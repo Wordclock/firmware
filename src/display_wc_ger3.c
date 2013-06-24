@@ -189,7 +189,7 @@
 
     #undef DISP_SETBIT
 
-    static bool isJesterModeActive(const datetime_t* i_dateTime, uint8_t i_langmode)
+    static bool isJesterModeActive(const datetime_t* i_dateTime, e_WcGerModes i_langmode)
     {
 
         #if (DISPLAY_ADD_JESTER_MODE == 1)
