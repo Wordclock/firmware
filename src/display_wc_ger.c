@@ -65,7 +65,7 @@
      * @see e_displayWordPos
      * @see DisplayState
      */
-    #define DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
+    #define _DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
 
     /**
      * @brief Containing the display states for the minute blocks
@@ -88,17 +88,17 @@
      */
     static const uint8_t minDataOssi[11] = {
 
-        (DISP_SETBIT(DWP_fuenfMin) | DISP_SETBIT(DWP_nach)),
-        (DISP_SETBIT(DWP_zehnMin) | DISP_SETBIT(DWP_nach)),
-        (DISP_SETBIT(DWP_viertel)),
-        (DISP_SETBIT(DWP_zehnMin) | DISP_SETBIT(DWP_halb) | DISP_SETBIT(DWP_vorMin)),
-        (DISP_SETBIT(DWP_fuenfMin) | DISP_SETBIT(DWP_halb) | DISP_SETBIT(DWP_vorMin)),
-        (DISP_SETBIT(DWP_halb)),
-        (DISP_SETBIT(DWP_fuenfMin) | DISP_SETBIT(DWP_halb) | DISP_SETBIT(DWP_nach)),
-        (DISP_SETBIT(DWP_zehnMin) | DISP_SETBIT(DWP_halb) | DISP_SETBIT(DWP_nach)),
-        (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_dreiHour)),
-        (DISP_SETBIT(DWP_zehnMin) | DISP_SETBIT(DWP_vorMin)),
-        (DISP_SETBIT(DWP_fuenfMin) | DISP_SETBIT(DWP_vorHour)),
+        (_DISP_SETBIT(DWP_fuenfMin) | _DISP_SETBIT(DWP_nach)),
+        (_DISP_SETBIT(DWP_zehnMin) | _DISP_SETBIT(DWP_nach)),
+        (_DISP_SETBIT(DWP_viertel)),
+        (_DISP_SETBIT(DWP_zehnMin) | _DISP_SETBIT(DWP_halb) | _DISP_SETBIT(DWP_vorMin)),
+        (_DISP_SETBIT(DWP_fuenfMin) | _DISP_SETBIT(DWP_halb) | _DISP_SETBIT(DWP_vorMin)),
+        (_DISP_SETBIT(DWP_halb)),
+        (_DISP_SETBIT(DWP_fuenfMin) | _DISP_SETBIT(DWP_halb) | _DISP_SETBIT(DWP_nach)),
+        (_DISP_SETBIT(DWP_zehnMin) | _DISP_SETBIT(DWP_halb) | _DISP_SETBIT(DWP_nach)),
+        (_DISP_SETBIT(DWP_viertel) | _DISP_SETBIT(DWP_dreiHour)),
+        (_DISP_SETBIT(DWP_zehnMin) | _DISP_SETBIT(DWP_vorMin)),
+        (_DISP_SETBIT(DWP_fuenfMin) | _DISP_SETBIT(DWP_vorHour)),
 
     };
 
@@ -114,7 +114,7 @@
      * @see minDataOssi
      * @see minWessidreiViertel
      */
-    static const uint8_t minWessiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_nach));
+    static const uint8_t minWessiViertel = (_DISP_SETBIT(DWP_viertel) | _DISP_SETBIT(DWP_nach));
 
     /**
      * @brief Containing the display state for "dreiviertel" (quarter to)
@@ -128,12 +128,12 @@
      * @see minDataOssi
      * @see minWessiViertel
      */
-    static const uint8_t minWessidreiViertel = (DISP_SETBIT(DWP_viertel) | DISP_SETBIT(DWP_vorHour));
+    static const uint8_t minWessidreiViertel = (_DISP_SETBIT(DWP_viertel) | _DISP_SETBIT(DWP_vorHour));
 
     /*
      * Undefine helper macro as it is no longer neede
      */
-    #undef DISP_SETBIT
+    #undef _DISP_SETBIT
 
     /**
      * @see display.h
