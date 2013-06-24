@@ -227,7 +227,7 @@
         const uint8_t minutes = i_newDateTime->mm / 5;
         const uint8_t minuteLeds = i_newDateTime->mm % 5;
         uint8_t minuteLedSubState = 0;
-        uint8_t jesterMode;
+        bool jesterMode;
         DisplayState leds;
         uint8_t langMode = g_displayParams->mode;
 
