@@ -50,8 +50,69 @@
 
 #if (WC_DISP_GER3 == 1)
 
+    /**
+     * @brief Makes it possible to set "minute groups" within a display state
+     *
+     * This makes it easier to deal with display states concerning the
+     * "minute groups", whenever single groups need to be enabled. This is used
+     * quite heavily within s_minData.
+     *
+     * A "minute group" is something like "fünf" (five), "zehn", (ten) and so
+     * forth. By logically "or"-ing these groups it is possible to come up with
+     * a display state where more than just a single "group" is enabled.
+     *
+     * The position is calculated by shifting a one to the the given position
+     * subtracted by the value of the position of the first minute LED, see
+     * DWP_MIN_FIRST.
+     *
+     * @see s_minData
+     * @see DWP_MIN_FIRST
+     */
     #define DISP_SETBIT(x) (1 << (x - DWP_MIN_FIRST))
 
+    /**
+     * @brief Contains the minute definitions for displaying a time
+     *
+     * This contains the minute part of a display state with all the possible
+     * ways to display a correct time. Note that not all combinations make
+     * necessarily sense. To make it easier to define single bits,
+     * DISP_SETBIT_MIN() is used quite heavily here.
+     *
+     * There are only eight different LED "minute groups", refer to
+     * e_displayWordPos for details. Therefore uint8_t is enough for now.
+     *
+     * The groups itself are:
+     *
+     * - DWP_fuenfMin
+     * - DWP_zehnMin
+     * - DWP_zwanzigMin
+     * - DWP_dreiMin
+     * - DWP_viertel
+     * - DWP_nach
+     * - DWP_vor
+     * - DWP_halb
+     *
+     * By combining these in various ways all different times throughout the
+     * hour can be displayed in all the different modes.
+     *
+     * This in part defines multiple ways of displaying the same time, e.g.
+     * "viertel vor" (quarter to) as well as "dreiviertel" (three-quarter).
+     * s_minStartInd defines where definitions for each five minute "block"
+     * can be found within this table, as there might be gaps between
+     * two five minute "blocks" due to different modes. s_minVariants on the
+     * other hand defines how many different variants there are for each five
+     * minute "block".
+     *
+     * @note If making adaptations to this, you probably need to change the
+     * other lookup tables (s_minStartInd, s_hourInc2nd, s_hourInc1st,
+     * s_minVariants), too.
+     *
+     * @see s_minStartInd
+     * @see s_hourInc2nd
+     * @see s_hourInc1st
+     * @see s_minVariants
+     * @see display_getTimeState()
+     */
     static const uint8_t s_minData[] = {
 
         (0),
@@ -87,9 +148,58 @@
 
     #undef DISP_SETBIT
 
+    /**
+     * @brief Defining when an increment by one to the current hour is needed
+     *
+     * Some entries of s_minData require the hour to be incremented by one for the
+     * displayed time to be correct. E.g. "8:45" can be displayed as "viertel
+     * vor neun" (quarter to nine).
+     *
+     * The least significant byte represents the first eight entries within
+     * s_minData. As there currently are only 28 entries within s_minData, the
+     * most significant byte represents the last four entries, which makes
+     * the four most significant bits basically useless.
+     *
+     * @see s_minData
+     * @see BIN32()
+     * @see s_hourInc2nd
+     * @see display_getTimeState()
+     */
     static const DisplayState s_hourInc1st = BIN32(00001111, 11011111, 11110101, 11010000);
+
+    /**
+     * @brief Defining when an increment by two to the current hour is needed
+     *
+     * Analogous to s_hourInc1st this defines which entries of s_minData
+     * require the current hour to be incremented by two. Currently there
+     * is only a single entry where this is the case, namely "dreiviertel vor
+     * halb" ("three-quarters to half"). To make this more clear consider
+     * "8:45" as an example. This can be displayed as "dreiviertel vor halb
+     * zehn" ("three quarters to half ten").
+     *
+     * The meaning of the bits itself are completely analogous to s_hourInc1st.
+     *
+     * @see s_minData
+     * @see BIN32()
+     * @see s_hourInc1st
+     * @see display_getTimeState()
+     */
     static const DisplayState s_hourInc2nd = BIN32(00000000, 10000000, 00000000, 00000000);
 
+    /**
+     * @brief Defines the start indexes for each "block" within s_minData
+     *
+     * This defines the index within s_minData, where a new five minute time
+     * "block" starts. There are exactly twelve entries expected, one for each
+     * block (0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 55). As there might be
+     * different ways to display the same block, the numbers itself are not
+     * completely "gapless". The "gaps", e.g. between 5 and 10, basically mean
+     * that there are five possible ways to display "viertel nach" (quarter
+     * past).
+     *
+     * @see s_minData
+     * @see display_getTimeState()
+     */
     static const uint8_t s_minStartInd[] = {
 
         0,
@@ -107,9 +217,57 @@
 
     };
 
+    /**
+     * @brief Makes it possible mask and shift bytes more easily
+     *
+     * This makes it easier to deal with byte shifting and masking within
+     * s_modeShiftMask.
+     *
+     * The resulting byte is basically actually "halved". The first half
+     * (lower nibble) represents a bit offset, whereas the second half
+     * (higher nibble) represents the number of bits given.
+     *
+     * @param numBits Number of bits (0 - 4), higher nibble of resulting byte
+     * @param bitOffset Bit offset, lower nibble of the resulting byte
+     *
+     * @return Byte after applying the operations with the given parameters
+     *
+     * @see s_modeShiftMask
+     */
     #define MASK_SHIFT(numBits, bitOffset) \
         ((((numBits == 0) ? 0 : ((numBits == 1) ? 1 : ((numBits == 2) ? 0x3 : ((numBits == 3) ? 0x7 : 0xf)))) << 4) | bitOffset)
 
+    /**
+     * @brief Defines the position of sub indexes for each 5 minute time "block"
+     *
+     * There are exactly twelve entries expected, one for each "block"
+     * (0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 55).
+     *
+     * The MASK_SHIFT() macro is used to define the entries itself:
+     *
+     * - The first parameter is the number of bits needed to encode the given
+     * amount of different variants, e.g. when there are two different variants
+     * at least one bit is needed to distinguish between both of them. If there
+     * are five different variants then at least 3 bits (2 ^ 3 = 8) are needed.
+     * This is effectively the bit mask that has to be applied after the bitset
+     * has been shifted.
+     *
+     * - The second parameter is amount of bits that the bitset needs to be
+     * shifted to the right.
+     *
+     * The number of bits needed to shift an entry should be as big as the
+     * number of bits needed by all previous definitions combined, e.g. when
+     * the first entry needs one bit, the second entry can only start at bit
+     * two and therefore needs to be shifted by one.
+     *
+     * In combination with s_modes this makes it possible to get the correct
+     * index within s_minData for the chosen language mode and the given
+     * time.
+     *
+     * @see MASK_SHIFT()
+     * @see display_getTimeState()
+     * @see s_modes
+     */
     static const uint8_t s_modeShiftMask[] = {
 
         MASK_SHIFT(1, 0),
@@ -129,6 +287,22 @@
 
     #undef MASK_SHIFT
 
+    /**
+     * @brief Number of variants for each five minute "block" within s_minData
+     *
+     * This defines the number of different variants for each five minute
+     * "block" within s_minData, e.g. for the "fünf nach" (five past) time
+     * "block" is only one entry within s_minData, whereas for the "viertel
+     * nach" (quarter past) time "block" there are five different variants
+     * within s_minData.
+     *
+     * This, in a way, is also expressed by the first parameter of MASK_SHIFT()
+     * within s_modeShiftMask.
+     *
+     * @see s_minData
+     * @see s_modeShiftMask
+     * @see display_getTimeState()
+     */
     static const uint8_t s_minVariants[] = {
 
         2,
@@ -146,11 +320,87 @@
 
     };
 
+    /**
+     * @brief Used to define bitsets representing the different modes
+     *
+     * This makes it easier to deal with bitsets representing the different
+     * modes, which are implemented by this module, namely: "Wessi",
+     * "Rhein-Ruhr", "Ossi", "Schwabe".
+     *
+     * It expects 12 parameters: One for each five minute block (0, 5, 10, 15,
+     * 20, 25, 30, 35, 40, 45, 50, 55) starting with the one for 0. Each
+     * parameter defines which sub index (variant) should actually be chosen
+     * for this specific five minute "block" from within s_minData.
+     *
+     * The range for each parameter depends upon the number of bits that are
+     * used to encode this five minute "block". Refer to s_modeShiftMask for
+     * details. Right now this means that the following five minute "blocks"
+     * are exactly one bit wide: 0, 10, 20, 25, 30, 40, 50, 55. The five minute
+     * "blocks" for 15 and 45 on the other hand are each three bits wide. The
+     * five minute blocks for 5 and 35 are not encoded here, as there is only
+     * one variant for each of this block.
+     *
+     * One bit width blocks can either be 0 and/or 1, three bit width blocks
+     * can take up values ranging from 0 to 7. Generally speaking the formula
+     * is: `0 to (2 ^ bit_width) - 1`
+     *
+     * @param i0 The subindex (variant) for the first five minute "block"
+     * @param i5 The subindex (variant) for the second five minute "block"
+     * @param i10 The subindex (variant) for the third five minute "block"
+     * @param i15 The subindex (variant) for the fourth five minute "block"
+     * @param i20 The subindex (variant) for the fifth five minute "block"
+     * @param i25 The subindex (variant) for the sixth five minute "block"
+     * @param i30 The subindex (variant) for the seventh five minute "block"
+     * @param i35 The subindex (variant) for the eighth five minute "block"
+     * @param i40 The subindex (variant) for the ninth five minute "block"
+     * @param i45 The subindex (variant) for the tenth five minute "block"
+     * @param i50 The subindex (variant) for the eleventh five minute "block"
+     * @param i55 The subindex (variant) for the twelfth five minute "block"
+     *
+     * @return Bitset representing the given mode
+     *
+     * @see s_minData
+     * @see s_modes
+     */
     #define SELECT_MODE(i0, i5, i10, i15, i20, i25, i30, i35, i40, i45, i50, i55) \
         (i0 | (i10 << 1) | (i15 << 2) | (i20 << 5) | (i25 << 6)  | (i30 << 7) | (i40 << 8) | (i45 << 9) | (i50 << 12) | (i55 << 13))
 
+    /**
+     * @brief Defines the mode for the "jester mode"
+     *
+     * This defines the "jester mode" used to include it within "s_modes".
+     *
+     * @see s_minData
+     * @see s_modes
+     * @see DISPLAY_ADD_JESTER_MODE
+     */
     #define JESTER_MODE 0xffff
 
+    /**
+     * @brief Different modes that are implemented by this module
+     *
+     * This defines the different modes that this module implements, see
+     * e_WcGerModes. The idea is that the user can effectively change the
+     * modes, e.g. using the remote control.
+     *
+     * To make the definition easier, the macro SELECT_MODE() is used here
+     * quite heavily.
+     *
+     * There are basically four different modes, which will be added:
+     *
+     * - "Wessi"
+     * - "Rhein-Ruhr"
+     * - "Ossi"
+     * - "Schwabe"
+     *
+     * If DISPLAY_ADD_JESTER_MODE is set to 1, the "jester mode" will be added,
+     * too.
+     *
+     * @see e_WcGerModes
+     * @see SELECT_MODE
+     * @see DISPLAY_ADD_JESTER_MODE
+     * @see JESTER_MODE
+     */
     static const uint16_t s_modes[] = {
 
         SELECT_MODE(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -168,8 +418,46 @@
 
     #undef SELECT_MODE
 
+    /**
+     * @brief Makes it possible to set single bits within a display state
+     *
+     * This makes it easier to deal with display states, whenever single bits
+     * need to be set. This is useful within s_numbers.
+     *
+     * The position is simply calculated by shifting a one to the the given
+     * position. Multiple bits can be set by combining different states
+     * (effectively "or"-ing them together).
+     *
+     * @see s_numbers
+     * @see e_displayWordPos
+     * @see DisplayState
+     */
     #define DISP_SETBIT(x) ((DisplayState)1 << x)
 
+    /**
+     * @brief Definition of a display state for each number from one to twelve
+     *
+     * This defines a display state for each number reaching from one to
+     * twelve, which can be be used for one of two things:
+     *
+     * - Display the current hour as part of the current time, see
+     * display_getTimeState().
+     *
+     * - Show only the number to give the user some feedback, see
+     * display_getNumberDisplayState().
+     *
+     * The definitions itself are pretty straight forward. The only thing to
+     * notice is that uint8_t would not be enough here, as there are more
+     * than eight different words to control. Therefore uint16_t is used.
+     *
+     * @note The number one is defined as "eins". Depending upon the context it
+     * is used in, it might be the case that "ein" is actually needed, e.g.
+     * "ES IST EIN UHR" (It IS ONE O'CLOCK). In these cases the "s" has to be
+     * disabled manually by a simple bit operation.
+     *
+     * @see DISP_SETBIT()
+     * @see display_getNumberDisplayState()
+     */
     const uint16_t s_numbers[12] = {
 
         (DISP_SETBIT(DWP_zwoelf)),
@@ -189,6 +477,33 @@
 
     #undef DISP_SETBIT
 
+    /**
+     * @brief Returns whether the "jester mode" should be activated or not
+     *
+     * This returns a value indicating whether or not the "jester mode" should
+     * be activated based upon two factors:
+     *
+     * - The "jester mode" was added (see DISPLAY_ADD_JESTER_MODE) and is the
+     *  currently chosen mode (see e_WcGerModes).
+     *
+     * - The software was compiled with support for DCF77 (see DCF_PRESENT)
+     *  and the current date is April 1st while the software was compiled with
+     * DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL set to 1.
+     *
+     * One of these conditions must be met for this function to return true.
+     * Otherwise it will return false, which means that the "jester mode"
+     * should not be enabled.
+     *
+     * @param i_dateTime The current datetime
+     * @param i_langmode The currently chosen langmode (see e_WcGerModes)
+     *
+     * @return True if the "jester mode" should be activated, otherwise false
+     *
+     * @see DISPLAY_ADD_JESTER_MODE
+     * @see DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL
+     * @see DCF_PRESENT
+     * @see e_WcGerModes
+     */
     static bool isJesterModeActive(const datetime_t* i_dateTime, e_WcGerModes i_langmode)
     {
 
@@ -220,6 +535,9 @@
 
     }
 
+    /**
+     * @see display.h
+     */
     DisplayState display_getTimeState(const datetime_t* i_newDateTime)
     {
 
