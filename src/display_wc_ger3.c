@@ -87,8 +87,8 @@
 
     #undef DISP_SETBIT
 
-    static const uint32_t s_hourInc1st = BIN32(00001111, 11011111, 11110101, 11010000);
-    static const uint32_t s_hourInc2nd = BIN32(00000000, 10000000, 00000000, 00000000);
+    static const DisplayState s_hourInc1st = BIN32(00001111, 11011111, 11110101, 11010000);
+    static const DisplayState s_hourInc2nd = BIN32(00000000, 10000000, 00000000, 00000000);
 
     static const uint8_t s_minStartInd[] = {
 
@@ -168,7 +168,7 @@
 
     #undef SELECT_MODE
 
-    #define DISP_SETBIT(x) (1L << x)
+    #define DISP_SETBIT(x) ((DisplayState)1 << x)
 
     const uint16_t s_numbers[12] = {
 
@@ -231,18 +231,18 @@
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
-            uint32_t leds = 0;
+            DisplayState leds = 0;
             const uint8_t langMode = g_displayParams->mode / 2;
 
             if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
-                leds |= (1L << DWP_itis);
+                leds |= ((DisplayState)1 << DWP_itis);
 
             }
 
         #else
 
-            uint32_t leds = (1L << DWP_itis);
+            DisplayState leds = ((DisplayState)1 << DWP_itis);
             const uint8_t langMode = g_displayParams->mode;
 
         #endif
@@ -251,7 +251,7 @@
 
         if (minutes == 0) {
 
-            leds |= (1L << DWP_clock);
+            leds |= ((DisplayState)1 << DWP_clock);
 
         }
 
@@ -259,7 +259,7 @@
 
             uint8_t subInd;
             uint8_t ind;
-            uint32_t hincTestBit;
+            DisplayState hincTestBit;
 
             if (jesterMode) {
 
@@ -276,7 +276,7 @@
             }
 
             ind = s_minStartInd[minutes] + subInd;
-            hincTestBit = ((uint32_t)1) << ind;
+            hincTestBit = ((DisplayState)1) << ind;
 
             leds |= ((DisplayState)(s_minData[ind])) << DWP_MIN_FIRST;
 
@@ -358,7 +358,7 @@
 
         if ((hour == 1 || hour == 13) && (minutes == 0)) {
 
-            leds &= ~(1L << DWP_s);
+            leds &= ~((DisplayState)1 << DWP_s);
 
         }
 
