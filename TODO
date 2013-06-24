@@ -129,9 +129,13 @@
   state only once, when the fading is completed, so the ISR doesn't block the
   controller without doing anything useful.
 
+- display_wc_ger3.c:
 - display_wc_eng.c:
 - display_wc_ger.c:
     - Make PROGMEM if more RAM is needed (+10B PROGMEM)
+
+- display_wc_eng.c:
+- display_wc_ger.c:
     - Make more flexible
     - Consider to put translationmatrix to flash
 	
