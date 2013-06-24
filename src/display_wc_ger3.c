@@ -39,6 +39,7 @@
  */
 
 #include <inttypes.h>
+#include <stdbool.h>
 
 #include "main.h"
 #include "base.h"
@@ -188,7 +189,7 @@
 
     #undef DISP_SETBIT
 
-    static uint8_t isJesterModeActive(const datetime_t* i_dateTime, uint8_t i_langmode)
+    static bool isJesterModeActive(const datetime_t* i_dateTime, uint8_t i_langmode)
     {
 
         #if (DISPLAY_ADD_JESTER_MODE == 1)
@@ -211,7 +212,7 @@
 
             #else
 
-                return 0;
+                return false;
 
             #endif
 
