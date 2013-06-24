@@ -255,42 +255,38 @@
 
         }
 
-        {
+        uint8_t subInd;
+        uint8_t ind;
+        DisplayState hincTestBit;
 
-            uint8_t subInd;
-            uint8_t ind;
-            DisplayState hincTestBit;
+        if (jesterMode) {
 
-            if (jesterMode) {
+            subInd = simpleRand_get() % s_minVariants[minutes];
 
-                subInd = simpleRand_get() % s_minVariants[minutes];
+        } else {
 
-            } else {
+            const uint16_t mode = s_modes[langMode];
+            const uint8_t shift = s_modeShiftMask[minutes] & 0x0f;
+            const uint8_t mask = s_modeShiftMask[minutes] >> 4;
 
-                const uint16_t mode = s_modes[langMode];
-                const uint8_t shift = s_modeShiftMask[minutes] & 0x0f;
-                const uint8_t mask = s_modeShiftMask[minutes] >> 4;
+            subInd = (mode >> shift) & mask;
 
-                subInd = (mode >> shift) & mask;
+        }
 
-            }
+        ind = s_minStartInd[minutes] + subInd;
+        hincTestBit = ((DisplayState)1) << ind;
 
-            ind = s_minStartInd[minutes] + subInd;
-            hincTestBit = ((DisplayState)1) << ind;
+        leds |= ((DisplayState)(s_minData[ind])) << DWP_MIN_FIRST;
 
-            leds |= ((DisplayState)(s_minData[ind])) << DWP_MIN_FIRST;
+        if (hincTestBit & s_hourInc1st) {
 
-            if (hincTestBit & s_hourInc1st) {
+            ++hour;
 
-                ++hour;
+        }
 
-            }
+        if (hincTestBit & s_hourInc2nd) {
 
-            if (hincTestBit & s_hourInc2nd) {
-
-                ++hour;
-
-            }
+            ++hour;
 
         }
 
