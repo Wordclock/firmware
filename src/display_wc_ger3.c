@@ -39,9 +39,6 @@
  */
 
 #include <inttypes.h>
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
 
 #include "main.h"
 #include "base.h"
