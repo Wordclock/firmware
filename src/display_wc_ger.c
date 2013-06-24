@@ -52,9 +52,9 @@
     /**
      * @brief Macro making it easier to set single bits within a display state
      *
-     * This makes it easier to deal with display state, whenever single bits
+     * This makes it easier to deal with display states, whenever single bits
      * need to be set. It is used quite heavily within minData to define
-     * the single values.
+     * the single states.
      *
      * The position is simply calculated by subtracting DWP_MIN_FIRST from
      * the given parameter, which is expected to be from e_displayWordPos and
