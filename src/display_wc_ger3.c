@@ -19,23 +19,24 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file display_wc_ger3.c
- * 
- *  This files implements the german language specific.
+ * @brief Containing the implementation specific to the "new" German frontpanel
  *
- * \version $Id: display_wc_ger3.c 425 2013-03-14 19:05:31Z vt $
- * 
- * \author Copyright (c) 2012 Vlad Tepesch    
- * \author Copyright (c) 2012 Uwe Höß
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This header file contains the actual implementation to the "new" German
+ * frontpanel. Among other things this includes the function
+ * display_getTimeState().
+ *
+ * @note Keep in mind that this is the "new" German frontpanel, which is
+ * designed a little bit different than the "old" one and therefore supports
+ * more modes.
+ *
+ * @note This file should be left untouched if making general adaptations to
+ * the display module. Only things specific to the German language should be
+ * put inside this file.
+ *
+ * @see display_wc_ger3.h
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 #include <inttypes.h>
