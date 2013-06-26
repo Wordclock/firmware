@@ -275,9 +275,10 @@
         }
 
         ind = s_minStartInd[minutes] + subInd;
-        hincTestBit = ((DisplayState)1) << ind;
 
         leds |= ((DisplayState)(s_minData[ind])) << DWP_MIN_FIRST;
+
+        hincTestBit = ((DisplayState)1) << ind;
 
         if (hincTestBit & s_hourInc1st) {
 
