@@ -200,6 +200,13 @@ enum e_displayWordPos
     */
     struct DisplayEepromParams {
 
+        /**
+         * @brief Chosen mode
+         *
+         * This contains the chosen mode, which is a value from e_WcEngModes.
+         *
+         * @see e_WcEngModes
+         */
         e_WcEngModes mode;
 
     };
