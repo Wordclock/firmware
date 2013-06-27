@@ -18,25 +18,18 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file user.h
- * 
- *  The user-module handles the user interface of the wordclock
- *  \details
- *    This includes the reaction on the input via IR-RC as well as
- *    the output of the time.
+ * @brief Header file of the user module implementing the user interface
  *
- * \version $Id: user.h 424 2013-03-14 18:51:07Z vt $
- * 
- * \author Copyright (c) 2010 Vlad Tepesch    
- * 
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * The user module implements the user interface of the Wordclock. Beside
+ * being responsible for the output of the current time this also includes
+ * various menus which the user can interact with via remote control to
+ * influence the behavior of the Wordclock.
+ *
+ * @see user.c
+ * @see usermodes.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 #ifndef _WC_USER_H_
