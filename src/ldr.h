@@ -27,9 +27,9 @@
  * The returned brightness is the mean value of the last n measurements,
  * where n = MEASUREMENTS_ARRAY_SIZE.
  *
- * It is used to provide ambient light influenced behaviour, e.g. increasing the
- * brightness of the LEDs involved when the light in the room the Wordclock is in
- * is switched on.
+ * It is used to provide ambient light influenced behavior, e.g. increasing the
+ * brightness of the LEDs involved when the light in the room the Wordclock is
+ * in is switched on and/or changed.
  *
  * @see ldr.c
  */
