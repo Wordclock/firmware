@@ -78,9 +78,10 @@
     /**
      * @brief Table containing values to generate PWM signal
      *
-     * This table is used to generate a PWM signal. It contains 32 values.
-     * As the human eye perceives the brightness logarithmically, so these
-     * values are calculated appropriately.
+     * This table is used to generate a PWM signal. It contains 32 values,
+     * making it possible to implement 32 different steps of brightness.
+     * These values are precalculated to fit the logarithmic nature of the
+     * human eye as close as possible.
      *
      * @see pwm_set_brightness()
      * @see pwm_set_color_step()
@@ -94,9 +95,10 @@
     /**
      * @brief Table containing 64 values to generate PWM signal
      *
-     * This table is used to generate a PWM signal. It contains 64 values.
-     * As human eye perceives the brightness logarithmically, so these
-     * values are calculated appropriately.
+     * This table is used to generate a PWM signal. It contains 64 values,
+     * making it possible to implement 64 different steps of brightness.
+     * These values are precalculated to fit the logarithmic nature of the
+     * human eye as close as possible.
      *
      * @see pwm_set_brightness()
      * @see pwm_set_color_step()
