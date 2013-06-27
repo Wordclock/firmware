@@ -248,6 +248,13 @@ typedef enum e_WcGerModes {
  */
 struct DisplayEepromParams {
 
+    /**
+     * @brief Chosen mode
+     *
+     * This contains the chosen mode, which is a value from e_WcGerModes.
+     *
+     * @see e_WcGerModes
+     */
     e_WcGerModes mode;
 
 };
