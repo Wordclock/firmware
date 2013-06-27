@@ -312,20 +312,45 @@ struct DisplayEepromParams {
 }
 
 /**
- * @see user.h
- */
+ * @brief Defines the item within user.h::e_userCommands for changing the mode
+ *
+ * This represents the command, which enables the mode to be changed. The
+ * implemented modes can be found within e_WcGerModes. The default value is
+ * defined in DISPLAY_SPECIAL_USER_COMMANDS_CODES. The actual code, which will
+ * be executed by pressing this key, is defined in _DISP_TOGGLE_DISPMODE_CODE.
+ *
+ * @see e_WcGerModes
+ * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
+ * @see _DISP_TOGGLE_DISPMODE_CODE
+*/
 #define DISPLAY_SPECIAL_USER_COMMANDS \
     UI_SELECT_DISP_MODE,
 
 /**
- * @see user.h
- */
+ * @brief Defines the default key code for changing the mode
+ *
+ * This defines the default key code for changing the mode. The implemented
+ * modes can be found within e_WcGerModes. The actual code, which will be
+ * executed by pressing this key, is defined in _DISP_TOGGLE_DISPMODE_CODE.
+ *
+ * @see e_WcGerModes
+ * @see DISPLAY_SPECIAL_USER_COMMANDS
+ * @see _DISP_TOGGLE_DISPMODE_CODE
+*/
 #define DISPLAY_SPECIAL_USER_COMMANDS_CODES \
     0x0008,
 
 /**
- * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
- */
+ * @brief Actual code to be executed when pressing the mode changing key
+ *
+ * This defines the actual code, which will be executed by pressing the key
+ * responsible for changing the mode, see DISPLAY_SPECIAL_USER_COMMANDS. The
+ * implemented modes itself are listed within e_WcGerModes.
+ *
+ * @see e_WcGerModes
+ * @see DISPLAY_SPECIAL_USER_COMMANDS
+ * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
+*/
 #define _DISP_TOGGLE_DISPMODE_CODE \
     ++g_displayParams->mode; \
     g_displayParams->mode %= (TM_COUNT * (DISPLAY_DEACTIVATABLE_ITIS + 1)); \
@@ -333,8 +358,16 @@ struct DisplayEepromParams {
     log_state("WRO\n");
 
 /**
- * @see user.c
- */
+ * @brief IR handler responsible for executing the code when pressing the key
+ *
+ * This is the actual IR handler, which will generate the appropriate else
+ * branch for handling the key press defined in UI_SELECT_DISP_MODE. It
+ * will make it possible to execute the given code in
+ * _DISP_TOGGLE_DISPMODE_CODE when the appropriate key press is detected.
+ *
+ * @see DISPLAY_SPECIAL_USER_COMMANDS
+ * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
+*/
 #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
     USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
