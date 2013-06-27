@@ -200,7 +200,7 @@ enum e_displayWordPos
     */
     struct DisplayEepromParams {
 
-      e_WcEngModes mode;
+        e_WcEngModes mode;
 
     };
 
