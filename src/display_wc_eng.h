@@ -279,18 +279,41 @@ enum e_displayWordPos
     }
 
     /**
-     * @see user.h
-     */
+     * @brief Defines the item within user.h::e_userCommands for changing the mode
+     *
+     * This represents the command, which enables the mode to be changed. The
+     * implemented modes can be found within e_WcGerModes. The default value is
+     * defined in DISPLAY_SPECIAL_USER_COMMANDS_CODES.
+     *
+     * In case of this display frontpanel it is left empty.
+     *
+     * @see e_WcEngModes
+     * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
+    */
     #define DISPLAY_SPECIAL_USER_COMMANDS
 
     /**
-     * @see user.h
-     */
+     * @brief Defines the default key code for changing the mode
+     *
+     * This defines the default key code for changing the mode. The implemented
+     * modes can be found within e_WcGerModes.
+     *
+     * In case of this display frontpanel it is left empty.
+     *
+     * @see e_WcEngModes
+     * @see DISPLAY_SPECIAL_USER_COMMANDS
+    */
     #define DISPLAY_SPECIAL_USER_COMMANDS_CODES
 
     /**
-     * @see user.c
-     */
+     * @brief IR handler responsible for executing the code when pressing the key
+     *
+     * This is the actual IR handler, which in case of this display frontpanel
+     * is simply left empty as this functionality is not being used.
+     *
+     * @see DISPLAY_SPECIAL_USER_COMMANDS
+     * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
+    */
     #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
 
 #endif
