@@ -298,8 +298,11 @@
  * automatically after USER_DELAY_BEFORE_SAVE_EEPROM_s seconds. Otherwise the
  * user will have to trigger the saving manually.
  *
+ * The saving itself is done within user_isr1Hz().
+ *
  * @see USER_DELAY_BEFORE_SAVE_EEPROM_s
  * @see user.h
+ * @see user_isr1Hz()
  */
 #define USER_AUTOSAVE 1
 
