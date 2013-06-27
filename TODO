@@ -144,3 +144,5 @@
   wraps around. The minute LEDs can be used, so the range covered can be four
   times as big (1, 2, 3 or 4 minute LEDs enabled). This would make it possible
   to display ranges from 1 to 48.
+
+- Make use of copydoc Doxygen comment to avoid duplication
