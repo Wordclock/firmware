@@ -368,11 +368,16 @@
     /**
      * @brief Defines the mode for the "jester mode"
      *
-     * This defines the "jester mode" used to include it within "s_modes".
+     * This defines the "jester mode", which is may be added to "s_modes" when
+     * activated (see DISPLAY_ADD_JESTER_MODE and
+     * DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL). The value of this doesn't
+     * actually influence anything, because the mode will be selected by
+     * chance each time anyway.
      *
      * @see s_minData
      * @see s_modes
      * @see DISPLAY_ADD_JESTER_MODE
+     * @see DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL
      */
     #define JESTER_MODE 0xffff
 
@@ -386,12 +391,60 @@
      * To make the definition easier, the macro SELECT_MODE() is used here
      * quite heavily.
      *
+     * The bit pattern for each of these modes looks like this:
+     *
+     * \verbatim
+     * Bit number | Number of bits | Minutes | Variants
+     *
+     * 1    1   0       x UHR (x O'CLOCK)
+     *                  NACH x UHR (PAST x O'CLOCK)
+     *
+     * 2    1   10      ZEHN NACH x (TEN PAST x)
+     *                  ZWANZIG VOR HALB x+1 (TWENTY TO HALF x+1)
+     *
+     * 3    3   15      VIERTEL NACH x (QUARTER PAST x)
+     *                  VIERTEL x+1 (QUARTER x+1)
+     *                  VIERTEL VOR HALB x+1 (QUARTER TO HALF x+1)
+     *                  DREIVIERTEL VOR x+1 (THREE QUARTERS TO x+1)
+     *                  DREIVIERTEL NACH HALB x (THREE QUARTERS PAST HALF x)
+     *
+     * 6    1   20      ZEHN VOR HALB x+1 (TEN TO HALF x+1)
+     *                  ZWANZIG NACH x (TWENTY PAST x)
+     *
+     * 7    1   25      FÜNF VOR HALB x+1 (FIVE TO HALF x+1)
+     *                  VOR HALB x+1 (TO HALF x+1)
+     *
+     * 8    1   30      HALB x+1 (HALF x+1)
+     *                  NACH HALB x+1 (PAST HALF x+1)
+     *
+     * 9    1   40      ZEHN NACH HALB x+1 (TEN PAST HALF x+1)
+     *                  ZWANZIG VOR x+1 (TWENTY TO x+1)
+     *
+     * 10   3   45      VIERTEL VOR x+1 (QUARTER TO x+1)
+     *                  DREIVIERTEL x+1 (THREE QUARTER x+1)
+     *                  DREIVIERTEL NACH x (THREE QUARTERS PAST x)
+     *                  VIERTEL NACH HALB x+1 (QUARTER PAST HALF x+1)
+     *                  DREIVIERTEL VOR HALB x+2 (THREE QUARTERS TO HALF x+2)
+     *
+     * 13   1   50      ZEHN VOR x+1 (TEN TO x+1)
+     *                  ZWANZIG NACH HALB x+1 (TWENTY PAST HALF x+1)
+     *
+     * 14   1   55      FÜNF VOR x+1 (FIVE TO x+1)
+     *                  VOR x+1 (TO x+1)
+     * \endverbatim
+     *
+     * Notice that "FÜNF NACH" (FIVE PAST) as well as "FÜNF NACH HALB" (FIVE
+     * PAST HALF) are not encoded here, as there are no options for these two
+     * five minute "blocks".
+     *
      * There are basically four different modes, which will be added:
      *
      * - "Wessi"
      * - "Rhein-Ruhr"
      * - "Ossi"
      * - "Schwabe"
+     *
+     * For details about the modes itself, take a look at display_wc_ger3.h.
      *
      * If DISPLAY_ADD_JESTER_MODE is set to 1, the "jester mode" will be added,
      * too.
