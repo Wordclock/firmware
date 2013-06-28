@@ -362,7 +362,7 @@
      * @see s_minData
      * @see s_modes
      */
-    #define SELECT_MODE(i0, i5, i10, i15, i20, i25, i30, i35, i40, i45, i50, i55) \
+    #define _SELECT_MODE(i0, i5, i10, i15, i20, i25, i30, i35, i40, i45, i50, i55) \
         (i0 | (i10 << 1) | (i15 << 2) | (i20 << 5) | (i25 << 6)  | (i30 << 7) | (i40 << 8) | (i45 << 9) | (i50 << 12) | (i55 << 13))
 
     /**
@@ -388,7 +388,7 @@
      * e_WcGerModes. The idea is that the user can effectively change the
      * modes, e.g. using the remote control.
      *
-     * To make the definition easier, the macro SELECT_MODE() is used here
+     * To make the definition easier, the macro _SELECT_MODE() is used here
      * quite heavily.
      *
      * The bit pattern for each of these modes looks like this:
@@ -450,16 +450,16 @@
      * too.
      *
      * @see e_WcGerModes
-     * @see SELECT_MODE
+     * @see _SELECT_MODE
      * @see DISPLAY_ADD_JESTER_MODE
      * @see JESTER_MODE
      */
     static const uint16_t s_modes[] = {
 
-        SELECT_MODE(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        SELECT_MODE(0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),
-        SELECT_MODE(0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0),
-        SELECT_MODE(0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0),
+        _SELECT_MODE(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        _SELECT_MODE(0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),
+        _SELECT_MODE(0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0),
+        _SELECT_MODE(0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0),
 
         #if (DISPLAY_ADD_JESTER_MODE == 1)
 
@@ -469,7 +469,7 @@
 
     };
 
-    #undef SELECT_MODE
+    #undef _SELECT_MODE
 
     /**
      * @brief Makes it possible to set single bits within a display state
