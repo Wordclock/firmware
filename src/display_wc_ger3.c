@@ -146,6 +146,9 @@
 
     };
 
+    /*
+     * Undefine helper macro as it is no longer needed
+     */
     #undef _DISP_SETBIT_MIN
 
     /**
@@ -285,6 +288,9 @@
 
     };
 
+    /*
+     * Undefine helper macro as it is no longer needed
+     */
     #undef _MASK_SHIFT
 
     /**
@@ -469,6 +475,9 @@
 
     };
 
+    /*
+     * Undefine helper macro as it is no longer needed
+     */
     #undef _SELECT_MODE
 
     /**
@@ -528,6 +537,9 @@
 
     };
 
+    /*
+     * Undefine helper macro as it is no longer needed
+     */
     #undef _DISP_SETBIT
 
     /**
