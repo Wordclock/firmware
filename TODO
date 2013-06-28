@@ -148,3 +148,8 @@
 - Make use of copydoc Doxygen comment to avoid duplication:
 
     - Various defines and/or entities within the display module are duplicated 
+
+- main.c: Error handling in the case of i2c_rtc_init returning false. Right now
+  only an error message via UART is output. Add an "error state" where the
+  minute LEDs would permanently blink red and the number shown on the display
+  would represent the fault. The manual can then explain what to do.

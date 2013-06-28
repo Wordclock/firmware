@@ -442,7 +442,6 @@ int main()
             /*
              * Output error message indicating there was an error
              */
-            // TODO: error handling
             log_main("RTC init failed\n");
 
         }
