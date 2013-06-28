@@ -234,7 +234,7 @@
      *
      * @see s_modeShiftMask
      */
-    #define MASK_SHIFT(numBits, bitOffset) \
+    #define _MASK_SHIFT(numBits, bitOffset) \
         ((((numBits == 0) ? 0 : ((numBits == 1) ? 1 : ((numBits == 2) ? 0x3 : ((numBits == 3) ? 0x7 : 0xf)))) << 4) | bitOffset)
 
     /**
@@ -243,7 +243,7 @@
      * There are exactly twelve entries expected, one for each "block"
      * (0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 55).
      *
-     * The MASK_SHIFT() macro is used to define the entries itself:
+     * The _MASK_SHIFT() macro is used to define the entries itself:
      *
      * - The first parameter is the number of bits needed to encode the given
      * amount of different variants, e.g. when there are two different variants
@@ -264,28 +264,28 @@
      * index within s_minData for the chosen language mode and the given
      * time.
      *
-     * @see MASK_SHIFT()
+     * @see _MASK_SHIFT()
      * @see display_getTimeState()
      * @see s_modes
      */
     static const uint8_t s_modeShiftMask[] = {
 
-        MASK_SHIFT(1, 0),
-        MASK_SHIFT(0, 1),
-        MASK_SHIFT(1, 1),
-        MASK_SHIFT(3, 2),
-        MASK_SHIFT(1, 5),
-        MASK_SHIFT(1, 6),
-        MASK_SHIFT(1, 7),
-        MASK_SHIFT(0, 8),
-        MASK_SHIFT(1, 8),
-        MASK_SHIFT(3, 9),
-        MASK_SHIFT(1, 12),
-        MASK_SHIFT(1, 13),
+        _MASK_SHIFT(1, 0),
+        _MASK_SHIFT(0, 1),
+        _MASK_SHIFT(1, 1),
+        _MASK_SHIFT(3, 2),
+        _MASK_SHIFT(1, 5),
+        _MASK_SHIFT(1, 6),
+        _MASK_SHIFT(1, 7),
+        _MASK_SHIFT(0, 8),
+        _MASK_SHIFT(1, 8),
+        _MASK_SHIFT(3, 9),
+        _MASK_SHIFT(1, 12),
+        _MASK_SHIFT(1, 13),
 
     };
 
-    #undef MASK_SHIFT
+    #undef _MASK_SHIFT
 
     /**
      * @brief Number of variants for each five minute "block" within s_minData
@@ -296,7 +296,7 @@
      * nach" (quarter past) time "block" there are five different variants
      * within s_minData.
      *
-     * This, in a way, is also expressed by the first parameter of MASK_SHIFT()
+     * This, in a way, is also expressed by the first parameter of _MASK_SHIFT()
      * within s_modeShiftMask.
      *
      * @see s_minData
