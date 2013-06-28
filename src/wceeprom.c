@@ -101,7 +101,7 @@ WcEepromData EEMEM eepromParams;
  * @brief The default settings to be used in case the content from EEPROM is
  *   invalid
  *
- * These settings are used whenever the basic integrety check fails, see
+ * These settings are used whenever the basic integrity check fails, see
  * wcEeprom_init().
  *
  * @see wcEeprom_init()
