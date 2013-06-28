@@ -68,7 +68,7 @@
      * @see s_minData
      * @see DWP_MIN_FIRST
      */
-    #define DISP_SETBIT_MIN(x) (1 << (x - DWP_MIN_FIRST))
+    #define _DISP_SETBIT_MIN(x) (1 << (x - DWP_MIN_FIRST))
 
     /**
      * @brief Contains the minute definitions for displaying a time
@@ -76,7 +76,7 @@
      * This contains the minute part of a display state with all the possible
      * ways to display a correct time. Note that not all combinations make
      * necessarily sense. To make it easier to define single bits,
-     * DISP_SETBIT_MIN() is used quite heavily here.
+     * _DISP_SETBIT_MIN() is used quite heavily here.
      *
      * There are only eight different LED "minute groups", refer to
      * e_displayWordPos for details. Therefore uint8_t is enough for now.
@@ -116,37 +116,37 @@
     static const uint8_t s_minData[] = {
 
         (0),
-        (DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_fuenfMin) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_zehnMin) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_zwanzigMin) | DISP_SETBIT_MIN(DWP_vor ) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_viertel)),
-        (DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_vor) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_dreiMin) | DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_vor)),
-        (DISP_SETBIT_MIN(DWP_dreiMin) | DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_nach) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_zehnMin) | DISP_SETBIT_MIN(DWP_vor) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_zwanzigMin) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_fuenfMin) | DISP_SETBIT_MIN(DWP_vor) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_vor) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_halb) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_fuenfMin) | DISP_SETBIT_MIN(DWP_nach) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_zehnMin) | DISP_SETBIT_MIN(DWP_nach) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_zwanzigMin) | DISP_SETBIT_MIN(DWP_vor)),
-        (DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_vor)),
-        (DISP_SETBIT_MIN(DWP_dreiMin) | DISP_SETBIT_MIN(DWP_viertel)),
-        (DISP_SETBIT_MIN(DWP_dreiMin) | DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_nach)),
-        (DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_nach) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_dreiMin) | DISP_SETBIT_MIN(DWP_viertel) | DISP_SETBIT_MIN(DWP_vor) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_zehnMin) | DISP_SETBIT_MIN(DWP_vor)),
-        (DISP_SETBIT_MIN(DWP_zwanzigMin) | DISP_SETBIT_MIN(DWP_nach) | DISP_SETBIT_MIN(DWP_halb)),
-        (DISP_SETBIT_MIN(DWP_fuenfMin) | DISP_SETBIT_MIN(DWP_vor)),
-        (DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_fuenfMin) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_zehnMin) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_zwanzigMin) | _DISP_SETBIT_MIN(DWP_vor ) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_viertel)),
+        (_DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_vor) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_dreiMin) | _DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_dreiMin) | _DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_nach) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_zehnMin) | _DISP_SETBIT_MIN(DWP_vor) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_zwanzigMin) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_fuenfMin) | _DISP_SETBIT_MIN(DWP_vor) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_vor) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_halb) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_fuenfMin) | _DISP_SETBIT_MIN(DWP_nach) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_zehnMin) | _DISP_SETBIT_MIN(DWP_nach) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_zwanzigMin) | _DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_dreiMin) | _DISP_SETBIT_MIN(DWP_viertel)),
+        (_DISP_SETBIT_MIN(DWP_dreiMin) | _DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_nach)),
+        (_DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_nach) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_dreiMin) | _DISP_SETBIT_MIN(DWP_viertel) | _DISP_SETBIT_MIN(DWP_vor) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_zehnMin) | _DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_zwanzigMin) | _DISP_SETBIT_MIN(DWP_nach) | _DISP_SETBIT_MIN(DWP_halb)),
+        (_DISP_SETBIT_MIN(DWP_fuenfMin) | _DISP_SETBIT_MIN(DWP_vor)),
+        (_DISP_SETBIT_MIN(DWP_vor)),
 
     };
 
-    #undef DISP_SETBIT_MIN
+    #undef _DISP_SETBIT_MIN
 
     /**
      * @brief Defining when an increment by one to the current hour is needed
