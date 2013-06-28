@@ -131,7 +131,7 @@
     static const uint8_t minWessidreiViertel = (_DISP_SETBIT(DWP_viertel) | _DISP_SETBIT(DWP_vorHour));
 
     /*
-     * Undefine helper macro as it is no longer neede
+     * Undefine helper macro as it is no longer needed
      */
     #undef _DISP_SETBIT
 
