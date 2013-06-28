@@ -485,7 +485,7 @@
      * @see e_displayWordPos
      * @see DisplayState
      */
-    #define DISP_SETBIT(x) ((DisplayState)1 << x)
+    #define _DISP_SETBIT(x) ((DisplayState)1 << x)
 
     /**
      * @brief Definition of a display state for each number from one to twelve
@@ -508,27 +508,27 @@
      * "ES IST EIN UHR" (It IS ONE O'CLOCK). In these cases the "s" has to be
      * disabled manually by a simple bit operation.
      *
-     * @see DISP_SETBIT()
+     * @see _DISP_SETBIT()
      * @see display_getNumberDisplayState()
      */
     const uint16_t s_numbers[12] = {
 
-        (DISP_SETBIT(DWP_zwoelf)),
-        (DISP_SETBIT(DWP_ei) | DISP_SETBIT(DWP_n) | DISP_SETBIT(DWP_s)),
-        (DISP_SETBIT(DWP_zw) | DISP_SETBIT(DWP_ei)),
-        (DISP_SETBIT(DWP_drei)),
-        (DISP_SETBIT(DWP_vier)),
-        (DISP_SETBIT(DWP_fuenf)),
-        (DISP_SETBIT(DWP_sechs)),
-        (DISP_SETBIT(DWP_s) | DISP_SETBIT(DWP_ieben)),
-        (DISP_SETBIT(DWP_acht)),
-        (DISP_SETBIT(DWP_neun)),
-        (DISP_SETBIT(DWP_zehn)),
-        (DISP_SETBIT(DWP_elf)),
+        (_DISP_SETBIT(DWP_zwoelf)),
+        (_DISP_SETBIT(DWP_ei) | _DISP_SETBIT(DWP_n) | _DISP_SETBIT(DWP_s)),
+        (_DISP_SETBIT(DWP_zw) | _DISP_SETBIT(DWP_ei)),
+        (_DISP_SETBIT(DWP_drei)),
+        (_DISP_SETBIT(DWP_vier)),
+        (_DISP_SETBIT(DWP_fuenf)),
+        (_DISP_SETBIT(DWP_sechs)),
+        (_DISP_SETBIT(DWP_s) | _DISP_SETBIT(DWP_ieben)),
+        (_DISP_SETBIT(DWP_acht)),
+        (_DISP_SETBIT(DWP_neun)),
+        (_DISP_SETBIT(DWP_zehn)),
+        (_DISP_SETBIT(DWP_elf)),
 
     };
 
-    #undef DISP_SETBIT
+    #undef _DISP_SETBIT
 
     /**
      * @brief Returns whether the "jester mode" should be activated or not
