@@ -153,3 +153,5 @@
   only an error message via UART is output. Add an "error state" where the
   minute LEDs would permanently blink red and the number shown on the display
   would represent the fault. The manual can then explain what to do.
+
+- display_wc_ger3.c: Add comments regarding the code itself
