@@ -1123,7 +1123,7 @@ extern uint8_t useAutoOffAnimation;
  *
  * @see e_MenuStates::MS_irTrain
  */
-#define USER_STARTUP_WAIT_4_IR_TRAIN_s 7
+#define USER_STARTUP_WAIT_IR_TRAIN_s 7
 
 /**
  * @brief Hour at which the brightness should change when inputting times

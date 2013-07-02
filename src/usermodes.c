@@ -216,7 +216,7 @@ static void TrainIrState_1Hz( void )
 {
   if( mode_trainIrState.seconds != UINT8_MAX){
     ++mode_trainIrState.seconds;
-    if( mode_trainIrState.seconds == USER_STARTUP_WAIT_4_IR_TRAIN_s ){
+    if( mode_trainIrState.seconds == USER_STARTUP_WAIT_IR_TRAIN_s ){
       log_irTrain("leave IR-wait4train\n");
       quitMyself(MS_irTrain,NULL);
     }
