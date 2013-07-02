@@ -98,7 +98,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_SQWE
  * @see CTRL_REG
  */
-#define CTRL_REG_OUT 0x80
+#define CTRL_REG_OUT 1
 
 /**
  * @brief DS1307 Square-Wave Enable (SQWE)
@@ -115,7 +115,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS1
  * @see CTRL_REG
  */
-#define CTRL_REG_SQWE 0x10
+#define CTRL_REG_SQWE 1
 
 /**
  * @brief DS1307 Rate Select (RS1)
@@ -146,7 +146,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS0
  * @see CTRL_REG
  */
-#define CTRL_REG_RS1 0x02
+#define CTRL_REG_RS1 1
 
 /**
  * @brief DS1307 Rate Select (RS0)
@@ -157,7 +157,7 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG
  *
  */
-#define CTRL_REG_RS0 0x01
+#define CTRL_REG_RS0 1
 
 /**
  * @brief Holds the actual value for the control register
@@ -178,7 +178,8 @@ static uint8_t i2c_rtc_status;
  * @see CTRL_REG_RS1
  * @see i2c_rtc_init()
  */
-#define CTRL_REG CTRL_REG_OUT
+#define CTRL_REG \
+    (CTRL_REG_RS0 | CTRL_REG_RS0 << 1 | CTRL_REG_SQWE << 4 | CTRL_REG_OUT << 7)
 
 /**
  * @brief Returns the status of the last operation on the I2C bus
