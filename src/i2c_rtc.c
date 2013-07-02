@@ -570,7 +570,7 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
                 if (seconds & 0x80) {
 
                     seconds &= ~0x80;
-                    (void)i2c_rtc_sram_write(0x00, &seconds, 1);
+                    i2c_rtc_sram_write(0x00, &seconds, 1);
 
                 }
 
