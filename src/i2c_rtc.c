@@ -568,9 +568,9 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
                 /*
                  * Check whether CH bit is set and disable it if necessary.
                  */
-                if (seconds & 0x80) {
+                if (seconds & _BV(7)) {
 
-                    seconds &= ~0x80;
+                    seconds &= ~_BV(7);
                     i2c_rtc_sram_write(0x00, &seconds, 1);
 
                 }
