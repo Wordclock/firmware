@@ -155,3 +155,13 @@
   would represent the fault. The manual can then explain what to do.
 
 - display_wc_ger3.c: Add comments regarding the code itself
+
+- Rename variables to get rid of the Hungarian notation
+
+- user.h: Change default IR command codes and/or address to correspond to a
+  DX.com remote control
+
+- user: Use AMBILIGHT consistently, e.g. rename UI_AMBIENT_LIGHT to
+  UI_AMBILIGHT
+
+- user: useAutoOffAnimation use bool
