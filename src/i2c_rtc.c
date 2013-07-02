@@ -36,8 +36,6 @@
  * @see i2c_master.h
  */
 
-#include <avr/io.h>
-#include <util/delay.h>
 #include <util/twi.h>
 
 #include "base.h"
