@@ -104,12 +104,16 @@ typedef struct PwmEepromParams {
 } PwmEepromParams;
 
 /**
- * @brief Default values of the PWM module that should be stored persistently
+ * @brief Default values of this module that should be stored persistently
  *
- * This defines the default values for this module. See PwmEepromParams for
- * a description of each member.
+ * This defines the default values for this module. Refer to PwmEepromParams
+ * for a detailed description of each member.
+ *
+ * @note This will also be the values used after flashing the firmware to the
+ * microcontroller, so make sure that the defaults are actually useful.
  *
  * @see PwmEepromParams
+ * @see wceeprom.h
  */
 #define PWMEEPROMPARAMS_DEFAULT { \
     0, \
