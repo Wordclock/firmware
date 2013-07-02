@@ -295,12 +295,12 @@
  * @brief Controls whether changes to the setting should be saved automatically
  *
  * When set to 1 any changes to the settings done by the user will be saved
- * automatically after USER_DELAY_BEFORE_SAVE_EEPROM_s seconds. Otherwise the
+ * automatically after USER_DELAY_BEFORE_SAVE_EEPROM_S seconds. Otherwise the
  * user will have to trigger the saving manually.
  *
  * The saving itself is done within user_isr1Hz().
  *
- * @see USER_DELAY_BEFORE_SAVE_EEPROM_s
+ * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
  * @see user.h
  * @see user_isr1Hz()
  */

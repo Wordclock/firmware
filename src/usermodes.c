@@ -216,7 +216,7 @@ static void TrainIrState_1Hz( void )
 {
   if( mode_trainIrState.seconds != UINT8_MAX){
     ++mode_trainIrState.seconds;
-    if( mode_trainIrState.seconds == USER_STARTUP_WAIT_IR_TRAIN_s ){
+    if( mode_trainIrState.seconds == USER_STARTUP_WAIT_IR_TRAIN_S ){
       log_irTrain("leave IR-wait4train\n");
       quitMyself(MS_irTrain,NULL);
     }
@@ -286,7 +286,7 @@ static void ShowNumberState_enter( const void* param )
   DisplayState dispData;
   uint8_t paramSN = (uint8_t)((uint16_t)param);  /* double cast to avoid warning */
   log_state( "enter showNumber\n");
-  mode_showNumberState.delay100ms = USER_NORMAL_SHOW_NUMBER_DELAY_100ms;
+  mode_showNumberState.delay100ms = USER_NORMAL_SHOW_NUMBER_DELAY_100MS;
 
   dispData = display_getNumberDisplayState(paramSN);
   display_setDisplayState(dispData, 0);
@@ -414,15 +414,15 @@ static uint8_t AutoHueState_handleIR(  uint8_t cmdCode )
     log_state("CHS \n");
     incDecRange(    &g_params->hueChangeIntervall
                   , dir
-                  , USER_HUE_CHANGE_INT_100ms_MIN
-                  , USER_HUE_CHANGE_INT_100ms_MAX);
+                  , USER_HUE_CHANGE_INT_100MS_MIN
+                  , USER_HUE_CHANGE_INT_100MS_MAX);
 #if (USER_LOG_STATE == 1)
     uart_putc('0' + g_params->hueChangeIntervall);
 #endif
   }else{
     return false;
   }
-   
+
   return true;
 
 }
@@ -455,7 +455,7 @@ static void DemoState_10Hz( void )
     return;
   }
   ++mode_demoState.delay100ms;
-  if( mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100ms )
+  if( mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100MS )
   {
     display_setDisplayState( ((uint32_t)1) << (mode_demoState.demoStep), 0);
     ++mode_demoState.demoStep;
@@ -703,15 +703,15 @@ static uint8_t PulseState_handleIR(  uint8_t cmdCode )
     log_state("CPS \n");
     incDecRange(    &g_params->pulseUpdateInterval
                   , dir
-                  , USER_PULSE_CHANGE_INT_10ms_MIN
-                  , USER_PULSE_CHANGE_INT_10ms_MAX);
+                  , USER_PULSE_CHANGE_INT_10MS_MIN
+                  , USER_PULSE_CHANGE_INT_10MS_MAX);
 #if (USER_LOG_STATE == 1)
     uart_putc('0' + g_params->pulseUpdateInterval);
 #endif
   }else{
     return false;
   }
-   
+
   return true;
 
 }

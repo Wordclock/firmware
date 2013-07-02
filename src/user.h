@@ -175,7 +175,7 @@ typedef enum e_MenuStates
  * @see USER_AUTOSAVE
  * @see user_isr1Hz()
  */
-#define USER_DELAY_BEFORE_SAVE_EEPROM_s 120
+#define USER_DELAY_BEFORE_SAVE_EEPROM_S 120
 
 /**
  * @brief Time without receiving an IR command before checking whether autoOff
@@ -190,7 +190,7 @@ typedef enum e_MenuStates
  * @see USER_AUTOSAVE
  * @see user_isr1Hz()
  */
-#define USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_s 10
+#define USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S 10
 
 /**
  * @brief All the commands that can be received via remote control
@@ -943,15 +943,15 @@ typedef struct UserEepromParams {
      *
      * The speed of the pulsing in the pulse mode (e_MenuStates::MS_pulse) can
      * be changed by the user (within the boundaries defined by
-     * USER_PULSE_CHANGE_INT_10ms_MIN and USER_PULSE_CHANGE_INT_10ms_MAX).
+     * USER_PULSE_CHANGE_INT_10MS_MIN and USER_PULSE_CHANGE_INT_10MS_MAX).
      *
      * This represents this setting within the EEPROM.
      *
      * @see e_MenuStates::MS_pulse
      * @see PulseState_handleIR()
      * @see PulseState_100Hz()
-     * @see USER_PULSE_CHANGE_INT_10ms_MIN
-     * @see USER_PULSE_CHANGE_INT_10ms_MAX
+     * @see USER_PULSE_CHANGE_INT_10MS_MIN
+     * @see USER_PULSE_CHANGE_INT_10MS_MAX
      */
     uint8_t pulseUpdateInterval;
 
@@ -960,16 +960,16 @@ typedef struct UserEepromParams {
      *
      * The speed of the fading in the hue-fading mode
      * (e_MenuStates::MS_hueMode) can be changed by the user (within the
-     * boundaries defined by USER_HUE_CHANGE_INT_100ms_MIN and
-     * USER_HUE_CHANGE_INT_100ms_MAX).
+     * boundaries defined by USER_HUE_CHANGE_INT_100MS_MIN and
+     * USER_HUE_CHANGE_INT_100MS_MAX).
      *
      * This represents this setting within the EEPROM.
      *
      * @see e_MenuStates::MS_hueMode
      * @see AutoHueState_handleIR()
      * @see AutoHueState_10Hz()
-     * @see USER_HUE_CHANGE_INT_100ms_MIN
-     * @see USER_HUE_CHANGE_INT_100ms_MAX
+     * @see USER_HUE_CHANGE_INT_100MS_MIN
+     * @see USER_HUE_CHANGE_INT_100MS_MAX
      */
     uint8_t hueChangeIntervall;
 
@@ -997,7 +997,7 @@ extern uint8_t useAutoOffAnimation;
  *
  * @see USEREEPROMPARAMS_DEFAULT
  */
-#define USER_KEY_PRESS_DELAY_100ms 3
+#define USER_KEY_PRESS_DELAY_100MS 3
 
 /**
  * @brief Default value for interval between two animation steps in hue-fading
@@ -1006,14 +1006,14 @@ extern uint8_t useAutoOffAnimation;
  * This defines the default value for the interval (in multiples of 100 ms)
  * between two animations steps within the hue-fading mode. It then can be
  * changed by the user (within the boundaries defined in
- * USER_HUE_CHANGE_INT_100ms_MIN and USER_HUE_CHANGE_INT_100ms_MAX).
+ * USER_HUE_CHANGE_INT_100MS_MIN and USER_HUE_CHANGE_INT_100MS_MAX).
  *
  * @see e_MenuStates::MS_hueMode
  * @see UserEepromParams::hueChangeIntervall
- * @see USER_HUE_CHANGE_INT_100ms_MIN
- * @see USER_HUE_CHANGE_INT_100ms_MAX
+ * @see USER_HUE_CHANGE_INT_100MS_MIN
+ * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
-#define USER_HUE_CHANGE_INT_100ms 1
+#define USER_HUE_CHANGE_INT_100MS 1
 
 /**
  * @brief Minimum value for interval between two animation steps in hue-fading
@@ -1021,15 +1021,15 @@ extern uint8_t useAutoOffAnimation;
  *
  * This defines the minimum value for the interval (in multiples of 100 ms)
  * between two animations steps within the hue-fading mode. The user can change
- * the default value defined in USER_HUE_CHANGE_INT_100ms, however not below
+ * the default value defined in USER_HUE_CHANGE_INT_100MS, however not below
  * the value defined here.
  *
  * @see e_MenuStates::MS_hueMode
  * @see UserEepromParams::hueChangeIntervall
- * @see USER_HUE_CHANGE_INT_100ms
- * @see USER_HUE_CHANGE_INT_100ms_MAX
+ * @see USER_HUE_CHANGE_INT_100MS
+ * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
-#define USER_HUE_CHANGE_INT_100ms_MIN 1
+#define USER_HUE_CHANGE_INT_100MS_MIN 1
 
 /**
  * @brief Maximum value for interval between two animation steps in hue-fading
@@ -1037,15 +1037,15 @@ extern uint8_t useAutoOffAnimation;
  *
  * This defines the maximum value for the interval (in multiples of 100 ms)
  * between two animations steps within the hue-fading mode. The user can change
- * the default value defined in USER_HUE_CHANGE_INT_100ms, however not above
+ * the default value defined in USER_HUE_CHANGE_INT_100MS, however not above
  * the value defined here.
  *
  * @see e_MenuStates::MS_hueMode
  * @see UserEepromParams::hueChangeIntervall
- * @see USER_HUE_CHANGE_INT_100ms
- * @see USER_HUE_CHANGE_INT_100ms_MIN
+ * @see USER_HUE_CHANGE_INT_100MS
+ * @see USER_HUE_CHANGE_INT_100MS_MIN
  */
-#define USER_HUE_CHANGE_INT_100ms_MAX 8
+#define USER_HUE_CHANGE_INT_100MS_MAX 8
 
 /**
  * @brief Default value for interval between two animation steps in pulse mode
@@ -1053,44 +1053,44 @@ extern uint8_t useAutoOffAnimation;
  * This defines the default value for the interval (in multiples of 10 ms)
  * between two animations steps within the pulse mode. It then can be changed
  * by the user (within the boundaries defined in
- * USER_PULSE_CHANGE_INT_10ms_MIN and USER_PULSE_CHANGE_INT_10ms_MAX).
+ * USER_PULSE_CHANGE_INT_10MS_MIN and USER_PULSE_CHANGE_INT_10MS_MAX).
  *
  * @see e_MenuStates::MS_pulse
  * @see UserEepromParams::pulseUpdateInterval
- * @see USER_PULSE_CHANGE_INT_10ms_MIN
- * @see USER_PULSE_CHANGE_INT_10ms_MAX
+ * @see USER_PULSE_CHANGE_INT_10MS_MIN
+ * @see USER_PULSE_CHANGE_INT_10MS_MAX
  */
-#define USER_PULSE_CHANGE_INT_10ms 1
+#define USER_PULSE_CHANGE_INT_10MS 1
 
 /**
  * @brief Minimum value for interval between two animation steps in pulse mode
  *
  * This defines the minimum value for the interval (in multiples of 10 ms)
  * between two animations steps within the pulse mode. The user can change
- * the default value defined in USER_PULSE_CHANGE_INT_10ms, however not below
+ * the default value defined in USER_PULSE_CHANGE_INT_10MS, however not below
  * the value defined here.
  *
  * @see e_MenuStates::MS_pulse
  * @see UserEepromParams::hueChangeIntervall
- * @see USER_PULSE_CHANGE_INT_10ms
- * @see USER_PULSE_CHANGE_INT_10ms_MAX
+ * @see USER_PULSE_CHANGE_INT_10MS
+ * @see USER_PULSE_CHANGE_INT_10MS_MAX
  */
-#define USER_PULSE_CHANGE_INT_10ms_MIN 1
+#define USER_PULSE_CHANGE_INT_10MS_MIN 1
 
 /**
  * @brief Maximum value for interval between two animation steps in pulse mode
  *
  * This defines the maximum value for the interval (in multiples of 10 ms)
  * between two animations steps within the pulse mode. The user can change
- * the default value defined in USER_PULSE_CHANGE_INT_10ms, however not below
+ * the default value defined in USER_PULSE_CHANGE_INT_10MS, however not below
  * the value defined here.
  *
  * @see e_MenuStates::MS_pulse
  * @see UserEepromParams::hueChangeIntervall
- * @see USER_PULSE_CHANGE_INT_10ms
- * @see USER_PULSE_CHANGE_INT_10ms_MIN
+ * @see USER_PULSE_CHANGE_INT_10MS
+ * @see USER_PULSE_CHANGE_INT_10MS_MIN
  */
-#define USER_PULSE_CHANGE_INT_10ms_MAX 5
+#define USER_PULSE_CHANGE_INT_10MS_MAX 5
 
 /**
  * @brief Delay between two steps within the demo mode
@@ -1100,7 +1100,7 @@ extern uint8_t useAutoOffAnimation;
  *
  * @see e_MenuStates::MS_demoMode
  */
-#define USER_DEMO_CHANGE_INT_100ms 5
+#define USER_DEMO_CHANGE_INT_100MS 5
 
 /**
  * @brief Interval a number should be displayed
@@ -1113,7 +1113,7 @@ extern uint8_t useAutoOffAnimation;
  * @see e_MenuStates::MS_showNumber
  * @see display_getNumberDisplayState()
  */
-#define USER_NORMAL_SHOW_NUMBER_DELAY_100ms 10
+#define USER_NORMAL_SHOW_NUMBER_DELAY_100MS 10
 
 /**
  * @brief Interval to wait for an IR command to enter the training mode
@@ -1123,7 +1123,7 @@ extern uint8_t useAutoOffAnimation;
  *
  * @see e_MenuStates::MS_irTrain
  */
-#define USER_STARTUP_WAIT_IR_TRAIN_s 7
+#define USER_STARTUP_WAIT_IR_TRAIN_S 7
 
 /**
  * @brief Hour at which the brightness should change when inputting times
@@ -1353,8 +1353,8 @@ extern void user_init();
     0, \
     USER_ON_OFF_TIME_DEFAULTS, \
     1, \
-    USER_PULSE_CHANGE_INT_10ms, \
-    USER_HUE_CHANGE_INT_100ms, \
+    USER_PULSE_CHANGE_INT_10MS, \
+    USER_HUE_CHANGE_INT_100MS, \
     MS_normalMode \
 \
 }

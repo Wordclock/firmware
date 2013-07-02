@@ -352,7 +352,7 @@ handle_ir_code (void)
       uart_putc('\n');
     }
 #   endif
-    g_keyDelay = USER_KEY_PRESS_DELAY_100ms;
+    g_keyDelay = USER_KEY_PRESS_DELAY_100MS;
 
     if( g_stateStack[ g_topOfStack-1] == MS_irTrain )  // special handling in training mode
     {
@@ -534,7 +534,7 @@ extern void  user_setNewTime( const datetime_t* i_time)
   if( i_time ){
     log_time("saved Time ");
     g_dateTime = *i_time;
-    if(    (g_checkIfAutoOffDelay >= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_s))
+    if(    (g_checkIfAutoOffDelay >= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S))
     {
       if( checkActivation() )
       {
@@ -620,16 +620,16 @@ void  user_isr1Hz(void)
 {
   useAutoOffAnimation = 0;			// @EDI: only when anim is active (auto off or preview) this flag will be set to one
 
-  if( g_eepromSaveDelay <= USER_DELAY_BEFORE_SAVE_EEPROM_s ){
+  if( g_eepromSaveDelay <= USER_DELAY_BEFORE_SAVE_EEPROM_S ){
     ++g_eepromSaveDelay;
   }
 
-  if( g_checkIfAutoOffDelay <= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_s ){
+  if( g_checkIfAutoOffDelay <= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S ){
     ++g_checkIfAutoOffDelay;
   }
 
 # if USER_AUTOSAVE==1
-      if(g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_s){
+      if(g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_S){
         wcEeprom_writeback( wcEeprom_getData(), sizeof(WcEepromData)); /* save whole data */
       }
 # endif
