@@ -107,11 +107,11 @@ typedef struct WcEepromData {
      * claimed by the firmware itself and the one stored in EEPROM the data
      * of the EEPROM will be ignored and overwritten.
      *
-     * The size will be calculated automatically during compilation, so you
-     * don't have to worry about it too much.
+     * The size will be calculated automatically, so you actually don't have to
+     * worry about it.
      *
      * @warning This is a 8 bit value, so the size of the struct shouldn't
-     *  exceed 256 bytes.
+     * exceed 256 bytes.
      */
     uint8_t structSize;
 
