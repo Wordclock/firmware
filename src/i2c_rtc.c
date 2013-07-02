@@ -58,41 +58,40 @@
 /**
  * @brief Indicates whether this module has already been initialized
  *
- * This module needs to be initialized **before** it can actually be used. In
- * order to do so, i2c_rtc_init() has to be called. Various functions check
- * whether the module has already been initialized and return false if it
- * hasn't.
+ * This module needs to be initialized **before** it can actually be used. This
+ * is achieved using i2c_rtc_init(). Various functions rely on a successfully
+ * initialized RTC and will simply return false otherwise.
  *
  * @see i2c_rtc_init()
  */
 static bool rtc_initialized = false;
 
 /**
- * @brief Holds the status of the I2C bus of the last operation
+ * @brief Holds the status of the last operation on the I2C bus
  *
- * Various functions can fail for multiple reasons. This variable holds the
- * status of some functions. It can be retrieved using i2c_rtc_get_status().
+ * The functions within this module can fail for multiple reasons. This
+ * variable will contain the status for some functions of this module. It can
+ * then be retrieved using i2c_rtc_get_status().
  *
  * The possible states can be found at [1], p. 224f, table 22-2 and [1],
  * p. 227f, table 22-3. A more compact overview in form of macros can be
  * found at [2]. This file is part of recent versions of the AVR C Runtime
- * Library (avr-libc). The file can be included using <util/twi.h>.
+ * Library (avr-libc).
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  * [2]: http://www.nongnu.org/avr-libc/user-manual/group__util__twi.html#ga4440385d1818b4fe89b20341ea47b75a
  *
- * @see <util/twi.h>
  * @see i2c_rtc_get_status()
  */
 static uint8_t i2c_rtc_status;
 
 /**
- * @brief DS1307 Output Control bit
+ * @brief DS1307 Output control
  *
- * *This bit controls the output level of the SQW/OUT pin when the square-wave
+ * This bit controls the output level of the SQW/OUT pin when the square-wave
  * output is disabled. If SQWE = 0, the logic level on the SQW/OUT pin is 1 if
  * OUT = 1 and is 0 if OUT = 0. On initial application of power to the device,
- * this bit is typically set to a 0.*, cp. [1].
+ * this bit is typically set to a 0, cp. [1].
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
@@ -102,13 +101,13 @@ static uint8_t i2c_rtc_status;
 #define CTRL_REG_OUT 0x80
 
 /**
- * @brief DS1307 Square-Wave Enable (SQWE) bit
+ * @brief DS1307 Square-Wave Enable (SQWE)
  *
- * *This bit, when set to logic 1, enables the oscillator output. The frequency
+ * This bit, when set to logic 1, enables the oscillator output. The frequency
  * of the square-wave output depends upon the value of the RS0 and RS1 bits.
  * With the square-wave output set to 1Hz, the clock registers update on the
  * falling edge of the square wave. On initial application of power to the
- * device, this bit is typically set to a 0.*, cp. [1].
+ * device, this bit is typically set to a 0, cp. [1].
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
@@ -119,16 +118,17 @@ static uint8_t i2c_rtc_status;
 #define CTRL_REG_SQWE 0x10
 
 /**
- * @brief DS1307 Rate Select (RS1) bit
+ * @brief DS1307 Rate Select (RS1)
  *
- * This usually has to be combined with CTRL_REG_RS0
+ * This is used in combination with CTRL_REG_RS0.
  *
- * *These bits control the frequency of the square-wave output when the square-
+ * These bits control the frequency of the square-wave output when the square-
  * wave output has been enabled. The following table lists the square-wave
  * frequencies that can be selected with the RS bits. On initial application
- * of power to the device, these bits are typically set to a 1.*, cp. [1].
+ * of power to the device, these bits are typically set to a 1, cp. [1].
  *
- * The following combinations of RS1 and RS0 are possible:
+ * The following table lists all combinations of RS1 and RS0 and the
+ * appropriate result:
  *
  * \code
  * RS1  RS0  SQW/OUT OUTPUT  SQWE  OUT
@@ -141,16 +141,17 @@ static uint8_t i2c_rtc_status;
  *  X    X    1               0     1
  * \endcode
  *
+ * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+ *
  * @see CTRL_REG_RS0
  * @see CTRL_REG
  */
 #define CTRL_REG_RS1 0x02
 
 /**
- * @brief DS1307 Rate Select (RS0) bit
+ * @brief DS1307 Rate Select (RS0)
  *
- * This is usually used in combination with CTRL_REG_RS0. Take a look at
- * CTRL_REG_RS0 for details.
+ * Refer to CTRL_REG_RS0 for details.
  *
  * @see CTRL_REG_RS0
  * @see CTRL_REG
@@ -159,31 +160,31 @@ static uint8_t i2c_rtc_status;
 #define CTRL_REG_RS0 0x01
 
 /**
- * @brief Holds the value of the control register
+ * @brief Holds the actual value for the control register
  *
  * This is a combination of the macros defined above. It will set up the RTC
  * according to this options and will store it in the control register of
  * the RTC itself, so it persists even when it is powered off. This is done
  * during the initialization, see i2c_rtc_init().
  *
- * The control register of the DS1307 is located at memory address 0x07,
- * see [1], p. 8.
+ * The internal control register of the DS1307 is located at address 0x07, see
+ * [1], p. 8.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
  * @see CTRL_REG_OUT
  * @see CTRL_REG_SQWE
  * @see CTRL_REG_RS0
- * @see CTRL_REG_RS0
+ * @see CTRL_REG_RS1
  * @see i2c_rtc_init()
  */
 #define CTRL_REG CTRL_REG_OUT
 
 /**
- * @brief Returns the status of the I2C bus of the last operation
+ * @brief Returns the status of the last operation on the I2C bus
  *
  * This returns the status of the last operation performed on the I2C bus in
- * the context of this module. See i2c_rtc_status for details.
+ * the context of this module.
  *
  * @see i2c_rtc_status
  */
@@ -195,15 +196,15 @@ uint8_t i2c_rtc_get_status()
 }
 
 /**
- * @brief Writes date & time to the RTC
+ * @brief Writes the given datetime to the RTC
  *
- * This writes a new date & time to the RTC, which it then will store and work
- * with it from there on. The argument is a pointer to a buffer in form of the
- * struct datetime_t, which holds the date & time to write.
+ * This writes a new date and time to the RTC, which it then will store and
+ * work with it from there on. The argument is a pointer to a buffer in form of
+ * datetime_t, which holds the datetime to write.
  *
- * @param datetime Pointer to memory location holding the date & time to write
+ * @param datetime Pointer to memory holding the datetime to write
  *
- * @return Result of the operation, true if successful, false else
+ * @return Result of the operation, true if successful, false otherwise
  *
  * @see datetime_t
  */
@@ -250,14 +251,14 @@ bool i2c_rtc_write(const datetime_t* datetime)
 }
 
 /**
- * @brief Reads date & time from the RTC
+ * @brief Reads the datetime from the RTC
  *
- * This reads the date & time from the RTC and puts it into the given buffer in
- * memory in form of the struct datetime_t.
+ * This reads the current date and time from the RTC and puts it into the given
+ * buffer in memory in form of datetime_t.
  *
- * @param datetime Pointer to buffer in memory for storing the read date & time
+ * @param datetime Pointer to buffer in memory for storing the read datetime
  *
- * @return Result of the operation, true if successful, false else
+ * @return Result of the operation, true if successful, false otherwise
  *
  * @see datetime_t
  */
@@ -308,19 +309,19 @@ bool i2c_rtc_read(datetime_t* datetime)
 }
 
 /**
- * @brief Writes given data into the SRAM of the RTC
+ * @brief Writes the given data into the SRAM of the RTC
  *
  * This writes data pointed at by "void_valuep" and of the length specified
  * by the parameter "length" into the SRAM of the RTC. The SRAM address can
  * be specified using the "addr" argument.
  *
  * You should only use addresses ranging from 0x8 to 0x3f, which are meant for
- * general purpose. Addresses ranging from 0x0 to ox7 contain the various
- * registers of the RTC itself, see [1], p. 8.
+ * general purpose. Addresses ranging from 0x0 to 0x7 contain the various
+ * date and time registers of the RTC itself, see [1], p. 8.
  *
- * This function internally makes use of various function declared in
- * i2c_master.h and will return false if there is some kind of an error with
- * the I2C bus.
+ * This function internally makes use of various functions declared in
+ * i2c_master.h and will return false if there is some kind of an error in
+ * regards to the I2C bus.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
@@ -330,7 +331,7 @@ bool i2c_rtc_read(datetime_t* datetime)
  * @param void_valuep Pointer to buffer in memory containing the data to store
  * @param length The length the data you want to store
  *
- * @return Result of the operation, true if successful, false else
+ * @return Result of the operation, true if successful, false otherwise
  *
  * @see i2c_rtc_sram_read()
  */
@@ -414,12 +415,12 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * requested data.
  *
  * You should only use addresses ranging from 0x8 to 0x3f, which are meant for
- * general purpose. Addresses ranging from 0x0 to ox7 contain the various
+ * general purpose. Addresses ranging from 0x0 to 0x7 contain the various
  * registers of the RTC itself, see [1], p. 8.
  *
- * This function internally makes use of various function declared in
- * i2c_master.h and will return false if there is some kind of an error with
- * the I2C bus.
+ * This function internally makes use of various functions declared in
+ * i2c_master.h and will return false if there is some kind of an error in
+ * regards to the I2C bus.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
@@ -429,7 +430,7 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * @param void_valuep Pointer to buffer in memory for holding the data
  * @param length The length the data you want to read
  *
- * @return Result of the operation, true if successful, false else
+ * @return Result of the operation, true if successful, false otherwise
  *
  * @see i2c_rtc_sram_write()
  * @see i2c_master_write()
@@ -520,14 +521,14 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  *
  * It should be noted that there is a CH bit (bit 7 of register 0), see [1],
  * p. 8, which will halt the clock of the RTC. This function makes sure that
- * this bit is set to 0, so the clock is **not** halted.
+ * this bit is set to 0, so the clock is **not** being halted.
  *
- * If there is some sort of error with the I2C bus this function will return
+ * If there is some sort of an error with the I2C bus this function will return
  * false.
  *
  * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
  *
- * @return Result of the operation, true if successful, false else
+ * @return Result of the operation, true if successful, false otherwise
  *
  * @param errorcode_p Pointer to memory for holding possible error codes
  * @param status_p Pointer to memory for holding status codes
