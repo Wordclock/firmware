@@ -300,11 +300,17 @@ struct DisplayEepromParams {
 };
 
 /**
- * @brief Default settings of this module to be stored persistently
+ * @brief Default values of this module that should be stored persistently
+ *
+ * This defines the default values for this module. Refer to
+ * DisplayEepromParams for a detailed description of each member.
+ *
+ * @note This will also be the values used after flashing the firmware to the
+ * microcontroller, so make sure that the defaults are actually useful.
  *
  * @see DisplayEepromParams
  * @see wceeprom.h
-*/
+ */
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \
     (e_WcGerModes)0 \
