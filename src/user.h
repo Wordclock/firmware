@@ -999,8 +999,6 @@ extern uint8_t useAutoOffAnimation;
  */
 #define USER_KEY_PRESS_DELAY_100ms 3
 
-#define USER_KEY_PRESS_REALLY_LONG_DURATION_100ms 30
-
 /**
  * @brief Default value for interval between two animation steps in hue-fading
  * mode
