@@ -217,13 +217,13 @@ bool i2c_rtc_write(const datetime_t* datetime)
     if (rtc_initialized) {
 
         /*
-         * Write converted fields of the provided buffer in form of the struct
-         * datetime_t into the allocated buffer. Special care is needed in case
+         * Write converted fields of the provided buffer in form of datetime_t
+         * into the allocated buffer. Special care is needed in case
          * of the "wd" field, which contains the day of the week.
          *
-         * The definitions of datetime_t::wd and the one from the RTC
-         * differ, as datetime_t starts counting at 0, whereas the RTC
-         * starts at 1.
+         * The definitions of datetime_t::wd and the one from the RTC itself
+         * differ, as datetime_t starts counting at 0, whereas the RTC starts
+         * at 1.
          */
         rtcbuf[0] = itobcd(datetime->ss);
         rtcbuf[1] = itobcd(datetime->mm);
@@ -234,9 +234,9 @@ bool i2c_rtc_write(const datetime_t* datetime)
         rtcbuf[6] = itobcd(datetime->YY);
 
         /*
-         * The date & time information is located at the first 7 addresses of
-         * the RTC SRAM. Write our built up buffer to the RTC. If nothing
-         * unexpected happens, the return value will be set to true.
+         * The datetime information is located at the first 7 addresses of
+         * the RTC SRAM. Write the previously calculated values to the RTC. If
+         * nothing unexpected happens, the return value will be set to true.
          */
         if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
@@ -283,8 +283,8 @@ bool i2c_rtc_read(datetime_t* datetime)
              * field, which contains the day of the week.
              *
              * The definitions of datetime_t::wd and the one from the RTC
-             * differ, as datetime_t starts counting at 0, whereas the RTC
-             * starts at 1.
+             * itself differ, as datetime_t starts counting at 0, whereas the
+             * RTC starts at 1.
              */
 
             datetime->YY = bcdtoi(rtcbuf[6]);
@@ -369,14 +369,14 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
                 rtc = true;
 
                 /*
-                 * Decrement length until it hits zero
+                 * Decrement length until it reaches zero
                  */
                 while (length--) {
 
                     /*
                      * Write next byte to the I2C bus and post increment the
                      * valuep pointer, where the data is actually read from.
-                     * If there is some sort of error, the return value will
+                     * If there is some sort of an error, the return value will
                      * be set to false and we break out of this loop.
                      */
                     if (!i2c_master_write(*valuep++, &i2c_rtc_status)) {
@@ -441,15 +441,10 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
     unsigned char* valuep = void_valuep;
     bool rtc = false;
 
-    /*
-     * Basic check of the arguments provided. length obviously must be not
-     * equal to 0. There are only 64 bytes to write to. This boundary
-     * shouldn't be exceeded.
-     */
     if (rtc_initialized) {
 
         /*
-         * Basic check of the arguments provided. length obviously must be not
+         * Basic check of the provided arguments. length obviously must be not
          * equal to 0. There are only 64 bytes to write to. This boundary
          * shouldn't be exceeded.
          */
@@ -478,7 +473,7 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
                     rtc = true;
 
                     /**
-                     * Decrement length until it hits zero
+                     * Decrement length until it reaches zero
                      */
                     while (--length) {
 
