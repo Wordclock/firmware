@@ -207,7 +207,7 @@ static inline DisplayState display_getTimeSetIndicatorMask();
 static inline DisplayState display_getMinuteMask();
 
 /**
- * @brief Returns a display state with all bits representing a hour enabled
+ * @brief Returns a display state with all bits representing an hour enabled
  *
  * This functions returns a display state with all bits, which represent a
  * hour (1-12) enabled.

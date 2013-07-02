@@ -123,7 +123,7 @@ static volatile uint8_t soft_seconds;
  * fast, so that the software clock is only updated every
  * READ_DATETIME_INTERVAL - softclock_too_fast_seconds seconds.
  *
- * This function enables the DCF77 reception once a hour to signal to the
+ * This function enables the DCF77 reception once an hour to signal to the
  * DCF77 module that it should try to retrieve the current time.
  *
  * @see READ_DATETIME_INTERVAL

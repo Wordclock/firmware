@@ -233,7 +233,7 @@ enum e_displayWordPos
 #define DWP_MIN_FIRST DWP_fuenfMin
 
 /**
- * @brief First item within e_displayWordPos representing a hour
+ * @brief First item within e_displayWordPos representing an hour
  *
  * This is expected to "point" at the first item within e_displayWordPost which
  * represents a word regarding the hour (1 to 12).

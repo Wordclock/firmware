@@ -361,7 +361,7 @@ static DCF_Struct DCF;
  *
  * Setting this to false will deactivate the DCF77 decoding temporarily. This,
  * for instance, can be used to deactivate the DCF77 decoding once two valid
- * time frames have been received successfully in a row, within in a hour.
+ * time frames have been received successfully in a row, within in an hour.
  *
  * @note Keep in mind that this only will deactivate the decoding within this
  * module. The receiver itself, however, will stay enabled.
@@ -434,7 +434,7 @@ void dcf77_enable()
  * This sets enable_dcf77_ISR to false, which disables the DCF77 decoding
  * within the appropriate ISR. This can be used to disable the DCF77 processing
  * temporarily, e.g. once a valid time frame has already been received within
- * a hour.
+ * an hour.
  *
  * @see enable_dcf77_ISR
  * @see dcf77_enable()
