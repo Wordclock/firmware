@@ -265,14 +265,14 @@ uint8_t i2c_master_init()
 
         result = i2c_reset();
 
-        TWSR = 0;
-        TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
-
         if (result == 0) {
 
             initialized = true;
 
         }
+
+        TWSR = 0;
+        TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
 
     } else {
 
