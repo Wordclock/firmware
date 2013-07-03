@@ -20,9 +20,12 @@
 
 /**
  * @file simple_random.h
- * @brief Header file of a simple 8 bit random number generator (RNG)
+ * @brief Header file of a simple 8 bit random number generator (PRNG)
  *
  * This module can be used to generate 8 bit **pseudo** random numbers.
+ * Although something similar is already implemented in avr-libc itself, this
+ * implementation is significantly smaller, as it doesn't fulfill the
+ * requirements of <stdlib.h> and uint8_t is good enough in most cases.
  *
  * @see simple_random.c
  */
