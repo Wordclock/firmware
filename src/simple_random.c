@@ -43,7 +43,7 @@
 /**
  * @brief The prime multiplier used for calculating the next random number
  *
- * This is used within  simpleRand_get() to calculate the next random number
+ * This is used within simpleRand_get() to calculate the next random number
  * based upon the last generated number and/or the initial seed value.
  *
  * @see SR_PRIME_ADD
@@ -54,7 +54,7 @@
 /**
  * @brief The prime summand used for calculating the next random number
  *
- * This is used within  simpleRand_get() to calculate the next random number
+ * This is used within simpleRand_get() to calculate the next random number
  * based upon the last generated number and/or the initial seed value.
  *
  * @see SR_PRIME_MULT
@@ -80,8 +80,8 @@ static uint8_t g_lastVal = 1;
 /**
  * @brief Sets the initial seed value
  *
- * This sets the initial seed value, which the next requested random number (vy
- * simpleRand_get()) will be based upon.
+ * This sets the initial seed value, which the next requested random number
+ * (by simpleRand_get()) will be based upon.
  *
  * @param i_seed The seed value you want to set
  *
