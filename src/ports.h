@@ -21,12 +21,12 @@
  * @file ports.h
  * @brief Helper macros to make dealing with ports easier
  *
- * These file contains various macros, which will make dealing with ports
- * easier, which basically means that instead of defining up to four different
- * macros for the PINx, PORTx and DDRx registers of a pin, a single definition
- * is enough.
+ * This file contains various macros, which will make it easier and more
+ * intuitive to deal with the ports of the microcontroller. This basically
+ * means that instead of defining up to four different macros for the PINx,
+ * PORTx and DDRx registers of a pin, a single definition is enough.
  *
- * Consider this classic example:
+ * Consider the following example, which is used in this form quite often:
  *
  * \code
  *  #define WHATEVER_PORT    PORTD
@@ -36,8 +36,7 @@
  * \endcode
  *
  * This is kind of ugly for various reasons one of which is the implied
- * redundancy. With the macros defined in this file a simple definitions
- * enough:
+ * redundancy. With the macros defined in this file a single macro is enough:
  *
  * \code
  *  #define WHATEVER PORTD, 4
@@ -46,8 +45,8 @@
  * This works because the addresses of the involved registers can be calculated
  * as there is a system behind them. Normally the PINx register comes first and
  * is followed by the DDRx register, which in return is followed by the PORTx
- * register itself. For instance for the port C of an ATmega168 it looks like
- * this (see [1], p. 343, chapter 31).
+ * register itself. For instance in case of the port C of an ATmega168 it looks
+ * like this (see [1], p. 343, chapter 31).
  *
  * \code
  *   [...]
@@ -58,10 +57,11 @@
  * \endcode
  *
  * So by knowing the address location of PORTC both of the addresses for DDRC
- * as well as PINC can easily be calculated by subtracting one and/or two.
+ * as well as PINC can easily be calculated by simply subtracting one and/or
+ * two.
  *
  * However there is an exception to this in case of ATmega64's and ATmega128's,
- * which provide an additional port F. The PINF for whatever reason register is
+ * which provide an additional port F. For whatever reason the PINF register is
  * located at 0x00 instead of 0x60, which one would expect following the scheme
  * described above. For details see [2], p. 369ff. However the appropriate
  * PIN() macro accommodates for this with a relative simple distinction of the
