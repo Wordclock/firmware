@@ -379,9 +379,17 @@ static void handle_brightness()
  * hardware and enter an infinite loop, which will handle any upcoming events
  * not yet covered and/or initiated by various interrupts.
  *
+ * As this function is the main entry point, it won't actually be called by
+ * any other function. Therefore this function makes use of the attribute
+ * "OS_main", which will save a couple of bytes as no prologue and/or epilogue
+ * is needed to save the content of various registers. The description of
+ * this attribute can be found at [1].
+ *
+ * [1]: http://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
+ *
  * @return This function should actually never reach its end
  */
-int main()
+__attribute__((OS_main)) int main()
 {
 
     /*
