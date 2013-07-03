@@ -355,7 +355,7 @@ static void handle_brightness()
     /**
      * @brief Makes sure that the watchdog is turned of after a watchdog reset
      *
-     * In the case that a watchdog reset occured this makes actually sure that
+     * In the case that a watchdog reset occurred this makes actually sure that
      * the watchdog is turned off to prevent the microcontroller from resetting
      * itself all the time.
      *
