@@ -104,6 +104,11 @@ typedef enum e_MenuStates
      * This represents the "pulse" mode, which will constantly change the
      * brightness in a "pulsing" way.
      *
+     * Note that this is implemented different internally than the other modes
+     * (e_MenuStates::MS_normalMode and e_MenuStates::MS_hueMode) as it can
+     * be activated on top of these other modes, which makes it possible to
+     * pulse within both of these modes.
+     *
      * @see PulseState_init()
      */
     MS_pulse,
