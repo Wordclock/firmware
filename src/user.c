@@ -108,7 +108,7 @@ static datetime_t g_dateTime;
 
 #define g_params (&(wcEeprom_getData()->userParams))
 
-static void dispInternalTime(const datetime_t* i_time, uint32_t blinkmask);
+static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask);
 
 static uint8_t checkActivation();
 
@@ -595,7 +595,7 @@ void user_init()
 
 }
 
-static void dispInternalTime(const datetime_t* i_time, uint32_t blinkmask)
+static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask)
 {
 
     putTime(i_time);
