@@ -35,9 +35,6 @@
  * @see display_wc.h
  */
 
-#include <inttypes.h>
-#include <avr/io.h>
-#include <util/delay.h>
 #include <avr/pgmspace.h>
 
 #include "main.h"
