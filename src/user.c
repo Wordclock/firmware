@@ -110,7 +110,7 @@ static datetime_t g_dateTime;
 
 static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask);
 
-static uint8_t checkActivation();
+static bool checkActivation();
 
 static uint8_t curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
@@ -780,10 +780,10 @@ static uint8_t curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 
 }
 
-static uint8_t checkActivation()
+static bool checkActivation()
 {
 
-    uint8_t on = true;
+    bool on = true;
     uint8_t i;
 
     for (i = 0; i < UI_AUTOOFFTIMES_COUNT; i += 2) {
