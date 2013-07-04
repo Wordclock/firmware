@@ -126,7 +126,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if(state & ((DisplayState)1 << DWP_min4)) {
+    if (state & ((DisplayState)1 << DWP_min4)) {
 
         PORT(DISPLAY_MIN4) |= _BV(BIT(DISPLAY_MIN4));
 

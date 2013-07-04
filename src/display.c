@@ -292,7 +292,7 @@ ISR(DISPLAY_TIMER_OVF_vect)
 
             } else {
 
-                if(useAutoOffAnimation) {
+                if (useAutoOffAnimation) {
 
                     g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM / DISPLAY_FADE_STEPS) - 1;
 
@@ -337,11 +337,11 @@ ISR(DISPLAY_TIMER_OVF_vect)
 void display_blinkStep()
 {
 
-    if(g_blinkState && (g_curFadeStep == 0)) {
+    if (g_blinkState && (g_curFadeStep == 0)) {
 
         static uint8_t s_blinkPrescale = DISPLAY_BLINK_INT_100MS;
 
-        if(!(--s_blinkPrescale)) {
+        if (!(--s_blinkPrescale)) {
 
             g_curDispState ^= g_blinkState;
 
