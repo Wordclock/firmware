@@ -34,6 +34,8 @@
 #ifndef _WC_USER_H_
 #define _WC_USER_H_
 
+#include <stdbool.h>
+
 #include "main.h"
 #include "display.h"
 
@@ -941,7 +943,7 @@ typedef struct UserEepromParams {
      *
      * @see display_autoOffAnimStep1Hz
      */
-    uint8_t useAutoOffAnimation;
+    bool useAutoOffAnimation;
 
     /**
      * @brief Interval between two animation steps in pulse mode
@@ -990,7 +992,7 @@ typedef struct UserEepromParams {
 
 } UserEepromParams;
 
-extern uint8_t useAutoOffAnimation;
+extern bool useAutoOffAnimation;
 
 /**
  * @brief Delay before another key press will be recognized

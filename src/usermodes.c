@@ -637,7 +637,7 @@ static void SetOnOffTimeState_substateFinished (e_MenuStates finishedState, cons
     if( UI_AUTOOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet )
     {
       DisplayState dispData;
-      dispData = display_getNumberDisplayState(g_params->useAutoOffAnimation+1);
+      dispData = display_getNumberDisplayState((uint8_t)g_params->useAutoOffAnimation+1);
       display_setDisplayState(dispData, dispData);
       if(g_params->useAutoOffAnimation)
       {
@@ -665,8 +665,8 @@ static uint8_t SetOnOffTimeState_handleIr(  uint8_t cmdCode )
     if( (cmdCode == UI_DOWN) || (cmdCode == UI_UP) )
     {
       DisplayState dispData;
-      g_params->useAutoOffAnimation ^= 1;
-      dispData = display_getNumberDisplayState(g_params->useAutoOffAnimation+1);
+      g_params->useAutoOffAnimation = !g_params->useAutoOffAnimation;
+      dispData = display_getNumberDisplayState((uint8_t)g_params->useAutoOffAnimation+1);
       display_setDisplayState(dispData, dispData);
       if(g_params->useAutoOffAnimation)
       {

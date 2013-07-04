@@ -54,7 +54,7 @@
 
 #define USER_AUXPOWER PORTD, 2
 
-uint8_t useAutoOffAnimation;
+bool useAutoOffAnimation;
 
 static bool leaveSubState(int8_t indexOfStateToLeave);
 
@@ -718,7 +718,7 @@ void user_isr10Hz()
 void user_isr1Hz()
 {
 
-    useAutoOffAnimation = 0;
+    useAutoOffAnimation = false;
 
     if (g_eepromSaveDelay <= USER_DELAY_BEFORE_SAVE_EEPROM_S) {
 
@@ -751,7 +751,7 @@ void user_isr1Hz()
         if (g_params->useAutoOffAnimation) {
 
             display_autoOffAnimStep1Hz(g_animPreview);
-            useAutoOffAnimation = 1;
+            useAutoOffAnimation = true;
 
         }
 
