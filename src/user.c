@@ -18,22 +18,19 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file user.c
+ * @brief Contains the implementation of the user interface
  *
- *  This file contains implementation of the user interface.
+ * This - among other things - implements the functions defined in user.h.
+ * Within this file itself mainly generic things (like the stack management
+ * and/or the different power states) are defined and implemented. The specific
+ * modes with their implementation on the other hand are currently implemented
+ * within usermodes.c, which is simply being included into this file.
  *
- * \version $Id: user.c 424 2013-03-14 18:51:07Z vt $
- *
- * \author Copyright (c) 2010 Vlad Tepesch
- *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * @see user.h
+ * @see usermodes.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 /*
