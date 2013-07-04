@@ -56,7 +56,7 @@
 
 uint8_t useAutoOffAnimation;
 
-static uint8_t leaveSubState(int8_t indexOfStateToLeave);
+static bool leaveSubState(int8_t indexOfStateToLeave);
 
 static void addState(e_MenuStates mode, const void* param);
 
@@ -245,7 +245,7 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 
 }
 
-static uint8_t leaveSubState(int8_t indexOfStateToLeave)
+static bool leaveSubState(int8_t indexOfStateToLeave)
 {
 
     int8_t i;
