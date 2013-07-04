@@ -211,7 +211,7 @@ static void addState(e_MenuStates mode, const void* param)
 static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 {
 
-    uint8_t success = true;
+    bool success = true;
     int8_t nextIdx;
 
     if (curState == -1) {
@@ -249,13 +249,13 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
 {
 
     int8_t i;
-    uint8_t success = true;
+    bool success = true;
 
     log_state("leaving substates: ");
 
     for (i = g_topOfStack - 1; i >= indexOfStateToLeave; --i) {
 
-        uint8_t canLeave = !UserState_prohibitLeave(g_stateStack[i]);
+        bool canLeave = !UserState_prohibitLeave(g_stateStack[i]);
         success = success && canLeave;
 
         #if (LOG_USER_STATE == 1)
@@ -296,7 +296,7 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
 static void quitMyself(e_MenuStates state, const void* result)
 {
 
-    uint8_t success;
+    bool success;
     int8_t currentIdx = g_currentIdxs[state];
 
     log_state("quit self\n");
