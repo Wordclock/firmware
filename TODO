@@ -4,7 +4,6 @@
 
     Files left:
         - user.c
-        - user.h
         - usermodes.c
 
 - Cross-Read and correct comments. Finished files:
