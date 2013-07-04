@@ -40,6 +40,8 @@
 #ifndef _WC_DISPLAY_H_
 #define _WC_DISPLAY_H_
 
+#include <stdbool.h>
+
 #include "datetime.h"
 
 /**
@@ -161,7 +163,7 @@ extern DisplayState display_getTimeState(const datetime_t* i_newDateTime);
 extern void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates);
 extern void display_fadeDisplayState(DisplayState i_showStates);
 extern void display_blinkStep();
-extern void display_autoOffAnimStep1Hz(uint8_t animPreview);
+extern void display_autoOffAnimStep1Hz(bool animPreview);
 
 /**
  * @brief Returns a display state that contains a visual indication

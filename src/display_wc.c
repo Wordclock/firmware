@@ -158,17 +158,17 @@ void display_outputData(DisplayState state)
  *
  * This function is expected to be called on a regular basis with a frequency
  * of 1 Hz. This is usually done via user_isr1Hz(). It will let the minute
- * LEDs appear to blink alternately. When the parameter animPreview is set, the
- * word corresponding to "two" (hour) will be enabled on top of that. This is
- * referred to as "preview mode" and can be useful in case when setting up the
- * auto on off animation up to give the user some form of indication, which
- * mode he actually has selected and how it will look like.
+ * LEDs appear to blink alternately. When the parameter animPreview is set to
+ * true, the word corresponding to "two" (hour) will be enabled on top of that.
+ * This is referred to as "preview mode" and can be useful in case when setting
+ * up the auto on off animation up to give the user some form of indication,
+ * which mode he actually has selected and how it will look like.
  *
  * @param animPreview Defines whether "two" (hour) will be displayed
  *
  * @see display_getNumberDisplayState()
  */
-void display_autoOffAnimStep1Hz(uint8_t animPreview)
+void display_autoOffAnimStep1Hz(bool animPreview)
 {
 
     static uint8_t s_state = 0;
