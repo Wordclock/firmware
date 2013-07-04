@@ -783,7 +783,7 @@ static uint8_t curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 static bool checkActivation()
 {
 
-    bool on = true;
+    bool result = true;
     uint8_t i;
 
     for (i = 0; i < UI_AUTOOFFTIMES_COUNT; i += 2) {
@@ -791,12 +791,12 @@ static bool checkActivation()
         if (curTimeIsBetween(g_params->autoOffTimes[i].h, g_params->autoOffTimes[i].m,
                 g_params->autoOffTimes[i + 1].h, g_params->autoOffTimes[i + 1].m)) {
 
-            on = false;
+            result = false;
 
         }
 
     }
 
-    return on;
+    return result;
 
 }
