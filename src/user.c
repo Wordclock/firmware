@@ -506,7 +506,7 @@ void handle_ir_code()
 
                                 log_state("AL\n");
 
-                                PIN(USER_AMBILIGHT) |= (1 << BIT(USER_AMBILIGHT));
+                                PIN(USER_AMBILIGHT) |= _BV(BIT(USER_AMBILIGHT));
 
                         #endif
 
@@ -516,7 +516,7 @@ void handle_ir_code()
 
                                 log_state("BT\n");
 
-                                PIN(USER_BLUETOOTH) |= (1 << BIT(USER_BLUETOOTH));
+                                PIN(USER_BLUETOOTH) |= _BV(BIT(USER_BLUETOOTH));
 
                         #endif
 
@@ -526,7 +526,7 @@ void handle_ir_code()
 
                                 log_state("AUX\n");
 
-                                PIN(USER_AUXPOWER) |= (1 << BIT(USER_AUXPOWER));
+                                PIN(USER_AUXPOWER) |= _BV(BIT(USER_AUXPOWER));
 
                         #endif
 
@@ -577,19 +577,19 @@ void user_init()
 
     #if (AMBILIGHT_PRESENT == 1)
 
-        DDR(USER_AMBILIGHT) |= (1 << BIT(USER_AMBILIGHT));
+        DDR(USER_AMBILIGHT) |= _BV(BIT(USER_AMBILIGHT));
 
     #endif
 
     #if (BLUETOOTH_PRESENT == 1)
 
-        DDR(USER_BLUETOOTH) |= (1 << BIT(USER_BLUETOOTH));
+        DDR(USER_BLUETOOTH) |= _BV(BIT(USER_BLUETOOTH));
 
     #endif
 
     #if (AUXPOWER_PRESENT == 1)
 
-        DDR(USER_AUXPOWER) |= (1 << BIT(USER_AUXPOWER));
+        DDR(USER_AUXPOWER) |= _BV(BIT(USER_AUXPOWER));
 
     #endif
 
@@ -641,8 +641,8 @@ extern void user_setNewTime(const datetime_t* i_time)
 
                     #if (AMBILIGHT_PRESENT == 1)
 
-                        g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & (1 << BIT(USER_AMBILIGHT));
-                        PORT(USER_AMBILIGHT) &= ~(1 << BIT(USER_AMBILIGHT));
+                        g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & _BV(BIT(USER_AMBILIGHT));
+                        PORT(USER_AMBILIGHT) &= ~_BV(BIT(USER_AMBILIGHT));
 
                     #endif
 
