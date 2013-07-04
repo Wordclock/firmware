@@ -112,7 +112,7 @@ static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask);
 
 static bool checkActivation();
 
-static uint8_t curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
+static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 #if (LOG_USER_STATE == 1)
 
@@ -759,7 +759,7 @@ void user_isr1Hz()
 
 }
 
-static uint8_t curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
+static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 {
 
     uint8_t h = g_dateTime.hh;
