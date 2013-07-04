@@ -93,7 +93,7 @@ static uint8_t g_userSwitchedOff;
 
 #endif
 
-static uint8_t g_animPreview = 0;
+static bool g_animPreview = false;
 
 static uint8_t g_eepromSaveDelay;
 

@@ -641,9 +641,9 @@ static void SetOnOffTimeState_substateFinished (e_MenuStates finishedState, cons
       display_setDisplayState(dispData, dispData);
       if(g_params->useAutoOffAnimation)
       {
-        g_animPreview = 1;
+        g_animPreview = true;
       } else {
-        g_animPreview = 0;
+        g_animPreview = false;
       }
     }else{
       dt.hh = g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].h;
@@ -670,15 +670,15 @@ static uint8_t SetOnOffTimeState_handleIr(  uint8_t cmdCode )
       display_setDisplayState(dispData, dispData);
       if(g_params->useAutoOffAnimation)
       {
-        g_animPreview = 1;
+        g_animPreview = true;
       } else {
-        g_animPreview = 0;
+        g_animPreview = false;
       }
     }
     if( cmdCode == UI_SET_ONOFF_TIMES )
     {
       mode_setOnOffTimeState.prohibitLeave = false;
-      g_animPreview = 0;
+      g_animPreview = false;
       quitMyself( MS_setOnOffTime, NULL);
     }
   }
