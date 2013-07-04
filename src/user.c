@@ -32,7 +32,6 @@
  * @see usermodes.c
  */
 
-#include <inttypes.h>
 #include <avr/interrupt.h>
 
 #include "main.h"
