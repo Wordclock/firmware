@@ -246,7 +246,7 @@ static uint8_t TrainIrState_handleIR( const IRMP_DATA* i_irCode )
     ++mode_trainIrState.curKey;
   }
 
-# if USER_LOG_IR_TRAIN
+# if LOG_USER_IR_TRAIN
   {
     char buff[5];
     uart_puts_P("Ir train. Enter cmd #");
@@ -416,7 +416,7 @@ static uint8_t AutoHueState_handleIR(  uint8_t cmdCode )
                   , dir
                   , USER_HUE_CHANGE_INT_100MS_MIN
                   , USER_HUE_CHANGE_INT_100MS_MAX);
-#if (USER_LOG_STATE == 1)
+#if (LOG_USER_STATE == 1)
     uart_putc('0' + g_params->hueChangeIntervall);
 #endif
   }else{
@@ -705,7 +705,7 @@ static uint8_t PulseState_handleIR(  uint8_t cmdCode )
                   , dir
                   , USER_PULSE_CHANGE_INT_10MS_MIN
                   , USER_PULSE_CHANGE_INT_10MS_MAX);
-#if (USER_LOG_STATE == 1)
+#if (LOG_USER_STATE == 1)
     uart_putc('0' + g_params->pulseUpdateInterval);
 #endif
   }else{
