@@ -108,7 +108,7 @@ void uart_init()
     /*
      * Check whether speed should be doubled
      */
-    #if USE_2X
+    #if (USE_2X)
 
         /*
          * U2X: Double the UART transmission speed
