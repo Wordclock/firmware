@@ -102,8 +102,7 @@ void uart_init()
     /*
      * Set baud rate according to calculated value
      */
-    UBRR0H = UBRR_VALUE;
-    UBRR0L = UBRR_VALUE;
+    UBRR0 = UBRR_VALUE;
 
     /*
      * Check whether speed should be doubled
