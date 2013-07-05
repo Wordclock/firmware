@@ -342,7 +342,7 @@ struct DisplayEepromParams {
  * @see DISPLAY_SPECIAL_USER_COMMANDS
  * @see _DISP_TOGGLE_DISPMODE_CODE
 */
-#define DISPLAY_SPECIAL_USER_COMMANDS_CODES 0x0008,
+#define DISPLAY_SPECIAL_USER_COMMANDS_CODES 0x0014,
 
 /**
  * @brief Actual code to be executed when pressing the mode changing key

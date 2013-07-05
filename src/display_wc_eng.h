@@ -239,7 +239,7 @@ enum e_displayWordPos
      * @see user.h
      */
     #define DISPLAY_SPECIAL_USER_COMMANDS_CODES \
-        0x0008,
+        0x0014,
 
     /**
      * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER

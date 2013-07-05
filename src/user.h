@@ -452,12 +452,16 @@ typedef enum e_userCommands
  *
  * This is the default address of the IR remote control, which the Wordclock
  * will react to until otherwise "trained" (e_MenuStates::MS_irTrain). The
- * defined default value corresponds to the remote control
- * "Orion RC-BM 07660BM070".
+ * defined default value corresponds to the remote control "MAGIC LIGHTNING
+ * REMOTE CONTROLLER" purchasable on DX.com. This kind of form factor is
+ * quite common for LED stripes and there are labels to stick on top of the
+ * remote control itself available, see [1].
+ *
+ * [1]: https://www.mikrocontroller.net/articles/Word_Clock_Variante_1#IR
  *
  * @see e_MenuStates::MS_irTrain
  */
-#define USER_ADDRESS_DEFAULT 0x7B80
+#define USER_ADDRESS_DEFAULT 0xFF00
 
 /**
  * @brief Default command code for the "On" and/or "Off" command
@@ -466,11 +470,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "power" button.
+ * The defined default value corresponds to the "ON" button.
  *
  * @see e_UserCommands::UI_ONOFF
  */
-#define USER_CMD_DEF_ONOFF 0x0013
+#define USER_CMD_DEF_ONOFF 0x0007
 
 /**
  * @brief Default command code for the "increase brightness" command
@@ -479,11 +483,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "fwd" button.
+ * The defined default value corresponds to the first button from the left in
+ * the fourth row from the top.
  *
  * @see e_UserCommands::UI_BRIGHTNESS_UP
  */
-#define USER_CMD_DEF_BRIGHTNESS_UP 0x0018
+#define USER_CMD_DEF_BRIGHTNESS_UP 0x0015
 
 /**
  * @brief Default command code for the "decrease brightness" command
@@ -492,7 +497,8 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "bwd" button.
+ * The defined default value corresponds to the first button from the left in
+ * the fifth row from the top.
  *
  * @see e_UserCommands::UI_BRIGHTNESS_DOWN
  */
@@ -505,11 +511,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "ch+" button.
+ * The defined default value corresponds to the "STROBE" button.
  *
  * @see e_UserCommands::UI_UP
  */
-#define USER_CMD_DEF_UP 0x000A
+#define USER_CMD_DEF_UP 0x0017
 
 /**
  * @brief Default command code for the "down" command
@@ -518,11 +524,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "ch-" button.
+ * The defined default value corresponds to the "FADE" button.
  *
  * @see e_UserCommands::UI_DOWN
  */
-#define USER_CMD_DEF_DOWN 0x000B
+#define USER_CMD_DEF_DOWN 0x001B
 
 /**
  * @brief Default command code for the "set time" command
@@ -531,11 +537,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "9" button.
+ * The defined default value corresponds to the third button from the left in
+ * the fifth row from the top.
  *
  * @see e_UserCommands::UI_SET_TIME
  */
-#define USER_CMD_DEF_SET_TIME 0x0009
+#define USER_CMD_DEF_SET_TIME 0x001A
 
 /**
  * @brief Default command code for the "setup on/off times" command
@@ -544,11 +551,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "rec/otr" button.
+ * The defined default value corresponds to the third button from the left in
+ * the fourth row from the top.
  *
  * @see e_UserCommands::UI_SET_ONOFF_TIMES
  */
-#define USER_CMD_DEF_SET_ONOFF_TIMES 0x0015
+#define USER_CMD_DEF_SET_ONOFF_TIMES 0x0016
 
 /**
  * @brief Default command code for the "force DCF77 update" command
@@ -557,11 +565,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "0" button.
+ * The defined default value corresponds to the second button from the left in
+ * the fifth row from the top.
  *
  * @see e_UserCommands::UI_DCF_GET_TIME
  */
-#define USER_CMD_DEF_DCF_GET_TIME 0x0000
+#define USER_CMD_DEF_DCF_GET_TIME 0x0018
 
 /**
  * @brief Default command code for the "normal mode" command
@@ -570,11 +579,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "1" button.
+ * The defined default value corresponds to the "R" button.
  *
  * @see e_UserCommands::UI_NORMAL_MODE
  */
-#define USER_CMD_DEF_NORMAL_MODE 0x0001
+#define USER_CMD_DEF_NORMAL_MODE 0x0009
 
 /**
  * @brief Default command code for the "pulse mode" command
@@ -583,11 +592,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "SP/LP" button.
+ * The defined default value corresponds to the "G" button.
  *
  * @see e_UserCommands::UI_PULSE_MODE
  */
-#define USER_CMD_DEF_PULSE_MODE 0x001e
+#define USER_CMD_DEF_PULSE_MODE 0x000A
 
 /**
  * @brief Default command code for the "demo mode" command
@@ -596,11 +605,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "3" button.
+ * The defined default value corresponds to the "B" button.
  *
  * @see e_UserCommands::UI_DEMO_MODE
  */
-#define USER_CMD_DEF_DEMO_MODE 0x0003
+#define USER_CMD_DEF_DEMO_MODE 0x000B
 
 /**
  * @brief Default command code for the "hue-fading mode" command
@@ -609,11 +618,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "2" button.
+ * The defined default value corresponds to the "W" button.
  *
  * @see e_UserCommands::UI_HUE_MODE
  */
-#define USER_CMD_DEF_HUE_MODE 0x0002
+#define USER_CMD_DEF_HUE_MODE 0x0008
 
 /**
  * @brief Default command code for the "change red channel" command
@@ -622,11 +631,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "4" button.
+ * The defined default value corresponds to the first button from the left in
+ * the third row from the top.
  *
  * @see e_UserCommands::UI_CHANGE_R
  */
-#define USER_CMD_DEF_CHANGE_R 0x0004
+#define USER_CMD_DEF_CHANGE_R 0x000D
 
 /**
  * @brief Default command code for the "change green channel" command
@@ -635,11 +645,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "5" button.
+ * The defined default value corresponds to the second button from the left in
+ * the third row from the top.
  *
  * @see e_UserCommands::UI_CHANGE_G
  */
-#define USER_CMD_DEF_CHANGE_G 0x0005
+#define USER_CMD_DEF_CHANGE_G 0x000C
 
 /**
  * @brief Default command code for the "change blue channel" command
@@ -648,11 +659,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "6" button.
+ * The defined default value corresponds to the third button from the left in
+ * the third row from the top.
  *
  * @see e_UserCommands::UI_CHANGE_B
  */
-#define USER_CMD_DEF_CHANGE_B 0x0006
+#define USER_CMD_DEF_CHANGE_B 0x000E
 
 /**
  * @brief Default command code for the "change hue" command
@@ -661,11 +673,11 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "7" button.
+ * The defined default value corresponds to the "FLASH" button.
  *
  * @see e_UserCommands::UI_CHANGE_HUE
  */
-#define USER_CMD_DEF_CHANGE_HUE 0x0007
+#define USER_CMD_DEF_CHANGE_HUE 0x000F
 
 /**
  * @brief Default command code for the "brightness calibration" command
@@ -674,11 +686,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "enter" button.
+ * The defined default value corresponds to the first button from the left in
+ * the sixth row from the top.
  *
  * @see e_UserCommands::UI_CALIB_BRIGHTNESS
  */
-#define USER_CMD_DEF_CALIB_BRIGHTNESS 0x0045
+#define USER_CMD_DEF_CALIB_BRIGHTNESS 0x0011
 
 /**
  * @brief Default command code for the "Ambilight on/off" command
@@ -687,11 +700,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the "atr" button.
+ * The defined default value corresponds to the second button from the left in
+ * the sixth row from the top.
  *
  * @see e_UserCommands::UI_AMBIENT_LIGHT
  */
-#define USER_CMD_DEF_AMBILIGHT 0x0052
+#define USER_CMD_DEF_AMBILIGHT 0x0010
 
 /**
  * @brief Default command code for the "Bluetooth on/off" command
@@ -700,12 +714,12 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the same button as the "on" and/or
- * "off" button, which disables this command by default.
+ * The defined default value corresponds to the third button from the left in
+ * the sixth row from the top.
  *
  * @see e_UserCommands::UI_BLUETOOTH
  */
-#define USER_CMD_DEF_BLUETOOTH 0x0013
+#define USER_CMD_DEF_BLUETOOTH 0x0012
 
 /**
  * @brief Default command code for the "auxiliary GPO on/off" command
@@ -714,8 +728,8 @@ typedef enum e_userCommands
  * which the Wordclock will react to until otherwise "trained"
  * (e_MenuStates::MS_irTrain).
  *
- * The defined default value corresponds to the same button as the "on" and/or
- * "off" button, which disables this command by default.
+ * The defined default value corresponds to the third button from the left in
+ * the sixth row from the top.
  *
  * @see e_UserCommands::UI_AUXPOWER
  */
