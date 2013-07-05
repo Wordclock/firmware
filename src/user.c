@@ -45,12 +45,32 @@
 #include "color.h"
 #include "ports.h"
 
+/**
+ * @brief Port and pin definition of the line in control of the Ambilight
+ *
+ * @see ports.h
+ */
 #define USER_AMBILIGHT PORTB, 1
 
+/**
+ * @brief Port and pin definition of the line in control of the Bluetooth
+ *
+ * @see ports.h
+ */
 #define USER_BLUETOOTH PORTC, 1
 
+/**
+ * @brief Port and pin definition of the line in control of the auxiliary GPO
+ *
+ * @see ports.h
+ */
 #define USER_AUXPOWER PORTD, 2
 
+/**
+ * @brief Indicates whether the autoOff animation is currently being enabled
+ *
+ * @see SWITCHED_OFF::USO_AUTO_OFF
+ */
 bool useAutoOffAnimation;
 
 static bool leaveSubState(int8_t indexOfStateToLeave);
@@ -61,44 +81,268 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param);
 
 static void quitMyself(e_MenuStates state, const void* result);
 
+/**
+ * @brief Depth of the state stack
+ *
+ * This defines the depth of the stack, which effectively puts a limit on how
+ * many states (e_MenuStates) may be entered on top of each other. However each
+ * state can be entered only once, so it doesn't make sense to make this value
+ * too big. The default value is 10.
+ *
+ * @see g_stateStack
+ */
 #define USER_MAX_STATE_DEPTH 10
 
+/**
+ * @brief Buffer for the stack
+ *
+ * This represents the buffer that will be used for the stack itself, which
+ * contains all modes currently being active. The stack is "addressed" from the
+ * bottom up, so indexing starts from 0 and will grow towards
+ * USER_MAX_STATE_DEPTH - 1.
+ *
+ * Each mode of e_MenuStates can only be entered once and will therefore be put
+ * onto the stack only once.
+ *
+ * @see USER_MAX_STATE_DEPTH
+ * @see g_topOfStack
+ * @see g_currentIdxs
+ */
 static uint8_t g_stateStack[USER_MAX_STATE_DEPTH];
 
+/**
+ * @brief Contains the current index for each currently active mode
+ *
+ * This contains the current index number of the stack for each state currently
+ * being active. As each mode can only be entered once, there is only one index
+ * for each mode, which will be updated when the mode is entered. However it
+ * won't be cleared when the mode is left at a later stage, so it may contain
+ * values, which are not correct, in these cases.
+ *
+ * The mapping is done corresponding to the indexing of e_MenuStates itself,
+ * e.g. the current index for MS_normalMode will be stored at
+ * g_currentIdxs[MS_normalMode].
+ *
+ * @see g_stateStack
+ * @see e_MenuStates
+ * @see addState()
+ */
 static uint8_t g_currentIdxs[MS_COUNT];
 
+/**
+ * @brief Points to the current top of the stack
+ *
+ * This is needed to manage the stack and can be understood as the stack
+ * pointer. It will always point towards the next free "element" of the stack
+ * and will be increased when adding a new state to the stack, and decreased
+ * when leaving it again.
+ *
+ * @see g_stateStack
+ */
 static int8_t g_topOfStack;
 
+/**
+ * @brief Counter used to implement a recognition delay after pressing a key
+ *
+ * This is used to implement the delay in recognition between two key presses.
+ * This counter will be assigned the value of USER_KEY_PRESS_DELAY_100MS.
+ * handle_ir_code() won't process any other key press until this counter
+ * reaches zero. The decrementation itself is done in user_isr10Hz().
+ *
+ * @see USER_KEY_PRESS_DELAY_100MS
+ * @see handle_ir_code()
+ * @see user_isr10Hz()
+ */
 static uint8_t g_keyDelay;
 
+/**
+ * @brief Enumeration of the different "off" states
+ *
+ * These are the different kinds of "power" states the Wordclock can be
+ * assigned to when turning off the display. These are mainly needed to
+ * implement the autoOff feature while also allowing the user to turn out the
+ * display manually. Although the outcome may seem equal to the outside, these
+ * states are handled quite different internally.
+ *
+ * The current "power" state is hold by g_userSwitchedOff and at any given
+ * point in time will contain one of these values.
+ *
+ * There are the following "power" states:
+ *
+ *  - normal_on
+ *  - auto_off
+ *  - user_off
+ *  - override_on
+ *
+ * The following "inputs" are possible for each of this states:
+ *
+ *  - ontime
+ *  - offtime
+ *  - IROnOff
+ *
+ * The following table describes which state can be reached from any given
+ * state and an arbitrary input:
+ *
+ * \code
+ *    Z           E            Z'
+ * normal_on    ontime      normal_on
+ * normal_on    offTime     auto_off
+ * normal_on    IROnOff     user_off
+ * auto_off     ontime      normal_on
+ * auto_off     offtime     auto_off
+ * auto_off     IROnOff     override_on
+ * user_off     ontime      user_off
+ * user_off     offtime     user_off
+ * user_off     IROnOff     normal_on
+ * override_on  ontime      normal_on
+ * override_on  offTime     override_on
+ * override_on  IROnOff     user_off
+ * \endcode
+ *
+ * @note Be careful with changes and/or adaptations to the ordering of these
+ * items, as some functions rely on it.
+ *
+ * @see g_userSwitchedOff
+ * @see handle_ir_code()
+ * @see user_setNewTime()
+ * @see user_isr1Hz()
+ */
 enum SWITCHED_OFF {
 
+    /**
+     * @brief Represents the state when the display is turned on normally
+     *
+     * This is the value for g_userSwitchedOff when the display is turned on
+     * normally. This is mainly needed to differentiate against the various
+     * forms of "off" modes.
+     */
     USO_NORMAL_ON = 0,
 
+    /**
+     * @brief Represents the state when the display is "forced" to stay on
+     *
+     * When the display was turned off by the autoOff feature, but was enabled
+     * by the user manually afterwards, this is the value that will be assigned
+     * to g_userSwitchedOff.
+     */
     USO_OVERRIDE_ON,
 
+    /**
+     * @brief Represents the state when the display was turned off by autoOff
+     *
+     * This will be assigned to g_userSwitchedOff whenever the display is
+     * turned off automatically by the autoOff feature.
+     *
+     * It is possible to activate an animation during this "power" state, which
+     * will indicate to the user, which mode the Wordclock is currently in.
+     * The animation itself consists of blinking minute LEDs, which move over
+     * from one corner to the next one. This is controlled by the value
+     * of g_animPreview.
+     *
+     * @see g_animPreview
+     */
     USO_AUTO_OFF,
 
+    /**
+     * @brief Represents the state when the display was turned off manually
+     *
+     * This will be assigned to g_userSwitchedOff whenever the display was
+     * turned off manually by the user.
+     */
     USO_MANUAL_OFF,
 
 };
 
+/**
+ * @brief Holds the current "power" state
+ *
+ * This contains a value of SWITCHED_OFF and determines the current "power"
+ * state. Based on this, other states can be reached - depending upon the
+ * "input".
+ *
+ * @see SWITCHED_OFF
+ */
 static uint8_t g_userSwitchedOff;
 
 #if (AMBILIGHT_PRESENT == 1)
 
+    /**
+     * @brief Holds the state of the Ambilight before autoOff
+     *
+     * This holds the state of the Ambilight before the display was turned off
+     * by the autoOff feature. It makes it possible to enable the Ambilight
+     * after the display gets enabled again - if necessary.
+     *
+     * @see USER_AMBILIGHT
+     */
     static uint8_t g_settingOfAmbilightBeforeAutoOff;
 
 #endif
 
+/**
+ * @brief Indicates whether animation preview of autoOff should be activated
+ *
+ * This indicates whether the animation preview of the autoOff feature should
+ * be turned on and/or off. The animation itself is implemented by
+ * display_autoOffAnimStep1Hz(), where basically this variable will be passed
+ * on as a parameter.
+ *
+ * @see SWITCHED_OFF::USO_AUTO_OFF
+ * @see display_autoOffAnimStep1Hz()
+ */
 static bool g_animPreview = false;
 
+/**
+ * @brief Counter implementing the delay before saving to EEPROM
+ *
+ * This counter is used to implement the delay defined in
+ * USER_DELAY_BEFORE_SAVE_EEPROM_S. The value itself is reset within
+ * handle_ir_code() once a new command has been received. It is increased
+ * once a second within user_isr1Hz(). Once it reaches its threshold the
+ * writeback to the EEPROM is initiated.
+ *
+ * @see handle_ir_code()
+ * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
+ * @see user_isr1Hz()
+ * @see wceeprom.h
+ */
 static uint8_t g_eepromSaveDelay;
 
+/**
+ * @brief Counter implementing the delay before checking whether to autoOff
+ *
+ * This counter is used to implement the delay defined in
+ * USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S. The value itself is reset within
+ * handle_ir_code() once a new command has been received. It is increased
+ * once a second within user_isr1Hz(). Once it reaches its threshold a check
+ * (using checkActivation()) for the autoOff times is initiated and
+ * processed appropriately.
+ *
+ * @see handle_ir_code()
+ * @see USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S
+ * @see user_isr1Hz()
+ * @see user_setNewTime()
+ * @see checkActivation()
+ */
 static uint8_t g_checkIfAutoOffDelay;
 
+/**
+ * @brief Datetime used and made available to functions within this module
+ *
+ * This can be set using user_setNewTime(). It will then be output to the
+ * display. Furthermore functions within this module can make use of it,
+ * e.g. curTimeIsBetween().
+ *
+ * @see user_setNewTime()
+ * @see curTimeIsBetween()
+ */
 static datetime_t g_dateTime;
 
+/**
+ * @brief Allowing access to global instance of userParams backed by EEPROM
+ *
+ * @see UserEepromParams
+ */
 #define g_params (&(wcEeprom_getData()->userParams))
 
 static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask);
@@ -109,6 +353,15 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 #if (LOG_USER_STATE == 1)
 
+    /**
+     * @brief Outputs the current state of the stack
+     *
+     * This outputs the current state of the stack using UART. It is used
+     * within PRINT_STATE_STACK() and will only be compiled when LOG_USER_STATE
+     * == 1.
+     *
+     * @see PRINT_STATE_STACK()
+     */
     static void printStateStack()
     {
 
@@ -136,28 +389,81 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
     }
 
+    /**
+     * @brief Wrapper macro for printStateStack()
+     *
+     * This macro basically makes use of printStateStack() whenever
+     * LOG_USER_STATE == 1.
+     *
+     * @see printStateStack()
+     */
     #define PRINT_STATE_STACK() do { printStateStack(); } while (0)
 
 #else
 
+    /**
+     * @brief Dummy macro in case logging is disabled
+     *
+     * When LOG_USER_STATE == 0 this makes sure that nothing is actually added
+     * to the code. This makes it possible to add PRINT_STATE_STACK() within
+     * various functions without worrying whether or not the debugging is
+     * actually enabled.
+     */
     #define PRINT_STATE_STACK()
 
 #endif
 
 #if (LOG_USER_STATE == 1)
 
+    /**
+     * @brief Macro to output constant strings from program memory
+     *
+     * This is used within various functions of this module to output constant
+     * strings from program memory regarding the state of the module itself
+     * using UART.
+     *
+     * @see uart_puts_P()
+     */
     #define log_state(x) uart_puts_P(x)
 
 #else
 
+    /**
+     * @brief Dummy macro in case logging is disabled
+     *
+     * When LOG_USER_STATE == 0 this makes sure that nothing is actually added
+     * to the code. This makes it possible to add log_state() within various
+     * functions without worrying whether or not the debugging is actually
+     * enabled.
+     */
     #define log_state(x)
 
 #endif
 
 #if (LOG_USER_TIME == 1)
 
+    /**
+     * @brief Macro to output constant strings from program memory
+     *
+     * This is used within various functions of this module to output constant
+     * strings from program memory regarding the time of the module itself
+     * using UART.
+     *
+     * @see g_dateTime
+     * @see user_setNewTime()
+     * @see uart_puts_P()
+     */
     #define log_time(x) uart_puts_P(x)
 
+    /**
+     * @brief Outputs the given time
+     *
+     * This can be used to output the hours and minutes of the given time
+     * using UART. Other attributes of datetime_t will simply be ignored.
+     *
+     * @see datetime_t
+     * @see byteToStrLessOneHundred()
+     */
     void putTime(const datetime_t* time)
     {
 
@@ -174,14 +480,48 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 #else
 
+    /**
+     * @brief Dummy macro in case logging is disabled
+     *
+     * When LOG_USER_TIME == 0 this makes sure that nothing is actually added
+     * to the code. This makes it possible to add log_state() within various
+     * functions without worrying whether or not the debugging is actually
+     * enabled.
+     */
     #define log_time(x)
 
+    /**
+     * @brief Dummy macro in case logging is disabled
+     *
+     * When LOG_USER_TIME == 0 this makes sure that nothing is actually added
+     * to the code. This makes it possible to add log_state() within various
+     * functions without worrying whether or not the debugging is actually
+     * enabled.
+     */
     #define putTime(x)
 
 #endif
 
 #include "usermodes.c"
 
+/**
+ * @brief Adds a state on top of the stack
+ *
+ * This adds the given state (mode) to the stack, when the state was not
+ * already put there before. It will update all variables dealing with the
+ * state of the stack itself.
+ *
+ * Regardless of whether or not the given state was already put on the stack
+ * beforehand, it will execute UserState_enter() with the given parameter.
+ *
+ * @param mode The state to add
+ * @param param Any parameter for the given state, might also be NULL
+ *
+ * @see g_stateStack
+ * @see g_topOfStack
+ * @see g_currentIdxs
+ * @see UserState_enter()
+ */
 static void addState(e_MenuStates mode, const void* param)
 {
 
@@ -201,6 +541,30 @@ static void addState(e_MenuStates mode, const void* param)
 
 }
 
+/**
+ * @brief Adds a substate to a specific state
+ *
+ * A substate can be understood as a state, which in a way is related to its
+ * "parent", e.g. MS_enterTime can be a substate of MS_setSystemTime.
+ *
+ * Only a single substate for each parent can be entered at any given point in
+ * time. Therefore this function will try to leave any previously entered
+ * substates, before actually entering the given substate itself. The added
+ * substate will take up place on the actual stack itself - as it is handled
+ * quite similar to a normal state.
+ *
+ * Passing "-1" as value for the first parameter (curState) this function can
+ * be used to replace the "base" state itself (the state at the very bottom).
+ * Every state on top of it will then be left - if possible.
+ *
+ * @param curState The parent of the substate that should be added, -1 for base
+ * @param mode The substate that should be added
+ * @param param Any parameter for the given state, might be NULL
+ *
+ * @see g_currentIdxs
+ * @see leaveSubState()
+ * @see addState()
+ */
 static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 {
 
@@ -238,6 +602,23 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 
 }
 
+/**
+ * @brief Leaves the substate at the given stack position
+ *
+ * First of all this function will check whether the given state and all states
+ * on top of it can actually be left or whether leaving one of them is
+ * currently prohibited (UserState_prohibitLeave()). If it is possible to leave
+ * all of these states, it will invoke UserState_LeaveState() on each of them
+ * and the function will return true. If at least one state can't be left,
+ * nothing happens at all and the function simply returns false.
+ *
+ * @param indexOfStateToLeave Stack position of substate to leave
+ *
+ * @return Indicates whether or not the given substate was left
+ *
+ * @see UserState_prohibitLeave()
+ * @see UserState_LeaveState()
+ */
 static bool leaveSubState(int8_t indexOfStateToLeave)
 {
 
@@ -286,6 +667,23 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
 
 }
 
+/**
+ * @brief Makes the given state to quit itself
+ *
+ * This will invoke leaveSubState() on the current index of the given mode
+ * (g_currentIdxs). It will then reset the display state, and invoke
+ * UserState_SubstateFinished() on the "parent" of the state just left.
+ *
+ * This is expected to be used on states that have fulfilled their actual task,
+ * and want to hand over control to the "parent" again.
+ *
+ * @param state The state that should leave itself
+ * @param result Result to be handed over to the "parent", might be NULL
+ *
+ * @see leaveSubState()
+ * @see g_currentIdxs
+ * @see UserState_SubstateFinished()
+ */
 static void quitMyself(e_MenuStates state, const void* result)
 {
 
@@ -309,6 +707,33 @@ static void quitMyself(e_MenuStates state, const void* result)
 
 }
 
+/**
+ * @brief Processes any received IR commands
+ *
+ * This function handles any IR commands received by IRMP. It will check
+ * whether a command was decoded successfully using irmp_get_data() and
+ * implements a key press delay before any other key press can be recognized.
+ * If currently in training state it will dispatch the handling to
+ * TrainIrState_handleIR().
+ *
+ * Otherwise it will iterate over each element within e_userCommands and
+ * compare it against the received IR command and execute the action associated
+ * with this command and/or enter the appropriate state. For some states it
+ * also possible to dispatch the handling of the IR command to a dedicated
+ * function, in which case this function won't process it.
+ *
+ * In the end it will also reset g_eepromSaveDelay and g_checkIfAutoOffDelay
+ * making sure that these delays are implemented correctly.
+ *
+ * @note To make sure not to loose any events, this function should be called
+ * on a quasi-regular basis.
+ *
+ * @see irmp_get_data()
+ * @see g_keyDelay
+ * @see TrainIrState_handleIR()
+ * @see g_eepromSaveDelay
+ * @see g_checkIfAutoOffDelay
+ */
 void handle_ir_code()
 {
 
@@ -550,6 +975,26 @@ void handle_ir_code()
 
 }
 
+/**
+ * @brief Initializes the user module
+ *
+ * This initializes the user module: First of all it calls UserState_init(),
+ * which will initialize all the user modes implemented within usermodes.c.
+ * Afterwards it will restore the mode previously stored. If no mode was
+ * stored, it will fallback to the default values. Furthermore this function
+ * also sets up the data direction registers of the lines in control of the
+ * Ambilight, Bluetooth and/or auxiliary GPO lines.
+ *
+ * @note This has to be executed after the EEPROM module (wcEeprom_init()) has
+ * been initialized, as it accesses data provided by the EEPROM module.
+ *
+ * @see UserState_init()
+ * @see g_params
+ * @see e_MenuStates::MS_irTrain
+ * @see USER_AMBILIGHT
+ * @see USER_BLUETOOTH
+ * @see AUXPOWER_PRESENT
+ */
 void user_init()
 {
 
@@ -584,6 +1029,21 @@ void user_init()
 
 }
 
+/**
+ * @brief Outputs the given datetime to the display
+ *
+ * This will output the given time to the display by retrieving the appropriate
+ * display state for the given time using display_getTimeState() and outputting
+ * it using display_setDisplayState(). It will also pass the given blinkmask
+ * to display_setDisplayState(), so it is possible to let some of the words
+ * blink.
+ *
+ * @param i_time The new date and time to set
+ * @param i_blinkstates Defines words that should be blinking
+ *
+ * @see display_setDisplayState()
+ * @see display_getTimeState()
+ */
 static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask)
 {
 
@@ -592,6 +1052,23 @@ static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask)
 
 }
 
+/**
+ * @brief Takes over the given time internally
+ *
+ * This will take over the given time internally (g_dateTime). It then checks
+ * whether enough time (g_checkIfAutoOffDelay) has passed to check whether the
+ * autoOff times should be consulted to decide whether the display should be
+ * enabled and/or disabled by the autoOff feature. It will then turn the
+ * display on and/or off if neccessary - depending upon the result of the
+ * check.
+ *
+ * @param i_time The new date and time to set
+ *
+ * @see g_dateTime
+ * @see g_checkIfAutoOffDelay
+ * @see USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S
+ * @see checkActivation()
+ */
 void user_setNewTime(const datetime_t* i_time)
 {
 
@@ -664,7 +1141,14 @@ void user_setNewTime(const datetime_t* i_time)
 }
 
 /**
+ * @brief "ISR" executed with a frequency of 1000 Hz
+ *
+ * This "ISR" will be executed a thousand times each second (INTERRUPT_1000HZ).
+ * It is responsible for calling UserState_Isr1000Hz() with the current state
+ * as parameter.
+ *
  * @see INTERRUPT_1000HZ
+ * @see UserState_Isr1000Hz()
  */
 void user_isr1000Hz()
 {
@@ -674,7 +1158,14 @@ void user_isr1000Hz()
 }
 
 /**
+ * @brief "ISR" executed with a frequency of 100 Hz
+ *
+ * This "ISR" will be executed a hundred times each second (INTERRUPT_100HZ).
+ * It is responsible for calling UserState_Isr100Hz() with the current state as
+ * parameter.
+ *
  * @see INTERRUPT_100HZ
+ * @see UserState_Isr100Hz()
  */
 void user_isr100Hz()
 {
@@ -684,7 +1175,16 @@ void user_isr100Hz()
 }
 
 /**
+ * @brief "ISR" executed with a frequency of 10 Hz
+ *
+ * This "ISR" will be executed ten times each second (INTERRUPT_10HZ). It is
+ * responsible for calling UserState_Isr10Hz() with the current state as
+ * parameter and decreases the delay counter for key press recognition
+ * (g_keyDelay).
+ *
  * @see INTERRUPT_10HZ
+ * @see UserState_Isr10Hz()
+ * @see g_keyDelay
  */
 void user_isr10Hz()
 {
@@ -700,7 +1200,27 @@ void user_isr10Hz()
 }
 
 /**
+ * @brief "ISR" executed with a frequency of 1 Hz
+ *
+ * This "ISR" will be executed once a second (INTERRUPT_1HZ) and contains some
+ * task, which are executed comparatively slow. Among other things it increases
+ * various delay counters (g_eepromSaveDelay, g_checkIfAutoOffDelay) and
+ * will initiate the writeback to the EEPROM once the appropriate delay
+ * (g_eepromSaveDelay) has reached its threshold
+ * (USER_DELAY_BEFORE_SAVE_EEPROM_S). It will also make sure that either
+ * UserState_Isr1Hz() with the current state as parameter and/or
+ * display_autoOffAnimStep1Hz() with the current setting of g_animPreview are
+ * executed - depending on the current power "state" (g_userSwitchedOff).
+ *
  * @see INTERRUPT_1HZ
+ * @see g_eepromSaveDelay
+ * @see g_checkIfAutoOffDelay
+ * @see g_eepromSaveDelay
+ * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
+ * @see UserState_Isr1Hz()
+ * @see display_autoOffAnimStep1Hz()
+ * @see g_animPreview
+ * @see g_userSwitchedOff
  */
 void user_isr1Hz()
 {
@@ -746,6 +1266,22 @@ void user_isr1Hz()
 
 }
 
+/**
+ * @brief Checks whether the current time lies within the given range
+ *
+ * The range is defined by the four parameters, whereas the first two parameter
+ * define the hours and/or minutes of the first boundary, and the last two
+ * parameters the hours and/or minutes of the second boundary.
+ *
+ * @param h1 The hours of the first boundary
+ * @param m1 The minutes of the first boundary
+ * @param h2 The hours of the second boundary
+ * @param m2 The minutes of the second boundary
+ *
+ * @return True if current time lies in between the given range, else false
+ *
+ * @see g_dateTime
+ */
 static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 {
 
@@ -767,6 +1303,20 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 
 }
 
+/**
+ * @brief Checks whether display should be activated for autoOff feature
+ *
+ * This function checks whether the current time lies outside of the defined
+ * ranges by the autoOff times and returns true if it does. This can be used to
+ * determine, whether the display should be enabled, once it was disabled by
+ * the autoOff feature.
+ *
+ * @return True if current time lies outside the autoOff ranges, else false
+ *
+ * @see UserEepromParams::autoOffTimes
+ * @see curTimeIsBetween()
+ * @see user_setNewTime()
+ */
 static bool checkActivation()
 {
 
