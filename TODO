@@ -157,10 +157,5 @@
 
 - Rename variables to get rid of the Hungarian notation
 
-- user.h: Change default IR command codes and/or address to correspond to a
-  DX.com remote control
-
 - user: Use AMBILIGHT consistently, e.g. rename UI_AMBIENT_LIGHT to
   UI_AMBILIGHT
-
-- user: useAutoOffAnimation use bool
