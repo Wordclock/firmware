@@ -76,14 +76,14 @@
 #define DISPLAY_MIN2 PORTD, 7
 
 /**
- * @brief Port and pin definition of the line in control of the three minute
+ * @brief Port and pin definition of the line in control of the third minute
  *
  * @see ports.h
  */
 #define DISPLAY_MIN3 PORTC, 2
 
 /**
- * @brief Port and pin definition of the line in control of the four minute
+ * @brief Port and pin definition of the line in control of the fourth minute
  *
  * @see ports.h
  */
