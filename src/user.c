@@ -401,7 +401,7 @@ void handle_ir_code()
             } else {
 
                 int8_t i;
-                uint8_t handled = false;
+                bool handled = false;
 
                 for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
 
