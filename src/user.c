@@ -405,7 +405,7 @@ void handle_ir_code()
 
                 for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
 
-                    handled = handled || UserState_HanbdleIr(g_stateStack[i], ir_code);
+                    handled = handled || UserState_HandleIr(g_stateStack[i], ir_code);
 
                 }
 

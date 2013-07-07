@@ -151,7 +151,7 @@ static void UserState_Isr1Hz( e_MenuStates state );
 static void UserState_LeaveState( e_MenuStates state );
 
 /** Dispatcher routine for processing the IR signals */
-static uint8_t UserState_HanbdleIr (e_MenuStates state, uint8_t cmdCode);
+static uint8_t UserState_HandleIr (e_MenuStates state, uint8_t cmdCode);
 
 /** Dispatcher routine to handle the result of a finished sub state */
 static void    UserState_SubstateFinished(e_MenuStates state, e_MenuStates finishedState, const void* result);
@@ -809,7 +809,7 @@ static void    UserState_SubstateFinished(e_MenuStates state, e_MenuStates finis
 
 
 
-static uint8_t UserState_HanbdleIr (e_MenuStates state, uint8_t cmdCode)
+static uint8_t UserState_HandleIr (e_MenuStates state, uint8_t cmdCode)
 { 
   uint8_t handled = false;
  
