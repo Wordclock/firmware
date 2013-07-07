@@ -786,8 +786,9 @@ static bool dcf77_check()
 
     /*
      * The bits 0 - 20 are not important for us and won't be examined at all.
-     * They basically contain only contain weather data and information about
-     * leap seconds and time changes at the end of the hour.
+     * They basically only contain some proprietary weather information as
+     * well as information about leap seconds and time changes at the end of
+     * the hour.
      */
     if (DCF.BitCounter <= 20) {
 
