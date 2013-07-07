@@ -45,7 +45,7 @@
 /**
  * @brief The pin the MOSI line of the SPI is attached to
  */
-#define SHIFT_SR_SPI_MOSI PIN3
+#define SHIFT_SR_SPI_MOSI 3
 
 /**
  * @brief The pin the MISO line of the SPI is attached to
@@ -55,7 +55,7 @@
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  */
-#define SHIFT_SR_SPI_MISO PIN4
+#define SHIFT_SR_SPI_MISO 4
 
 /**
  * @brief The pin the RCLK lines of the shift registers are attached to
@@ -63,14 +63,14 @@
  * This is used to transfer the the contents of the shift registers to the
  * storage registers to output them in parallel.
  */
-#define SHIFT_SR_SPI_RCLK PIN2
+#define SHIFT_SR_SPI_RCLK 2
 
 /**
  * @brief The pin the SCK lines of the shift registers are attached to
  *
  * This is the clock line used for the shift registers.
  */
-#define SHIFT_SR_SPI_SCK PIN5
+#define SHIFT_SR_SPI_SCK 5
 
 /**
  * @brief Initializes this module
