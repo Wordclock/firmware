@@ -101,8 +101,6 @@ static uint8_t g_checkIfAutoOffDelay;
 
 static e_userCommands g_lastPressedKey;
 
-static uint8_t g_keyPressTime;
-
 static datetime_t g_dateTime;
 
 #define g_params (&(wcEeprom_getData()->userParams))
@@ -706,8 +704,6 @@ void user_isr10Hz()
         --g_keyDelay;
 
     }
-
-    ++g_keyPressTime;
 
 }
 
