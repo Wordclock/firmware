@@ -28,9 +28,7 @@
  * @see shift.c
  */
 
-#include <inttypes.h>
 #include <avr/io.h>
-#include <util/delay.h>
 
 #include "shift.h"
 
