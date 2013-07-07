@@ -516,23 +516,23 @@ static void dcf77_check_receiver_type()
 
             char log_text[8];
 
-            byteToStr (count_low, log_text);
+            byteToStr(count_low, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr (count_high, log_text);
+            byteToStr(count_high, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr (count_high+count_low, log_text);
+            byteToStr(count_high+count_low, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr (count_pass, log_text);
+            byteToStr(count_pass, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr (count_switch, log_text);
+            byteToStr(count_switch, log_text);
             uart_puts(log_text);
             uart_puts("\n");
 
