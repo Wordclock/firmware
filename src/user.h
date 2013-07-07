@@ -151,6 +151,12 @@ typedef enum e_MenuStates
      */
     MS_showNumber,
 
+    /**
+     * @brief Simply dummy containing the number of items
+     *
+     * This due to the successive allocation of indexes and the start at zero,
+     * will actually represent the amount of items within this enumeration.
+     */
     MS_COUNT
 
 } e_MenuStates;
