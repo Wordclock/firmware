@@ -99,8 +99,6 @@ static uint8_t g_eepromSaveDelay;
 
 static uint8_t g_checkIfAutoOffDelay;
 
-static e_userCommands g_lastPressedKey;
-
 static datetime_t g_dateTime;
 
 #define g_params (&(wcEeprom_getData()->userParams))
@@ -549,10 +547,6 @@ void handle_ir_code()
             g_checkIfAutoOffDelay = 0;
 
         }
-
-    } else {
-
-        g_lastPressedKey = UI_COMMAND_COUNT;
 
     }
 
