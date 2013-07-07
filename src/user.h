@@ -191,8 +191,8 @@ typedef enum e_MenuStates
  * The autoOff feature enables the display to be disabled within certain
  * intervals of time. This defines the interval in seconds after the last
  * received IR command before the clock checks whether it should disable the
- * display, so that the display won't be disabled when the user actually
- * interacts with the clock.
+ * display, so that the display won't be disabled while the user is actually
+ * interacting with the Wordclock.
  *
  * @see USER_AUTOSAVE
  * @see user_isr1Hz()
