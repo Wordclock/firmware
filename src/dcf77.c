@@ -115,7 +115,7 @@ typedef enum FLAGS_e {
      * is used within dcf77_getDateTime() to see if there is anything to do.
      *
      * @see dcf77_ISR()
-     * @see dcf77_getDateTime
+     * @see dcf77_getDateTime()
      */
     CHECK = 0,
 
@@ -725,7 +725,7 @@ static void dcf77_check_receiver_type()
  *
  * This functions analyzes the received information. It gets called once a new
  * bit has been received. Any errors will trigger a reset (see dcf77_reset()).
- * This includes invalid pulse lenghts, invalid amount of bits received and/or
+ * This includes invalid pulse lengths, invalid amount of bits received and/or
  * invalid parity bits. If the received time frame was valid true is returned,
  * otherwise it will return false.
  *
