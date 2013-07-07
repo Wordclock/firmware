@@ -594,7 +594,7 @@ static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask)
 
 }
 
-extern void user_setNewTime(const datetime_t* i_time)
+void user_setNewTime(const datetime_t* i_time)
 {
 
     if (i_time) {
