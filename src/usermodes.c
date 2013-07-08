@@ -446,17 +446,19 @@ static uint8_t NormalState_handleIR(uint8_t cmdCode)
 
             }
 
-        } else
+        } else {
 
-    #endif
+            return false;
 
-    {
+        }
+
+        return true;
+
+    #else
 
         return false;
 
-    }
-
-    return true;
+    #endif
 
 }
 
