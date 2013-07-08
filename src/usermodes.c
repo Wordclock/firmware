@@ -683,8 +683,6 @@ static uint8_t EnterTimeState_handleIr(uint8_t cmdCode)
 
         }
 
-    } else {
-
     }
 
     dispInternalTime(&mode_enterTimeState.time,
