@@ -148,7 +148,7 @@ static void UserState_init();
 
 static uint8_t UserState_prohibitLeave(e_MenuStates state);
 
-static uint8_t UserState_prohibitTimeDisplay(e_MenuStates state);
+static bool UserState_prohibitTimeDisplay(e_MenuStates state);
 
 static void UserState_Isr1000Hz(e_MenuStates state);
 
@@ -1079,7 +1079,7 @@ static void UserState_Isr1000Hz(e_MenuStates state)
 
 }
 
-static uint8_t UserState_prohibitTimeDisplay(e_MenuStates state)
+static bool UserState_prohibitTimeDisplay(e_MenuStates state)
 {
 
     return (MS_irTrain == state) || (MS_showNumber == state)
