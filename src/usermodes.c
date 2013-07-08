@@ -559,7 +559,7 @@ static void DemoState_10Hz()
 
     if (mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100MS) {
 
-        display_setDisplayState(((uint32_t)1) << (mode_demoState.demoStep), 0);
+        display_setDisplayState(((DisplayState)1) << (mode_demoState.demoStep), 0);
         ++mode_demoState.demoStep;
         mode_demoState.demoStep %= 32;
         mode_demoState.delay100ms = 0;
