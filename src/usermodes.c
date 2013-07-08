@@ -42,7 +42,7 @@ typedef struct TrainIrState {
 
 static TrainIrState mode_trainIrState;
 
-static uint8_t TrainIrState_handleIR(const IRMP_DATA* i_irCode);
+static void TrainIrState_handleIR(const IRMP_DATA* i_irCode);
 
 typedef struct ShowNumberState {
 
@@ -246,7 +246,7 @@ static void TrainIrState_1Hz()
 
 }
 
-static uint8_t TrainIrState_handleIR(const IRMP_DATA* i_irCode)
+static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 {
 
     DisplayState disp;
@@ -268,8 +268,6 @@ static uint8_t TrainIrState_handleIR(const IRMP_DATA* i_irCode)
                 wcEeprom_writeback(g_params, sizeof(*g_params));
 
                 quitMyself(MS_irTrain, NULL);
-
-                return true;
 
             }
 
@@ -302,8 +300,6 @@ static uint8_t TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
     disp = display_getNumberDisplayState(mode_trainIrState.curKey) | display_getIndicatorMask();
     display_setDisplayState(disp, disp);
-
-    return true;
 
 }
 
