@@ -154,7 +154,7 @@ static void UserState_Isr1Hz(e_MenuStates state);
 
 static void UserState_LeaveState(e_MenuStates state);
 
-static uint8_t UserState_HandleIr(e_MenuStates state, uint8_t cmdCode);
+static bool UserState_HandleIr(e_MenuStates state, uint8_t cmdCode);
 
 static void UserState_SubstateFinished(e_MenuStates state, e_MenuStates finishedState, const void* result);
 
@@ -956,7 +956,7 @@ static void UserState_SubstateFinished(e_MenuStates state, e_MenuStates finished
 
 }
 
-static uint8_t UserState_HandleIr(e_MenuStates state, uint8_t cmdCode)
+static bool UserState_HandleIr(e_MenuStates state, uint8_t cmdCode)
 {
 
     uint8_t handled = false;
