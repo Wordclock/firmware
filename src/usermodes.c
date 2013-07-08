@@ -146,7 +146,7 @@ static EnterTimeState mode_enterTimeState;
 
 static void UserState_init();
 
-static uint8_t UserState_prohibitLeave(e_MenuStates state);
+static bool UserState_prohibitLeave(e_MenuStates state);
 
 static bool UserState_prohibitTimeDisplay(e_MenuStates state);
 
@@ -1088,7 +1088,7 @@ static bool UserState_prohibitTimeDisplay(e_MenuStates state)
 
 }
 
-static uint8_t UserState_prohibitLeave(e_MenuStates state)
+static bool UserState_prohibitLeave(e_MenuStates state)
 {
 
     uint8_t prohibit = false;
