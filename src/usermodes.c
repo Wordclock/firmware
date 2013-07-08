@@ -365,7 +365,7 @@ static void NormalState_enter(const void* param)
     #endif
 }
 
-static uint8_t NormalState_handleIR(uint8_t cmdCode)
+static bool NormalState_handleIR(uint8_t cmdCode)
 {
 
     #if (MONO_COLOR_CLOCK != 1)
@@ -485,7 +485,7 @@ static void NormalState_init()
 
     }
 
-    static uint8_t AutoHueState_handleIR(uint8_t cmdCode)
+    static bool AutoHueState_handleIR(uint8_t cmdCode)
     {
 
         if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
@@ -558,7 +558,7 @@ static void DemoState_10Hz()
 
 }
 
-static uint8_t DemoState_handleIR(uint8_t cmdCode)
+static bool DemoState_handleIR(uint8_t cmdCode)
 {
 
     if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
@@ -613,7 +613,7 @@ static void EnterTimeState_enter(const void* param)
 
 }
 
-static uint8_t EnterTimeState_handleIr(uint8_t cmdCode)
+static bool EnterTimeState_handleIr(uint8_t cmdCode)
 {
 
     uint8_t caller = g_stateStack[g_currentIdxs[MS_enterTime] - 1];
@@ -782,7 +782,7 @@ static void SetOnOffTimeState_init()
 
 }
 
-static uint8_t SetOnOffTimeState_handleIr(uint8_t cmdCode)
+static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 {
 
     if (UI_AUTOOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
@@ -820,7 +820,7 @@ static uint8_t SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
 }
 
-static uint8_t PulseState_handleIR(uint8_t cmdCode)
+static bool PulseState_handleIR(uint8_t cmdCode)
 {
 
     if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
