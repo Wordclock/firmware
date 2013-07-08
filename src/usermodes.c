@@ -18,25 +18,19 @@
  * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------*//**
+/**
  * @file usermodes.c
+ * @brief Contains the implementation of the user modes itself
  *
- *  This file contains implementation of the internal states and modes
- *  \details
- *       This file is designed to be included in user.c.
- *       SO DO NOT ADD IT TO PROJECT OR MAKEFILE!
+ * This file gets simply included within user.c and does not represent its own
+ * module. It contains the implementation of the user modes as well as the
+ * appropriate IR handlers, which will process the received IR commands for
+ * each user mode differently. It is based around the state handling provided
+ * by functions defined in user.h and/or user.c.
  *
- * \version $Id: usermodes.c 424 2013-03-14 18:51:07Z vt $
- *
- * \author Copyright (c) 2010 Vlad Tepesch
- *
- * \remarks
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * @see user.h
+ * @see user.c
  */
- /*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 typedef struct TrainIrState {
 
