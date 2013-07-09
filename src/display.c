@@ -65,29 +65,29 @@
 #define DISPLAY_FADE_STEPS 20
 
 /**
- * @brief Amount of PWM cycles per step
+ * @brief Length of a single fading step
  *
- * This is the amount of PWM cycles a single step (see DISPLAY_FADE_STEPS) will
- * take up.
+ * This defines the length of a single fading step (DISPLAY_FADE_STEPS).
  *
+ * @see DISPLAY_TIMER_FREQUENCY
+ * @see DISPLAY_FADE_TIME_MS
  * @see DISPLAY_FADE_STEPS
  * @see g_curFadeStepTimer
- *
- * @note A single step length should be at least one PWM cycle long
  */
 #define DISPLAY_FADE_PERIOD \
     ((uint16_t)(((((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_MS) / 1000) / DISPLAY_FADE_STEPS))
 
 /**
- * @brief Amount of PWM cycles per step in case of an auto off animation
+ * @brief Length of a single fading step when autoOff enabled
  *
- * This is the amount of PWM cycles a single step (see DISPLAY_FADE_STEPS) will
- * take up.
+ * This defines the length of a single fading step (DISPLAY_FADE_STEPS) when
+ * the autoOff feature (useAutoOffAnimation) is enabled.
  *
+ * @see DISPLAY_TIMER_FREQUENCY
+ * @see DISPLAY_FADE_TIME_ANIM_MS
  * @see DISPLAY_FADE_STEPS
+ * @see useAutoOffAnimation
  * @see g_curFadeStepTimer
- *
- * @note A single step length should be at least one PWM cycle long
  */
 #define DISPLAY_FADE_PERIOD_ANIM \
     ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_ANIM_MS) / 1000) / DISPLAY_FADE_STEPS))
@@ -95,35 +95,36 @@
 /**
  * @brief Global variable containing the old display state
  *
- * This variable is mainly used by the appropriate ISR
- * (DISPLAY_TIMER_OVF_vect) and allows the ISR to implement a fading between
- * the old and the new (current) state, e.g. using display_fadeDisplayState().
+ * This variable is mainly used by the appropriate ISR (DISPLAY_TIMER_OVF_vect)
+ * and allows the ISR to implement a fading between the old and the new
+ * (current) state.
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see g_curDispState
  */
 static DisplayState g_oldDispState;
 
- /**
-  * @brief Global variable containing the current display state
-  *
-  * This variable is mainly used by the appropriate ISR
-  * (DISPLAY_TIMER_OVF_vect) and allows the ISR (in combination with
-  * g_blinkState) to implement a blinking effect for certain words.
-  *
-  * @see ISR(DISPLAY_TIMER_OVF_vect)
-  * @see g_blinkState
-  * @see g_oldDispState
-  */
+/**
+ * @brief Global variable containing the current display state
+ *
+ * This variable is mainly used by the appropriate ISR (DISPLAY_TIMER_OVF_vect)
+ * and allows the ISR to either output the current display state directly
+ * and/or fade between the old (g_oldDispState) and the new display state.
+ * Furthermore the blinking effect (g_blinkState) is applied on top of this
+ * state, too.
+ *
+ * @see ISR(DISPLAY_TIMER_OVF_vect)
+ * @see g_blinkState
+ * @see g_oldDispState
+ */
 static DisplayState g_curDispState;
 
 /**
  * @brief Global variable containing words that should be blinking
  *
  * This contains words that should be blinking rather than being displayed
- * statically as words within g_curDispState. It is mainly used by the
- * appropriate ISR (DISPLAY_TIMER_OVF_vect). The blinking itself is achieved
- * using display_blinkStep().
+ * statically. Only words that are currently enabled at all (g_curDispState)
+ * can be blinking. The blinking itself is performed by display_blinkStep().
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see display_blinkStep()
@@ -137,12 +138,14 @@ static DisplayState g_blinkState;
  * The fading between two states consists of a predefined amount of steps
  * (DISPLAY_FADE_STEPS). Within each of these steps this variable is
  * compared against the current fade step (g_curFadeStep). When it is bigger
- * than the current fade step g_curFadeStep, the new and/or current display
- * state (g_curDispState) will be output, otherwise the old one will be output
+ * than the current fade step g_curFadeStep, the new display state
+ * (g_curDispState) will be output, otherwise the old one will be output
  * (g_oldDispState). This counter will then be decremented by one. When
  * reaching 0, it will be reset to DISPLAY_FADE_STEPS - 1, which marks the
  * current fade step as completed, and enables the next fading step to be
- * processed. This can be referred to as a kind of "microsteps".
+ * processed. This makes sure that in the beginning of the fading the old
+ * state will be being output more often, whereas towards the end of the
+ * fading the new state is being output more often.
  *
  * @see DISPLAY_FADE_STEPS
  * @see g_curFadeStep
@@ -158,7 +161,7 @@ static uint8_t g_curFadeCounter;
  * ISR (DISPLAY_TIMER_OVF_vect). It should be noted that this variable
  * actually counts backwards, e.g. it usually gets initialized with
  * DISPLAY_FADE_STEPS - 1 and will be decremented by 1 with each step until it
- * reaches 0.
+ * reaches 0, which marks the end of the fading.
  *
  * @see DISPLAY_FADE_STEPS
  * @see ISR(DISPLAY_TIMER_OVF_vect)
@@ -170,38 +173,35 @@ static uint8_t g_curFadeStep;
  *
  * This is used within the appropriate ISR to determine when the current fade
  * step is actually over, and therefore g_curFadeStep needs to be decremented
- * by one. It will then reset itself to either
+ * by one. It will then be reset to either
  * (DISPLAY_FADE_PERIOD_ANIM / DISPLAY_FADE_STEPS) - 1 or
  * (DISPLAY_FADE_PERIOD / DISPLAY_FADE_STEPS) - 1 depending upon the value of
  * useAutoOffAnimation.
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
+ * @see useAutoOffAnimation
  */
 static uint16_t g_curFadeStepTimer;
 
 /**
- * @brief Applies the given state the to display and shows it immediately
+ * @brief Outputs the given state to display
  *
- * This function applies the given state to the display. The new state will be
- * shown on the display immediately. This can be used to output a special
- * state on the display, which not dependent upon the time itself. That might
- * be useful to provide some feedback to the user when interacting with the
- * clock, e.g. when setting the time or working with and/or on the color
- * profiles.
+ * This function outputs the given state to the display. The new state will be
+ * shown on the display immediately.
  *
  * The first parameter (i_showStates) defines which words should be shown at
  * all. The second parameter (i_blinkstates) defines, which of the shown
  * words should blink. The blink interval is defined in DISPLAY_BLINK_INT_MS.
  * Only words that are set to be shown, can actually blink.
  *
- * The state itself is output using display_outputData(). All the rest is
- * handles by the appropriate ISR (DISPLAY_TIMER_OVF_vect) itself.
+ * The state itself is being output by the appropriate ISR
+ * (DISPLAY_TIMER_OVF_vect). The blinking is performed by display_blinkStep().
  *
  * @param i_showStates Defines which words should be shown
  * @param i_blinkstates Defines which of the shown words should blink
  *
- * @see display_outputData()
  * @see ISR(DISPLAY_TIMER_OVF_vect)
+ * @see display_blinkStep()
  */
 void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates)
 {
@@ -214,14 +214,13 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
 }
 
 /**
- * @brief Applies a new state to the display and fades over from the old one
+ * @brief Fades over from the old display state to the new one
  *
- * This function applies the given state to the display. The display will then
- * fade over from the old state to the new one to make it look smoother.
+ * This function fades over from the old display state to the new one, which
+ * makes it look smoother than a direct output (display_setDisplayState()).
  *
- * Internally this function basically just sets up some variables, which will
- * be read back by the appropriate ISR (DISPLAY_TIMER_OVF_vect) during the
- * next iteration.
+ * Internally this function basically just sets up some variables, while
+ * the appropriate ISR (DISPLAY_TIMER_OVF_vect) is doing the actual work.
  *
  * @param i_showStates The new state that should be shown on the display
  *
@@ -250,15 +249,24 @@ void display_fadeDisplayState(DisplayState i_showStates)
 }
 
 /**
- * @brief Applies a new state to the display and fades over from the old one
+ * @brief Outputs the set up state to the display - possibly with a fading
  *
- * This ISR is doing most of the work in regards to the fading between two
- * states. Is is executed at a regular basis, the frequency is defined in
- * DISPLAY_TIMER_FREQUENCY. It will then check whether there are still fade
- * steps left to be processed and will output the appropriate data. Once
- * the fading is completed, it will output the current display state every
- * time it is called.
+ * This ISR is doing the actual in regards to outputting the previously set up
+ * display state (g_curDispState) and/or fading between the old
+ * (g_oldDispState) and the new (g_curDispState) display state. It is executed
+ * at a regular basis whenever the appropriate Timer/Counter will overflow
+ * (DISPLAY_TIMER_OVF_vect). The frequency this ISR will be called with is
+ * defined in DISPLAY_TIMER_FREQUENCY.
  *
+ * It will check whether there are still fade steps left to be processed and
+ * will output the appropriate data (new and/or old display state). Once the
+ * fading is completed (or if no fading had to be done in the first place), it
+ * will simply output the current display state every time it is called.
+ *
+ * @see g_curDispState
+ * @see g_oldDispState
+ * @see DISPLAY_TIMER_FREQUENCY
+ * @see DISPLAY_TIMER_OVF_vect
  * @see g_curFadeStep
  * @see g_curFadeCounter
  * @see g_curFadeStepTimer
@@ -317,21 +325,21 @@ ISR(DISPLAY_TIMER_OVF_vect)
 }
 
 /**
- * Updates the display if it is currently in a blinking state
+ * @brief Performs the blinking effect
  *
  * This implements the blinking effect for chosen words (g_blinkState) of the
  * display. This function is called by a timer ISR on a regular basis
- * (INTERRUPT_10HZ) with 10 Hz. The blinking frequency of the words itself
- * however will only be half as big, as with each execution of this function
- * the bit pattern will be flipped and it takes two flips to get back to the
- * original state again.
+ * (INTERRUPT_10HZ). The blinking interval of the words itself is defined by
+ * DISPLAY_BLINK_INT_100MS. However it will only be half as big, as with each
+ * execution of this function the bit pattern will be flipped and it takes two
+ * flips to get back to the original state again.
  *
- * The first thing this function does is to check whether there actually are
- * any words that should be blinking (g_blinkState != 0), so when no words are
- * set up to be blinking, this function will be returned from pretty quickly.
+ * The blinking effect will only be performed when there actually are any words
+ * that should be blinking (g_blinkState != 0) and when no fading is currently
+ * going on (g_curFadeStep != 0).
  *
- * @see INTERRUPT_10HZ
  * @see g_blinkState
+ * @see INTERRUPT_10HZ
  * @see DISPLAY_BLINK_INT_100MS
  */
 void display_blinkStep()
