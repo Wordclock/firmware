@@ -47,28 +47,50 @@
 /**
  * @brief Interval (in multiples of 100 ms) for blinking words
  *
- * The default value for this option is 7 (700 ms)
+ * This defines the frequency in which blinking words should actually blink.
+ * However the blinking frequency of the words itself will only be half as big,
+ * as this defines how often the bit pattern should be flipped and it takes two
+ * flips to get back to the original state again. The blinking effect itself is
+ * implemented by display_blinkStep(). Words that should blink in the current
+ * state are stored within g_blinkState.
  *
+ * The default value for this option is 7 (700 ms).
+ *
+ * @see g_blinkState
  * @see display_blinkStep()
  */
 #define DISPLAY_BLINK_INT_100MS 7
 
 /**
- * @brief Time (in ms) the fading between two times should take
+ * @brief Time the fading between two states should take
+ *
+ * This defines the time (in ms) the fading between two states
+ * (display_fadeDisplayState()) should take. In this period of time essentially
+ * both states will be output alternatingly with an increase of duration
+ * towards the new state with each fading step.
  *
  * The default value for this option is 500 (500 ms).
  *
  * @see DISPLAY_FADE_PERIOD
+ * @see display_fadeDisplayState()
  */
 #define DISPLAY_FADE_TIME_MS 500
 
 /**
- * @brief Time (in ms) the fading of the auto off animation should take
+ * @brief Time the fading between two states should take with autoOff enabled
+ *
+ * This defines the time (in ms) the fading between two states
+ * (display_fadeDisplayState()) should take when the autoOff feature
+ * (useAutoOffAnimation) is enabled and the preview mode is activated. In this
+ * period of time essentially both states will be output alternatingly with an
+ * increase of duration towards the new state with each fading step.
  *
  * The default value for this option is 1000 (1 s).
  *
  * @see DISPLAY_FADE_PERIOD_ANIM
  * @see useAutoOffAnimation
+ * @see display_fadeDisplayState()
+ * @see display_autoOffAnimStep1Hz()
  */
 #define DISPLAY_FADE_TIME_ANIM_MS 1000
 
@@ -78,26 +100,24 @@
  * This macro stores the overflow interrupt vector of the Timer/Counter
  * responsible for the display module. Using this abstraction it is possible
  * to change the involved Timer/Counter without fiddling around in the
- * sources itself too much.
+ * sources itself.
  *
  * @see ISR(TIMER2_OVF_vect)
  */
 #define DISPLAY_TIMER_OVF_vect TIMER2_OVF_vect
 
 /**
- * @brief Macro used to enable involved interrupts
+ * @brief Macro used to enable the involved Timer/Counter interrupt
  *
  * This is used during initialization to enable the interrupt of the involved
- * Timer/Counter responsible for the display module. Using this abstraction it
- * is possible to change the involved Timer/Counter without fiddling around in
- * the sources itself too much.
+ * Timer/Counter responsible for the display module.
  *
  * @see display_init()
  */
 #define DISPLAY_TIMER_ENABLE_INTS() TIMSK2 |= _BV(TOIE2);
 
 /**
- * @brief Frequency the timer/counter involved is running at (in Hz)
+ * @brief Frequency the involved Timer/Counter is running at (in Hz)
  *
  * The frequency is calculated in the following way:
  *
@@ -149,7 +169,7 @@ extern void display_outputData(DisplayState state);
  *
  * This functions returns a display state for the given datetime. As this is
  * something specific to the frontpanel, it is actually implemented by the
- * language specific file itself.
+ * language specific files itself.
  *
  * @param i_newDateTime The datetime to get a display state for
  *
@@ -229,7 +249,7 @@ static inline DisplayState display_getHoursMask();
  * @brief Returns a display state with a representation for the given number
  *
  * This functions returns a display state which will represent the given
- * number. This can be used to interact with the user by offering him an
+ * number. This can be used to interact with the user by offering him a
  * visual feedback within certain menus.
  *
  * This is effectively implemented in the language specific files, as it
