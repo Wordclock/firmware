@@ -207,7 +207,6 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
 {
 
     g_blinkState = i_blinkstates & i_showStates;
-    g_oldDispState = g_curDispState;
     g_curDispState = i_showStates;
     g_curFadeStep = 0;
 
