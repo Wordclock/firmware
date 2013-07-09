@@ -55,7 +55,6 @@
 #include "ldr.h"
 #include "user.h"
 #include "display.h"
-
 #include "uart.h"
 #include "wceeprom.h"
 
@@ -142,7 +141,7 @@ void timer_init()
     /*
      * ICIE1: Input capture interrupt enable
      */
-    TIMSK1 = 1 << ICIE1;
+    TIMSK1 = _BV(ICIE1);
 
 }
 

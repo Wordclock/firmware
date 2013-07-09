@@ -129,7 +129,7 @@ void display_outputData(DisplayState state)
 
     } else {
 
-        PORT(DISPLAY_MIN4) &= ~(1 << BIT(DISPLAY_MIN4));
+        PORT(DISPLAY_MIN4) &= ~(_BV(BIT(DISPLAY_MIN4)));
 
     }
 
