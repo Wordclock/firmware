@@ -69,8 +69,6 @@ void display_init()
     PORT(DISPLAY_MIN3) &= ~(_BV(BIT(DISPLAY_MIN3)));
     PORT(DISPLAY_MIN4) &= ~(_BV(BIT(DISPLAY_MIN4)));
 
-    DISPLAY_TIMER_ENABLE_INTS();
-
 }
 
 /**

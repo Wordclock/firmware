@@ -103,19 +103,38 @@
  * to change the involved Timer/Counter without fiddling around in the
  * sources itself.
  *
+ * @note When actually changing this, make sure to also change
+ * DISPLAY_TIMER_ENABLE_INTS() and DISPLAY_TIMER_DISABLE_INTS() accordingly.
+ *
  * @see ISR(TIMER2_OVF_vect)
+ * @see DISPLAY_TIMER_ENABLE_INTS()
+ * @see DISPLAY_TIMER_DISABLE_INTS()
  */
 #define DISPLAY_TIMER_OVF_vect TIMER2_OVF_vect
 
 /**
  * @brief Macro used to enable the involved Timer/Counter interrupt
  *
- * This is used during initialization to enable the interrupt of the involved
- * Timer/Counter responsible for the display module.
+ * This is used to enable the interrupt of the involved Timer/Counter
+ * responsible for the display module whenever there is work that needs to be
+ * done by the appropriate ISR (DISPLAY_TIMER_OVF_vect).
  *
- * @see display_init()
+ * @see DISPLAY_TIMER_DISABLE_INTS()
+ * @see DISPLAY_TIMER_OVF_vect
  */
 #define DISPLAY_TIMER_ENABLE_INTS() TIMSK2 |= _BV(TOIE2);
+
+/**
+ * @brief Macro used to disable the involved Timer/Counter interrupt
+ *
+ * This is used to disable the interrupt of the involved Timer/Counter
+ * responsible for the display module once all work has been done by the
+ * appropriate ISR (DISPLAY_TIMER_OVF_vect).
+ *
+ * @see DISPLAY_TIMER_ENABLEINTS()
+ * @see DISPLAY_TIMER_OVF_vect
+ */
+#define DISPLAY_TIMER_DISABLE_INTS() TIMSK2 &= ~_BV(TOIE2);
 
 /**
  * @brief Frequency the involved Timer/Counter is running at (in Hz)

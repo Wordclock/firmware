@@ -122,10 +122,6 @@
   one, the brightness seems to be at a maximum, although it wasn't before
   entering this mode.
 
-- display.c: Check whether it would be possible to output the current display
-  state only once, when the fading is completed, so the ISR doesn't block the
-  controller without doing anything useful.
-
 - display_wc_ger3.c:
 - display_wc_eng.c:
 - display_wc_ger.c:

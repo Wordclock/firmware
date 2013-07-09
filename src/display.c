@@ -194,8 +194,9 @@ static uint16_t g_curFadeStepTimer;
  * words should blink. The blink interval is defined in DISPLAY_BLINK_INT_MS.
  * Only words that are set to be shown, can actually blink.
  *
- * The state itself is being output by the appropriate ISR
- * (DISPLAY_TIMER_OVF_vect). The blinking is performed by display_blinkStep().
+ * Internally this function basically just sets up some variables and
+ * enables the appropriate ISR (DISPLAY_TIMER_OVF_vect), which is then doing
+ * the actual work. The blinking is performed by display_blinkStep().
  *
  * @param i_showStates Defines which words should be shown
  * @param i_blinkstates Defines which of the shown words should blink
@@ -210,6 +211,8 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
     g_curDispState = i_showStates;
     g_curFadeStep = 0;
 
+    DISPLAY_TIMER_ENABLE_INTS();
+
 }
 
 /**
@@ -218,12 +221,14 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
  * This function fades over from the old display state to the new one, which
  * makes it look smoother than a direct output (display_setDisplayState()).
  *
- * Internally this function basically just sets up some variables, while
- * the appropriate ISR (DISPLAY_TIMER_OVF_vect) is doing the actual work.
+ * Internally this function basically just sets up some variables and
+ * enables the appropriate ISR (DISPLAY_TIMER_OVF_vect), which is then doing
+ * the actual work.
  *
  * @param i_showStates The new state that should be shown on the display
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
+ * @see DISPLAY_TIMER_ENABLE_INTS()
  */
 void display_fadeDisplayState(DisplayState i_showStates)
 {
@@ -232,6 +237,8 @@ void display_fadeDisplayState(DisplayState i_showStates)
     g_oldDispState = g_curDispState;
     g_curDispState = i_showStates;
     g_curFadeStep = DISPLAY_FADE_STEPS - 1;
+
+    DISPLAY_TIMER_ENABLE_INTS();
 
     if (useAutoOffAnimation) {
 
@@ -259,8 +266,9 @@ void display_fadeDisplayState(DisplayState i_showStates)
  *
  * It will check whether there are still fade steps left to be processed and
  * will output the appropriate data (new and/or old display state). Once the
- * fading is completed (or if no fading had to be done in the first place), it
- * will simply output the current display state every time it is called.
+ * actual work has been done (e.g. fading is complete and/or new display state
+ * has been output), it will disable this interrupt, so it won't keep the
+ * microcontroller busy.
  *
  * @see g_curDispState
  * @see g_oldDispState
@@ -269,6 +277,7 @@ void display_fadeDisplayState(DisplayState i_showStates)
  * @see g_curFadeStep
  * @see g_curFadeCounter
  * @see g_curFadeStepTimer
+ * @see DISPLAY_TIMER_DISABLE_INTS()
  */
 ISR(DISPLAY_TIMER_OVF_vect)
 {
@@ -318,6 +327,8 @@ ISR(DISPLAY_TIMER_OVF_vect)
     } else {
 
         display_outputData(g_curDispState);
+
+        DISPLAY_TIMER_DISABLE_INTS();
 
     }
 
