@@ -90,7 +90,7 @@
  * @see g_curFadeStepTimer
  */
 #define DISPLAY_FADE_PERIOD_ANIM \
-    ((uint16_t)((( ((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_ANIM_MS) / 1000) / DISPLAY_FADE_STEPS))
+    ((uint16_t)(((((uint32_t)DISPLAY_TIMER_FREQUENCY) * DISPLAY_FADE_TIME_ANIM_MS) / 1000) / DISPLAY_FADE_STEPS))
 
 /**
  * @brief Global variable containing the old display state
