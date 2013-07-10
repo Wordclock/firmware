@@ -162,6 +162,7 @@ typedef uint32_t DisplayState;
 typedef struct DisplayEepromParams DisplayEepromParams;
 
 extern void display_init();
+
 extern void display_outputData(DisplayState state);
 
 /**
@@ -181,8 +182,11 @@ extern void display_outputData(DisplayState state);
 extern DisplayState display_getTimeState(const datetime_t* i_newDateTime);
 
 extern void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates);
+
 extern void display_fadeDisplayState(DisplayState i_showStates);
+
 extern void display_blinkStep();
+
 extern void display_autoOffAnimStep1Hz(bool animPreview);
 
 /**
