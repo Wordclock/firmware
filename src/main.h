@@ -237,7 +237,7 @@
  *
  * The support itself basically consists only of a simple toggle between "on"
  * and/or "off". The auxiliaries are expected to be connected as defined in
- * USER_BLUETOOTH.
+ * USER_AUXPOWER.
  *
  * @see user.h
  */
