@@ -159,3 +159,50 @@
 
 - user: Use AMBILIGHT consistently, e.g. rename UI_AMBIENT_LIGHT to
   UI_AMBILIGHT
+
+- dcf77: Think about a way to expose the current sync status of the module, so
+  other modules can actually check whether the time has been synchronized
+  successfully. This might be useful for the "jester mode" of
+  "display_wc_ger3.c" as it can be configured to enable itself on April 1st.
+  However the fact that DCF_PRESENT is set to 1, doesn't actually mean that
+  the time has been synchronized correctly in the past.
+
+- dcf77: Fix the enable/disable logic to be more consequent. Right now the
+  module disables itself after having received two valid time frames in a row,
+  however it doesn't enable itself. This has to be done "manually" by invoking
+  dcf77_enable().
+
+- i2c_master: Make both i2c_master_init() and i2c_reset() return boolean
+  values, by introducing a status parameter, which the status will be written
+  to. i2c_master_init() is basically the last remaining function not to return
+  true boolean values.
+
+- user.c: Currently usermodes.c is simply included. Check whether it is
+  possible with a reasonable amount of time to outsource this into its own
+  module and include just the header. Also check the impact on code size.
+
+- user: Think about saving the last state of Ambilight, Bluetooth and Aux after
+  reboot
+
+- Fix artifacts on display when switching from fast demo mode into normal one.
+
+- Write proper README
+
+- Come up with a suitable Makefile
+
+- Clean up directory structure (ChangeLog.txt, README.txt)
+
+- wceeprom: Use update* functions provided by <avr/eeprom.h> instead of using
+  own ones.
+
+- Look into some sort of task/bug management system, e.g. gitorious.
+
+- Change various return types of functions within usermodes.c
+
+- Make use of git branches!
+
+- pwm.c: Check whether it would make sense to adapt pwm_on() and pwm_off() to
+  make use of pwm_is_on.
+
+- ldr: Change the ISR: Start conversion once a second in ldr_ISR() and analyze
+  the measurement within an ADC complete ISR.
