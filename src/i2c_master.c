@@ -180,7 +180,7 @@ static uint8_t i2c_reset()
 
     uint8_t result = 0;
 
-    #if HAS_RESET == 1
+    #if (HAS_RESET == 1)
 
         PORT(SCL) &= ~_BV(BIT(SCL));
         DDR(SCL)  &= ~_BV(BIT(SCL));
@@ -235,9 +235,9 @@ static uint8_t i2c_reset()
 
         }
 
-        #endif
+    #endif
 
-        return result;
+    return result;
 
 }
 
