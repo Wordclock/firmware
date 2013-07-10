@@ -57,6 +57,32 @@ extern void ldr_init();
 
 extern uint8_t ldr_get_brightness();
 
-extern void ldr_ISR();
+/**
+ * @brief Starts a new ADC conversion
+ *
+ * This is executed within INTERRUPT_1HZ to start a new ADC measurement each
+ * second. However before this can be used the module has to initialized first
+ * using ldr_init(), otherwise this function won't have any effect at all.
+ *
+ * The measurement itself is being processed by the appropriate ISR
+ * (ISR(ADC_vect)).
+ *
+ * The meaning of the register and bits are described at [1], p. 256f.
+ *
+ * As this function is pretty simple it is declared as "inline" and defined
+ * directly within this header file, which keeps the needed program space
+ * smaller.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see ldr_init()
+ * @see INTERRUPT_1HZ
+ * @see ISR(ADC_vect)
+ */
+void inline ldr_ADC() {
+
+    ADCSRA |= _BV(ADSC);
+
+}
 
 #endif /* _WC_LDR_H_ */

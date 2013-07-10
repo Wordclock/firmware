@@ -119,9 +119,10 @@ void ldr_init()
 
     /*
      * ADEN: Enable ADC
+     * ADIE: ADC interrupt enable
      * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
      */
-    ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
+    ADCSRA = _BV(ADEN) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS0);
 
     /*
      * Start first conversion
@@ -167,11 +168,6 @@ void ldr_init()
 
     # endif
 
-    /*
-     * Start next measurement, which will then be handled by ldr_ISR()
-     */
-    ADCSRA |= _BV(ADSC);
-
 }
 
 /**
@@ -202,30 +198,29 @@ uint8_t ldr_get_brightness()
 }
 
 /**
- * @brief Takes the measurement and recalculates the new value to return
+ * @brief Processes the last taken measurement
  *
- * This function does the actual work. It should be called regularly, e.g.
- * once every second. This is achieved by using the various macros defined in
- * timer.c, namely INTERRUPT_1HZ.
+ * This ISR will be executed once a new conversion has been completed. The
+ * conversion itself is started using ldr_ADC().
  *
  * It will read out the value from the ADC measurement started in the last
- * cycle and put it into measurements. It will then also recalculate the new value
- * for curr_sum, which is needed by ldr_get_brightness().
+ * cycle and put it into measurements. It will then also recalculate the new
+ * value for curr_sum, which is needed by ldr_get_brightness().
  *
- * If logging is enabled it will also output the value of the measurement
- * taken.
+ * If logging is enabled it will also output the value of the ADC measurement.
  *
- * It uses an counter in order to keep track of the current index for measurements.
- * It uses a modulo operation to get the new value of this index, which is
- * reason why MEASUREMENTS_ARRAY_SIZE should be a multiple of 2, so this can be
- * performed by a appropriate bit shift.
+ * It uses a counter in order to keep track of the current index for
+ * measurements. It uses a modulo operation to get the new value of this index,
+ * which is the reason why MEASUREMENTS_ARRAY_SIZE should be a multiple of 2,
+ * so this can be performed by a bit shift more effectively.
  *
+ * @see ldr_ADC()
  * @see measurements
  * @see curr_sum
  * @see LOG_LDR
  * @see MEASUREMENTS_ARRAY_SIZE
  */
-void ldr_ISR()
+ISR(ADC_vect)
 {
 
     /*
@@ -234,64 +229,51 @@ void ldr_ISR()
     static uint8_t curr_index = 0;
 
     /*
-     * Check whether last conversion has been completed
+     * Read out value of last conversion
      */
-    if (!(ADCSRA & _BV(ADSC))) {
+    uint8_t measurement = ADCH;
 
-        /*
-         * Read out value of last conversion
-         */
-        uint8_t measurement = ADCH;
+    /*
+     * Check whether logging is enabled
+     */
+    #if (LOG_LDR == 1)
 
-        /*
-         * Check whether logging is enabled
-         */
-        #if (LOG_LDR == 1)
+        char buff[5];
 
-            char buff[5];
+        byteToStr(measurement, buff);
+        uart_puts_P("LDR: ");
+        uart_puts(buff);
+        uart_putc('\n');
 
-            byteToStr(measurement, buff);
-            uart_puts_P("LDR: ");
-            uart_puts(buff);
-            uart_putc('\n');
+    #endif
 
-        #endif
+    /*
+     * As we are going to replace the value at curr_index with the value
+     * of the last conversion, we need to subtract it from curr_sum
+     */
+    curr_sum -= measurements[curr_index];
 
-        /*
-         * As we are going to replace the value at curr_index with the value
-         * of the last conversion, we need to subtract it from curr_sum
-         */
-        curr_sum -= measurements[curr_index];
+    /*
+     * Put value of last conversion into measurements
+     */
+    measurements[curr_index] = measurement;
 
-        /*
-         * Put value of last conversion into measurements
-         */
-        measurements[curr_index] = measurement;
+    /*
+     * Add the value of the last measurement to curr_sum
+     */
+    curr_sum += measurement;
 
-        /*
-         * Add the value of the last measurement to curr_sum
-         */
-        curr_sum += measurement;
+    /*
+     * Increment curr_index for next iteration of this function
+     */
+    curr_index++;
 
-        /*
-         * Increment curr_index for next iteration of this function
-         */
-        curr_index++;
-
-        /*
-         * Use modulo operation to get the next value for curr_index,
-         * see [ring buffer][1].
-         *
-         * [1]: https://en.wikipedia.org/wiki/Circular_buffer
-         */
-        curr_index %= MEASUREMENTS_ARRAY_SIZE;
-
-        /*
-         * Start next conversion, which will be handled in the next
-         * iteration of this function
-         */
-        ADCSRA |= _BV(ADSC);
-
-    }
+    /*
+     * Use modulo operation to get the next value for curr_index,
+     * see [ring buffer][1].
+     *
+     * [1]: https://en.wikipedia.org/wiki/Circular_buffer
+     */
+    curr_index %= MEASUREMENTS_ARRAY_SIZE;
 
 }

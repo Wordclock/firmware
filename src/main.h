@@ -339,7 +339,7 @@
  * values from the LDR should be output.
  *
  * @see ldr_init()
- * @see ldr_ISR()
+ * @see ldr_ADC()
  * @see ldr.c
  */
 #define LOG_LDR 0

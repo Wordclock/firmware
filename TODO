@@ -203,6 +203,3 @@
 
 - pwm.c: Check whether it would make sense to adapt pwm_on() and pwm_off() to
   make use of pwm_is_on.
-
-- ldr: Change the ISR: Start conversion once a second in ldr_ISR() and analyze
-  the measurement within an ADC complete ISR.
