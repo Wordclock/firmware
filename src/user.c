@@ -32,8 +32,6 @@
  * @see usermodes.c
  */
 
-#include <avr/interrupt.h>
-
 #include "main.h"
 #include "user.h"
 #include "IRMP/irmp.h"
