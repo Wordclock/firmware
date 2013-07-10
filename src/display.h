@@ -41,6 +41,7 @@
 #define _WC_DISPLAY_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "datetime.h"
 
