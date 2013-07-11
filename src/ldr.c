@@ -142,7 +142,7 @@ void ldr_init()
     /*
      * Initialize measurements by putting the measured value in every field
      */
-    for (int i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
+    for (uint8_t i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
 
         measurements[i] = result;
 
