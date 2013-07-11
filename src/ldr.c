@@ -157,7 +157,7 @@ void ldr_init()
     /*
      * Check whether logging is enabled
      */
-    # if (LOG_LDR == 1)
+    #if (LOG_LDR == 1)
 
         char buff[5];
 
@@ -166,7 +166,7 @@ void ldr_init()
         uart_puts(buff);
         uart_putc('\n');
 
-    # endif
+    #endif
 
 }
 
