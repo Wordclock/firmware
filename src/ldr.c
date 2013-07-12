@@ -236,7 +236,7 @@ void ldr_ISR()
     /*
      * Check whether last conversion has been completed
      */
-    if ((ADCSRA & _BV(ADSC))) {
+    if (!(ADCSRA & _BV(ADSC))) {
 
         /*
          * Read out value of last conversion
