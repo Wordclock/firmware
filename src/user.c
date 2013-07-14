@@ -164,8 +164,8 @@ static uint8_t g_keyDelay;
  * display manually. Although the outcome may seem equal to the outside, these
  * states are handled quite different internally.
  *
- * The current "power" state is hold by g_userSwitchedOff and at any given
- * point in time will contain one of these values.
+ * The current "power" state is hold by g_powerState and at any given point in
+ * time will contain one of these values.
  *
  * There are the following "power" states:
  *
@@ -202,7 +202,7 @@ static uint8_t g_keyDelay;
  * @note Be careful with changes and/or adaptations to the ordering of these
  * items, as some functions rely on it.
  *
- * @see g_userSwitchedOff
+ * @see g_powerState
  * @see handle_ir_code()
  * @see user_setNewTime()
  * @see user_isr1Hz()
@@ -212,7 +212,7 @@ enum POWER_STATES {
     /**
      * @brief Represents the state when the display is turned on normally
      *
-     * This is the value for g_userSwitchedOff when the display is turned on
+     * This is the value for g_powerState when the display is turned on
      * normally. This is mainly needed to differentiate against the various
      * forms of "off" modes.
      */
@@ -223,15 +223,15 @@ enum POWER_STATES {
      *
      * When the display was turned off by the autoOff feature, but was enabled
      * by the user manually afterwards, this is the value that will be assigned
-     * to g_userSwitchedOff.
+     * to g_powerState.
      */
     UPS_OVERRIDE_ON,
 
     /**
      * @brief Represents the state when the display was turned off by autoOff
      *
-     * This will be assigned to g_userSwitchedOff whenever the display is
-     * turned off automatically by the autoOff feature.
+     * This will be assigned to g_powerState whenever the display is turned off
+     * automatically by the autoOff feature.
      *
      * It is possible to activate an animation during this "power" state, which
      * will indicate to the user, which mode the Wordclock is currently in.
@@ -246,8 +246,8 @@ enum POWER_STATES {
     /**
      * @brief Represents the state when the display was turned off manually
      *
-     * This will be assigned to g_userSwitchedOff whenever the display was
-     * turned off manually by the user.
+     * This will be assigned to g_powerState whenever the display was turned
+     * off manually by the user.
      */
     UPS_MANUAL_OFF,
 
@@ -262,7 +262,7 @@ enum POWER_STATES {
  *
  * @see POWER_STATES
  */
-static uint8_t g_userSwitchedOff;
+static uint8_t g_powerState;
 
 #if (AMBILIGHT_PRESENT == 1)
 
@@ -793,20 +793,20 @@ void handle_ir_code()
 
                 log_state("OF\n");
 
-                if (g_userSwitchedOff < UPS_AUTO_OFF) {
+                if (g_powerState < UPS_AUTO_OFF) {
 
-                    g_userSwitchedOff = UPS_MANUAL_OFF;
+                    g_powerState = UPS_MANUAL_OFF;
                     pwm_off();
 
                 } else {
 
-                    if (g_userSwitchedOff == UPS_MANUAL_OFF) {
+                    if (g_powerState == UPS_MANUAL_OFF) {
 
-                        g_userSwitchedOff = UPS_NORMAL_ON;
+                        g_powerState = UPS_NORMAL_ON;
 
                     } else {
 
-                        g_userSwitchedOff = UPS_OVERRIDE_ON;
+                        g_powerState = UPS_OVERRIDE_ON;
 
                     }
 
@@ -1082,11 +1082,11 @@ void user_setNewTime(const datetime_t* i_time)
 
             if (checkActivation()) {
 
-                if (g_userSwitchedOff != UPS_MANUAL_OFF) {
+                if (g_powerState != UPS_MANUAL_OFF) {
 
                     #if (AMBILIGHT_PRESENT == 1)
 
-                        if (g_userSwitchedOff == UPS_AUTO_OFF) {
+                        if (g_powerState == UPS_AUTO_OFF) {
 
                             PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;
 
@@ -1094,16 +1094,16 @@ void user_setNewTime(const datetime_t* i_time)
 
                     #endif
 
-                    g_userSwitchedOff = UPS_NORMAL_ON;
+                    g_powerState = UPS_NORMAL_ON;
                     pwm_on();
 
                 }
 
             } else {
 
-                if (g_userSwitchedOff == UPS_NORMAL_ON) {
+                if (g_powerState == UPS_NORMAL_ON) {
 
-                    g_userSwitchedOff = UPS_AUTO_OFF;
+                    g_powerState = UPS_AUTO_OFF;
 
                     #if (AMBILIGHT_PRESENT == 1)
 
@@ -1127,7 +1127,7 @@ void user_setNewTime(const datetime_t* i_time)
     }
 
     if (!UserState_prohibitTimeDisplay(g_stateStack[g_topOfStack - 1])
-            && (g_userSwitchedOff != UPS_AUTO_OFF)) {
+            && (g_powerState != UPS_AUTO_OFF)) {
 
         log_time("disp Time ");
 
@@ -1210,7 +1210,7 @@ void user_isr10Hz()
  * (USER_DELAY_BEFORE_SAVE_EEPROM_S). It will also make sure that either
  * UserState_Isr1Hz() with the current state as parameter and/or
  * display_autoOffAnimStep1Hz() with the current setting of g_animPreview are
- * executed - depending on the current power "state" (g_userSwitchedOff).
+ * executed - depending on the current power "state" (g_powerState).
  *
  * @see INTERRUPT_1HZ
  * @see g_eepromSaveDelay
@@ -1220,7 +1220,7 @@ void user_isr10Hz()
  * @see UserState_Isr1Hz()
  * @see display_autoOffAnimStep1Hz()
  * @see g_animPreview
- * @see g_userSwitchedOff
+ * @see g_powerState
  */
 void user_isr1Hz()
 {
@@ -1249,7 +1249,7 @@ void user_isr1Hz()
 
     #endif
 
-    if ((g_userSwitchedOff != UPS_AUTO_OFF) && (!g_animPreview)) {
+    if ((g_powerState != UPS_AUTO_OFF) && (!g_animPreview)) {
 
         UserState_Isr1Hz(g_stateStack[g_topOfStack - 1]);
 
