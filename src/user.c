@@ -69,7 +69,7 @@
 /**
  * @brief Indicates whether the autoOff animation is currently being enabled
  *
- * @see SWITCHED_OFF::USO_AUTO_OFF
+ * @see POWER_STATES::UPS_AUTO_OFF
  */
 bool useAutoOffAnimation;
 
@@ -207,7 +207,7 @@ static uint8_t g_keyDelay;
  * @see user_setNewTime()
  * @see user_isr1Hz()
  */
-enum SWITCHED_OFF {
+enum POWER_STATES {
 
     /**
      * @brief Represents the state when the display is turned on normally
@@ -216,7 +216,7 @@ enum SWITCHED_OFF {
      * normally. This is mainly needed to differentiate against the various
      * forms of "off" modes.
      */
-    USO_NORMAL_ON = 0,
+    UPS_NORMAL_ON = 0,
 
     /**
      * @brief Represents the state when the display is "forced" to stay on
@@ -225,7 +225,7 @@ enum SWITCHED_OFF {
      * by the user manually afterwards, this is the value that will be assigned
      * to g_userSwitchedOff.
      */
-    USO_OVERRIDE_ON,
+    UPS_OVERRIDE_ON,
 
     /**
      * @brief Represents the state when the display was turned off by autoOff
@@ -241,7 +241,7 @@ enum SWITCHED_OFF {
      *
      * @see g_animPreview
      */
-    USO_AUTO_OFF,
+    UPS_AUTO_OFF,
 
     /**
      * @brief Represents the state when the display was turned off manually
@@ -249,18 +249,18 @@ enum SWITCHED_OFF {
      * This will be assigned to g_userSwitchedOff whenever the display was
      * turned off manually by the user.
      */
-    USO_MANUAL_OFF,
+    UPS_MANUAL_OFF,
 
 };
 
 /**
  * @brief Holds the current "power" state
  *
- * This contains a value of SWITCHED_OFF and determines the current "power"
+ * This contains a value of POWER_STATES and determines the current "power"
  * state. Based on this, other states can be reached - depending upon the
  * "input".
  *
- * @see SWITCHED_OFF
+ * @see POWER_STATES
  */
 static uint8_t g_userSwitchedOff;
 
@@ -287,7 +287,7 @@ static uint8_t g_userSwitchedOff;
  * display_autoOffAnimStep1Hz(), where basically this variable will be passed
  * on as a parameter.
  *
- * @see SWITCHED_OFF::USO_AUTO_OFF
+ * @see POWER_STATES::UPS_AUTO_OFF
  * @see display_autoOffAnimStep1Hz()
  */
 static bool g_animPreview = false;
@@ -793,20 +793,20 @@ void handle_ir_code()
 
                 log_state("OF\n");
 
-                if (g_userSwitchedOff < USO_AUTO_OFF) {
+                if (g_userSwitchedOff < UPS_AUTO_OFF) {
 
-                    g_userSwitchedOff = USO_MANUAL_OFF;
+                    g_userSwitchedOff = UPS_MANUAL_OFF;
                     pwm_off();
 
                 } else {
 
-                    if (g_userSwitchedOff == USO_MANUAL_OFF) {
+                    if (g_userSwitchedOff == UPS_MANUAL_OFF) {
 
-                        g_userSwitchedOff = USO_NORMAL_ON;
+                        g_userSwitchedOff = UPS_NORMAL_ON;
 
                     } else {
 
-                        g_userSwitchedOff = USO_OVERRIDE_ON;
+                        g_userSwitchedOff = UPS_OVERRIDE_ON;
 
                     }
 
@@ -1082,11 +1082,11 @@ void user_setNewTime(const datetime_t* i_time)
 
             if (checkActivation()) {
 
-                if (g_userSwitchedOff != USO_MANUAL_OFF) {
+                if (g_userSwitchedOff != UPS_MANUAL_OFF) {
 
                     #if (AMBILIGHT_PRESENT == 1)
 
-                        if (g_userSwitchedOff == USO_AUTO_OFF) {
+                        if (g_userSwitchedOff == UPS_AUTO_OFF) {
 
                             PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;
 
@@ -1094,16 +1094,16 @@ void user_setNewTime(const datetime_t* i_time)
 
                     #endif
 
-                    g_userSwitchedOff = USO_NORMAL_ON;
+                    g_userSwitchedOff = UPS_NORMAL_ON;
                     pwm_on();
 
                 }
 
             } else {
 
-                if (g_userSwitchedOff == USO_NORMAL_ON) {
+                if (g_userSwitchedOff == UPS_NORMAL_ON) {
 
-                    g_userSwitchedOff = USO_AUTO_OFF;
+                    g_userSwitchedOff = UPS_AUTO_OFF;
 
                     #if (AMBILIGHT_PRESENT == 1)
 
@@ -1127,7 +1127,7 @@ void user_setNewTime(const datetime_t* i_time)
     }
 
     if (!UserState_prohibitTimeDisplay(g_stateStack[g_topOfStack - 1])
-            && (g_userSwitchedOff != USO_AUTO_OFF)) {
+            && (g_userSwitchedOff != UPS_AUTO_OFF)) {
 
         log_time("disp Time ");
 
@@ -1249,7 +1249,7 @@ void user_isr1Hz()
 
     #endif
 
-    if ((g_userSwitchedOff != USO_AUTO_OFF) && (!g_animPreview)) {
+    if ((g_userSwitchedOff != UPS_AUTO_OFF) && (!g_animPreview)) {
 
         UserState_Isr1Hz(g_stateStack[g_topOfStack - 1]);
 
