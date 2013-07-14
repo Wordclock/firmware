@@ -630,7 +630,7 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
     for (i = g_topOfStack - 1; i >= indexOfStateToLeave; --i) {
 
         bool canLeave = !UserState_prohibitLeave(g_stateStack[i]);
-        success = success && canLeave;
+        success &= canLeave;
 
         #if (LOG_USER_STATE == 1)
 
@@ -824,7 +824,7 @@ void handle_ir_code()
 
                 for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
 
-                    handled = handled || UserState_HandleIr(g_stateStack[i], ir_code);
+                    handled |= UserState_HandleIr(g_stateStack[i], ir_code);
 
                 }
 
