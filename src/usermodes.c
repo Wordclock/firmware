@@ -104,7 +104,7 @@ static DemoState mode_demoState;
 
 typedef struct SetSystemTimeState {
 
-    uint8_t prohibitLeave;
+    bool prohibitLeave;
 
 } SetSystemTimeState;
 
@@ -112,7 +112,7 @@ static SetSystemTimeState mode_setSystemTimeState;
 
 typedef struct SetOnOffmTimeState {
 
-    uint8_t prohibitLeave;
+    bool prohibitLeave;
 
     uint8_t currentTimeToSet;
 
@@ -122,7 +122,7 @@ static SetOnOffmTimeState mode_setOnOffTimeState;
 
 typedef struct EnterTimeState {
 
-    uint8_t prohibitLeave;
+    bool prohibitLeave;
 
     datetime_t time;
 
@@ -1081,7 +1081,7 @@ static bool UserState_prohibitTimeDisplay(e_MenuStates state)
 static bool UserState_prohibitLeave(e_MenuStates state)
 {
 
-    uint8_t prohibit = false;
+    bool prohibit = false;
 
     if (MS_normalMode == state) {
 
