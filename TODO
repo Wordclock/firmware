@@ -3,7 +3,6 @@
   documentation is full of misspellings and a mix of English and German.
 
     Files left:
-        - user.c
         - usermodes.c
 
 - Cross-Read and correct comments. Finished files:
