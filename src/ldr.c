@@ -184,8 +184,7 @@ void ldr_init()
  * The returned value is actually the mean value of the last measurements.
  * This makes it more robust against sudden changes of the ambient light.
  *
- * @return Eight bit value containing the brightness. 255 represents the
- *   maximum brightness, 0 represents darkness.
+ * @return Current brightness, 0 = dark, 255 = bright
  *
  * @see ldr_init()
  * @see MEASUREMENTS_ARRAY_SIZE
