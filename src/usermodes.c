@@ -96,7 +96,7 @@ typedef struct DemoState {
 
     uint8_t delay100ms;
 
-    uint8_t fastMode;
+    bool fastMode;
 
 } DemoState;
 
