@@ -603,7 +603,7 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
 }
 
 /**
- * @brief Leaves the substate at the given stack position
+ * @brief Leaves the state at the given stack position
  *
  * First of all this function will check whether the given state and all states
  * on top of it can actually be left or whether leaving one of them is
@@ -612,9 +612,9 @@ static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
  * and the function will return true. If at least one state can't be left,
  * nothing happens at all and the function simply returns false.
  *
- * @param indexOfStateToLeave Stack position of substate to leave
+ * @param indexOfStateToLeave Stack position of state to leave
  *
- * @return Indicates whether or not the given substate was left
+ * @return Indicates whether or not the given state was left
  *
  * @see UserState_prohibitLeave()
  * @see UserState_LeaveState()
