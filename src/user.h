@@ -406,7 +406,7 @@ typedef enum e_userCommands
          *
          * @see USER_AMBILIGHT
          */
-        UI_AMBIENT_LIGHT,
+        UI_AMBILIGHT,
 
     #endif
 
@@ -709,7 +709,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the second button from the left in
  * the sixth row from the top.
  *
- * @see e_UserCommands::UI_AMBIENT_LIGHT
+ * @see e_UserCommands::UI_AMBILIGHT
  */
 #define USER_CMD_DEF_AMBILIGHT 0x0010
 

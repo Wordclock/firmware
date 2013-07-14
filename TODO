@@ -153,9 +153,6 @@
 
 - Rename variables to get rid of the Hungarian notation
 
-- user: Use AMBILIGHT consistently, e.g. rename UI_AMBIENT_LIGHT to
-  UI_AMBILIGHT
-
 - dcf77: Think about a way to expose the current sync status of the module, so
   other modules can actually check whether the time has been synchronized
   successfully. This might be useful for the "jester mode" of

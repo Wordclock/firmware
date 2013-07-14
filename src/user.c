@@ -920,7 +920,7 @@ void handle_ir_code()
 
                         #if (AMBILIGHT_PRESENT == 1)
 
-                            } else if (UI_AMBIENT_LIGHT == ir_code) {
+                            } else if (UI_AMBILIGHT == ir_code) {
 
                                 log_state("AL\n");
 
