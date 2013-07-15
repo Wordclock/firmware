@@ -42,8 +42,6 @@ typedef struct TrainIrState {
 
 static TrainIrState mode_trainIrState;
 
-static void TrainIrState_handleIR(const IRMP_DATA* i_irCode);
-
 typedef struct ShowNumberState {
 
     uint8_t delay100ms;
