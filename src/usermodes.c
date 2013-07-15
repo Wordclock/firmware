@@ -68,7 +68,7 @@ typedef struct PulseState {
 
     uint8_t curBrightness;
 
-    uint8_t delay100ms;
+    uint8_t delay10ms;
 
 } PulseState;
 
@@ -849,13 +849,13 @@ static bool PulseState_handleIR(uint8_t cmdCode)
 static void PulseState_100Hz()
 {
 
-    ++mode_pulseState.delay100ms;
+    ++mode_pulseState.delay10ms;
 
-    if (mode_pulseState.delay100ms >= (volatile uint8_t)(g_params->pulseUpdateInterval)) {
+    if (mode_pulseState.delay10ms >= (volatile uint8_t)(g_params->pulseUpdateInterval)) {
 
         pwm_lock_brightness_val(color_pulse_waveform(mode_pulseState.curBrightness));
         ++mode_pulseState.curBrightness;
-        mode_pulseState.delay100ms = 0;
+        mode_pulseState.delay10ms = 0;
 
     }
 
