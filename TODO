@@ -197,3 +197,24 @@
   make use of pwm_is_on.
 
 - Look into making use of uCUnit.
+
+- usermodes.c: NormalState::curHue: Calc current hue from RGB
+
+- usermodes.c: NormalState::colorToSet: Introduce new typedef for each color
+  and the hue
+
+- usermodes.c: Think about implementing and/or using dynamic memory managment,
+  to save some RAM as a couple of variables are actually not used constantly,
+  but only when entering a specific mode.
+
+- usermodes.c: Move incDecRange() and incDecRangeOverflow() to base module.
+
+- usermodes.c: incDecRangeOverflow(): Check whether it makes sense to overflow
+  on both ends, not only on the bottom, but also on the top.
+
+- usermodes.c: Check whether it makes sense to combine incDecRange() and
+  incDecRangeOverflow() into a single function with parameters for whether or
+  not to overflow
+
+- usermodes.c: Fix AutoHueState logic. The *_enter function calls
+  AutoHueState_10Hz() without ever initializing --mode_autoHueState.delay100ms
