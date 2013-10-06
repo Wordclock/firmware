@@ -528,7 +528,7 @@ static void DemoState_1000Hz()
     }
 
     pwm_lock_brightness_val(255);
-    display_setDisplayState((0x01010101L << (mode_demoState.demoStep)), 0);
+    display_setDisplayState(((DisplayState)0x01010101 << (mode_demoState.demoStep)), 0);
     ++mode_demoState.demoStep;
     mode_demoState.demoStep %= 8;
 
