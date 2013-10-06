@@ -181,14 +181,14 @@ static void incDecRange(uint8_t* val, int8_t dir, uint8_t min, uint8_t max)
 
 }
 
-static void incDecRangeOverflow(uint8_t* val, int8_t dir, uint8_t max)
+static void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max)
 {
 
-    if (dir < 0) {
+    if (opr < 0) {
 
-        if (*val < -dir) {
+        if (*val < -opr) {
 
-            *val = max + 1 + dir;
+            *val = max + 1 + opr;
 
             return;
 
@@ -196,7 +196,7 @@ static void incDecRangeOverflow(uint8_t* val, int8_t dir, uint8_t max)
 
     }
 
-    *val += dir;
+    *val += opr;
 
     if (*val > max) {
 
