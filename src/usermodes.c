@@ -462,7 +462,7 @@ static void NormalState_init()
 
         --mode_autoHueState.delay100ms;
 
-        if (mode_autoHueState.delay100ms >= (volatile uint8_t)(g_params->hueChangeIntervall)) {
+        if (mode_autoHueState.delay100ms >= (volatile uint8_t)(g_params->hueChangeInterval)) {
 
             uint8_t r, g, b;
 
@@ -470,7 +470,7 @@ static void NormalState_init()
             mode_autoHueState.curHue %= (COLOR_HUE_MAX + 1);
             color_hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
             pwm_set_colors(r, g, b);
-            mode_autoHueState.delay100ms = g_params->hueChangeIntervall;
+            mode_autoHueState.delay100ms = g_params->hueChangeInterval;
 
         }
 
@@ -492,12 +492,12 @@ static void NormalState_init()
 
             log_state("CHS \n");
 
-            incDecRange(&g_params->hueChangeIntervall, dir,
+            incDecRange(&g_params->hueChangeInterval, dir,
                 USER_HUE_CHANGE_INT_100MS_MIN, USER_HUE_CHANGE_INT_100MS_MAX);
 
             #if (LOG_USER_STATE == 1)
 
-                uart_putc('0' + g_params->hueChangeIntervall);
+                uart_putc('0' + g_params->hueChangeInterval);
 
             #endif
 

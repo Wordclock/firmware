@@ -1001,7 +1001,7 @@ typedef struct UserEepromParams {
      * @see USER_HUE_CHANGE_INT_100MS_MIN
      * @see USER_HUE_CHANGE_INT_100MS_MAX
      */
-    uint8_t hueChangeIntervall;
+    uint8_t hueChangeInterval;
 
     /**
      * @brief Holds the mode currently selected by the user
@@ -1039,7 +1039,7 @@ extern bool useAutoOffAnimation;
  * USER_HUE_CHANGE_INT_100MS_MIN and USER_HUE_CHANGE_INT_100MS_MAX).
  *
  * @see e_MenuStates::MS_hueMode
- * @see UserEepromParams::hueChangeIntervall
+ * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS_MIN
  * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
@@ -1055,7 +1055,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see e_MenuStates::MS_hueMode
- * @see UserEepromParams::hueChangeIntervall
+ * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
@@ -1071,7 +1071,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see e_MenuStates::MS_hueMode
- * @see UserEepromParams::hueChangeIntervall
+ * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MIN
  */
@@ -1101,7 +1101,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see e_MenuStates::MS_pulse
- * @see UserEepromParams::hueChangeIntervall
+ * @see UserEepromParams::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
  */
@@ -1116,7 +1116,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see e_MenuStates::MS_pulse
- * @see UserEepromParams::hueChangeIntervall
+ * @see UserEepromParams::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
  */
