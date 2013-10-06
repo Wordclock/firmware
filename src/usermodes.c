@@ -124,7 +124,7 @@ typedef struct EnterTimeState {
 
     datetime_t time;
 
-    enum e_EnterTimesubStates {
+    enum e_EnterTimeSubstates {
 
         ETS_hour,
 
