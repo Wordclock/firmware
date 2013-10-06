@@ -108,15 +108,15 @@ typedef struct SetSystemTimeState {
 
 static SetSystemTimeState mode_setSystemTimeState;
 
-typedef struct SetOnOffmTimeState {
+typedef struct SetOnOffTimeState {
 
     bool prohibitLeave;
 
     uint8_t currentTimeToSet;
 
-} SetOnOffmTimeState;
+} SetOnOffTimeState;
 
-static SetOnOffmTimeState mode_setOnOffTimeState;
+static SetOnOffTimeState mode_setOnOffTimeState;
 
 typedef struct EnterTimeState {
 
