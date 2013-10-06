@@ -57,12 +57,13 @@ typedef enum e_MenuStates
 {
 
     /**
-     * @brief Represents the training mode for the IR codes
+     * @brief Represents the "training" mode
      *
-     * This mode is used to train the codes for the various commands defined in
-     * e_userCommands.
+     * This mode is used to train the IR codes for the various commands defined
+     * in e_userCommands.
      *
      * @see TrainIrState_enter()
+     * @see e_userCommands
      */
     MS_irTrain = 0,
 
@@ -101,7 +102,7 @@ typedef enum e_MenuStates
     #endif
 
     /**
-     * @brief Represents the "demo" mode
+     * @brief Represents the "pulse" mode
      *
      * This represents the "pulse" mode, which will constantly change the
      * brightness in a "pulsing" way.
