@@ -203,7 +203,7 @@ static uint16_t g_curFadeStepTimer;
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see display_blinkStep()
- * @see DISPLAY_TIMER_ENABLE_INTS()
+ * @see DISPLAY_TIMER_ENABLE_INT()
  */
 void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates)
 {
@@ -212,7 +212,7 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
     g_curDispState = i_showStates;
     g_curFadeStep = 0;
 
-    DISPLAY_TIMER_ENABLE_INTS();
+    DISPLAY_TIMER_ENABLE_INT();
 
 }
 
@@ -229,7 +229,7 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
  * @param i_showStates The new state that should be shown on the display
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
- * @see DISPLAY_TIMER_ENABLE_INTS()
+ * @see DISPLAY_TIMER_ENABLE_INT()
  */
 void display_fadeDisplayState(DisplayState i_showStates)
 {
@@ -251,7 +251,7 @@ void display_fadeDisplayState(DisplayState i_showStates)
 
     g_curFadeCounter = DISPLAY_FADE_STEPS - 1;
 
-    DISPLAY_TIMER_ENABLE_INTS();
+    DISPLAY_TIMER_ENABLE_INT();
 
 }
 
@@ -278,7 +278,7 @@ void display_fadeDisplayState(DisplayState i_showStates)
  * @see g_curFadeStep
  * @see g_curFadeCounter
  * @see g_curFadeStepTimer
- * @see DISPLAY_TIMER_DISABLE_INTS()
+ * @see DISPLAY_TIMER_DISABLE_INT()
  */
 ISR(DISPLAY_TIMER_OVF_vect)
 {
@@ -329,7 +329,7 @@ ISR(DISPLAY_TIMER_OVF_vect)
 
         display_outputData(g_curDispState);
 
-        DISPLAY_TIMER_DISABLE_INTS();
+        DISPLAY_TIMER_DISABLE_INT();
 
     }
 
