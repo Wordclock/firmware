@@ -103,8 +103,8 @@
  * to change the involved Timer/Counter without fiddling around in the
  * sources itself.
  *
- * @note When actually changing this, make sure to also change
- * DISPLAY_TIMER_ENABLE_INTS() and DISPLAY_TIMER_DISABLE_INTS() accordingly.
+ * @note When actually changing this, make sure to also change and/or check
+ * DISPLAY_TIMER_INTERRUPT_MASK and DISPLAY_TIMER_INTERRUPT_ENABLE.
  *
  * @see ISR(TIMER2_OVF_vect)
  * @see DISPLAY_TIMER_ENABLE_INTS()
@@ -113,16 +113,52 @@
 #define DISPLAY_TIMER_OVF_vect TIMER2_OVF_vect
 
 /**
+ * @brief Interrupt mask register of the Timer/Counter involved
+ *
+ * This macro stores the interrupt mask register of the Timer/Counter
+ * responsible for the display module. Using this abstraction it is possible
+ * to change the involved Timer/Counter without fiddling around in the
+ * sources itself.
+ *
+ * @note When actually changing this, make sure to also change and/or check
+ * DISPLAY_TIMER_OVF_vect and DISPLAY_TIMER_INTERRUPT_ENABLE.
+ *
+ * @see DISPLAY_TIMER_INTERRUPT_ENABLE
+ * @see DISPLAY_TIMER_ENABLE_INTS()
+ * @see DISPLAY_TIMER_DISABLE_INTS()
+ */
+#define DISPLAY_TIMER_INTERRUPT_MASK TIMSK2
+
+/**
+ * @brief Interrupt enable bit of the Timer/Counter involved
+ *
+ * This macro stores the interrupt enable bit of the Timer/Counter responsible
+ * for the display module. Using this abstraction it is possible to change the
+ * involved Timer/Counter without fiddling around in the sources itself.
+ *
+ * @note When actually changing this, make sure to also change and/or check
+ * DISPLAY_TIMER_OVF_vect and DISPLAY_TIMER_INTERRUPT_MASK.
+ *
+ * @see DISPLAY_TIMER_INTERRUPT_MASK
+ * @see DISPLAY_TIMER_ENABLE_INTS()
+ * @see DISPLAY_TIMER_DISABLE_INTS()
+ */
+#define DISPLAY_TIMER_INTERRUPT_ENABLE TOIE2
+
+/**
  * @brief Macro used to enable the involved Timer/Counter interrupt
  *
  * This is used to enable the interrupt of the involved Timer/Counter
  * responsible for the display module whenever there is work that needs to be
  * done by the appropriate ISR (DISPLAY_TIMER_OVF_vect).
  *
+ * @see DISPLAY_TIMER_INTERRUPT_MASK
+ * @see DISPLAY_TIMER_INTERRUPT_ENABLE
  * @see DISPLAY_TIMER_DISABLE_INTS()
  * @see DISPLAY_TIMER_OVF_vect
  */
-#define DISPLAY_TIMER_ENABLE_INTS() TIMSK2 |= _BV(TOIE2);
+#define DISPLAY_TIMER_ENABLE_INTS() DISPLAY_TIMER_INTERRUPT_MASK |= \
+    _BV(DISPLAY_TIMER_INTERRUPT_ENABLE);
 
 /**
  * @brief Macro used to disable the involved Timer/Counter interrupt
@@ -131,10 +167,13 @@
  * responsible for the display module once all work has been done by the
  * appropriate ISR (DISPLAY_TIMER_OVF_vect).
  *
+ * @see DISPLAY_TIMER_INTERRUPT_MASK
+ * @see DISPLAY_TIMER_INTERRUPT_ENABLE
  * @see DISPLAY_TIMER_ENABLEINTS()
  * @see DISPLAY_TIMER_OVF_vect
  */
-#define DISPLAY_TIMER_DISABLE_INTS() TIMSK2 &= ~_BV(TOIE2);
+#define DISPLAY_TIMER_DISABLE_INTS() DISPLAY_TIMER_INTERRUPT_MASK &= \
+    ~_BV(DISPLAY_TIMER_INTERRUPT_ENABLE);
 
 /**
  * @brief Frequency the involved Timer/Counter is running at (in Hz)
