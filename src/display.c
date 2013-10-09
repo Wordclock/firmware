@@ -203,6 +203,7 @@ static uint16_t g_curFadeStepTimer;
  *
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see display_blinkStep()
+ * @see DISPLAY_TIMER_ENABLE_INTS()
  */
 void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates)
 {

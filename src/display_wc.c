@@ -52,7 +52,6 @@
  * the involved timer interrupt.
  *
  * @see shift24_init()
- * @see DISPLAY_TIMER_ENABLE_INTS()
  */
 void display_init()
 {
