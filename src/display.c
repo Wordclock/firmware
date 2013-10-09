@@ -239,8 +239,6 @@ void display_fadeDisplayState(DisplayState i_showStates)
     g_curDispState = i_showStates;
     g_curFadeStep = DISPLAY_FADE_STEPS - 1;
 
-    DISPLAY_TIMER_ENABLE_INTS();
-
     if (useAutoOffAnimation) {
 
         g_curFadeStepTimer = (DISPLAY_FADE_PERIOD_ANIM / DISPLAY_FADE_STEPS) - 1;
@@ -252,6 +250,8 @@ void display_fadeDisplayState(DisplayState i_showStates)
     }
 
     g_curFadeCounter = DISPLAY_FADE_STEPS - 1;
+
+    DISPLAY_TIMER_ENABLE_INTS();
 
 }
 
