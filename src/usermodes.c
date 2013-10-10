@@ -323,13 +323,15 @@ static void ShowNumberState_enter(const void* param)
 {
 
     DisplayState dispData;
-    uint8_t paramSN = (uint8_t)((uint16_t)param);
 
     log_state("enter showNumber\n");
 
     mode_showNumberState.delay100ms = USER_NORMAL_SHOW_NUMBER_DELAY_100MS;
 
-    dispData = display_getNumberDisplayState(paramSN);
+    /*
+     * Double cast to prevent warning
+     */
+    dispData = display_getNumberDisplayState((uint8_t)(uint16_t)param);
     display_setDisplayState(dispData, 0);
 
 }
