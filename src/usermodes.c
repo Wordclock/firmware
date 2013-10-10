@@ -486,7 +486,7 @@ static void NormalState_init()
 
     }
 
-    static void AutoHueStat_enter(const void* param)
+    static void AutoHueState_enter(const void* param)
     {
 
         AutoHueState_10Hz();
@@ -953,7 +953,7 @@ static void UserState_enter(e_MenuStates state, const void* param)
 
         } else if (MS_hueMode == state) {
 
-            AutoHueStat_enter(param);
+            AutoHueState_enter(param);
 
     #endif
 

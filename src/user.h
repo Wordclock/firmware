@@ -95,7 +95,7 @@ typedef enum e_MenuStates
          * This represents the "hue-fading" mode, which change the hue of the
          * color automatically by iterating over it step by step.
          *
-         * @see AutoHueStat_enter()
+         * @see AutoHueState_enter()
          */
         MS_hueMode,
 
