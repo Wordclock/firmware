@@ -358,7 +358,11 @@ static void NormalState_enter(const void* param)
 
         if (((uint16_t)param) != 0) {
 
-            addSubState(MS_normalMode, MS_showNumber, (void*)(((uint16_t)g_params->curColorProfile + 1)));
+            /*
+             * Double cast to prevent warning
+             */
+            void* param = (void*)(((uint16_t)g_params->curColorProfile + 1));
+            addSubState(MS_normalMode, MS_showNumber, param);
 
         }
 
