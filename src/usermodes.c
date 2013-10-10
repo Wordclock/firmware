@@ -32,108 +32,418 @@
  * @see user.c
  */
 
+/**
+ * @brief Data needed for the "training" mode
+ *
+ * @see mode_trainIrState
+ * @see e_MenuStates::MS_irTrain
+ */
 typedef struct TrainIrState {
 
+    /**
+     * @brief Number of seconds passed since entering the "training" mode
+     *
+     * This is used to determine whether enough time has passed for this mode
+     * to quit itself again (USER_STARTUP_WAIT_IR_TRAIN_S).
+     *
+     * @see TrainIrState_1Hz()
+     * @see USER_STARTUP_WAIT_IR_TRAIN_S
+     */
     uint8_t seconds;
 
+    /**
+     * @brief Key currently being trained
+     *
+     * This is used to keep track of the key and/or command that is currently
+     * being expected to be trained within TrainIrState_handleIR().
+     *
+     * @see e_userCommands
+     * @see TrainIrState_handleIR()
+     */
     uint8_t curKey;
 
 } TrainIrState;
 
+/**
+ * @brief Actual variable holding TrainIrState
+ *
+ * @see TrainIrState
+ * @see TrainIrState_1Hz()
+ * @see TrainIrState_handleIR()
+ */
 static TrainIrState mode_trainIrState;
 
+/**
+ * @brief Data needed for the "show number" mode
+ *
+ * @see mode_showNumberState
+ * @see e_MenuStates::MS_showNumber
+ */
 typedef struct ShowNumberState {
 
+    /**
+     * @brief Counter to keep track of the time the number has been shown
+     *
+     * This is used as counter to keep track of the duration the current number
+     * has already been displayed. Once the number has been shown for the
+     * amount of time defined in USER_NORMAL_SHOW_NUMBER_DELAY_100MS the mode
+     * will quit itself.
+     *
+     * @see ShowNumberState_enter()
+     * @see ShowNumberState_10Hz()
+     * @see USER_NORMAL_SHOW_NUMBER_DELAY_100MS
+     */
     uint8_t delay100ms;
 
 } ShowNumberState;
 
+/**
+ * @brief Actual variable holding ShowNumberState
+ *
+ * @see ShowNumberState
+ * @see ShowNumberState_enter()
+ * @see ShowNumberState_10Hz()
+ */
 static ShowNumberState mode_showNumberState;
 
 #if (MONO_COLOR_CLOCK != 1)
 
+    /**
+     * @brief Data needed for the "normal" mode
+     *
+     * @see mode_normalState
+     * @see e_MenuStates::MS_normalMode
+     */
     typedef struct NormalState {
 
+        /**
+         * @brief Keeps track which property is currently being set
+         *
+         * This is used to keep track of the property (red, green, blue, hue)
+         * that is currently being set, so that received "up"
+         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_UP)
+         * commands can be assigned correctly.
+         *
+         * @see NormalState_handleIR()
+         * @see UI_CHANGE_R
+         * @see UI_CHANGE_G
+         * @see UI_CHANGE_B
+         * @see UI_CHANGE_HUE
+         */
         uint8_t colorToSet;
 
+        /**
+         * @brief Current hue value
+         *
+         * This holds the current hue value, which can ony be changed by the
+         * user in this mode.
+         *
+         * @see NormalState_handleIR()
+         * @see UI_CHANGE_HUE
+         */
         Hue_t curHue;
 
     } NormalState;
 
+    /**
+     * @brief Actual variable holding NormalState
+     *
+     * @see NormalState
+     * @see NormalState_handleIR()
+     */
     static NormalState mode_normalState;
 
 #endif
 
+/**
+ * @brief Data needed for the "pulse" mode
+ *
+ * @see mode_pulseState
+ * @see e_MenuStates::MS_pulseMode
+ */
 typedef struct PulseState {
 
+    /**
+     * @brief Holds the current brightness step
+     *
+     * This contains the current brightness step, which will be passed on to
+     * color_pulse_waveform() when in  pulse mode and is newly calculated every
+     * 10 ms by PulseState_100Hz().
+     *
+     * @see PulseState_100Hz()
+     * @see color_pulse_waveform()
+     */
     uint8_t curBrightness;
 
+    /**
+     * @brief Counter keeping track of the time displaying with same brightness
+     *
+     * This is used as counter to keep track of the duration the output is
+     * already being displayed with the current brightness. Once the brightness
+     * hasn't changed for the amount of time defined by the user in
+     * UserEepromParams::pulseUpdateInterval it will be updated.
+     *
+     * @see UserEepromParams::pulseUpdateInterval
+     * @see PulseState_100Hz()
+     */
     uint8_t delay10ms;
 
 } PulseState;
 
+/**
+ * @brief Actual variable holding PulseState
+ *
+ * @see PulseState
+ * @see PulseState_100Hz()
+ */
 static PulseState mode_pulseState;
 
 #if (MONO_COLOR_CLOCK != 1)
 
+    /**
+     * @brief Data needed for the "hue fading" mode
+     *
+     * @see mode_autoHueState
+     * @see e_MenuStates::MS_hueMode
+     */
     typedef struct AutoHueState {
 
+        /**
+         * @brief The hue the output is currently being displayed with
+         *
+         * This is a simple counter representing the hue the output is
+         * currently being displayed with. This is simply passed on to
+         * color_hue2rgb() and wraps around once it reaches COLOR_HUE_MAX.
+         *
+         * @see COLOR_HUE_MAX
+         * @see color_hue2rgb()
+         * @see AutoHueState_10Hz()
+         */
         Hue_t curHue;
 
+        /**
+         * @brief Counter to keep track of the length of the current hue fading
+         *
+         * This is used as counter to keep track of the duration the output
+         * has been displayed with the current hue (AutoHueState::curHue).
+         * Once the user defined time interval
+         * (UserEepromParams::hueChangeInterval) has been reached, it will
+         * update and apply the new hue.
+         *
+         * @see AutoHueState_10Hz()
+         * @see UserEepromParams::hueChangeInterval
+         * @see USER_NORMAL_SHOW_NUMBER_DELAY_100MS
+         */
         uint8_t delay100ms;
 
     } AutoHueState;
 
+    /**
+     * @brief Actual variable holding AutoHueState
+     *
+     * @see AutoHueState
+     * @see AutoHueState_10Hz()
+     */
     static AutoHueState mode_autoHueState;
 
 #endif
 
+/**
+ * @brief Data needed for the "demo" mode
+ *
+ * @see mode_demoState
+ * @see e_MenuStates::MS_demoMode
+ */
 typedef struct DemoState {
 
+    /**
+     * @brief The current step of the demo animation
+     *
+     * The demo (both in normal as well as in fast mode) is consisting of
+     * different steps. Each step corresponds to a different display state.
+     * The actual meaning of a step depends upon the mode ("normal" and/or
+     * "fast"). Within "normal" mode each step corresponds to a different
+     * LED group being enabled. Within "fast" mode there are actually only
+     * eight different steps. Within each step a different output of each LED
+     * driver is enabled. This is responsible for the multiplexing, which
+     * makes all LEDs appear to be enabled.
+     *
+     * @see DisplayState
+     * @see DemoState_1000Hz()
+     * @see DemoState_10Hz()
+     */
     uint8_t demoStep;
 
+    /**
+     * @brief Counter to keep track of the length of the current step
+     *
+     * This is used as counter to keep track of the duration of the current
+     * step within the demo animation. It is only used in "normal" mode. Once
+     * the interval reaches the limit defined by USER_DEMO_CHANGE_INT_100MS
+     * the next demo step is performed.
+     *
+     * @see AutoHueState_10Hz()
+     * @see USER_DEMO_CHANGE_INT_100MS
+     */
     uint8_t delay100ms;
 
+    /*
+     * @brief Indicates whether or not the "fast" mode is enabled
+     *
+     * As the "demo" mode itself consists of two modes ("normal" and/or
+     * "fast"). This variable is set to true once the "fast" mode has been
+     * selected, and reset to false when it is left again.
+     *
+     * @see DemoState_handleIR()
+     * @see AutoHueState_1000Hz()
+     */
     bool fastMode;
 
 } DemoState;
 
+/**
+ * @brief Actual variable holding DemoState
+ *
+ * @see DemoState
+ * @see DemoState_handleIR()
+ * @see AutoHueState_10Hz()
+ * @see AutoHueState_1000Hz()
+ */
 static DemoState mode_demoState;
 
+/**
+ * @brief Data needed for the "set system time" mode
+ *
+ * @see mode_setSystemTimeState
+ * @see e_MenuStates::MS_setSystemTime
+ */
 typedef struct SetSystemTimeState {
 
+    /**
+     * @brief Indicates whether or not the mode can currently be left
+     *
+     * @see SetSystemTimeState_enter()
+     * @see SetSystemTimeState_substateFinished()
+     * @see UserState_prohibitLeave()
+     */
     bool prohibitLeave;
 
 } SetSystemTimeState;
 
+/**
+ * @brief Actual variable holding SetSystemTimeState
+ *
+ * @see SetSystemTimeState
+ * @see SetSystemTimeState_enter()
+ * @see SetSystemTimeState_substateFinished()
+ * @see UserState_prohibitLeave()
+ */
 static SetSystemTimeState mode_setSystemTimeState;
 
+/**
+ * @brief Data needed for the "set autoOff time" mode
+ *
+ * @see mode_setOnOffTimeState
+ * @see e_MenuStates::MS_setOnOffTime
+ */
 typedef struct SetOnOffTimeState {
 
+    /**
+     * @brief Indicates whether or not the mode can currently be left
+     *
+     * @see SetOnOffTimeState_enter()
+     * @see SetOnOffTimeState_handleIr()
+     * @see UserState_prohibitLeave()
+     */
     bool prohibitLeave;
 
+    /*
+     * @brief Index of auto on/off time currently being set
+     *
+     * There are up to UI_AUTOOFFTIMES_COUNT different auto on/off times, which
+     * are set consecutively one by one. This defines the index of the one
+     * currently being set.
+     *
+     * @see UI_AUTOOFFTIMES_COUNT
+     * @see SetOnOffTimeState_enter()
+     * @see SetOnOffTimeState_substateFinished()
+     */
     uint8_t currentTimeToSet;
 
 } SetOnOffTimeState;
 
+/**
+ * @brief Actual variable holding SetOnOffTimeState
+ *
+ * @see SetOnOffTimeState
+ * @see SetOnOffTimeState_enter()
+ * @see SetOnOffTimeState_substateFinished()
+ * @see UserState_prohibitLeave()
+ * @see SetOnOffTimeState_handleIr()
+ */
 static SetOnOffTimeState mode_setOnOffTimeState;
 
+/**
+ * @brief Data needed for the "enter time" mode
+ *
+ * @see mode_enterTimeState
+ * @see e_MenuStates::MS_enterTime
+ */
 typedef struct EnterTimeState {
 
+    /**
+     * @brief Indicates whether or not the mode can currently be left
+     *
+     * @see EnterTimeState_enter()
+     * @see EnterTimeState_handleIr()
+     * @see UserState_prohibitLeave()
+     */
     bool prohibitLeave;
 
+    /**
+     * @brief Buffer that is manipulated during time input
+     *
+     * This buffer will be manipulated during time input and is then copied
+     * once the time entering is actually finished.
+     *
+     * @see EnterTimeState_enter()
+     * @see EnterTimeState_handleIr()
+     */
     datetime_t time;
 
+    /**
+     * @brief Current substate of time input
+     *
+     * The input works by inputting the hour and the minutes separately. This
+     * represents both of these modes.
+     *
+     * @see EnterTimeState_enter()
+     * @see EnterTimeState_handleIr()
+     */
     enum e_EnterTimeSubstates {
 
+        /**
+         * @brief Represents time input of the hour
+         */
         ETS_hour,
 
+        /**
+         * @brief Represents time input of the minutes
+         */
         ETS_minutes,
 
     } curSubState;
 
 } EnterTimeState;
 
+/**
+ * @brief Actual variable holding EnterTimeState
+ *
+ * @see EnterTimeState
+ * @see EnterTimeState_enter()
+ * @see EnterTimeState_handleIr()
+ * @see UserState_prohibitLeave()
+ */
 static EnterTimeState mode_enterTimeState;
 
 static void UserState_init();
@@ -158,6 +468,23 @@ static void UserState_SubstateFinished(e_MenuStates state, e_MenuStates finished
 
 static void UserState_enter(e_MenuStates state, const void* param);
 
+/**
+ * @brief Increments and/or decrements a value by one within a given range
+ *
+ * This is meant to increment and/or decrement the value pointed to by "val" by
+ * one. The given boundaries ("min", "max") are checked and the value won't be
+ * incremented and/or decremented beyond that. The "dir" parameter expects
+ * either "-1" for decrementing the given value and/or "+1" for incrementing
+ * it.
+ *
+ * @warning This function does not check the actual value of "dir" and hence
+ * other values than "-1" and/or "+1" are possible, but might not be senseful.
+ *
+ * @param val Pointer to value to be increased and/or decreased by one
+ * @param dir Direction: -1 down, +1 up
+ * @param min Allowed minimum value
+ * @param max Allowed maximum value
+ */
 static void incDecRange(uint8_t* val, int8_t dir, uint8_t min, uint8_t max)
 {
 
@@ -181,6 +508,22 @@ static void incDecRange(uint8_t* val, int8_t dir, uint8_t min, uint8_t max)
 
 }
 
+/**
+ * @brief Increments and/or decrements given value and overflows if necessary
+ *
+ * This is meant to increment and/or decrement the value pointed to by "val" by
+ * the amount specified in "opr". "val" is expected to range from 0 to "max".
+ * When incrementing "val" would result in an overflow, the value of "val" will
+ * be set to 0. When decrementing "val" by an operand greater than itself, the
+ * "value" of "val" will overflow by this amount.
+ *
+ * @warning This function does not check whether "opr" actually lies in between
+ * 0 and "max", which might result with unexpected values.
+ *
+ * @param val Pointer to value to be increased and/or decreased by "opr"
+ * @param opr Operand by which to increment and/or decrement, range: -max - max
+ * @param max Allowed maximum value
+ */
 static void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max)
 {
 
@@ -208,14 +551,42 @@ static void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max)
 
 #if (LOG_USER_IR_TRAIN == 1)
 
+    /**
+     * @brief Used to output debug information when in IR training mode
+     *
+     * When the logging for this module is enabled (LOG_USER_IR_TRAIN == 1),
+     * this macro can be used to output information for debugging purposes.
+     *
+     * @see LOG_USER_IR_TRAIN
+     */
     #define log_irTrain(x) uart_puts_P(x)
 
 #else
 
+    /**
+     * @brief Dummy used to output debug information when in IR training mode
+     *
+     * This makes sure that nothing is being output when the logging for this
+     * module is deactivated (LOG_USER_IR_TRAIN == 0).
+     *
+     * @see LOG_USER_IR_TRAIN
+     */
     #define log_irTrain(x)
 
 #endif
 
+/**
+ * @brief Routine executed when entering the "training" mode
+ *
+ * This routine gets executed whenever the "training"
+ * (e_MenuStates::MS_irTrain) mode is entered. It retrieves the indicator mask
+ * for the display and applies it in a way that it will be blinking.
+ *
+ * @param param Void parameter for consistency reasons only
+ *
+ * @see display_getIndicatorMask()
+ * @see display_setDisplayState()
+ */
 static void TrainIrState_enter(const void* param)
 {
 
@@ -228,6 +599,18 @@ static void TrainIrState_enter(const void* param)
 
 }
 
+/**
+ * @brief ISR for the "training" mode executed with a frequency of 1 Hz
+ *
+ * This "ISR" gets executed with a frequency of 1 Hz whenever the "training"
+ * (e_MenuStates::MS_irTrain) mode is currently active. It checks whether
+ * enough time (USER_STARTUP_WAIT_IR_TRAIN_S) has passed to quit itself and
+ * does so if necessary.
+ *
+ * @see TrainIrState::seconds
+ * @see USER_STARTUP_WAIT_IR_TRAIN_S
+ * @see quitMyself()
+ */
 static void TrainIrState_1Hz()
 {
 
@@ -247,6 +630,30 @@ static void TrainIrState_1Hz()
 
 }
 
+/**
+ * @brief IR handling routine for the "training" mode
+ *
+ * This function handles the received IR commands for the "training"
+ * (e_MenuStates::MS_irTrain) mode. It stores the address of the first valid IR
+ * frame and expect all further commands to come from this address. A counter
+ * (mode_trainIrState.curKey) is used to keep track of the command currently
+ * being trained. Whenever receiving a command from this controller it will
+ * assign the received command to the key and increment the counter. Once every
+ * key has been assigned, it will initiate a writeback to the EEPROM and exit
+ * itself. It will also set the display state to the number of the key
+ * currently being assigned and let it blink.
+ *
+ * @param i_irCode The decoded IRMP data that was received
+ *
+ * @see mode_trainIrState
+ * @see TrainIrState::curKey
+ * @see UserEepromParams::irAddress
+ * @see UserEepromParams::irCommandCodes
+ * @see wcEeprom_writeback()
+ * @see quitMyself()
+ * @see display_getNumberDisplayState()
+ * @see display_setDisplayState()
+ */
 static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 {
 
@@ -305,11 +712,30 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
 }
 
+/**
+ * @brief Initializes the "training" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "training" (e_MenuStates::MS_irTrain) mode. Currently its only a dummy as
+ * this mode does not require any specific initialization.
+ */
 static void TrainIrState_init()
 {
 
 }
 
+/**
+ * @brief ISR for the "show number" mode executed with a frequency of 10 Hz
+ *
+ * This "ISR" gets executed with a frequency of 10 Hz whenever the
+ * "show number" (e_MenuStates::MS_showNumber) mode is currently active. It
+ * check whether enough time has passed to quit itself and does so if
+ * necessary.
+ *
+ * @see ShowNumberState::delay100ms
+ * @see mode_showNumberState
+ * @see quitMyself()
+ */
 static void ShowNumberState_10Hz()
 {
 
@@ -323,6 +749,23 @@ static void ShowNumberState_10Hz()
 
 }
 
+/**
+ * @brief Routine executed when entering the "show number" mode
+ *
+ * This routine gets executed whenever the "show number"
+ * (e_MenuStates::MS_showNumber) mode is entered. It sets up the counter
+ * (mode_showNumberState.delay100ms) with the value defined in
+ * USER_NORMAL_SHOW_NUMBER_DELAY_100MS, gets the display state for the given
+ * number and applies it to the display. The parameter itself is a pointer to
+ * a value interpreted as uint8_t.
+ *
+ * @param param Pointer to number to be shown (uint8_t)
+ *
+ * @see ShowNumberState::delay100ms
+ * @see mode_showNumberState
+ * @see display_getNumberDisplayState()
+ * @see display_setDisplayState()
+ */
 static void ShowNumberState_enter(const void* param)
 {
 
@@ -340,11 +783,39 @@ static void ShowNumberState_enter(const void* param)
 
 }
 
+/**
+ * @brief Initializes the "show number" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "training" (e_MenuStates::MS_showNumber) mode. Currently its only a dummy as
+ * this mode does not require any specific initialization.
+ */
 static void ShowNumberState_init()
 {
 
 }
 
+/**
+ * @brief Routine executed when entering the "normal" mode
+ *
+ * This routine gets executed whenever the "normal"
+ * (e_MenuStates::MS_normalMode) mode is entered. In case the software is built
+ * with support for RGB colors (MONO_COLOR_CLOCK != 1), it applies the color
+ * settings of the current color profile for each channel. When a parameter
+ * is given it will display the number of the the appropriate color profile for
+ * a short period of time. In case of no RGB support all of the logic mentioned
+ * above is skipped and the current time will be displayed directly.
+ *
+ * @param param Pointer to number of the color profile to work on
+ *
+ * @see MONO_COLOR_CLOCK
+ * @see pwm_set_color_step()
+ * @see UserEepromParams::curColorProfile
+ * @see UserEepromParams::colorPresets
+ * @see addSubState()
+ * @see e_MenuStates::MS_showNumber
+ * @see dispInternalTime()
+ */
 static void NormalState_enter(const void* param)
 {
 
@@ -373,6 +844,29 @@ static void NormalState_enter(const void* param)
     #endif
 }
 
+/**
+ * @brief IR handling routine for the "normal" mode
+ *
+ * This function handles the received IR commands for the "normal"
+ * (e_MenuStates::MS_normalMode) mode. It switches the color profile when the
+ * "normal mode" command is received. When receiving the commands to change
+ * the color and/or hue, it make sure that the appropriate property is set and
+ * directly applied to the display whenever receiving "up" and/or "down"
+ * commands.
+ *
+ * @param cmdCode The received IR command code
+ *
+ * @see mode_normalState
+ * @see NormalState::colorToSet
+ * @see e_userCommands::UI_NORMAL_MODE
+ * @see e_userCommands::UI_CHANGE_R
+ * @see e_userCommands::UI_CHANGE_G
+ * @see e_userCommands::UI_CHANGE_B
+ * @see e_userCommands::UI_CHANGE_HUE
+ * @see e_userCommands::UI_UP
+ * @see e_userCommands::UI_DOWN
+ * @see incDecRange()
+ */
 static bool NormalState_handleIR(uint8_t cmdCode)
 {
 
@@ -460,6 +954,13 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
 }
 
+/**
+ * @brief Initializes the "normal" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "normal" (e_MenuStates::MS_normalMode) mode. Currently its only a dummy as
+ * this mode does not require any specific initialization.
+ */
 static void NormalState_init()
 {
 
@@ -467,6 +968,21 @@ static void NormalState_init()
 
 #if (MONO_COLOR_CLOCK != 1)
 
+    /**
+     * @brief ISR for the "hue fading" mode executed with a frequency of 10 Hz
+     *
+     * This "ISR" gets executed with a frequency of 10 Hz whenever the
+     * "hue fading" (e_MenuStates::MS_hueMode) mode is currently active. It
+     * checks the appropriate time interval set by the user
+     * (UserEepromParams::hueChangeInterval) has passed and updates the hue
+     * if necessary.
+     *
+     * @see AutoHueState::delay100ms
+     * @see mode_autoHueState
+     * @see UserEepromParams::hueChangeInterval
+     * @see color_hue2rgb()
+     * @see pwm_set_colors()
+     */
     static void AutoHueState_10Hz()
     {
 
@@ -486,6 +1002,17 @@ static void NormalState_init()
 
     }
 
+    /**
+     * @brief Routine executed when entering the "hue fading" mode
+     *
+     * This routine gets executed whenever the "hue fading"
+     * (e_MenuStates::MS_hueMode) mode is entered. It will start with the
+     * fading immediately by calling the appropriate "ISR" directly.
+     *
+     * @param param Void parameter for consistency reasons only
+     *
+     * @see AutoHueState_10Hz()
+     */
     static void AutoHueState_enter(const void* param)
     {
 
@@ -493,6 +1020,23 @@ static void NormalState_init()
 
     }
 
+    /**
+     * @brief IR handling routine for the "hue fading" mode
+     *
+     * This function handles the received IR commands for the "hue fading"
+     * (e_MenuStates::MS_hueMode) mode. It checks whether an "up" and/or "down"
+     * command was received and increments and/or decrements the interval
+     * (UserEepromParams::hueChangeInterval) appropriately.
+     *
+     * @param cmdCode The received IR command code
+     *
+     * @see e_userCommands::UI_UP
+     * @see e_userCommands::UI_DOWN
+     * @see incDecRange()
+     * @see UserEepromParams::hueChangeInterval
+     * @see USER_HUE_CHANGE_INT_100MS_MIN
+     * @see USER_HUE_CHANGE_INT_100MS_MAX
+     */
     static bool AutoHueState_handleIR(uint8_t cmdCode)
     {
 
@@ -521,6 +1065,13 @@ static void NormalState_init()
 
     }
 
+    /**
+     * @brief Initializes the "hue fading" mode state
+     *
+     * This function will be executed in order to initialize the state for the
+     * "hue fading" (e_MenuStates::MS_hueMode) mode. Currently its only a dummy
+     * as this mode does not require any specific initialization.
+     */
     static void AutoHueState_init()
     {
 
@@ -528,6 +1079,20 @@ static void NormalState_init()
 
 #endif
 
+/**
+ * @brief ISR for the "demo" mode executed with a frequency of 1 kHz
+ *
+ * This "ISR" gets executed with a frequency of 1 kHz whenever the "demo"
+ * (e_MenuStates::MS_demo) mode is currently active. It is only needed
+ * when the "fast" mode (DemoState::fastMode) is being used. Otherwise it will
+ * return immediately. In "fast" mode it sets the brightness to its maximum,
+ * and then multiplexes the output so each word appears to be enabled at once.
+ *
+ * @see mode_demoState
+ * @see DemoState::fastMode
+ * @see DemoState::demoStep
+ * @see pwm_lock_brightness_val()
+ */
 static void DemoState_1000Hz()
 {
 
@@ -547,6 +1112,22 @@ static void DemoState_1000Hz()
 
 }
 
+/**
+ * @brief ISR for the "demo" mode executed with a frequency of 10 Hz
+ *
+ * This "ISR" gets executed with a frequency of 10 Hz whenever the "demo"
+ * (e_MenuStates::MS_demo) mode is currently active. It is only needed
+ * when the "normal" mode (DemoState::fastMode) is being used. Otherwise it
+ * will return immediately. In "normal" mode it checks whether the appropriate
+ * time interval has passed (USER_DEMO_CHANGE_INT_100MS) and turns on the next
+ * LED group if necessary.
+ *
+ * @see mode_demoState
+ * @see DemoState::fastMode
+ * @see DemoState::delay100ms
+ * @see USER_DEMO_CHANGE_INT_100MS
+ * @see DemoState::demoStep
+ */
 static void DemoState_10Hz()
 {
 
@@ -572,6 +1153,20 @@ static void DemoState_10Hz()
 
 }
 
+/**
+ * @brief IR handling routine for the "demo" mode
+ *
+ * This function handles the received IR commands for the "demo"
+ * (e_MenuStates::MS_demo) mode. It checks whether an "up" and/or "down"
+ * command was received and toggles between the "fast" and/or "normal" mode.
+ *
+ * @param cmdCode The received IR command code
+ *
+ * @see e_userCommands::UI_UP
+ * @see e_userCommands::UI_DOWN
+ * @see mode_demoState
+ * @see DemoState::fastMode
+ */
 static bool DemoState_handleIR(uint8_t cmdCode)
 {
 
@@ -591,11 +1186,28 @@ static bool DemoState_handleIR(uint8_t cmdCode)
 
 }
 
+/**
+ * @brief Initializes the "demo" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "demo" (e_MenuStates::MS_demo) mode. Currently its only a dummy as this mode
+ * does not require any specific initialization.
+ */
 static void DemoState_init()
 {
 
 }
 
+/**
+ * @brief Routine executed when leaving the "demo" mode
+ *
+ * This routine gets executed whenever the "demo" (e_MenuStates::MS_demo) mode
+ * is left. It will make sure the brightness lock for the PWM module is
+ * released, which was acquired by the appropriate ISR.
+ *
+ * @see pwm_release_brightness()
+ * @see DemoState_1000Hz()
+ */
 static void DemoState_leave()
 {
 
@@ -603,6 +1215,27 @@ static void DemoState_leave()
 
 }
 
+/**
+ * @brief Routine executed when entering the "enter time" mode
+ *
+ * This routine gets executed whenever the "hue fading"
+ * (e_MenuStates::MS_enterTime) mode is entered. Initially it saves the pointer
+ * to the buffer to be manipulated later on in (EnterTimeState::time), sets the
+ * current substate to enter the hour and prohibits to leave the mode. On top
+ * of that it sets the brightness according to the current time of day and
+ * outputs the time provided in the given buffer along with indicators for the
+ * hour and the time setting itself.
+ *
+ * @param param Pointer to buffer for time manipulation
+ *
+ * @see mode_enterTimeState
+ * @see EnterTimeState
+ * @see USER_ENTERTIME_DAY_NIGHT_CHANGE_HOUR
+ * @see pwm_lock_brightness_val()
+ * @see dispInternalTime()
+ * @see display_getHoursMask()
+ * @see display_getTimeSetIndicatorMask()
+ */
 static void EnterTimeState_enter(const void* param)
 {
 
@@ -631,6 +1264,41 @@ static void EnterTimeState_enter(const void* param)
 
 }
 
+/**
+ * @brief IR handling routine for the "enter time" mode
+ *
+ * This function handles the received IR commands for the "enter time"
+ * (e_MenuStates::MS_enterTime) mode. As this mode can actually be entered from
+ * two modes (e_MenuStates::MS_setSystemTime and
+ * e_MenuStates::MS_setOnOffTime), this function checks whether either the
+ * e_userCommands::UI_SET_TIME and/or e_userCommands::UI_SET_ONOFF_TIMES
+ * command was received and switches to the "minute entering" substate if
+ * necessary. Once the minutes are entered, too, it releases the brightness
+ * lock again, allows the user to leave the mode and quits itself with a
+ * pointer to the buffer of the set time.
+ *
+ * It also handles the minute and/or hour entering itself, whenever receiving
+ * an "up" and/or "down" command, sets the brightness according to the set
+ * day of time and makes sure that only valid times are entered.
+ *
+ * It outputs the property being set at all stages, to give the user a visual
+ * feedback of what he is actually doing.
+ *
+ * @param cmdCode The received IR command code
+ *
+ * @see e_userCommands::UI_SET_TIME
+ * @see e_userCommands::UI_SET_ONOFF_TIMES
+ * @see mode_enterTimeState
+ * @see USER_ENTERTIME_DAY_NIGHT_CHANGE_HOUR
+ * @see pwm_lock_brightness_val()
+ * @see pwm_release_brightness()
+ * @see quitMyself()
+ * @see e_userCommands::UI_UP
+ * @see e_userCommands::UI_DOWN
+ * @see incDecRangeOverflow()
+ * @see dispInternalTime()
+ * @see DemoState::fastMode
+ */
 static bool EnterTimeState_handleIr(uint8_t cmdCode)
 {
 
@@ -702,11 +1370,34 @@ static bool EnterTimeState_handleIr(uint8_t cmdCode)
 
 }
 
+/**
+ * @brief Initializes the "enter time" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "enter time" (e_MenuStates::MS_enterTime) mode. Currently its only a dummy
+ * as this mode does not require any specific initialization.
+ */
 static void EnterTimeState_init()
 {
 
 }
 
+/**
+ * @brief Routine executed when entering the "set system time" mode
+ *
+ * This routine gets executed whenever the "set system time"
+ * (e_MenuStates::MS_setSystemTime) mode is entered. It calls the sub state
+ * to enter a time (e_MenuStates::MS_enterTime) and prohibits the user to
+ * leave until finished.
+ *
+ * @param param Void parameter for consistency reasons only
+ *
+ * @see mode_setSystemTimeState
+ * @see SetSystemTimeState
+ * @see addSubState()
+ * @see e_MenuStates::MS_enterTime
+ * @see g_dateTime
+ */
 static void SetSystemTimeState_enter(const void* param)
 {
 
@@ -717,6 +1408,25 @@ static void SetSystemTimeState_enter(const void* param)
 
 }
 
+/**
+ * @brief Routine executed when a substate of "set system time" was finished
+ *
+ * This routine gets executed whenever a substate of the "set system time"
+ * (e_MenuStates::MS_setSystemTime) mode has finished its job. For now the
+ * only substate is actually the "enter time" (e_MenuStates::MS_enterTime)
+ * mode. Once the "enter time" mode has finished, this will make sure the set
+ * time will be written to the RTC, makes the set time available to other
+ * functions, allows the user to leave the mode and quits itself.
+ *
+ * @param result Pointer to the result of the substate (set time)
+ *
+ * @see SetSystemTimeState_enter()
+ * @see mode_setSystemTimeState
+ * @see SetSystemTimeState
+ * @see i2c_rtc_write()
+ * @see g_dateTime
+ * @see quitMyself()
+ */
 static void SetSystemTimeState_substateFinished(e_MenuStates finishedState, const void* result)
 {
 
@@ -733,11 +1443,35 @@ static void SetSystemTimeState_substateFinished(e_MenuStates finishedState, cons
 
 }
 
+/**
+ * @brief Initializes the "set system time" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "set system time" (e_MenuStates::MS_setSystemTime) mode. Currently its only
+ * a dummy as this mode does not require any specific initialization.
+ */
 static void SetSystemTimeState_init()
 {
 
 }
 
+/**
+ * @brief Routine executed when entering the "set autoOff time" mode
+ *
+ * This routine gets executed whenever the "set autoOff time"
+ * (e_MenuStates::MS_setOnOffTime) mode is entered. After some initialization
+ * of various variables related to these settings, it calls the substate to
+ * enter a time (e_MenuStates::MS_enterTime) and prohibits the user to leave
+ * until finished.
+ *
+ * @param param Void parameter for consistency reasons only
+ *
+ * @see mode_setOnOffTimeState
+ * @see SetOnOffTimeState
+ * @see UserEepromParam::autoOffTimes
+ * @see e_MenuStates::MS_enterTime
+ * @see addSubState()
+ */
 static void SetOnOffTimeState_enter(const void* param)
 {
 
@@ -755,6 +1489,27 @@ static void SetOnOffTimeState_enter(const void* param)
 
 }
 
+/**
+ * @brief Routine executed when a substate of "set autoOff time" was finished
+ *
+ * This routine gets executed whenever a substate of the "set autoOff time"
+ * (e_MenuStates::MS_setOnOffTime) mode has finished its job. For now the
+ * only substate is the "enter time" (e_MenuStates::MS_enterTime) mode. Once
+ * the "enter time" mode has finished, this will make sure the set autoOff
+ * time is saved and if there are other times to be set, allows the user to
+ * do so. The last stage gives the user a preview of the animation, which can
+ * optionally either be enabled and/or disabled.
+ *
+ * @param result Pointer to the result of the substate (set time)
+ *
+ * @see SetOnOffTimeState_enter()
+ * @see mode_setOnOffTimeState
+ * @see SetOnOffTimeState
+ * @see UserEepromParams::autoOffTimes
+ * @see UserEepromParams::useAutoOffAnimation
+ * @see UI_AUTOOFFTIMES_COUNT
+ * @see addSubState()
+ */
 static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const void* result)
 {
 
@@ -796,11 +1551,39 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 
 }
 
+/**
+ * @brief Initializes the "set autoOff time" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "set autoOff time" (e_MenuStates::MS_setOnOffTime) mode. Currently its only
+ * a dummy as this mode does not require any specific initialization.
+ */
 static void SetOnOffTimeState_init()
 {
 
 }
 
+/**
+ * @brief IR handling routine for the "set autoOff time" mode
+ *
+ * This function handles the received IR commands for the "set autoOff time"
+ * (e_MenuStates::MS_setOnOffTime) mode. It enables the user to enable and/or
+ * disable the autoOff animation with the "up" and/or "down" commands.
+ * Depending upon the status of this setting (on and/or off) a preview of the
+ * animation is shown. When the actual "autoOff time" command itself was
+ * received, the mode will quit itself, as this is an indication that the
+ * user has finished going through the process of this mode.
+ *
+ * @param cmdCode The received IR command code
+ *
+ * @see mode_setOnOffTimeState
+ * @see SetOnOffTimeState
+ * @see UserEepromParams::useAutoOffAnimation
+ * @see e_userCommands::UI_DOWN
+ * @see e_userCommands::UI_UP
+ * @see e_userCommands::UI_SET_ONOFF_TIMES
+ * @see quitMyself()
+ */
 static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 {
 
@@ -840,6 +1623,21 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
 }
 
+/**
+ * @brief IR handling routine for the "pulse" mode
+ *
+ * This function handles the received IR commands for the "pulse"
+ * (e_MenuStates::MS_pulse) mode. It checks whether an "up"
+ * and/or "down" command was received and updates the user defined update
+ * interval appropriately.
+ *
+ * @see e_userCommands::UI_UP
+ * @see e_userCommands::UI_DOWN
+ * @see UserEepromParams::pulseUpdateInterval
+ * @see incDecRange()
+ * @see USER_PULSE_CHANGE_INT_10MS_MIN
+ * @see USER_PULSE_CHANGE_INT_10MS_MAX
+ */
 static bool PulseState_handleIR(uint8_t cmdCode)
 {
 
@@ -868,6 +1666,22 @@ static bool PulseState_handleIR(uint8_t cmdCode)
 
 }
 
+/**
+ * @brief ISR for the "pulse" mode executed with a frequency of 100 Hz
+ *
+ * This "ISR" gets executed with a frequency of 100 Hz whenever the "pulse"
+ * (e_MenuStates::MS_pulse) mode is currently active. It checks whether enough
+ * time has already passed (UserEepromParams::pulseUpdateInterval) for
+ * a new brightness to be calculated and applied to the display and does so if
+ * necessary.
+ *
+ * @see mode_pulseState
+ * @see PulseState::delay10ms
+ * @see UserEepromParams::pulseUpdateInterval
+ * @see pwm_lock_brightness()
+ * @see color_pulse_wafeform
+ * @see mode_pulseState.curBrightness
+ */
 static void PulseState_100Hz()
 {
 
@@ -883,6 +1697,17 @@ static void PulseState_100Hz()
 
 }
 
+/**
+ * @brief ISR for the "pulse" mode executed with a frequency of 10 Hz
+ *
+ * This "ISR" gets executed with a frequency of 10 Hz whenever the "pulse"
+ * (e_MenuStates::MS_pulse) mode is currently active. It makes sure that the
+ * mode underneath the "pulse" mode will get updated, too.
+ *
+ * @see UserState_Isr10Hz
+ * @see g_stateStack
+ * @see g_currentIdxs
+ */
 static void PulseState_10Hz()
 {
 
@@ -890,6 +1715,16 @@ static void PulseState_10Hz()
 
 }
 
+/**
+ * @brief Routine executed when leaving the "pulse" mode
+ *
+ * This routine gets executed whenever the "pulse" (e_MenuStates::MS_pulse)
+ * mode is left. It will make sure the brightness lock for the PWM module is
+ * released, which was acquired by the appropriate ISR (PulseState_100Hz()).
+ *
+ * @see pwm_release_brightness()
+ * @see PulseState_100Hz()
+ */
 static void PulseState_leave()
 {
 
@@ -897,11 +1732,35 @@ static void PulseState_leave()
 
 }
 
+/**
+ * @brief Initializes the "pulse" mode state
+ *
+ * This function will be executed in order to initialize the state for the
+ * "pulse" (e_MenuStates::MS_pulse) mode. Currently its only a dummy as this
+ * mode does not require any specific initialization.
+ */
 static void PulseState_init()
 {
 
 }
 
+/**
+ * @brief Initializes all available user states
+ *
+ * This makes sure that all appropriate *_init() functions are called, which
+ * gives each mode a chance to initialize itself.
+ *
+ * @see TrainIrState_init()
+ * @see TrainIrState_init()
+ * @see ShowNumberState_init()
+ * @see NormalState_init()
+ * @see DemoState_init()
+ * @see SetSystemTimeState_init()
+ * @see SetOnOffTimeState_init()
+ * @see EnterTimeState_init()
+ * @see PulseState_init()
+ * @see AutoHueState_init()
+ */
 static void UserState_init()
 {
 
@@ -922,6 +1781,15 @@ static void UserState_init()
 
 }
 
+/**
+ * @brief Dispatcher routine for entering a state
+ *
+ * This function makes sure that the correct *_enter() function will be called
+ * for the given state along with the provided parameter.
+ *
+ * @param state The state to be entered
+ * @param param Parameter that should be passed along to the given state
+ */
 static void UserState_enter(e_MenuStates state, const void* param)
 {
 
@@ -961,6 +1829,17 @@ static void UserState_enter(e_MenuStates state, const void* param)
 
 }
 
+/**
+ * @brief Dispatcher routine to handle the result of finished substates
+ *
+ * A couple of states can execute substates, which will return a result once
+ * finished. This makes sure that the result is given back to the state that
+ * initially called the substate and provides it with the result.
+ *
+ * @param state The state that initiated the entering of the substate
+ * @param finishedState The substate that has finished its job
+ * @param result The result from the job performed by the substate
+ */
 static void UserState_SubstateFinished(e_MenuStates state, e_MenuStates finishedState, const void* result)
 {
 
@@ -976,6 +1855,26 @@ static void UserState_SubstateFinished(e_MenuStates state, e_MenuStates finished
 
 }
 
+/**
+ * @brief Dispatcher routine for IR handling within a given state
+ *
+ * Each user mode may define its own IR handler along with its own logic on
+ * how to handle specific commands. This will dispatch a received IR command to
+ * the correct IR handler and return a boolean value which indicates whether or
+ * not the appropriate handler has actually processed the command.
+ *
+ * @param state The state that should handle the command code
+ * @param cmdCode The command code that should be handled
+ *
+ * @return True if event was processed by IR handler, false otherwise
+ *
+ * @see EnterTimeState_handleIr()
+ * @see NormalState_handleIR()
+ * @see DemoState_handleIR()
+ * @see PulseState_handleIR()
+ * @see SetOnOffTimeState_handleIr()
+ * @see AutoHueState_handleIR()
+ */
 static bool UserState_HandleIr(e_MenuStates state, uint8_t cmdCode)
 {
 
@@ -1015,6 +1914,16 @@ static bool UserState_HandleIr(e_MenuStates state, uint8_t cmdCode)
 
 }
 
+/**
+ * @brief Dispatcher routine for leaving a state
+ *
+ * This will call the appropriate *_leave() function for the given state.
+ *
+ * @param state The state supposed to be left
+ *
+ * @see PulseState_leave()
+ * @see DemoState_leave()
+ */
 static void UserState_LeaveState(e_MenuStates state)
 {
 
@@ -1030,6 +1939,16 @@ static void UserState_LeaveState(e_MenuStates state)
 
 }
 
+/**
+ * @brief Dispatcher routine for 1 Hz events
+ *
+ * This function is called with a frequency of 1 Hz and will call the correct
+ * ISR of the given state.
+ *
+ * @param state The state the correct ISR should be called for
+ *
+ * @see TrainIrState_1Hz()
+ */
 static void UserState_Isr1Hz(e_MenuStates state)
 {
     if (MS_irTrain == state) {
@@ -1040,6 +1959,19 @@ static void UserState_Isr1Hz(e_MenuStates state)
 
 }
 
+/**
+ * @brief Dispatcher routine for 10 Hz events
+ *
+ * This function is called with a frequency of 10 Hz and will call the correct
+ * ISR of the given state.
+ *
+ * @param state The state the correct ISR should be called for
+ *
+ * @see ShowNumberState_10Hz()
+ * @see DemoState_10Hz()
+ * @see PulseState_10Hz()
+ * @see AutoHueState_10Hz()
+ */
 static void UserState_Isr10Hz(e_MenuStates state)
 {
 
@@ -1067,6 +1999,16 @@ static void UserState_Isr10Hz(e_MenuStates state)
 
 }
 
+/**
+ * @brief Dispatcher routine for 100 Hz events
+ *
+ * This function is called with a frequency of 100 Hz and will call the correct
+ * ISR of the given state.
+ *
+ * @param state The state the correct ISR should be called for
+ *
+ * @see PulseState_100Hz()
+ */
 static void UserState_Isr100Hz(e_MenuStates state)
 {
 
@@ -1078,6 +2020,16 @@ static void UserState_Isr100Hz(e_MenuStates state)
 
 }
 
+/**
+ * @brief Dispatcher routine for 1 kHz events
+ *
+ * This function is called with a frequency of 1 kHz and will call the correct
+ * ISR of the given state.
+ *
+ * @param state The state the correct ISR should be called for
+ *
+ * @see DemoState_1000Hz()
+ */
 static void UserState_Isr1000Hz(e_MenuStates state)
 {
 
@@ -1089,6 +2041,17 @@ static void UserState_Isr1000Hz(e_MenuStates state)
 
 }
 
+/**
+ * @brief Checks whether the current time can be shown
+ *
+ * When a mode requires the display itself to give visual feedback to the user,
+ * the current time cannot be shown. This returns a boolean value, which
+ * indicates whether or not the time can actually be shown for the given state.
+ *
+ * @param state The state the check should be performed for
+ *
+ * @return True if the given mode prohibits the time display, false otherwise
+ */
 static bool UserState_prohibitTimeDisplay(e_MenuStates state)
 {
 
@@ -1098,6 +2061,21 @@ static bool UserState_prohibitTimeDisplay(e_MenuStates state)
 
 }
 
+/**
+ * @brief Checks whether the given state can currently be left
+ *
+ * Some modes can only be left when actually finished correctly. In the mean
+ * time the user can't leave the mode. This will return a boolean value
+ * indicating whether or not the given state can currently be left.
+ *
+ * @param state The state the check should be performed for
+ *
+ * @return True if the current mode prohibits to be left, false otherwise
+ *
+ * @see EnterTimeState
+ * @see SetOnOffTimeState
+ * @see SetSystemTimeState
+ */
 static bool UserState_prohibitLeave(e_MenuStates state)
 {
 
