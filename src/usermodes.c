@@ -219,9 +219,12 @@ static void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max)
 static void TrainIrState_enter(const void* param)
 {
 
+    DisplayState disp;
+
     log_state("enter train\n");
 
-    display_setDisplayState(display_getIndicatorMask(), display_getIndicatorMask());
+    disp = display_getIndicatorMask();
+    display_setDisplayState(disp, disp);
 
 }
 
@@ -296,7 +299,8 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
     #endif
 
-    disp = display_getNumberDisplayState(mode_trainIrState.curKey) | display_getIndicatorMask();
+    disp = display_getNumberDisplayState(mode_trainIrState.curKey);
+    disp |= display_getIndicatorMask();
     display_setDisplayState(disp, disp);
 
 }
@@ -322,7 +326,7 @@ static void ShowNumberState_10Hz()
 static void ShowNumberState_enter(const void* param)
 {
 
-    DisplayState dispData;
+    DisplayState disp;
 
     log_state("enter showNumber\n");
 
@@ -331,8 +335,8 @@ static void ShowNumberState_enter(const void* param)
     /*
      * Double cast to prevent warning
      */
-    dispData = display_getNumberDisplayState((uint8_t)(uint16_t)param);
-    display_setDisplayState(dispData, 0);
+    disp = display_getNumberDisplayState((uint8_t)(uint16_t)param);
+    display_setDisplayState(disp, 0);
 
 }
 
@@ -523,6 +527,8 @@ static void NormalState_init()
 static void DemoState_1000Hz()
 {
 
+    DisplayState disp;
+
     if (!mode_demoState.fastMode) {
 
         return;
@@ -530,7 +536,8 @@ static void DemoState_1000Hz()
     }
 
     pwm_lock_brightness_val(255);
-    display_setDisplayState(((DisplayState)0x01010101 << (mode_demoState.demoStep)), 0);
+    disp = (DisplayState)0x01010101 << mode_demoState.demoStep;
+    display_setDisplayState(disp, 0);
     ++mode_demoState.demoStep;
     mode_demoState.demoStep %= 8;
 
@@ -538,6 +545,8 @@ static void DemoState_1000Hz()
 
 static void DemoState_10Hz()
 {
+
+    DisplayState disp;
 
     if (mode_demoState.fastMode) {
 
@@ -549,7 +558,8 @@ static void DemoState_10Hz()
 
     if (mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100MS) {
 
-        display_setDisplayState(((DisplayState)1) << (mode_demoState.demoStep), 0);
+        disp = (DisplayState)1 << mode_demoState.demoStep;
+        display_setDisplayState(disp, 0);
         ++mode_demoState.demoStep;
         mode_demoState.demoStep %= 32;
         mode_demoState.delay100ms = 0;
@@ -592,6 +602,8 @@ static void DemoState_leave()
 static void EnterTimeState_enter(const void* param)
 {
 
+    DisplayState disp;
+
     log_time("TH\n");
 
     mode_enterTimeState.time = *((datetime_t*)param);
@@ -609,7 +621,9 @@ static void EnterTimeState_enter(const void* param)
 
     }
 
-    dispInternalTime(&mode_enterTimeState.time, display_getHoursMask() | display_getTimeSetIndicatorMask());
+    disp = display_getHoursMask();
+    disp |= display_getTimeSetIndicatorMask();
+    dispInternalTime(&mode_enterTimeState.time, disp);
 
 }
 
@@ -751,9 +765,10 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 
         if (UI_AUTOOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
 
-            DisplayState dispData;
-            dispData = display_getNumberDisplayState((uint8_t)g_params->useAutoOffAnimation + 1);
-            display_setDisplayState(dispData, dispData);
+            DisplayState disp;
+            uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
+            disp = display_getNumberDisplayState(autoOnOff);
+            display_setDisplayState(disp, disp);
 
             if (g_params->useAutoOffAnimation) {
 
@@ -789,10 +804,11 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
         if ((cmdCode == UI_DOWN) || (cmdCode == UI_UP)) {
 
-            DisplayState dispData;
+            DisplayState disp;
             g_params->useAutoOffAnimation = !g_params->useAutoOffAnimation;
-            dispData = display_getNumberDisplayState((uint8_t)g_params->useAutoOffAnimation + 1);
-            display_setDisplayState(dispData, dispData);
+            uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
+            disp = display_getNumberDisplayState(autoOnOff);
+            display_setDisplayState(disp, disp);
 
             if (g_params->useAutoOffAnimation) {
 
