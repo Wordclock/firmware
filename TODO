@@ -195,3 +195,5 @@
 
 - pwm.c: Check whether it would make sense to adapt pwm_on() and pwm_off() to
   make use of pwm_is_on.
+
+- Look into making use of uCUnit.
