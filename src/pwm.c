@@ -674,7 +674,7 @@ void pwm_step_down_brightness()
  * @brief Locks the brightness to a specific value
  *
  * This locks the brightness to a specific value, so it can't be changed by
- * pwm_set_brightness() anymore, unless it is released again by calling
+ * pwm_set_brightness() anymore, unless the lock is released again by
  * pwm_release_brightness().
  *
  * @param val The value you want to lock the brightness to, range: 0 to 255
