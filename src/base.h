@@ -183,4 +183,8 @@ extern uint8_t bcdtoi(uint8_t bcd);
 
 extern uint8_t itobcd(uint8_t i);
 
+extern void incDecRange(uint8_t* val, int8_t dir, uint8_t min, uint8_t max);
+
+extern void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max);
+
 #endif /* _WC_BASE_H_ */

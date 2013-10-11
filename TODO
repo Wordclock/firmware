@@ -207,8 +207,6 @@
   to save some RAM as a couple of variables are actually not used constantly,
   but only when entering a specific mode.
 
-- usermodes.c: Move incDecRange() and incDecRangeOverflow() to base module.
-
 - usermodes.c: incDecRangeOverflow(): Check whether it makes sense to overflow
   on both ends, not only on the bottom, but also on the top.
 

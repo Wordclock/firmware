@@ -173,3 +173,84 @@ void byteToStrLessOneHundred(uint8_t val, char str[3])
     str[1] = r + '0';
 
 }
+
+/**
+ * @brief Increments and/or decrements a value by one within a given range
+ *
+ * This is meant to increment and/or decrement the value pointed to by "val" by
+ * one. The given boundaries ("min", "max") are checked and the value won't be
+ * incremented and/or decremented beyond that. The "dir" parameter expects
+ * either "-1" for decrementing the given value and/or "+1" for incrementing
+ * it.
+ *
+ * @warning This function does not check the actual value of "dir" and hence
+ * other values than "-1" and/or "+1" are possible, but might not be senseful.
+ *
+ * @param val Pointer to value to be increased and/or decreased by one
+ * @param dir Direction: -1 down, +1 up
+ * @param min Allowed minimum value
+ * @param max Allowed maximum value
+ */
+void incDecRange(uint8_t* val, int8_t dir, uint8_t min, uint8_t max)
+{
+
+    if (dir < 0) {
+
+        if (*val > min) {
+
+            *val += dir;
+
+        }
+
+    } else {
+
+        if (*val < max) {
+
+            *val +=dir;
+
+        }
+
+    }
+
+}
+
+/**
+ * @brief Increments and/or decrements given value and overflows if necessary
+ *
+ * This is meant to increment and/or decrement the value pointed to by "val" by
+ * the amount specified in "opr". "val" is expected to range from 0 to "max".
+ * When incrementing "val" would result in an overflow, the value of "val" will
+ * be set to 0. When decrementing "val" by an operand greater than itself, the
+ * "value" of "val" will overflow by this amount.
+ *
+ * @warning This function does not check whether "opr" actually lies in between
+ * 0 and "max", which might result with unexpected values.
+ *
+ * @param val Pointer to value to be increased and/or decreased by "opr"
+ * @param opr Operand by which to increment and/or decrement, range: -max - max
+ * @param max Allowed maximum value
+ */
+void incDecRangeOverflow(uint8_t* val, int8_t opr, uint8_t max)
+{
+
+    if (opr < 0) {
+
+        if (*val < -opr) {
+
+            *val = max + 1 + opr;
+
+            return;
+
+        }
+
+    }
+
+    *val += opr;
+
+    if (*val > max) {
+
+        *val = 0;
+
+    }
+
+}
