@@ -632,18 +632,6 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 }
 
 /**
- * @brief Initializes the "training" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "training" (e_MenuStates::MS_irTrain) mode. Currently its only a dummy as
- * this mode does not require any specific initialization.
- */
-static void TrainIrState_init()
-{
-
-}
-
-/**
  * @brief ISR for the "show number" mode executed with a frequency of 10 Hz
  *
  * This "ISR" gets executed with a frequency of 10 Hz whenever the
@@ -699,18 +687,6 @@ static void ShowNumberState_enter(const void* param)
      */
     disp = display_getNumberDisplayState((uint8_t)(uint16_t)param);
     display_setDisplayState(disp, 0);
-
-}
-
-/**
- * @brief Initializes the "show number" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "training" (e_MenuStates::MS_showNumber) mode. Currently its only a dummy as
- * this mode does not require any specific initialization.
- */
-static void ShowNumberState_init()
-{
 
 }
 
@@ -873,18 +849,6 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
 }
 
-/**
- * @brief Initializes the "normal" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "normal" (e_MenuStates::MS_normalMode) mode. Currently its only a dummy as
- * this mode does not require any specific initialization.
- */
-static void NormalState_init()
-{
-
-}
-
 #if (MONO_COLOR_CLOCK != 1)
 
     /**
@@ -981,18 +945,6 @@ static void NormalState_init()
         }
 
         return true;
-
-    }
-
-    /**
-     * @brief Initializes the "hue fading" mode state
-     *
-     * This function will be executed in order to initialize the state for the
-     * "hue fading" (e_MenuStates::MS_hueMode) mode. Currently its only a dummy
-     * as this mode does not require any specific initialization.
-     */
-    static void AutoHueState_init()
-    {
 
     }
 
@@ -1102,18 +1054,6 @@ static bool DemoState_handleIR(uint8_t cmdCode)
     }
 
     return true;
-
-}
-
-/**
- * @brief Initializes the "demo" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "demo" (e_MenuStates::MS_demo) mode. Currently its only a dummy as this mode
- * does not require any specific initialization.
- */
-static void DemoState_init()
-{
 
 }
 
@@ -1290,18 +1230,6 @@ static bool EnterTimeState_handleIr(uint8_t cmdCode)
 }
 
 /**
- * @brief Initializes the "enter time" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "enter time" (e_MenuStates::MS_enterTime) mode. Currently its only a dummy
- * as this mode does not require any specific initialization.
- */
-static void EnterTimeState_init()
-{
-
-}
-
-/**
  * @brief Routine executed when entering the "set system time" mode
  *
  * This routine gets executed whenever the "set system time"
@@ -1359,18 +1287,6 @@ static void SetSystemTimeState_substateFinished(e_MenuStates finishedState, cons
         quitMyself(MS_setSystemTime, NULL);
 
     }
-
-}
-
-/**
- * @brief Initializes the "set system time" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "set system time" (e_MenuStates::MS_setSystemTime) mode. Currently its only
- * a dummy as this mode does not require any specific initialization.
- */
-static void SetSystemTimeState_init()
-{
 
 }
 
@@ -1467,18 +1383,6 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
         }
 
     }
-
-}
-
-/**
- * @brief Initializes the "set autoOff time" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "set autoOff time" (e_MenuStates::MS_setOnOffTime) mode. Currently its only
- * a dummy as this mode does not require any specific initialization.
- */
-static void SetOnOffTimeState_init()
-{
 
 }
 
@@ -1652,51 +1556,14 @@ static void PulseState_leave()
 }
 
 /**
- * @brief Initializes the "pulse" mode state
- *
- * This function will be executed in order to initialize the state for the
- * "pulse" (e_MenuStates::MS_pulse) mode. Currently its only a dummy as this
- * mode does not require any specific initialization.
- */
-static void PulseState_init()
-{
-
-}
-
-/**
  * @brief Initializes all available user states
  *
  * This makes sure that all appropriate *_init() functions are called, which
- * gives each mode a chance to initialize itself.
- *
- * @see TrainIrState_init()
- * @see TrainIrState_init()
- * @see ShowNumberState_init()
- * @see NormalState_init()
- * @see DemoState_init()
- * @see SetSystemTimeState_init()
- * @see SetOnOffTimeState_init()
- * @see EnterTimeState_init()
- * @see PulseState_init()
- * @see AutoHueState_init()
+ * gives each mode a chance to initialize itself. For now no user mode actually
+ * requires a separate initialization, so this can be considered a dummy.
  */
 static void UserState_init()
 {
-
-    TrainIrState_init();
-    ShowNumberState_init();
-    NormalState_init();
-    DemoState_init();
-    SetSystemTimeState_init();
-    SetOnOffTimeState_init();
-    EnterTimeState_init();
-    PulseState_init();
-
-    #if (MONO_COLOR_CLOCK != 1)
-
-        AutoHueState_init();
-
-    #endif
 
 }
 
