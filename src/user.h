@@ -136,7 +136,10 @@ typedef enum e_MenuStates
     /**
      * @brief Represents the "enter time" mode
      *
-     * This mode is used to enter times.
+     * This mode is used to enter times. It can actually be reached from two
+     * other modes(e_MenuStates::MS_setSystemTime and
+     * e_MenuStates::MS_setOnOffTime), which both need the possibility to enter
+     * times.
      *
      * @see EnterTimeState_enter()
      */
