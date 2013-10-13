@@ -45,11 +45,9 @@
  * This defines all the different states (and/or menus) the Wordclock can enter
  * or reside in. Besides actually showing the current time
  * (e_MenuStates::MS_normalMode) there are a couple of different states,
- * which are needed to interact with the user, e.g. the training state, where
- * you can train the different IR commands.
+ * which are needed to enable the possibility for interaction with the user.
  *
- * e_MenuStates::MS_hueMode will actually only be available when
- * MONO_COLOR_CLOCK is not set.
+ * @warning Some "modes" may not be available due to configuration settings.
  *
  * @see MONO_COLOR_CLOCK
  */
