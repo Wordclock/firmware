@@ -88,9 +88,9 @@ typedef enum e_MenuStates
     #if (MONO_COLOR_CLOCK != 1)
 
         /**
-         * @brief Represents the "hue-fading" mode
+         * @brief Represents the "hue fading" mode
          *
-         * This represents the "hue-fading" mode, which change the hue of the
+         * This represents the "hue fading" mode, which change the hue of the
          * color automatically by iterating over it step by step.
          *
          * @see AutoHueState_enter()
@@ -317,7 +317,7 @@ typedef enum e_userCommands
      * This represents the command, which will switch to the "pulse" display
      * mode. The color will "pulse", meaning the brightness will alternatively
      * increase and/or decrease. This is possible in both, the "normal"
-     * (e_userCommands::UI_NORMAL_MODE) and in the "hue-fading"
+     * (e_userCommands::UI_NORMAL_MODE) and in the "hue fading"
      * (e_userCommands::UI_HUE_MODE) mode.
      */
     UI_PULSE_MODE,
@@ -342,9 +342,9 @@ typedef enum e_userCommands
     #if (INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
 
         /**
-         * @brief Display the time in the "hue-fading" mode
+         * @brief Display the time in the "hue fading" mode
          *
-         * This represents the command, which will switch to the "hue-fading"
+         * This represents the command, which will switch to the "hue fading"
          * display mode. The color the current time will be displayed in will
          * slowly change.
          */
@@ -620,7 +620,7 @@ typedef enum e_userCommands
 #define USER_CMD_DEF_DEMO_MODE 0x000B
 
 /**
- * @brief Default command code for the "hue-fading mode" command
+ * @brief Default command code for the "hue fading mode" command
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
@@ -985,9 +985,9 @@ typedef struct UserEepromParams {
     uint8_t pulseUpdateInterval;
 
     /**
-     * @brief Interval between two animation steps in hue-fading mode
+     * @brief Interval between two animation steps in hue fading mode
      *
-     * The speed of the fading in the hue-fading mode
+     * The speed of the fading in the hue fading mode
      * (e_MenuStates::MS_hueMode) can be changed by the user (within the
      * boundaries defined by USER_HUE_CHANGE_INT_100MS_MIN and
      * USER_HUE_CHANGE_INT_100MS_MAX).
@@ -1029,11 +1029,11 @@ extern bool useAutoOffAnimation;
 #define USER_KEY_PRESS_DELAY_100MS 3
 
 /**
- * @brief Default value for interval between two animation steps in hue-fading
+ * @brief Default value for interval between two animation steps in hue fading
  * mode
  *
  * This defines the default value for the interval (in multiples of 100 ms)
- * between two animations steps within the hue-fading mode. It then can be
+ * between two animations steps within the hue fading mode. It then can be
  * changed by the user (within the boundaries defined in
  * USER_HUE_CHANGE_INT_100MS_MIN and USER_HUE_CHANGE_INT_100MS_MAX).
  *
@@ -1045,11 +1045,11 @@ extern bool useAutoOffAnimation;
 #define USER_HUE_CHANGE_INT_100MS 1
 
 /**
- * @brief Minimum value for interval between two animation steps in hue-fading
+ * @brief Minimum value for interval between two animation steps in hue fading
  * mode
  *
  * This defines the minimum value for the interval (in multiples of 100 ms)
- * between two animations steps within the hue-fading mode. The user can change
+ * between two animations steps within the hue fading mode. The user can change
  * the default value defined in USER_HUE_CHANGE_INT_100MS, however not below
  * the value defined here.
  *
@@ -1061,11 +1061,11 @@ extern bool useAutoOffAnimation;
 #define USER_HUE_CHANGE_INT_100MS_MIN 1
 
 /**
- * @brief Maximum value for interval between two animation steps in hue-fading
+ * @brief Maximum value for interval between two animation steps in hue fading
  * mode
  *
  * This defines the maximum value for the interval (in multiples of 100 ms)
- * between two animations steps within the hue-fading mode. The user can change
+ * between two animations steps within the hue fading mode. The user can change
  * the default value defined in USER_HUE_CHANGE_INT_100MS, however not above
  * the value defined here.
  *
