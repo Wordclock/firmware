@@ -30,8 +30,8 @@
  * @see color.c
  */
 
-#ifndef _WC_COLOR_EFFECTS_H_
-#define _WC_COLOR_EFFECTS_H_
+#ifndef _WC_COLOR_H_
+#define _WC_COLOR_H_
 
 #include <stdint.h>
 
@@ -84,4 +84,4 @@ extern void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
 
 extern uint8_t color_pulse_waveform(uint8_t step);
 
-#endif /* _WC_COLOR_EFFECTS_H_ */
+#endif /* _WC_COLOR_H_ */
