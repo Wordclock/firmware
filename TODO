@@ -43,8 +43,6 @@
   to rename these modules. Moreover some rework is needed to make (more) use
   of "twi.h".
 
-- Use macros for port definitions provided by ports.h
-
 - Make the determination of the DCF77 module type optional. Although this is
   a nice gimmick, it only takes up program space and doesn't provide any real
   use, as the module type should be known when actually building the clock
@@ -171,18 +169,12 @@
 
 - Fix artifacts on display when switching from fast demo mode into normal one.
 
-- Write proper README
-
 - Come up with a suitable Makefile
-
-- Clean up directory structure (ChangeLog.txt, README.txt)
 
 - wceeprom: Use update* functions provided by <avr/eeprom.h> instead of using
   own ones.
 
 - Look into some sort of task/bug management system, e.g. gitorious.
-
-- Change various return types of functions within usermodes.c
 
 - Make use of git branches!
 
@@ -200,12 +192,19 @@
   to save some RAM as a couple of variables are actually not used constantly,
   but only when entering a specific mode.
 
-- usermodes.c: incDecRangeOverflow(): Check whether it makes sense to overflow
+- base.c: incDecRangeOverflow(): Check whether it makes sense to overflow
   on both ends, not only on the bottom, but also on the top.
 
-- usermodes.c: Check whether it makes sense to combine incDecRange() and
+- base.c: Check whether it makes sense to combine incDecRange() and
   incDecRangeOverflow() into a single function with parameters for whether or
   not to overflow
 
 - usermodes.c: Fix AutoHueState logic. The *_enter function calls
-  AutoHueState_10Hz() without ever initializing --mode_autoHueState.delay100ms
+  AutoHueState_10Hz() without ever initializing mode_autoHueState.delay100ms
+
+- usermodes.c: Rename "colorToSet" to "propertyToSet" as hue is technically not
+  a color of its own.
+
+- user: Refer to "SetOnOffTime" mode consequently to "autoOff" mode
+
+- user: UI_AUTOOFFTIMES_COUNT > 1 seems to be broken
