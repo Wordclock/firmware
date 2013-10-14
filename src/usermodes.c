@@ -920,17 +920,20 @@ static bool NormalState_handleIR(uint8_t cmdCode)
      *
      * This routine gets executed whenever the "hue fading"
      * (e_MenuStates::MS_hueMode) mode is entered. It simply resets the
-     * appropriate counter responsible for the hue fading interval.
+     * appropriate counter responsible for the hue fading interval and sets
+     * back the current hue to 0.
      *
      * @param param Void parameter for consistency reasons only
      *
      * @see AutoHueState::delay100ms
+     * @see AutoHueState::curHue
      * @see mode_autoHueState
      */
     static void AutoHueState_enter(const void* param)
     {
 
         mode_autoHueState.delay100ms = 0;
+        mode_autoHueState.curHue = 0;
 
     }
 
