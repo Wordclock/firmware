@@ -749,7 +749,7 @@ typedef enum e_userCommands
  * (e.g. autoOff) as this times refer to a daily basis so other entities such
  * as the date is not needed.
  *
- * @see UserEepromParams::autoOffTimes
+ * @see UserEepromParams::onOffTimes
  */
 typedef struct UiTime {
 
@@ -782,8 +782,8 @@ typedef struct UiTime {
  * @note If changing this number you probably want also to change the
  * default values, see USER_ON_OFF_TIME_DEFAULTS.
  *
- * @see UserEepromParams::autoOffTimes
- * @see UI_AUTOOFFTIMES_COUNT
+ * @see UserEepromParams::onOffTimes
+ * @see UI_ONOFFTIMES_COUNT
  * @see USER_ON_OFF_TIME_DEFAULTS
  */
 #define UI_MAX_ONOFF_TIMES 1
@@ -792,17 +792,17 @@ typedef struct UiTime {
  * @brief Amount of needed elements to store the on/off (autoOff) times
  *
  * This defines the needed amount of elements within
- * UserEepromParams::autoOffTimes to store the configured amount of autoOff
- * times (UI_MAX_ONOFF_TIMES).
+ * UserEepromParams::onOffTimes to store the configured amount of on/off
+ * (autoOff) times (UI_MAX_ONOFF_TIMES).
  *
  * Each on/off (autoOff) time consists of two parts: The "on" time as well as
  * the "off" time. Therefore the value for this macro is simply calculated by
  * multiplying UI_MAX_ONOFF_TIMES by two.
  *
- * @see UserEepromParams::autoOffTimes
+ * @see UserEepromParams::onOffTimes
  * @see UI_MAX_ONOFF_TIMES
  */
-#define UI_AUTOOFFTIMES_COUNT (UI_MAX_ONOFF_TIMES * 2)
+#define UI_ONOFFTIMES_COUNT (UI_MAX_ONOFF_TIMES * 2)
 
 /**
  * @brief Default value for an entry within USER_ON_OFF_TIME_DEFAULTS
@@ -823,10 +823,10 @@ typedef struct UiTime {
  * equals to USER_DEFAULT_TIME.
  *
  * @note Keep in mind that the amount of items within this macro should be
- * equal to UI_AUTOOFFTIMES_COUNT whenever changing UI_MAX_ONOFF_TIMES.
+ * equal to UI_ONOFFTIMES_COUNT whenever changing UI_MAX_ONOFF_TIMES.
  *
  * @see UI_MAX_ONOFF_TIMES
- * @see UI_AUTOOFFTIMES_COUNT
+ * @see UI_ONOFFTIMES_COUNT
  * @see USER_DEFAULT_TIME
  */
 #define USER_ON_OFF_TIME_DEFAULTS \
@@ -948,9 +948,9 @@ typedef struct UserEepromParams {
      * misbehavior.
      *
      * @see UI_MAX_ONOFF_TIMES
-     * @see UI_AUTOOFFTIMES_COUNT
+     * @see UI_ONOFFTIMES_COUNT
      */
-    UiTime autoOffTimes[UI_AUTOOFFTIMES_COUNT];
+    UiTime onOffTimes[UI_ONOFFTIMES_COUNT];
 
     /**
      * @brief Stores whether an animation should be displayed during autoOff

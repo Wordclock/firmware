@@ -360,11 +360,11 @@ typedef struct SetOnOffTimeState {
     /*
      * @brief Index of on/off time currently being set
      *
-     * There are up to UI_AUTOOFFTIMES_COUNT different auto on/off times, which
-     * are set consecutively one by one. This defines the index of the one
+     * There are up to UI_ONOFFTIMES_COUNT different on/off times, which are
+     * set consecutively one by one. This defines the index of the on
      * currently being set.
      *
-     * @see UI_AUTOOFFTIMES_COUNT
+     * @see UI_ONOFFTIMES_COUNT
      * @see SetOnOffTimeState_enter()
      * @see SetOnOffTimeState_substateFinished()
      */
@@ -1304,7 +1304,7 @@ static void SetSystemTimeState_substateFinished(e_MenuStates finishedState, cons
  *
  * @see mode_setOnOffTimeState
  * @see SetOnOffTimeState
- * @see UserEepromParam::autoOffTimes
+ * @see UserEepromParam::onOffTimes
  * @see e_MenuStates::MS_enterTime
  * @see addSubState()
  */
@@ -1312,8 +1312,8 @@ static void SetOnOffTimeState_enter(const void* param)
 {
 
     datetime_t dt = {0, 0, 0, 0, 0, 0, 0};
-    dt.hh = g_params->autoOffTimes[0].h;
-    dt.mm = g_params->autoOffTimes[0].m;
+    dt.hh = g_params->onOffTimes[0].h;
+    dt.mm = g_params->onOffTimes[0].m;
 
     log_state("SOOT\n");
 
@@ -1341,9 +1341,9 @@ static void SetOnOffTimeState_enter(const void* param)
  * @see SetOnOffTimeState_enter()
  * @see mode_setOnOffTimeState
  * @see SetOnOffTimeState
- * @see UserEepromParams::autoOffTimes
+ * @see UserEepromParams::onOffTimes
  * @see UserEepromParams::useAutoOffAnimation
- * @see UI_AUTOOFFTIMES_COUNT
+ * @see UI_ONOFFTIMES_COUNT
  * @see addSubState()
  */
 static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const void* result)
@@ -1353,12 +1353,12 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 
         const datetime_t* time = result;
         datetime_t dt = *time;
-        g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].h = dt.hh;
-        g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].m = dt.mm;
+        g_params->onOffTimes[mode_setOnOffTimeState.currentTimeToSet].h = dt.hh;
+        g_params->onOffTimes[mode_setOnOffTimeState.currentTimeToSet].m = dt.mm;
 
         ++mode_setOnOffTimeState.currentTimeToSet;
 
-        if (UI_AUTOOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
+        if (UI_ONOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
 
             DisplayState disp;
             uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
@@ -1368,8 +1368,8 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 
         } else {
 
-            dt.hh = g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].h;
-            dt.mm = g_params->autoOffTimes[mode_setOnOffTimeState.currentTimeToSet].m;
+            dt.hh = g_params->onOffTimes[mode_setOnOffTimeState.currentTimeToSet].h;
+            dt.mm = g_params->onOffTimes[mode_setOnOffTimeState.currentTimeToSet].m;
             addSubState(MS_setOnOffTime, MS_enterTime, &dt);
 
         }
@@ -1402,7 +1402,7 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 {
 
-    if (UI_AUTOOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
+    if (UI_ONOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
 
         if ((cmdCode == UI_DOWN) || (cmdCode == UI_UP)) {
 

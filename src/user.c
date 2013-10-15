@@ -1308,7 +1308,7 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
  *
  * @return True if current time lies outside any on/off time ranges, else false
  *
- * @see UserEepromParams::autoOffTimes
+ * @see UserEepromParams::onOffTimes
  * @see curTimeIsBetween()
  * @see user_setNewTime()
  */
@@ -1318,10 +1318,10 @@ static bool checkActivation()
     bool result = true;
     uint8_t i;
 
-    for (i = 0; i < UI_AUTOOFFTIMES_COUNT; i += 2) {
+    for (i = 0; i < UI_ONOFFTIMES_COUNT; i += 2) {
 
-        if (curTimeIsBetween(g_params->autoOffTimes[i].h, g_params->autoOffTimes[i].m,
-                g_params->autoOffTimes[i + 1].h, g_params->autoOffTimes[i + 1].m)) {
+        if (curTimeIsBetween(g_params->onOffTimes[i].h, g_params->onOffTimes[i].m,
+                g_params->onOffTimes[i + 1].h, g_params->onOffTimes[i + 1].m)) {
 
             result = false;
 
