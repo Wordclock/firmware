@@ -341,7 +341,7 @@ typedef struct SetSystemTimeState {
 static SetSystemTimeState mode_setSystemTimeState;
 
 /**
- * @brief Data needed for the "set autoOff time" mode
+ * @brief Data needed for the "set on/off time(s)" mode
  *
  * @see mode_setOnOffTimeState
  * @see e_MenuStates::MS_setOnOffTime
@@ -358,7 +358,7 @@ typedef struct SetOnOffTimeState {
     bool prohibitLeave;
 
     /*
-     * @brief Index of auto on/off time currently being set
+     * @brief Index of on/off time currently being set
      *
      * There are up to UI_AUTOOFFTIMES_COUNT different auto on/off times, which
      * are set consecutively one by one. This defines the index of the one
@@ -1291,13 +1291,14 @@ static void SetSystemTimeState_substateFinished(e_MenuStates finishedState, cons
 }
 
 /**
- * @brief Routine executed when entering the "set autoOff time" mode
+ * @brief Routine executed when entering the "set on/off time(s)" mode
  *
- * This routine gets executed whenever the "set autoOff time"
+ * This routine gets executed whenever the "set on/off time(s)"
  * (e_MenuStates::MS_setOnOffTime) mode is entered. After some initialization
  * of various variables related to these settings, it calls the substate to
- * enter a time (e_MenuStates::MS_enterTime) and prohibits the user to leave
- * until finished.
+ * enter a time (e_MenuStates::MS_enterTime) for the first "off" time and
+ * prohibits the user to leave, which will only be allowed again when all times
+ * have been entered.
  *
  * @param param Void parameter for consistency reasons only
  *
@@ -1325,15 +1326,15 @@ static void SetOnOffTimeState_enter(const void* param)
 }
 
 /**
- * @brief Routine executed when a substate of "set autoOff time" was finished
+ * @brief Routine executed when a substate of "set on/off time(s)" was finished
  *
- * This routine gets executed whenever a substate of the "set autoOff time"
+ * This routine gets executed whenever a substate of the "set on/off time(s)"
  * (e_MenuStates::MS_setOnOffTime) mode has finished its job. For now the
  * only substate is the "enter time" (e_MenuStates::MS_enterTime) mode. Once
- * the "enter time" mode has finished, this will make sure the set autoOff
- * time is saved and if there are other times to be set, allows the user to
- * do so. The last stage gives the user a preview of the animation, which can
- * optionally either be enabled and/or disabled.
+ * the "enter time" mode has finished, this will make sure the set "on" and/or
+ * "off" time is saved and if there are other times to be set, allows the user
+ * to do so. The last stage gives the user the option to enable and/or disable
+ * the autoOff animation along with a preview on how this actually looks like.
  *
  * @param result Pointer to the result of the substate (set time)
  *
@@ -1378,13 +1379,13 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
 }
 
 /**
- * @brief IR handling routine for the "set autoOff time" mode
+ * @brief IR handling routine for the "set on/off time(s)" mode
  *
- * This function handles the received IR commands for the "set autoOff time"
+ * This function handles the received IR commands for the "set on/off time(s)"
  * (e_MenuStates::MS_setOnOffTime) mode. It enables the user to enable and/or
  * disable the autoOff animation with the "up" and/or "down" commands.
  * Depending upon the status of this setting (on and/or off) a preview of the
- * animation is shown. When the actual "autoOff time" command itself was
+ * animation is shown. When the actual "set on/off time(s)" command itself was
  * received, the mode will quit itself, as this is an indication that the
  * user has finished going through the process of this mode.
  *

@@ -165,19 +165,17 @@ static uint8_t g_keyDelay;
  * states are handled quite different internally.
  *
  * The current "power" state is hold by g_powerState and at any given point in
- * time will contain one of these values.
+ * time will contain one of these values:
  *
- * There are the following "power" states:
- *
- *  - normal_on
- *  - auto_off
- *  - user_off
- *  - override_on
+ *  - normal_on (POWER_STATES::UPS_NORMAL_ON)
+ *  - auto_off (POWER_STATES::UPS_AUTO_OFF)
+ *  - user_off (POWER_STATES::UPS_MANUAL_OFF)
+ *  - override_on (POWER_STATES::UPS_OVERRIDE_ON)
  *
  * The following "inputs" are possible for each of this states:
  *
- *  - ontime
- *  - offtime
+ *  - onTime
+ *  - offTime
  *  - IROnOff
  *
  * The following table describes which state can be reached from any given
@@ -185,16 +183,16 @@ static uint8_t g_keyDelay;
  *
  * \code
  *    Z           E            Z'
- * normal_on    ontime      normal_on
+ * normal_on    onTime      normal_on
  * normal_on    offTime     auto_off
  * normal_on    IROnOff     user_off
- * auto_off     ontime      normal_on
- * auto_off     offtime     auto_off
+ * auto_off     onTime      normal_on
+ * auto_off     offTime     auto_off
  * auto_off     IROnOff     override_on
- * user_off     ontime      user_off
- * user_off     offtime     user_off
+ * user_off     onTime      user_off
+ * user_off     offTime     user_off
  * user_off     IROnOff     normal_on
- * override_on  ontime      normal_on
+ * override_on  onTime      normal_on
  * override_on  offTime     override_on
  * override_on  IROnOff     user_off
  * \endcode
@@ -284,8 +282,8 @@ static uint8_t g_powerState;
  *
  * This indicates whether the animation preview of the autoOff feature should
  * be turned on and/or off. The animation itself is implemented by
- * display_autoOffAnimStep1Hz(), where basically this variable will be passed
- * on as a parameter.
+ * display_autoOffAnimStep1Hz(), where this variable will simply be passed on
+ * as a parameter.
  *
  * @see POWER_STATES::UPS_AUTO_OFF
  * @see display_autoOffAnimStep1Hz()
@@ -315,8 +313,7 @@ static uint8_t g_eepromSaveDelay;
  * USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S. The value itself is reset within
  * handle_ir_code() once a new command has been received. It is increased
  * once a second within user_isr1Hz(). Once it reaches its threshold a check
- * (using checkActivation()) for the autoOff times is initiated and
- * processed appropriately.
+ * for the autoOff feature is initiated and processed appropriately.
  *
  * @see handle_ir_code()
  * @see USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S
@@ -720,7 +717,7 @@ static void quitMyself(e_MenuStates state, const void* result)
  * compare it against the received IR command and execute the action associated
  * with this command and/or enter the appropriate state. For some states it
  * also possible to dispatch the handling of the IR command to a dedicated
- * function, in which case this function won't process it.
+ * function, in which case this function itself won't process it.
  *
  * In the end it will also reset g_eepromSaveDelay and g_checkIfAutoOffDelay
  * making sure that these delays are implemented correctly.
@@ -1306,12 +1303,10 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 /**
  * @brief Checks whether display should be activated for autoOff feature
  *
- * This function checks whether the current time lies outside of the defined
- * ranges by the autoOff times and returns true if it does. This can be used to
- * determine, whether the display should be enabled, once it was disabled by
- * the autoOff feature.
+ * This function checks whether the current time lies outside of any defined
+ * on/off (autoOff) time range and returns true if it does.
  *
- * @return True if current time lies outside the autoOff ranges, else false
+ * @return True if current time lies outside any on/off time ranges, else false
  *
  * @see UserEepromParams::autoOffTimes
  * @see curTimeIsBetween()

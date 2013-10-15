@@ -124,11 +124,15 @@ typedef enum e_MenuStates
     MS_setSystemTime,
 
     /**
-     * @brief Represents the "set autoOff time" mode
+     * @brief Represents the "set on/off time(s)" (autoOff) mode
      *
-     * This mode is used to set the setup the autoOff times.
+     * This mode is used to setup the on/off time(s) during which the clock
+     * will disable itself. This is also being referred to as autoOff feature.
+     * Depending upon the value of UI_MAX_ONOFF_TIMES there might be a couple
+     * of on/off pairs.
      *
      * @see SetOnOffTimeState_enter()
+     * @see UI_MAX_ONOFF_TIMES
      */
     MS_setOnOffTime,
 
@@ -192,16 +196,14 @@ typedef enum e_MenuStates
 #define USER_DELAY_BEFORE_SAVE_EEPROM_S 120
 
 /**
- * @brief Time without receiving an IR command before checking whether autoOff
+ * @brief Time without receiving IR command before checking whether autoOff
  * is active
  *
- * The autoOff feature enables the display to be disabled within certain
- * intervals of time. This defines the interval in seconds after the last
- * received IR command before the clock checks whether it should disable the
- * display, so that the display won't be disabled while the user is actually
- * interacting with the Wordclock.
+ * This defines the interval in seconds after the last received IR command
+ * before checking whether the display should be disabled due to the on/off
+ * time(s) defined by the user. This makes sure that the display isn't simply
+ * turned off while the user is still interacting with the clock itself.
  *
- * @see USER_AUTOSAVE
  * @see user_isr1Hz()
  */
 #define USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S 10
@@ -272,11 +274,10 @@ typedef enum e_userCommands
     UI_SET_TIME,
 
     /**
-     * @brief Initializes the configuration of the autoOff times
+     * @brief Initializes the configuration of the on/off time(s)
      *
      * This is the command for entering the menu, which enables the user to
-     * setup the autoOff times. This are times when the clock will disable
-     * the display to save power and save the LEDs.
+     * setup the on/off (autoOff) time(s).
      *
      * @see e_MenuStates::MS_setOnOffTime
      */
@@ -328,13 +329,11 @@ typedef enum e_userCommands
      * working LEDs can be spotted quite easily. There are two different
      * "demo" modes:
      *
-     *  - The first one will display all the words in sequence, iterating
-     *  over them one by one.
+     *  - The "normal" mode will display all the words in sequence, iterating
+     *  over them one by one in sequence.
      *
-     *  - The second one will display all the words simultaneously. This
-     *  is actually achieved by multiplexing, so that the drivers won't be
-     *  damaged. However this does not allow the brightness to be at its
-     *  maximum.
+     *  - The "fast" mode will display all the words simultaneously. This
+     *  is actually achieved by multiplexing.
      */
     UI_DEMO_MODE,
 
@@ -771,14 +770,14 @@ typedef struct UiTime {
 } UiTime;
 
 /**
- * @brief Amount of supported autoOff times
+ * @brief Amount of supported on/off (autoOff) time(s)
  *
- * This defines the maximum amount of storable autoOff times. The default
- * value is 1, which allows the user to set it up in a way that the display
- * will disable itself for a specific period of time, e.g. at the night. You
- * can increase this number, however this goes along with an increased
- * consumption of EEPROM and will make the interaction with the user more
- * "complex".
+ * This defines the maximum amount of usable on/off (autoOff) times. The
+ * default value is 1, which allows the user to set it up in a way that the
+ * display will disable itself for a specific period of time, e.g. at the
+ * night. You can increase this number, however this goes along with an
+ * increased consumption of EEPROM and will make the interaction with the user
+ * more "complex".
  *
  * @note If changing this number you probably want also to change the
  * default values, see USER_ON_OFF_TIME_DEFAULTS.
@@ -790,15 +789,15 @@ typedef struct UiTime {
 #define UI_MAX_ONOFF_TIMES 1
 
 /**
- * @brief Amount of needed elements to store the autoOff times
+ * @brief Amount of needed elements to store the on/off (autoOff) times
  *
  * This defines the needed amount of elements within
  * UserEepromParams::autoOffTimes to store the configured amount of autoOff
  * times (UI_MAX_ONOFF_TIMES).
  *
- * Each autoOff time consists of two parts: The "on" time as well as the "off"
- * time. Therefore the value for this macro is simply calculated by multiplying
- * UI_MAX_ONOFF_TIMES by two.
+ * Each on/off (autoOff) time consists of two parts: The "on" time as well as
+ * the "off" time. Therefore the value for this macro is simply calculated by
+ * multiplying UI_MAX_ONOFF_TIMES by two.
  *
  * @see UserEepromParams::autoOffTimes
  * @see UI_MAX_ONOFF_TIMES
@@ -818,10 +817,10 @@ typedef struct UiTime {
 #define USER_DEFAULT_TIME {0, 0}
 
 /**
- * @brief Default values for the autoOff times
+ * @brief Default values for the on/off (autoOff) time(s)
  *
- * This defines the default values for the autoOff times. Each entry equals
- * to USER_DEFAULT_TIME.
+ * This defines the default values for the on/off (autoOff) time(s). Each entry
+ * equals to USER_DEFAULT_TIME.
  *
  * @note Keep in mind that the amount of items within this macro should be
  * equal to UI_AUTOOFFTIMES_COUNT whenever changing UI_MAX_ONOFF_TIMES.
@@ -938,15 +937,15 @@ typedef struct UserEepromParams {
     uint8_t curColorProfile;
 
     /**
-     * @brief Stores the autoOff times
+     * @brief Stores the on/off (autoOff) time(s)
      *
-     * This stores the autoOff times. As each "autoOff" is actually a pair
-     * of two times ("on" and/or "off") time and there might be multiple
-     * autoOff times supported (UI_MAX_ONOFF_TIMES), each two consecutively
-     * times belong to one "autoOff" time. If both of these times are equal
-     * to each other the functionality for this autoOff time is disabled.
-     * If the times between two different autoOff times overlap the behavior
-     * is undefined.
+     * This stores the on/off (autoOff) time(s). There are up to
+     * UI_MAX_ONOFF_TIMES on/off (autoOff) times supported. Each "autoOff" time
+     * is actually a pair of two consecutive times ("on" and/or "off"). If the
+     * "on" and/or "off" time are equal to each other, this slot is practically
+     * disabled. If the times between two different pairs of on/off (autoOff)
+     * times overlap the behavior is undefined and will probably lead to
+     * misbehavior.
      *
      * @see UI_MAX_ONOFF_TIMES
      * @see UI_AUTOOFFTIMES_COUNT
@@ -956,13 +955,11 @@ typedef struct UserEepromParams {
     /**
      * @brief Stores whether an animation should be displayed during autoOff
      *
-     * When the display is deactivated due to the autoOff times an animation
+     * When the display is deactivated due to the autoOff feature an animation
      * can be displayed to give a visual indication about the state to the
      * user.
      *
-     * "0" indicates that this feature should be disabled, "1" enables it.
-     *
-     * @see display_autoOffAnimStep1Hz
+     * @see display_autoOffAnimStep1Hz()
      */
     bool useAutoOffAnimation;
 
