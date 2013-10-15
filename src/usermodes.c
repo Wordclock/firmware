@@ -803,7 +803,7 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             log_state("CC\n");
 
-            if (mode_normalState.propertyToSet < 4){
+            if (mode_normalState.propertyToSet < 4) {
 
                 uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
 
