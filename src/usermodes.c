@@ -1416,7 +1416,7 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
             DisplayState disp;
             g_params->useAutoOffAnimation = !g_params->useAutoOffAnimation;
-            uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
+            uint8_t autoOnOff = g_params->useAutoOffAnimation ? 2 : 1;
             disp = display_getNumberDisplayState(autoOnOff);
             display_setDisplayState(disp, disp);
 
