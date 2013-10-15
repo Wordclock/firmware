@@ -135,7 +135,7 @@ static ShowNumberState mode_showNumberState;
         /**
          * @brief Current hue value
          *
-         * This holds the current hue value, which can ony be changed by the
+         * This holds the current hue value, which can only be changed by the
          * user in this mode.
          *
          * @see NormalState_handleIR()
