@@ -154,10 +154,9 @@ typedef enum e_MenuStates
     MS_showNumber,
 
     /**
-     * @brief Simply dummy containing the number of items
+     * @brief Simple dummy representing number of items
      *
-     * This due to the successive allocation of indexes and the start at zero,
-     * will actually represent the amount of items within this enumeration.
+     * This will represent the amount of items within this enumeration.
      */
     MS_COUNT
 
@@ -185,7 +184,7 @@ typedef enum e_MenuStates
  * @brief Time without receiving an IR command before data is written to EEPROM
  *
  * This defines the time interval in seconds which has to elapse without
- * receiving an IR command before the data is written to the EEPROM.
+ * receiving an IR command before changed data is written back to EEPROM.
  *
  * @see USER_AUTOSAVE
  * @see user_isr1Hz()
