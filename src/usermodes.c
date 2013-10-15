@@ -1363,16 +1363,7 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
             uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
             disp = display_getNumberDisplayState(autoOnOff);
             display_setDisplayState(disp, disp);
-
-            if (g_params->useAutoOffAnimation) {
-
-                g_animPreview = true;
-
-            } else {
-
-                g_animPreview = false;
-
-            }
+            g_animPreview = g_params->useAutoOffAnimation;
 
         } else {
 
@@ -1419,16 +1410,7 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
             uint8_t autoOnOff = g_params->useAutoOffAnimation ? 2 : 1;
             disp = display_getNumberDisplayState(autoOnOff);
             display_setDisplayState(disp, disp);
-
-            if (g_params->useAutoOffAnimation) {
-
-                g_animPreview = true;
-
-            } else {
-
-                g_animPreview = false;
-
-            }
+            g_animPreview = g_params->useAutoOffAnimation;
 
         }
 
