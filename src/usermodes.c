@@ -130,7 +130,7 @@ static ShowNumberState mode_showNumberState;
          * @see UI_CHANGE_B
          * @see UI_CHANGE_HUE
          */
-        uint8_t colorToSet;
+        uint8_t propertyToSet;
 
         /**
          * @brief Current hue value
@@ -752,7 +752,7 @@ static void NormalState_enter(const void* param)
  * @param cmdCode The received IR command code
  *
  * @see mode_normalState
- * @see NormalState::colorToSet
+ * @see NormalState::propertyToSet
  * @see e_userCommands::UI_NORMAL_MODE
  * @see e_userCommands::UI_CHANGE_R
  * @see e_userCommands::UI_CHANGE_G
@@ -777,25 +777,25 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             log_state("CR\n");
 
-            mode_normalState.colorToSet = 0;
+            mode_normalState.propertyToSet = 0;
 
         } else if (UI_CHANGE_G == cmdCode) {
 
             log_state("CG\n");
 
-            mode_normalState.colorToSet = 1;
+            mode_normalState.propertyToSet = 1;
 
         } else if (UI_CHANGE_B == cmdCode) {
 
             log_state("CB\n");
 
-            mode_normalState.colorToSet = 2;
+            mode_normalState.propertyToSet = 2;
 
         } else if (UI_CHANGE_HUE == cmdCode) {
 
             log_state("CH\n");
 
-            mode_normalState.colorToSet = 4;
+            mode_normalState.propertyToSet = 4;
 
         } else if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
 
@@ -803,11 +803,11 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             log_state("CC\n");
 
-            if (mode_normalState.colorToSet < 4){
+            if (mode_normalState.propertyToSet < 4){
 
                 uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
 
-                incDecRange(&rgb[mode_normalState.colorToSet], dir, 0, MAX_PWM_STEPS - 1);
+                incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, MAX_PWM_STEPS - 1);
                 pwm_set_color_step(rgb[0], rgb[1], rgb[2]);
 
             } else {
