@@ -109,6 +109,39 @@ static ShowNumberState mode_showNumberState;
 #if (MONO_COLOR_CLOCK != 1)
 
     /**
+     * @brief Allowed properties which can be set in "normal" mode
+     *
+     * This properties can be changed by the user in "normal" mode by sending
+     * the appropriate commands.
+     *
+     * @see NormalState::propertyToSet
+     */
+    typedef enum
+    {
+
+        /**
+         * @brief Represents the property "red color"
+         */
+        NS_propColorR = 0,
+
+        /**
+         * @brief Represents the property "green color"
+         */
+        NS_propColorG,
+
+        /**
+         * @brief Represents the property "blue color"
+         */
+        NS_propColorB,
+
+        /**
+         * @brief Represents the property "hue"
+         */
+        NS_propHue
+
+    } propToSet_t;
+
+    /**
      * @brief Data needed for the "normal" mode
      *
      * @see mode_normalState
@@ -125,12 +158,9 @@ static ShowNumberState mode_showNumberState;
          * commands can be assigned correctly.
          *
          * @see NormalState_handleIR()
-         * @see UI_CHANGE_R
-         * @see UI_CHANGE_G
-         * @see UI_CHANGE_B
-         * @see UI_CHANGE_HUE
+         * @see propToSet_t
          */
-        uint8_t propertyToSet;
+        propToSet_t propertyToSet;
 
         /**
          * @brief Current hue value
@@ -777,25 +807,25 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             log_state("CR\n");
 
-            mode_normalState.propertyToSet = 0;
+            mode_normalState.propertyToSet = NS_propColorR;
 
         } else if (UI_CHANGE_G == cmdCode) {
 
             log_state("CG\n");
 
-            mode_normalState.propertyToSet = 1;
+            mode_normalState.propertyToSet = NS_propColorG;
 
         } else if (UI_CHANGE_B == cmdCode) {
 
             log_state("CB\n");
 
-            mode_normalState.propertyToSet = 2;
+            mode_normalState.propertyToSet = NS_propColorB;
 
         } else if (UI_CHANGE_HUE == cmdCode) {
 
             log_state("CH\n");
 
-            mode_normalState.propertyToSet = 4;
+            mode_normalState.propertyToSet = NS_propHue;
 
         } else if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
 
@@ -803,14 +833,7 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             log_state("CC\n");
 
-            if (mode_normalState.propertyToSet < 4) {
-
-                uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
-
-                incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, MAX_PWM_STEPS - 1);
-                pwm_set_color_step(rgb[0], rgb[1], rgb[2]);
-
-            } else {
+            if (mode_normalState.propertyToSet == NS_propHue) {
 
                 uint8_t r, g, b;
 
@@ -830,6 +853,13 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
                 color_hue2rgb(mode_normalState.curHue, &r, &g, &b);
                 pwm_set_colors(r, g, b);
+
+            } else {
+
+                uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
+
+                incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, MAX_PWM_STEPS - 1);
+                pwm_set_color_step(rgb[0], rgb[1], rgb[2]);
 
             }
 
