@@ -1321,7 +1321,7 @@ static bool checkActivation()
     for (i = 0; i < UI_ONOFFTIMES_COUNT; i += 2) {
 
         if (curTimeIsBetween(g_params->onOffTimes[i].h, g_params->onOffTimes[i].m,
-                g_params->onOffTimes[i + 1].h, g_params->onOffTimes[i + 1].m)) {
+            g_params->onOffTimes[i + 1].h, g_params->onOffTimes[i + 1].m)) {
 
             result = false;
 
