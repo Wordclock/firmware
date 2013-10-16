@@ -837,17 +837,17 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
                 uint8_t r, g, b;
 
-                if (dir < 0 && mode_normalState.curHue < COLOR_HUE_MANUAL_STEPS) {
+                if (dir < 0 && mode_normalState.curHue < USER_HUE_CHANGE_MANUAL_STEPS) {
 
                     mode_normalState.curHue = COLOR_HUE_MAX;
 
-                } else if (dir > 0 && mode_normalState.curHue >= COLOR_HUE_MAX - COLOR_HUE_MANUAL_STEPS) {
+                } else if (dir > 0 && mode_normalState.curHue >= COLOR_HUE_MAX - USER_HUE_CHANGE_MANUAL_STEPS) {
 
                     mode_normalState.curHue = 0;
 
                 } else {
 
-                    mode_normalState.curHue += dir * COLOR_HUE_MANUAL_STEPS;
+                    mode_normalState.curHue += dir * USER_HUE_CHANGE_MANUAL_STEPS;
 
                 }
 

@@ -62,15 +62,6 @@
 #define COLOR_HUE_MAX (COLOR_HUE_STEPS * 6)
 
 /**
- * @brief Amount of steps to change when requested manually
- *
- * Whenever a hue change is requested (up and/or down) manually by the user
- * this defines the amount of steps to change the hue by. It basically is a
- * tradeoff between granular control and an actual visible change to the color.
- */
-#define COLOR_HUE_MANUAL_STEPS 10
-
-/**
  * @brief The actual type when dealing with hues
  *
  * When dealing with hues this is the type which will be used. Note that it

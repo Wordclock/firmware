@@ -1073,6 +1073,19 @@ extern bool useAutoOffAnimation;
 #define USER_HUE_CHANGE_INT_100MS_MAX 8
 
 /**
+ * @brief Amount of steps to change when requested manually
+ *
+ * Whenever a hue change is requested ("up" and/or "down") manually by the user
+ * this defines the amount of steps to change the hue by. It basically is a
+ * tradeoff between granular control and an actual visible change to the color.
+ * Hues are numerical values ranging from 0 up to COLOR_HUE_MAX.
+ *
+ * @see COLOR_HUE_MAX
+ * @see NormalState_handleIR()
+ */
+#define USER_HUE_CHANGE_MANUAL_STEPS 10
+
+/**
  * @brief Default value for interval between two animation steps in pulse mode
  *
  * This defines the default value for the interval (in multiples of 10 ms)

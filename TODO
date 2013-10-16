@@ -74,11 +74,6 @@
   settings successfully should not be part of the function itself, but moved
   to user.c.
 
-- color: Check whether HUE_MANUAL_STEPS is really needed or whether it should
-  be outsourced to usermodes.c itself, as it is only used there anyway and at
-  first glance it doesn't make too much sense to define something like this
-  "globally".
-
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
   needed or if it would make more sense to not include it in the first place
   when dealing with monochromatic clocks.
