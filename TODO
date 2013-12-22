@@ -199,9 +199,4 @@
 - usermodes.c: Fix AutoHueState logic. The *_enter function calls
   AutoHueState_10Hz() without ever initializing mode_autoHueState.delay100ms
 
-- usermodes.c: Rename "colorToSet" to "propertyToSet" as hue is technically not
-  a color of its own.
-
-- user: Refer to "SetOnOffTime" mode consequently to "autoOff" mode
-
-- user: UI_AUTOOFFTIMES_COUNT > 1 seems to be broken
+- user: UI_ONOFFTIMES_COUNT > 1 seems to be broken
