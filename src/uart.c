@@ -128,7 +128,7 @@ void uart_init()
  *
  * @param c Character to transmit
  */
-void uart_putc(unsigned char c)
+void uart_putc(char c)
 {
 
     while (!(UCSR0A & _BV(UDRE0)));

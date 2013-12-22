@@ -39,7 +39,7 @@
 
 extern void uart_init();
 
-extern void uart_putc(unsigned char c);
+extern void uart_putc(char c);
 
 extern void uart_puts(const char* s);
 
