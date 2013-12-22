@@ -899,9 +899,9 @@ static bool NormalState_handleIR(uint8_t cmdCode)
     static void AutoHueState_10Hz()
     {
 
-        --mode_autoHueState.delay100ms;
+        mode_autoHueState.delay100ms++;
 
-        if (mode_autoHueState.delay100ms >= (volatile uint8_t)(g_params->hueChangeInterval)) {
+        if (mode_autoHueState.delay100ms > (volatile uint8_t)(g_params->hueChangeInterval)) {
 
             uint8_t r, g, b;
 
@@ -909,7 +909,7 @@ static bool NormalState_handleIR(uint8_t cmdCode)
             mode_autoHueState.curHue %= (COLOR_HUE_MAX + 1);
             color_hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
             pwm_set_colors(r, g, b);
-            mode_autoHueState.delay100ms = g_params->hueChangeInterval;
+            mode_autoHueState.delay100ms = 0;
 
         }
 
@@ -919,17 +919,18 @@ static bool NormalState_handleIR(uint8_t cmdCode)
      * @brief Routine executed when entering the "hue fading" mode
      *
      * This routine gets executed whenever the "hue fading"
-     * (e_MenuStates::MS_hueMode) mode is entered. It will start with the
-     * fading immediately by calling the appropriate "ISR" directly.
+     * (e_MenuStates::MS_hueMode) mode is entered. It simply resets the
+     * appropriate counter responsible for the hue fading interval.
      *
      * @param param Void parameter for consistency reasons only
      *
-     * @see AutoHueState_10Hz()
+     * @see AutoHueState::delay100ms
+     * @see mode_autoHueState
      */
     static void AutoHueState_enter(const void* param)
     {
 
-        AutoHueState_10Hz();
+        mode_autoHueState.delay100ms = 0;
 
     }
 
