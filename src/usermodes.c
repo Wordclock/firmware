@@ -968,13 +968,11 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
             #endif
 
-        } else {
-
-            return false;
+            return true;
 
         }
 
-        return true;
+        return false;
 
     }
 
