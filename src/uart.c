@@ -86,7 +86,7 @@ void uart_init()
          * RXEN0: Enable receiver
          * RXCIE0: Enable receiver
          */
-        UCSR0B |= _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);
+        UCSR0B |= _BV(TXEN0) | _BV(RXEN0) | _BV(RXCIE0);
 
     #else
 
