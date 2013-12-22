@@ -51,11 +51,16 @@
 #endif
 
 /**
- * @brief The baud rate used for communication
+ * @brief The baud rate used for the serial communication
  *
+ * This gets redefined here because the header that is included below expects
+ * the macro to be called "BAUD". It will be undefined once it is no longer
+ * actually needed.
+ *
+ * @see UART_BAUD
  * @see uart_init()
  */
-#define BAUD 9600
+#define BAUD UART_BAUD
 
 #include <util/setbaud.h>
 
@@ -240,3 +245,8 @@ void uart_puts_p(const char* s)
     }
 
 #endif
+
+/*
+ * Undefine BAUD macro to prevent name collisions as it is no longer needed
+ */
+#undef BAUD

@@ -37,6 +37,20 @@
 
 #include <avr/pgmspace.h>
 
+/**
+ * @brief The baud rate used for the serial communication
+ *
+ * The value should be considered carefully as it directly influences the
+ * resulting error rate, which is even more important when no real crystal is
+ * being used. Refer to the datasheet for details [1], p. 195ff, table 20-9.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ *
+ * @see UART_BAUD
+ * @see uart_init()
+ */
+#define UART_BAUD 9600
+
 extern void uart_init();
 
 extern void uart_putc(char c);
