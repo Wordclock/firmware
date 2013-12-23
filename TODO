@@ -191,7 +191,4 @@
   incDecRangeOverflow() into a single function with parameters for whether or
   not to overflow
 
-- usermodes.c: Fix AutoHueState logic. The *_enter function calls
-  AutoHueState_10Hz() without ever initializing mode_autoHueState.delay100ms
-
 - user: UI_ONOFFTIMES_COUNT > 1 seems to be broken
