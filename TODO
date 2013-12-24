@@ -192,3 +192,17 @@
   not to overflow
 
 - user: UI_ONOFFTIMES_COUNT > 1 seems to be broken
+
+- Fix Doxygen comments: For the most part the Doxygen comments were written
+  without actually rendering them. So there might be a vast amount of issues,
+  which prevent them from being displayed as intended. Go through them one by
+  one and check/fix them.
+
+- The whole user module is kind of a mess: Its pretty big by now, its not
+  using function pointers, but a lot of functions with the same scheme. It
+  probably makes sense to rewrite this completely.
+
+- When sending the "on" command directly after flashing the firmware, the
+  display gets disabled for a brief period of time, but reenables itself within
+  a second or so. This is also the case with the original firmware, so nothing
+  that was introduced by the changes itself.
