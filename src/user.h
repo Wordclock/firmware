@@ -975,7 +975,7 @@ typedef struct UserEepromParams {
      * This represents this setting within the EEPROM.
      *
      * @see menu_state_t::MS_pulse
-     * @see PulseState_handleIR()
+     * @see PulseState_handleUserCommand()
      * @see PulseState_100Hz()
      * @see USER_PULSE_CHANGE_INT_10MS_MIN
      * @see USER_PULSE_CHANGE_INT_10MS_MAX
@@ -993,7 +993,7 @@ typedef struct UserEepromParams {
      * This represents this setting within the EEPROM.
      *
      * @see menu_state_t::MS_hueMode
-     * @see AutoHueState_handleIR()
+     * @see AutoHueState_handleUserCommand()
      * @see AutoHueState_10Hz()
      * @see USER_HUE_CHANGE_INT_100MS_MIN
      * @see USER_HUE_CHANGE_INT_100MS_MAX
@@ -1083,7 +1083,7 @@ extern bool useAutoOffAnimation;
  * Hues are numerical values ranging from 0 up to COLOR_HUE_MAX.
  *
  * @see COLOR_HUE_MAX
- * @see NormalState_handleIR()
+ * @see NormalState_handleUserCommand()
  */
 #define USER_HUE_CHANGE_MANUAL_STEPS 10
 

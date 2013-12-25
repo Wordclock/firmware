@@ -709,7 +709,7 @@ static void quitMyself(menu_state_t state, const void* result)
  *
  * This handles the given user command (user_command_t) either by processing
  * it directly, or by passing it over to the actual handler using
- * UserState_HandleIr().
+ * UserState_HandleUserCommand().
  *
  * g_eepromSaveDelay and g_checkIfAutoOffDelay get reset every time this
  * function is called to make sure the appropriate functionality works as
@@ -717,7 +717,7 @@ static void quitMyself(menu_state_t state, const void* result)
  *
  * @param user_command The user command that should be handled
  *
- * @see UserState_HandleIr()
+ * @see UserState_HandleUserCommand()
  * @see g_eepromSaveDelay
  * @see g_checkIfAutoOffDelay
  */
@@ -759,7 +759,7 @@ static void user_command_handle(user_command_t user_command)
 
         for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
 
-            handled |= UserState_HandleIr(g_stateStack[i], user_command);
+            handled |= UserState_HandleUserCommand(g_stateStack[i], user_command);
 
         }
 
