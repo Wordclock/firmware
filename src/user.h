@@ -971,6 +971,8 @@ extern bool useAutoOffAnimation;
  */
 #define USER_ENTER_ONOFF_TIME_STEP 15
 
+extern void handle_user_command(user_command_t user_command);
+
 extern void handle_ir_code();
 
 extern void user_setNewTime(const datetime_t* i_time);

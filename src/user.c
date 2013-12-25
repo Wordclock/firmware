@@ -721,7 +721,7 @@ static void quitMyself(menu_state_t state, const void* result)
  * @see g_eepromSaveDelay
  * @see g_checkIfAutoOffDelay
  */
-static void user_command_handle(user_command_t user_command)
+void handle_user_command(user_command_t user_command)
 {
 
     if (UC_ONOFF == user_command) {
@@ -915,7 +915,7 @@ static void user_command_handle(user_command_t user_command)
  *
  * If currently in training state it will dispatch the handling to
  * TrainIrState_handleIR(). Otherwise it will find the correct user command
- * (user_command_t) for the received code and pass it to user_command_handle().
+ * (user_command_t) for the received code and pass it to handle_user_command().
  *
  * @note To make sure not to loose any events, this function should be called
  * on a quasi-regular basis.
@@ -923,7 +923,7 @@ static void user_command_handle(user_command_t user_command)
  * @see irmp_get_data()
  * @see g_keyDelay
  * @see TrainIrState_handleIR()
- * @see user_command_handle()
+ * @see handle_user_command()
  */
 void handle_ir_code()
 {
@@ -980,7 +980,7 @@ void handle_ir_code()
 
             }
 
-            user_command_handle((user_command_t)ir_code);
+            handle_user_command((user_command_t)ir_code);
 
         }
 
