@@ -59,9 +59,9 @@ typedef enum
     /**
      * @brief Controls the "On" and/or "Off" status of the display
      *
-     * This represents the command, which can enable and/or disable the
-     * display (along with the optional Ambilight). This command actually
-     * toggles between "On" and/or "Off".
+     * This represents the command, which can enable and/or disable the display
+     * (along with the optional Ambilight). This command actually toggles
+     * between "On" and/or "Off".
      */
     UC_ONOFF = 0,
 
@@ -181,7 +181,8 @@ typedef enum
          * @brief Change the red channel of the color with "up" and/or "down"
          *
          * This enables the red channel to be changed by issuing the "up"
-         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN)
+         * command.
          */
         UC_CHANGE_R,
 
@@ -189,7 +190,8 @@ typedef enum
          * @brief Change the green channel of the color with "up" and/or "down"
          *
          * This enables the green channel to be changed by issuing the "up"
-         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN)
+         * command.
          */
         UC_CHANGE_G,
 
@@ -197,7 +199,8 @@ typedef enum
          * @brief Change the blue channel of the color  with "up" and/or "down"
          *
          * This enables the blue channel to be changed by issuing the "up"
-         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN)
+         * command.
          */
         UC_CHANGE_B,
 
@@ -205,7 +208,8 @@ typedef enum
          * @brief Change the current hue of the color with "up" and/or "down"
          *
          * This enables the current hue to be changed by issuing the "up"
-         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) commands.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN)
+         * commands.
          */
         UC_CHANGE_HUE,
 
@@ -214,8 +218,8 @@ typedef enum
     /**
      * @brief Sets the current brightness as base for adjustments of the LDR
      *
-     * Changes to the ambient lightning will be relative to the brightness
-     * set here. Refer to pwm.h for details.
+     * Changes to the ambient lightning will be relative to the brightness set
+     * here. Refer to pwm.h for details.
      *
      * @see pwm_modifyLdrBrightness2pwmStep()
      */
@@ -242,7 +246,7 @@ typedef enum
          *
          * This represents the command, which can enable and/or disable the GPO
          * dedicated to a Bluetooth module, effectively toggling the Bluetooth
-         * tranceiver "On" and/or "Off".
+         * transceiver "On" and/or "Off".
          *
          * @see USER_BLUETOOTH
          */
@@ -256,8 +260,8 @@ typedef enum
          * @brief Controls the "On" and/or "Off" status of the auxiliary GPO
          *
          * This represents the command, which can enable and/or disable the
-         * auxiliary GPO, which can be used to control some individual
-         * hardware attached to it.
+         * auxiliary GPO, which can be used to control some individual hardware
+         * attached to it.
          *
          * @see USER_AUXPOWER
          */
