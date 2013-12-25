@@ -1235,14 +1235,14 @@ extern void user_init();
 /**
  * @brief Creates a handler for the given command with the given code
  *
- * The helper macro will generate a simple handler for the given command with
- * the given code. It is used within the language specific display files
- * to implement commands specific to the language.
+ * The helper macro will generate a simple handler for a received and/or
+ * decoded user command (user_command_t). It is used within the language
+ * specific display files to implement commands specific to the language.
  *
  * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
  */
-#define USER_CREATE_IR_HANDLER(command, code) \
-    } else if (command == ir_code) { \
+#define USER_CREATE_IR_HANDLER(rcvd_user_command, code) \
+    } else if (rcvd_user_command == user_command) { \
         code \
         user_setNewTime(0);
 
