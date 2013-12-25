@@ -1676,7 +1676,7 @@ static void UserState_SubstateFinished(menu_state_t state, menu_state_t finished
 static bool UserState_HandleIr(menu_state_t state, uint8_t cmdCode)
 {
 
-    uint8_t handled = false;
+    bool handled = false;
 
     if (MS_enterTime == state) {
 
