@@ -705,22 +705,217 @@ static void quitMyself(e_MenuStates state, const void* result)
 }
 
 /**
+ * @brief Handles the given user command
+ *
+ * This handles the given user command (user_command_t) either by processing
+ * it directly, or by passing it over to the actual handler using
+ * UserState_HandleIr().
+ *
+ * g_eepromSaveDelay and g_checkIfAutoOffDelay get reset every time this
+ * function is called to make sure the appropriate functionality works as
+ * intended.
+ *
+ * @param user_command The user command that should be handled
+ *
+ * @see UserState_HandleIr()
+ * @see g_eepromSaveDelay
+ * @see g_checkIfAutoOffDelay
+ */
+static void user_command_handle(user_command_t user_command)
+{
+
+    if (UC_ONOFF == user_command) {
+
+        log_state("OF\n");
+
+        if (g_powerState < UPS_AUTO_OFF) {
+
+            g_powerState = UPS_MANUAL_OFF;
+            pwm_off();
+
+        } else {
+
+            if (g_powerState == UPS_MANUAL_OFF) {
+
+                g_powerState = UPS_NORMAL_ON;
+
+            } else {
+
+                g_powerState = UPS_OVERRIDE_ON;
+
+            }
+
+            pwm_on();
+            user_setNewTime(NULL);
+
+        }
+
+        wcEeprom_writeback(wcEeprom_getData(), sizeof(WcEepromData));
+
+    } else {
+
+        int8_t i;
+        bool handled = false;
+
+        for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
+
+            handled |= UserState_HandleIr(g_stateStack[i], user_command);
+
+        }
+
+        if (!handled) {
+
+            if (UC_BRIGHTNESS_UP == user_command) {
+
+                log_state("B+\n");
+                pwm_step_up_brightness();
+
+            } else if (UC_BRIGHTNESS_DOWN == user_command) {
+
+                log_state("B-\n");
+                pwm_step_down_brightness();
+
+            } else if (UC_NORMAL_MODE == user_command) {
+
+                addSubState(-1, MS_normalMode, (void*)1);
+
+            } else if (UC_SET_TIME == user_command) {
+
+                addState(MS_setSystemTime, NULL);
+
+            } else if (UC_SET_ONOFF_TIMES == user_command) {
+
+                addState(MS_setOnOffTime, NULL);
+
+            } else if (UC_DEMO_MODE == user_command) {
+
+                e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
+
+                log_state("BS\n");
+
+                if (MS_demoMode == curTop) {
+
+                    quitMyself(MS_demoMode, NULL);
+
+                } else {
+
+                    addState(MS_demoMode, NULL);
+
+                }
+
+            } else if (UC_CALIB_BRIGHTNESS == user_command) {
+
+                pwm_modifyLdrBrightness2pwmStep();
+
+            } else if (UC_PULSE_MODE == user_command) {
+
+                e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
+
+                log_state("PLS\n");
+
+                if (MS_pulse == curTop) {
+
+                    leaveSubState(g_topOfStack - 1);
+
+                } else {
+
+                    if ((MS_normalMode == curTop)
+                    #if (MONO_COLOR_CLOCK != 1)
+                        || (MS_hueMode == curTop)
+                    #endif
+                    ) {
+
+                        addState(MS_pulse, NULL);
+
+                    }
+
+                }
+
+                DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
+
+                #if (MONO_COLOR_CLOCK != 1)
+
+                    } else if (UC_HUE_MODE == user_command) {
+
+                        log_state("HM");
+
+                        addSubState(-1, MS_hueMode, NULL);
+
+                #endif
+
+                #if (DCF_PRESENT == 1)
+
+                    } else if (UC_DCF_GET_TIME == user_command) {
+
+                        log_state("DCF\n");
+
+                        dcf77_enable();
+
+                #endif
+
+                #if (AMBILIGHT_PRESENT == 1)
+
+                    } else if (UC_AMBILIGHT == user_command) {
+
+                        log_state("AL\n");
+
+                        PIN(USER_AMBILIGHT) |= _BV(BIT(USER_AMBILIGHT));
+
+                #endif
+
+                #if (BLUETOOTH_PRESENT == 1)
+
+                    } else if (UC_BLUETOOTH == user_command) {
+
+                        log_state("BT\n");
+
+                        PIN(USER_BLUETOOTH) |= _BV(BIT(USER_BLUETOOTH));
+
+                #endif
+
+                #if (AUXPOWER_PRESENT == 1)
+
+                    } else if (UC_AUXPOWER == user_command) {
+
+                        log_state("AUX\n");
+
+                        PIN(USER_AUXPOWER) |= _BV(BIT(USER_AUXPOWER));
+
+                #endif
+
+                    } else {
+
+                        return;
+
+                    }
+
+        }
+
+    }
+
+    g_params->mode = g_stateStack[0];
+
+    if (MS_pulse == g_stateStack[1]) {
+
+        g_params->mode |= 0x80;
+
+    }
+
+    g_eepromSaveDelay = 0;
+    g_checkIfAutoOffDelay = 0;
+
+}
+
+/**
  * @brief Processes any received IR commands
  *
  * This function handles any IR commands received by IRMP. It will check
  * whether a command was decoded successfully using irmp_get_data() and
  * implements a key press delay before any other key press can be recognized.
+ *
  * If currently in training state it will dispatch the handling to
- * TrainIrState_handleIR().
- *
- * Otherwise it will iterate over each element within user_command_t and
- * compare it against the received IR command and execute the action associated
- * with this command and/or enter the appropriate state. For some states it
- * also possible to dispatch the handling of the IR command to a dedicated
- * function, in which case this function itself won't process it.
- *
- * In the end it will also reset g_eepromSaveDelay and g_checkIfAutoOffDelay
- * making sure that these delays are implemented correctly.
+ * TrainIrState_handleIR(). Otherwise it will find the correct user command
+ * (user_command_t) for the received code and pass it to user_command_handle().
  *
  * @note To make sure not to loose any events, this function should be called
  * on a quasi-regular basis.
@@ -728,8 +923,7 @@ static void quitMyself(e_MenuStates state, const void* result)
  * @see irmp_get_data()
  * @see g_keyDelay
  * @see TrainIrState_handleIR()
- * @see g_eepromSaveDelay
- * @see g_checkIfAutoOffDelay
+ * @see user_command_handle()
  */
 void handle_ir_code()
 {
@@ -786,185 +980,7 @@ void handle_ir_code()
 
             }
 
-            if (UC_ONOFF == ir_code) {
-
-                log_state("OF\n");
-
-                if (g_powerState < UPS_AUTO_OFF) {
-
-                    g_powerState = UPS_MANUAL_OFF;
-                    pwm_off();
-
-                } else {
-
-                    if (g_powerState == UPS_MANUAL_OFF) {
-
-                        g_powerState = UPS_NORMAL_ON;
-
-                    } else {
-
-                        g_powerState = UPS_OVERRIDE_ON;
-
-                    }
-
-                    pwm_on();
-                    user_setNewTime(NULL);
-
-                }
-
-                wcEeprom_writeback(wcEeprom_getData(), sizeof(WcEepromData));
-
-            } else {
-
-                int8_t i;
-                bool handled = false;
-
-                for (i = g_topOfStack - 1; i >= 0 && !handled; --i) {
-
-                    handled |= UserState_HandleIr(g_stateStack[i], ir_code);
-
-                }
-
-                if (!handled) {
-
-                    if (UC_BRIGHTNESS_UP == ir_code) {
-
-                        log_state("B+\n");
-                        pwm_step_up_brightness();
-
-                    } else if (UC_BRIGHTNESS_DOWN == ir_code) {
-
-                        log_state("B-\n");
-                        pwm_step_down_brightness();
-
-                    } else if (UC_NORMAL_MODE == ir_code) {
-
-                        addSubState(-1, MS_normalMode, (void*)1);
-
-                    } else if (UC_SET_TIME == ir_code) {
-
-                        addState(MS_setSystemTime, NULL);
-
-                    } else if (UC_SET_ONOFF_TIMES == ir_code) {
-
-                        addState(MS_setOnOffTime, NULL);
-
-                    } else if (UC_DEMO_MODE == ir_code) {
-
-                        e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
-
-                        log_state("BS\n");
-
-                        if (MS_demoMode == curTop) {
-
-                            quitMyself(MS_demoMode, NULL);
-
-                        } else {
-
-                            addState(MS_demoMode, NULL);
-
-                        }
-
-                    } else if (UC_CALIB_BRIGHTNESS == ir_code) {
-
-                        pwm_modifyLdrBrightness2pwmStep();
-
-                    } else if (UC_PULSE_MODE == ir_code) {
-
-                        e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
-
-                        log_state("PLS\n");
-
-                        if (MS_pulse == curTop) {
-
-                            leaveSubState(g_topOfStack - 1);
-
-                        } else {
-
-                            if ((MS_normalMode == curTop)
-                            #if (MONO_COLOR_CLOCK != 1)
-                                || (MS_hueMode == curTop)
-                            #endif
-                            ) {
-
-                                addState(MS_pulse, NULL);
-
-                            }
-
-                        }
-
-                        DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
-
-                        #if (MONO_COLOR_CLOCK != 1)
-
-                            } else if (UC_HUE_MODE == ir_code) {
-
-                                log_state("HM");
-
-                                addSubState(-1, MS_hueMode, NULL);
-
-                        #endif
-
-                        #if (DCF_PRESENT == 1)
-
-                            } else if (UC_DCF_GET_TIME == ir_code) {
-
-                                log_state("DCF\n");
-
-                                dcf77_enable();
-
-                        #endif
-
-                        #if (AMBILIGHT_PRESENT == 1)
-
-                            } else if (UC_AMBILIGHT == ir_code) {
-
-                                log_state("AL\n");
-
-                                PIN(USER_AMBILIGHT) |= _BV(BIT(USER_AMBILIGHT));
-
-                        #endif
-
-                        #if (BLUETOOTH_PRESENT == 1)
-
-                            } else if (UC_BLUETOOTH == ir_code) {
-
-                                log_state("BT\n");
-
-                                PIN(USER_BLUETOOTH) |= _BV(BIT(USER_BLUETOOTH));
-
-                        #endif
-
-                        #if (AUXPOWER_PRESENT == 1)
-
-                            } else if (UC_AUXPOWER == ir_code) {
-
-                                log_state("AUX\n");
-
-                                PIN(USER_AUXPOWER) |= _BV(BIT(USER_AUXPOWER));
-
-                        #endif
-
-                            } else {
-
-                                return;
-
-                            }
-
-                }
-
-            }
-
-            g_params->mode = g_stateStack[0];
-
-            if (MS_pulse == g_stateStack[1]) {
-
-                g_params->mode |= 0x80;
-
-            }
-
-            g_eepromSaveDelay = 0;
-            g_checkIfAutoOffDelay = 0;
+            user_command_handle((user_command_t)ir_code);
 
         }
 
