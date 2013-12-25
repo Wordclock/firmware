@@ -780,7 +780,7 @@ void handle_ir_code()
             }
 
             while ((ir_code < UC_COMMAND_COUNT)
-                    && (g_params->irCommandCodes[ir_code] != ir_data.command)) {
+                && (g_params->irCommandCodes[ir_code] != ir_data.command)) {
 
                 ++ir_code;
 
