@@ -20,22 +20,24 @@
 
 /**
  * @file uart.h
- * @brief Header for utilizing the UART hardware
+ * @brief Header allowing for access to the UART hardware
  *
- * This is the header, which needs to be included when access to the UART
- * hardware is needed. For now it is only possible to send data out, which is
- * primarily used for debugging purposes. However if BOOTLOADER_RESET_UART is
- * enabled a pretty basic ISR for receiving data is registered to process the
- * reset in order to start the bootloader.
+ * This is the header provides functionality that allows for access to the UART
+ * hardware. Transmissions in both directions (send and/or receive) are
+ * possible. The whole module works asynchronously, meaning that data is
+ * buffered and the functions do not block the actual processing. Some means to
+ * synchronize are provided, too, in order to make sure no data is being lost.
  *
- * @see BOOTLOADER_RESET_UART
  * @see uart.c
  */
 
-#ifndef _WC_UART_H_
-#define _WC_UART_H_
+#ifndef WC_UART_H
+#define WC_UART_H
 
+#include <avr/io.h>
 #include <avr/pgmspace.h>
+
+#include <stdbool.h>
 
 /**
  * @brief The baud rate used for the serial communication
@@ -53,11 +55,15 @@
 
 extern void uart_init();
 
-extern void uart_putc(char c);
+extern bool uart_putc(char c);
 
-extern void uart_puts(const char* s);
+extern char uart_getc_wait();
 
-extern void uart_puts_p(const char* s);
+extern char uart_getc_nowait(bool* status);
+
+extern void uart_puts(const char*);
+
+extern void uart_puts_p(const char*);
 
 /**
  * @brief Macro used to automatically put a string constant into program memory
@@ -68,6 +74,22 @@ extern void uart_puts_p(const char* s);
  * @see PSTR()
  * @see uart_puts_p()
  */
-#define uart_puts_P(__s) uart_puts_p(PSTR(__s))
+#define uart_puts_P(s) uart_puts_p(PSTR(s))
 
-#endif /* _WC_UART_H_ */
+/**
+ * @brief Waits for the transmit buffer to be flushed completely
+ *
+ * This busy waits until the whole transmission buffer has been output. This
+ * can be used to synchronize the transmission every now and then to make sure
+ * no data is being lost.
+ *
+ * @see ISR(USART_UDRE_vect)
+ */
+static inline void uart_flush()
+{
+
+    while (UCSR0B & _BV(UDRIE0));
+
+}
+
+#endif /* WC_UART_H */

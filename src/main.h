@@ -244,34 +244,6 @@
 #define AUXPOWER_PRESENT 1
 
 /**
- * @brief Controls whether the software should be compiled with support for
- *   resets via UART
- *
- * When set to 1 the microcontroller can be reset via UART by sending a "R"
- * to it. Depending upon the value of BOOTLOADER_RESET_WDT the reset is either
- * accomplished by directly jumping to address 0x00 or by letting the watchdog
- * timeout triggering a reset.
- *
- * @see BOOTLOADER_RESET_WDT
- */
-#define BOOTLOADER_RESET_UART 1
-
-/**
- * @brief Controls how a reset via UART should be accomplished
- *
- * When set to 1 the reset (see BOOTLOADER_RESET_UART) is accomplished by
- * enabling the watchdog timer and letting it timeout, resulting in a reset.
- * Otherwise it will directly jump to address 0, which is is not a classical
- * reset. This is needed when using [chip45boot2][1].
- *
- * [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
- *
- * @see BOOTLOADER_RESET_UART
- * @see ISR(USART_RX_vect)
- */
-#define BOOTLOADER_RESET_WDT 1
-
-/**
  * @brief Controls whether the software should be compiled with support for an
  *   individual config
  *

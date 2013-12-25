@@ -22,33 +22,23 @@
  * @file uart.c
  * @brief Implementation of the header declared in uart.h.
  *
- * This implements the various functions declared in uart.h in order to utilize
- * the UART hardware. Furthermore it implements a rather basic ISR,
- * which will be executed once data has been received. This is used to start
- * the bootloader, either by using the watchdog timer or by jumping to it
- * directly.
+ * This implements the functionality declared in uart.h. As the module works
+ * in an asynchronous fashion there are buffers holding the data, which are
+ * managed as FIFOs.
+ *
+ * It is based upon [1] with some minor adaptations.
+ *
+ * [1]: http://www.rn-wissen.de/index.php/UART_mit_avr-gcc
  *
  * @see uart.h
+ * @see fifo.h
  */
 
-#include <inttypes.h>
 #include <avr/io.h>
-#include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 
 #include "uart.h"
-#include "main.h"
-
-#if (BOOTLOADER_RESET_UART == 1)
-
-    #include <avr/interrupt.h>
-
-    #if (BOOTLOADER_RESET_WDT == 1)
-
-        #include <avr/wdt.h>
-
-    #endif
-
-#endif
+#include "fifo.h"
 
 /**
  * @brief The baud rate used for the serial communication
@@ -65,80 +55,221 @@
 #include <util/setbaud.h>
 
 /**
+ * @brief Defines the size of uart_buffer_in
+ *
+ * @see uart_buffer_in
+ */
+#define UART_BUFFER_SIZE_IN 16
+
+/**
+ * @brief Buffer used for incoming data
+ *
+ * This is the actual buffer used for data coming in via UART. It is managed
+ * as a FIFO (uart_fifo_in).
+ *
+ * @see UART_BUFFER_SIZE_IN
+ * @see uart_buffer_in
+ * @see uart_fifo_in
+ */
+static uint8_t uart_buffer_in[UART_BUFFER_SIZE_IN];
+
+/**
+ * @brief FIFO organizational data of incoming buffer
+ *
+ * @see uart_buffer_in
+ */
+fifo_t uart_fifo_in;
+
+/**
+ * @brief Defines the size of uart_buffer_out
+ *
+ * @see uart_buffer_out
+ */
+#define UART_BUFFER_SIZE_OUT 48
+
+/**
+ * @brief Buffer used for outgoing data
+ *
+ * This is the actual buffer used for data that should be transmitted via UART.
+ * It is managed as a FIFO (uart_fifo_out).
+ *
+ * @see UART_BUFFER_SIZE_OUT
+ * @see uart_buffer_out
+ * @see uart_fifo_out
+ */
+static uint8_t uart_buffer_out[UART_BUFFER_SIZE_OUT];
+
+/**
+ * @brief FIFO organizational data of outgoing buffer
+ *
+ * @see uart_fifo_out
+ */
+fifo_t uart_fifo_out;
+
+/**
  * @brief Initializes the UART hardware
  *
  * This functions initializes the UART hardware. It needs to be called once
- * **before** other functions of this module can be used.
+ * **before** any other functions of this module can be used.
  *
- * For a detailed description of the various registers used here, take a look
- * at [1], p. 190f.
+ * For a detailed description of the various registers used here, refer to [1],
+ * p. 190f.
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  */
 void uart_init()
 {
 
-    /*
-     * Check whether bootloader support is enabled
-     */
-    #if (BOOTLOADER_RESET_UART == 1)
+    uint8_t sreg = SREG;
 
-        /*
-         * Bootloader support is activated, both receiver and transmitter are
-         * needed
-         *
-         * TXEN0: Enable transmitter
-         * RXEN0: Enable receiver
-         * RXCIE0: Enable receiver
-         */
-        UCSR0B |= _BV(TXEN0) | _BV(RXEN0) | _BV(RXCIE0);
+    cli();
 
-    #else
-
-        /*
-         * Bootloader support is disabled, only transmitter is needed
-         *
-         * TXEN0: Enable transmitter
-         */
-        UCSR0B |= _BV(TXEN0);
-
-    #endif
-
-    /*
-     * Set baud rate according to calculated value
-     */
     UBRR0 = UBRR_VALUE;
+    UCSR0B = _BV(RXEN0) | _BV(TXEN0) | _BV(RXCIE0);
+    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
 
-    /*
-     * Check whether speed should be doubled
-     */
+    do {
+
+        (void)UDR0;
+
+    } while (UCSR0A & _BV(RXC0));
+
+    UCSR0A = _BV(RXC0) | _BV(TXC0);
+
     #if (USE_2X)
 
-        /*
-         * U2X: Double the UART transmission speed
-         */
-        UCSR0A = _BV(U2X);
+        UCSR0A |= _BV(U2X);
 
     #endif
 
+    SREG = sreg;
+
+    fifo_init(&uart_fifo_in, uart_buffer_in, UART_BUFFER_SIZE_IN);
+    fifo_init(&uart_fifo_out, uart_buffer_out, UART_BUFFER_SIZE_OUT);
+
+}
+
+/**
+ * @brief Processes incoming data from UART
+ *
+ * This ISR processes all of the data coming in via UART. It simply puts the
+ * received data into the appropriate buffer (uart_fifo_in).
+ *
+ * @see fifo_put()
+ * @see uart_fifo_in
+ */
+ISR(USART_RX_vect)
+{
+
+    fifo_put(&uart_fifo_in, UDR0);
+
+}
+
+/**
+ * @brief Transmits data via UART
+ *
+ * This ISR processes all of the data within the outgoing buffer
+ * (uart_fifo_out) and transmits it via UART. It also checks whether there is
+ * actually something to be transmitted and disables itself if this is not the
+ * case.
+ *
+ * @see uart_fifo_out
+ * @see fifo_get_nowait()
+ */
+ISR(USART_UDRE_vect)
+{
+
+    if (uart_fifo_out.count > 0) {
+
+        bool status;
+        UDR0 = fifo_get_nowait(&uart_fifo_out, &status);
+
+    } else {
+
+        UCSR0B &= ~_BV(UDRIE0);
+
+    }
 }
 
 /**
  * @brief Transmits a single character
  *
- * This functions transmits a single character using the UART hardware. It
- * basically just puts the data into the UDR0 register. However it might be
- * possible that the last transmission is not yet completed, so that the
- * UDRE0 bit within the UCSR0A register needs to be polled (busy waiting).
+ * This function puts the given character into the transmission FIFO. It
+ * returns a boolean value, which indicates whether the character could
+ * actually be put into the FIFO, or whether the buffer is already full, in
+ * which case the return value would be false and the character won't be
+ * transmitted at all.
+ *
+ * This function enables the UART data register empty interrupt to make sure
+ * that the data within the buffer will be processed by the appropriate ISR.
  *
  * @param c Character to transmit
+ *
+ * @return True if character was put into transmission FIFO, false otherwise
+ *
+ * @warning By putting too much data into the transmission buffer without
+ * taking into account the return value, data might be lost.
+ *
+ * @note uart_flush() can be used for synchronization.
+ *
+ * @see uart_fifo_out
+ * @see ISR(USART_UDRE_vect)
  */
-void uart_putc(char c)
+bool uart_putc(char c)
 {
 
-    while (!(UCSR0A & _BV(UDRE0)));
+    bool result = fifo_put(&uart_fifo_out, c);
 
-    UDR0 = c;
+    UCSR0B |= _BV(UDRIE0);
+
+    return result;
+
+}
+
+/**
+ * @brief Retrieves next byte received by the UART hardware - if available
+ *
+ * This retrieves the next byte from the incoming buffer - if there was
+ * actually something received at all. The status parameter is an indicator
+ * for whether or not something senseful has actually been returned.
+ *
+ * @param status Pointer to a boolean variable for holding the success value
+ *
+ * @return The character retrieved from the buffer
+ *
+ * @warning Make sure to check the value of the status variable. The returned
+ * value makes only sense if the status variable is true.
+ *
+ * @see uart_fifo_in
+ * @see fifo_get_nowait
+ */
+char uart_getc_nowait(bool* status)
+{
+
+    return fifo_get_nowait(&uart_fifo_in, status);
+
+}
+
+/**
+ * @brief Retrieves next byte received by the UART hardware or wait for it
+ *
+ * This retrieves the next byte from the incoming buffer and busy waits when
+ * no data is currently available.
+ *
+ * Internally it makes use of fifo_get_wait()
+ *
+ * @return The character retrieved from the buffer
+ *
+ * @warning By using this function carelessly you can effectively stop program
+ * execution. Consider using uart_getc_nowait().
+ *
+ * @see uart_fifo_in
+ * @see fifo_get_wait
+ */
+char uart_getc_wait()
+{
+
+    return fifo_get_wait(&uart_fifo_in);
 
 }
 
@@ -146,8 +277,8 @@ void uart_putc(char c)
  * @brief Transmits a complete string
  *
  * This functions transmits a complete string. The string needs to be null
- * terminated. Internally it makes use of uart_putc(), so each character gets
- * transmitted individually.
+ * terminated. Internally it makes use of uart_putc(), so each character will
+ * be processed individually.
  *
  * @param s Pointer to string to transmit
  *
@@ -169,84 +300,28 @@ void uart_puts(const char* s)
  *
  * This functions transmits a complete string stored in program memory. The
  * string needs to be null terminated. Internally it makes use of
- * pgm_read_byte() to retrieve the data and uart_putc() to transmit it.
+ * pgm_read_byte() to retrieve the data and uart_putc(), so each character will
+ * be processed individually.
  *
  * @param s Pointer to string stored in program memory to transmit
  *
+ * uart_puts_P() can be used to put strings into program space quite easily.
+ *
+ * @see uart_puts_P()
  * @see uart_putc()
  * @see pgm_read_byte()
  */
 void uart_puts_p(const char* s)
 {
 
-    char ch;
+    char c;
 
-    while ((ch = pgm_read_byte(s++)) != '\0') {
+    while ((c = pgm_read_byte(s++)) != '\0') {
 
-        uart_putc(ch);
+        uart_putc(c);
 
     }
 
 }
 
-/**
- * @brief ISR for data received over UART
- *
- * This ISR is only available when BOOTLOADER_RESET_UART is enabled. When a "R"
- * is received, it will reset the microcontroller and start the bootloader.
- *
- * Depending on the setting of BOOTLOADER_RESET_WDT this is either achieved by
- * enabling the watchdog timer and waiting for it to reset the microcontroller,
- * which will then start the bootloader or by directly jumping to it. The
- * latter is needed for [chip45boot2][1].
- *
- * [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
- *
- * @see BOOTLOADER_RESET_UART
- * @see BOOTLOADER_RESET_WDT
- */
-#if (BOOTLOADER_RESET_UART == 1)
-
-    ISR(USART_RX_vect)
-    {
-
-        /*
-         * Check whether received data was R
-         */
-        if (UDR0 == 'R') {
-
-            /*
-             * Check whether reset should be performed using the watchdog timer
-             */
-            #if (BOOTLOADER_RESET_WDT == 1)
-
-                /*
-                 * Enable watchdog timer with shortest possible value
-                 */
-                wdt_enable(WDTO_15MS);
-
-                /*
-                 * Do nothing and wait for the reset performed by the watchdog
-                 * timer
-                 */
-                while (1);
-
-            #else
-
-                /*
-                 * No actual reset needed, jump to chip45boot2 directly
-                 */
-                asm volatile("jmp 0x3800");
-
-            #endif
-
-        }
-
-    }
-
-#endif
-
-/*
- * Undefine BAUD macro to prevent name collisions as it is no longer needed
- */
 #undef BAUD

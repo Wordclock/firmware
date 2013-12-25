@@ -84,9 +84,6 @@
 - Define and implement an UART protocol to control the Wordclock. This could
   then be used for a smartphone application or something similar like that.
 
-- Replace UART module with an interrupt based one, e.g. UART-avr
-  (https://gitorious.org/johnpatcher/uart-avr)
-
 - Add support for motion sensors, so that the Wordclock can be disabled and
   will enable itself once there is someone in the surrounding.
 

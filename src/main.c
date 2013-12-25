@@ -345,33 +345,6 @@ static void handle_brightness()
 
 }
 
-/*
- * Check whether software is compiled with watchdog reset functionality
- */
-#if (BOOTLOADER_RESET_WDT == 1)
-
-    void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
-
-    /**
-     * @brief Makes sure that the watchdog is turned of after a watchdog reset
-     *
-     * In the case that a watchdog reset occurred this makes actually sure that
-     * the watchdog is turned off to prevent the microcontroller from resetting
-     * itself all the time.
-     *
-     * @note This function is not actually called, but included in the "init3"
-     * section automatically.
-     */
-    void wdt_init()
-    {
-
-        MCUSR = 0;
-        wdt_disable();
-
-    }
-
-#endif
-
 /**
  * @brief Entry point to start execution at
  *
