@@ -75,17 +75,17 @@ bool useAutoOffAnimation;
 
 static bool leaveSubState(int8_t indexOfStateToLeave);
 
-static void addState(e_MenuStates mode, const void* param);
+static void addState(menu_state_t mode, const void* param);
 
-static void addSubState(int8_t curState, e_MenuStates mode, const void* param);
+static void addSubState(int8_t curState, menu_state_t mode, const void* param);
 
-static void quitMyself(e_MenuStates state, const void* result);
+static void quitMyself(menu_state_t state, const void* result);
 
 /**
  * @brief Depth of the state stack
  *
  * This defines the depth of the stack, which effectively puts a limit on how
- * many states (e_MenuStates) may be entered on top of each other. However each
+ * many states (menu_state_t) may be entered on top of each other. However each
  * state can be entered only once, so it doesn't make sense to make this value
  * too big. The default value is 10.
  *
@@ -101,7 +101,7 @@ static void quitMyself(e_MenuStates state, const void* result);
  * bottom up, so indexing starts from 0 and will grow towards
  * USER_MAX_STATE_DEPTH - 1.
  *
- * Each mode of e_MenuStates can only be entered once and will therefore be put
+ * Each mode of menu_state_t can only be entered once and will therefore be put
  * onto the stack only once.
  *
  * @see USER_MAX_STATE_DEPTH
@@ -119,12 +119,12 @@ static uint8_t g_stateStack[USER_MAX_STATE_DEPTH];
  * won't be cleared when the mode is left at a later stage, so it may contain
  * values, which are not correct, in these cases.
  *
- * The mapping is done corresponding to the indexing of e_MenuStates itself,
+ * The mapping is done corresponding to the indexing of menu_state_t itself,
  * e.g. the current index for MS_normalMode will be stored at
  * g_currentIdxs[MS_normalMode].
  *
  * @see g_stateStack
- * @see e_MenuStates
+ * @see menu_state_t
  * @see addState()
  */
 static uint8_t g_currentIdxs[MS_COUNT];
@@ -519,7 +519,7 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
  * @see g_currentIdxs
  * @see UserState_enter()
  */
-static void addState(e_MenuStates mode, const void* param)
+static void addState(menu_state_t mode, const void* param)
 {
 
     log_state("addstate\n");
@@ -562,7 +562,7 @@ static void addState(e_MenuStates mode, const void* param)
  * @see leaveSubState()
  * @see addState()
  */
-static void addSubState(int8_t curState, e_MenuStates mode, const void* param)
+static void addSubState(int8_t curState, menu_state_t mode, const void* param)
 {
 
     bool success = true;
@@ -681,7 +681,7 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
  * @see g_currentIdxs
  * @see UserState_SubstateFinished()
  */
-static void quitMyself(e_MenuStates state, const void* result)
+static void quitMyself(menu_state_t state, const void* result)
 {
 
     bool success;
@@ -789,7 +789,7 @@ static void user_command_handle(user_command_t user_command)
 
             } else if (UC_DEMO_MODE == user_command) {
 
-                e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
+                menu_state_t curTop = g_stateStack[g_topOfStack - 1];
 
                 log_state("BS\n");
 
@@ -809,7 +809,7 @@ static void user_command_handle(user_command_t user_command)
 
             } else if (UC_PULSE_MODE == user_command) {
 
-                e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
+                menu_state_t curTop = g_stateStack[g_topOfStack - 1];
 
                 log_state("PLS\n");
 
@@ -1003,7 +1003,7 @@ void handle_ir_code()
  *
  * @see UserState_init()
  * @see g_params
- * @see e_MenuStates::MS_irTrain
+ * @see menu_state_t::MS_irTrain
  * @see USER_AMBILIGHT
  * @see USER_BLUETOOTH
  * @see AUXPOWER_PRESENT

@@ -44,14 +44,14 @@
  *
  * This defines all the different states (and/or menus) the Wordclock can enter
  * or reside in. Besides actually showing the current time
- * (e_MenuStates::MS_normalMode) there are a couple of different states,
+ * (menu_state_t::MS_normalMode) there are a couple of different states,
  * which are needed to enable the possibility for interaction with the user.
  *
  * @warning Some "modes" may not be available due to configuration settings.
  *
  * @see MONO_COLOR_CLOCK
  */
-typedef enum e_MenuStates
+typedef enum
 {
 
     /**
@@ -106,7 +106,7 @@ typedef enum e_MenuStates
      * brightness in a "pulsing" way.
      *
      * Note that this is implemented different internally than the other modes
-     * (e_MenuStates::MS_normalMode and e_MenuStates::MS_hueMode) as it can
+     * (menu_state_t::MS_normalMode and menu_state_t::MS_hueMode) as it can
      * be activated on top of these other modes, which makes it possible to
      * pulse within both of these modes.
      *
@@ -140,8 +140,8 @@ typedef enum e_MenuStates
      * @brief Represents the "enter time" mode
      *
      * This mode is used to enter times. It can actually be reached from two
-     * other modes(e_MenuStates::MS_setSystemTime and
-     * e_MenuStates::MS_setOnOffTime), which both need the possibility to enter
+     * other modes(menu_state_t::MS_setSystemTime and
+     * menu_state_t::MS_setOnOffTime), which both need the possibility to enter
      * times.
      *
      * @see EnterTimeState_enter()
@@ -164,7 +164,7 @@ typedef enum e_MenuStates
      */
     MS_COUNT
 
-} e_MenuStates;
+} menu_state_t;
 
 #ifndef INDIVIDUAL_CONFIG
 
@@ -212,7 +212,7 @@ typedef enum e_MenuStates
  * @brief Enumeration of valid commands that can be executed
  *
  * This implicitly also defines the order in which the codes are expected to be
- * trained during the "training phase", see e_MenuStates::MS_irTrain.
+ * trained during the "training phase", see menu_state_t::MS_irTrain.
  *
  * If the flag for an individual configuration is set (INDIVIDUAL_CONFIG) then
  * this enumeration is built dynamically and it depends upon the current
@@ -282,7 +282,7 @@ typedef enum
      * This is the command for entering the menu, which enables the user to
      * setup the on/off (autoOff) time(s).
      *
-     * @see e_MenuStates::MS_setOnOffTime
+     * @see menu_state_t::MS_setOnOffTime
      */
     UC_SET_ONOFF_TIMES,
 
@@ -307,7 +307,7 @@ typedef enum
      * @brief Display the time in the "normal" mode
      *
      * This represents the command, which will switch to the "normal" display
-     * mode (e_MenuStates::MS_normalMode). The current time will be displayed
+     * mode (menu_state_t::MS_normalMode). The current time will be displayed
      * in a single color. This command can also switch the currently used color
      * profile (assuming MONO_COLOR_CLOCK is not set), which effectively
      * changes the color the current time is displayed in.
@@ -320,15 +320,15 @@ typedef enum
      * This represents the command, which will switch to the "pulse" display
      * mode. The color will "pulse", meaning the brightness will alternatively
      * increase and/or decrease. This is possible in both, the "normal"
-     * (e_MenuStates::MS_normalMode) and in the "hue fading"
-     * (e_MenuStates::MS_hueMode) mode.
+     * (menu_state_t::MS_normalMode) and in the "hue fading"
+     * (menu_state_t::MS_hueMode) mode.
      */
     UC_PULSE_MODE,
 
     /**
      * @brief Enters the "demo" mode
      *
-     * The "demo" mode (e_MenuStates::MS_demoMode) makes it easier to test the
+     * The "demo" mode (menu_state_t::MS_demoMode) makes it easier to test the
      * construction as not working LEDs can be spotted quite easily. There are
      * two different "demo" modes:
      *
@@ -346,7 +346,7 @@ typedef enum
          * @brief Displays the time in the "hue fading" mode
          *
          * This represents the command, which will switch to the "hue fading"
-         * display mode (e_MenuStates::MS_hueMode). The color the current time
+         * display mode (menu_state_t::MS_hueMode). The color the current time
          * will be displayed in will slowly change.
          */
         UC_HUE_MODE,
@@ -459,7 +459,7 @@ typedef enum
  * @brief Default address of the IR remote control
  *
  * This is the default address of the IR remote control, which the Wordclock
- * will react to until otherwise "trained" (e_MenuStates::MS_irTrain). The
+ * will react to until otherwise "trained" (menu_state_t::MS_irTrain). The
  * defined default value corresponds to the remote control "MAGIC LIGHTNING
  * REMOTE CONTROLLER" purchasable on DX.com. This kind of form factor is
  * quite common for LED stripes and there are labels to stick on top of the
@@ -467,7 +467,7 @@ typedef enum
  *
  * [1]: https://www.mikrocontroller.net/articles/Word_Clock_Variante_1#IR
  *
- * @see e_MenuStates::MS_irTrain
+ * @see menu_state_t::MS_irTrain
  */
 #define USER_ADDRESS_DEFAULT 0xFF00
 
@@ -476,7 +476,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "ON" button.
  *
@@ -489,7 +489,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the first button from the left in
  * the fourth row from the top.
@@ -503,7 +503,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the first button from the left in
  * the fifth row from the top.
@@ -517,7 +517,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "STROBE" button.
  *
@@ -530,7 +530,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "FADE" button.
  *
@@ -543,7 +543,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the third button from the left in
  * the fifth row from the top.
@@ -557,7 +557,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the third button from the left in
  * the fourth row from the top.
@@ -571,7 +571,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the second button from the left in
  * the fifth row from the top.
@@ -585,7 +585,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "R" button.
  *
@@ -598,7 +598,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "G" button.
  *
@@ -611,7 +611,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "B" button.
  *
@@ -624,7 +624,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "W" button.
  *
@@ -637,7 +637,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the first button from the left in
  * the third row from the top.
@@ -651,7 +651,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the second button from the left in
  * the third row from the top.
@@ -665,7 +665,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the third button from the left in
  * the third row from the top.
@@ -679,7 +679,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the "FLASH" button.
  *
@@ -692,7 +692,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the first button from the left in
  * the sixth row from the top.
@@ -706,7 +706,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the second button from the left in
  * the sixth row from the top.
@@ -720,7 +720,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the third button from the left in
  * the sixth row from the top.
@@ -734,7 +734,7 @@ typedef enum
  *
  * This is the default command code of the IR remote control for this command,
  * which the Wordclock will react to until otherwise "trained"
- * (e_MenuStates::MS_irTrain).
+ * (menu_state_t::MS_irTrain).
  *
  * The defined default value corresponds to the third button from the left in
  * the sixth row from the top.
@@ -968,13 +968,13 @@ typedef struct UserEepromParams {
     /**
      * @brief Interval between two animation steps in pulse mode
      *
-     * The speed of the pulsing in the pulse mode (e_MenuStates::MS_pulse) can
+     * The speed of the pulsing in the pulse mode (menu_state_t::MS_pulse) can
      * be changed by the user (within the boundaries defined by
      * USER_PULSE_CHANGE_INT_10MS_MIN and USER_PULSE_CHANGE_INT_10MS_MAX).
      *
      * This represents this setting within the EEPROM.
      *
-     * @see e_MenuStates::MS_pulse
+     * @see menu_state_t::MS_pulse
      * @see PulseState_handleIR()
      * @see PulseState_100Hz()
      * @see USER_PULSE_CHANGE_INT_10MS_MIN
@@ -986,13 +986,13 @@ typedef struct UserEepromParams {
      * @brief Interval between two animation steps in hue fading mode
      *
      * The speed of the fading in the hue fading mode
-     * (e_MenuStates::MS_hueMode) can be changed by the user (within the
+     * (menu_state_t::MS_hueMode) can be changed by the user (within the
      * boundaries defined by USER_HUE_CHANGE_INT_100MS_MIN and
      * USER_HUE_CHANGE_INT_100MS_MAX).
      *
      * This represents this setting within the EEPROM.
      *
-     * @see e_MenuStates::MS_hueMode
+     * @see menu_state_t::MS_hueMode
      * @see AutoHueState_handleIR()
      * @see AutoHueState_10Hz()
      * @see USER_HUE_CHANGE_INT_100MS_MIN
@@ -1006,7 +1006,7 @@ typedef struct UserEepromParams {
      * This is the mode the user has selected and should be entered when
      * the Wordclock is started.
      *
-     * @see e_MenuStates
+     * @see menu_state_t
      */
     uint8_t mode;
 
@@ -1035,7 +1035,7 @@ extern bool useAutoOffAnimation;
  * changed by the user (within the boundaries defined in
  * USER_HUE_CHANGE_INT_100MS_MIN and USER_HUE_CHANGE_INT_100MS_MAX).
  *
- * @see e_MenuStates::MS_hueMode
+ * @see menu_state_t::MS_hueMode
  * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS_MIN
  * @see USER_HUE_CHANGE_INT_100MS_MAX
@@ -1051,7 +1051,7 @@ extern bool useAutoOffAnimation;
  * the default value defined in USER_HUE_CHANGE_INT_100MS, however not below
  * the value defined here.
  *
- * @see e_MenuStates::MS_hueMode
+ * @see menu_state_t::MS_hueMode
  * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MAX
@@ -1067,7 +1067,7 @@ extern bool useAutoOffAnimation;
  * the default value defined in USER_HUE_CHANGE_INT_100MS, however not above
  * the value defined here.
  *
- * @see e_MenuStates::MS_hueMode
+ * @see menu_state_t::MS_hueMode
  * @see UserEepromParams::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MIN
@@ -1095,7 +1095,7 @@ extern bool useAutoOffAnimation;
  * by the user (within the boundaries defined in
  * USER_PULSE_CHANGE_INT_10MS_MIN and USER_PULSE_CHANGE_INT_10MS_MAX).
  *
- * @see e_MenuStates::MS_pulse
+ * @see menu_state_t::MS_pulse
  * @see UserEepromParams::pulseUpdateInterval
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
@@ -1110,7 +1110,7 @@ extern bool useAutoOffAnimation;
  * the default value defined in USER_PULSE_CHANGE_INT_10MS, however not below
  * the value defined here.
  *
- * @see e_MenuStates::MS_pulse
+ * @see menu_state_t::MS_pulse
  * @see UserEepromParams::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
@@ -1125,7 +1125,7 @@ extern bool useAutoOffAnimation;
  * the default value defined in USER_PULSE_CHANGE_INT_10MS, however not below
  * the value defined here.
  *
- * @see e_MenuStates::MS_pulse
+ * @see menu_state_t::MS_pulse
  * @see UserEepromParams::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
@@ -1138,7 +1138,7 @@ extern bool useAutoOffAnimation;
  * This defines the delay (in multiples of 100 ms)  between two steps within
  * the demo mode.
  *
- * @see e_MenuStates::MS_demoMode
+ * @see menu_state_t::MS_demoMode
  */
 #define USER_DEMO_CHANGE_INT_100MS 5
 
@@ -1150,7 +1150,7 @@ extern bool useAutoOffAnimation;
  * display a number. This for instance affects the displaying of the currently
  * chosen color preset.
  *
- * @see e_MenuStates::MS_showNumber
+ * @see menu_state_t::MS_showNumber
  * @see display_getNumberDisplayState()
  */
 #define USER_NORMAL_SHOW_NUMBER_DELAY_100MS 10
@@ -1161,7 +1161,7 @@ extern bool useAutoOffAnimation;
  * This defines the interval (in seconds) how long during the startup the
  * Wordclock should accept arbitrary IR commands to enter the training mode.
  *
- * @see e_MenuStates::MS_irTrain
+ * @see menu_state_t::MS_irTrain
  */
 #define USER_STARTUP_WAIT_IR_TRAIN_S 7
 
