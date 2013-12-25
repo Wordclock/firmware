@@ -278,7 +278,7 @@ struct DisplayEepromParams {
 }
 
 /**
- * @brief Defines the item within user.h::e_userCommands for changing the mode
+ * @brief Defines the item within user_command_t for changing the mode
  *
  * This represents the command, which enables the mode to be changed. The
  * implemented modes can be found within e_WcGerModes. The default value is
@@ -289,7 +289,7 @@ struct DisplayEepromParams {
  * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
  * @see _DISP_TOGGLE_DISPMODE_CODE
 */
-#define DISPLAY_SPECIAL_USER_COMMANDS UI_SELECT_DISP_MODE,
+#define DISPLAY_SPECIAL_USER_COMMANDS UC_SELECT_DISP_MODE,
 
 /**
  * @brief Defines the default key code for changing the mode
@@ -325,7 +325,7 @@ struct DisplayEepromParams {
  * @brief IR handler responsible for executing the code when pressing the key
  *
  * This is the actual IR handler, which will generate the appropriate else
- * branch for handling the key press defined in UI_SELECT_DISP_MODE. It
+ * branch for handling the key press defined in UC_SELECT_DISP_MODE. It
  * will make it possible to execute the given code in
  * _DISP_TOGGLE_DISPMODE_CODE when the appropriate key press is detected.
  *
@@ -333,7 +333,7 @@ struct DisplayEepromParams {
  * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
 */
 #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
-    USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
+    USER_CREATE_IR_HANDLER(UC_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
 /**
  * @see display.h

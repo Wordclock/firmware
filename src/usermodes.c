@@ -57,7 +57,7 @@ typedef struct TrainIrState {
      * This is used to keep track of the key and/or command that is currently
      * being expected to be trained within TrainIrState_handleIR().
      *
-     * @see e_userCommands
+     * @see user_command_t
      * @see TrainIrState_handleIR()
      */
     uint8_t curKey;
@@ -154,7 +154,7 @@ static ShowNumberState mode_showNumberState;
          *
          * This is used to keep track of the property (red, green, blue, hue)
          * that is currently being set, so that received "up"
-         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_UP)
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN)
          * commands can be assigned correctly.
          *
          * @see NormalState_handleIR()
@@ -169,7 +169,7 @@ static ShowNumberState mode_showNumberState;
          * user in this mode.
          *
          * @see NormalState_handleIR()
-         * @see UI_CHANGE_HUE
+         * @see UC_CHANGE_HUE
          */
         Hue_t curHue;
 
@@ -618,7 +618,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
             g_params->irCommandCodes[mode_trainIrState.curKey - 1] = i_irCode->command;
 
-            if (mode_trainIrState.curKey == UI_COMMAND_COUNT) {
+            if (mode_trainIrState.curKey == UC_COMMAND_COUNT) {
 
                 log_irTrain("Ir train finished\n");
 
@@ -783,13 +783,13 @@ static void NormalState_enter(const void* param)
  *
  * @see mode_normalState
  * @see NormalState::propertyToSet
- * @see e_userCommands::UI_NORMAL_MODE
- * @see e_userCommands::UI_CHANGE_R
- * @see e_userCommands::UI_CHANGE_G
- * @see e_userCommands::UI_CHANGE_B
- * @see e_userCommands::UI_CHANGE_HUE
- * @see e_userCommands::UI_UP
- * @see e_userCommands::UI_DOWN
+ * @see user_command_t::UC_NORMAL_MODE
+ * @see user_command_t::UC_CHANGE_R
+ * @see user_command_t::UC_CHANGE_G
+ * @see user_command_t::UC_CHANGE_B
+ * @see user_command_t::UC_CHANGE_HUE
+ * @see user_command_t::UC_UP
+ * @see user_command_t::UC_DOWN
  * @see incDecRange()
  */
 static bool NormalState_handleIR(uint8_t cmdCode)
@@ -797,39 +797,39 @@ static bool NormalState_handleIR(uint8_t cmdCode)
 
     #if (MONO_COLOR_CLOCK != 1)
 
-        if (UI_NORMAL_MODE == cmdCode) {
+        if (UC_NORMAL_MODE == cmdCode) {
 
             ++(g_params->curColorProfile);
             g_params->curColorProfile %=  UI_COLOR_PRESET_COUNT;
             NormalState_enter((void*)1);
 
-        } else if (UI_CHANGE_R == cmdCode) {
+        } else if (UC_CHANGE_R == cmdCode) {
 
             log_state("CR\n");
 
             mode_normalState.propertyToSet = NS_propColorR;
 
-        } else if (UI_CHANGE_G == cmdCode) {
+        } else if (UC_CHANGE_G == cmdCode) {
 
             log_state("CG\n");
 
             mode_normalState.propertyToSet = NS_propColorG;
 
-        } else if (UI_CHANGE_B == cmdCode) {
+        } else if (UC_CHANGE_B == cmdCode) {
 
             log_state("CB\n");
 
             mode_normalState.propertyToSet = NS_propColorB;
 
-        } else if (UI_CHANGE_HUE == cmdCode) {
+        } else if (UC_CHANGE_HUE == cmdCode) {
 
             log_state("CH\n");
 
             mode_normalState.propertyToSet = NS_propHue;
 
-        } else if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
+        } else if (UC_UP == cmdCode || UC_DOWN == cmdCode) {
 
-            int8_t dir = (UI_UP == cmdCode) ? 1 : -1;
+            int8_t dir = (UC_UP == cmdCode) ? 1 : -1;
 
             log_state("CC\n");
 
@@ -944,8 +944,8 @@ static bool NormalState_handleIR(uint8_t cmdCode)
      *
      * @param cmdCode The received IR command code
      *
-     * @see e_userCommands::UI_UP
-     * @see e_userCommands::UI_DOWN
+     * @see user_command_t::UC_UP
+     * @see user_command_t::UC_DOWN
      * @see incDecRange()
      * @see UserEepromParams::hueChangeInterval
      * @see USER_HUE_CHANGE_INT_100MS_MIN
@@ -954,9 +954,9 @@ static bool NormalState_handleIR(uint8_t cmdCode)
     static bool AutoHueState_handleIR(uint8_t cmdCode)
     {
 
-        if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
+        if (UC_UP == cmdCode || UC_DOWN == cmdCode) {
 
-            int8_t dir = (UI_UP == cmdCode) ? -1 : 1;
+            int8_t dir = (UC_UP == cmdCode) ? -1 : 1;
 
             log_state("CHS \n");
 
@@ -1062,15 +1062,15 @@ static void DemoState_10Hz()
  *
  * @param cmdCode The received IR command code
  *
- * @see e_userCommands::UI_UP
- * @see e_userCommands::UI_DOWN
+ * @see user_command_t::UC_UP
+ * @see user_command_t::UC_DOWN
  * @see mode_demoState
  * @see DemoState::fastMode
  */
 static bool DemoState_handleIR(uint8_t cmdCode)
 {
 
-    if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
+    if (UC_UP == cmdCode || UC_DOWN == cmdCode) {
 
         log_state("DMF\n");
 
@@ -1159,7 +1159,7 @@ static void EnterTimeState_enter(const void* param)
  * (e_MenuStates::MS_enterTime) mode. As this mode can actually be entered from
  * two modes (e_MenuStates::MS_setSystemTime and
  * e_MenuStates::MS_setOnOffTime), this function checks whether either the
- * e_userCommands::UI_SET_TIME and/or e_userCommands::UI_SET_ONOFF_TIMES
+ * user_command_t::UC_SET_TIME and/or user_command_t::UC_SET_ONOFF_TIMES
  * command was received and switches to the "minute entering" substate if
  * necessary. Once the minutes are entered, too, it releases the brightness
  * lock again, allows the user to leave the mode and quits itself with a
@@ -1174,15 +1174,15 @@ static void EnterTimeState_enter(const void* param)
  *
  * @param cmdCode The received IR command code
  *
- * @see e_userCommands::UI_SET_TIME
- * @see e_userCommands::UI_SET_ONOFF_TIMES
+ * @see user_command_t::UC_SET_TIME
+ * @see user_command_t::UC_SET_ONOFF_TIMES
  * @see mode_enterTimeState
  * @see USER_ENTERTIME_DAY_NIGHT_CHANGE_HOUR
  * @see pwm_lock_brightness_val()
  * @see pwm_release_brightness()
  * @see quitMyself()
- * @see e_userCommands::UI_UP
- * @see e_userCommands::UI_DOWN
+ * @see user_command_t::UC_UP
+ * @see user_command_t::UC_DOWN
  * @see incDecRangeOverflow()
  * @see dispInternalTime()
  * @see DemoState::fastMode
@@ -1192,8 +1192,8 @@ static bool EnterTimeState_handleIr(uint8_t cmdCode)
 
     uint8_t caller = g_stateStack[g_currentIdxs[MS_enterTime] - 1];
 
-    if (((MS_setSystemTime == caller) && (UI_SET_TIME == cmdCode))
-        || ((MS_setOnOffTime == caller) && (UI_SET_ONOFF_TIMES == cmdCode))) {
+    if (((MS_setSystemTime == caller) && (UC_SET_TIME == cmdCode))
+        || ((MS_setOnOffTime == caller) && (UC_SET_ONOFF_TIMES == cmdCode))) {
 
         if (ETS_hour == mode_enterTimeState.curSubState) {
 
@@ -1214,9 +1214,9 @@ static bool EnterTimeState_handleIr(uint8_t cmdCode)
 
         }
 
-    } else if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
+    } else if (UC_UP == cmdCode || UC_DOWN == cmdCode) {
 
-        int8_t dir = (UI_UP == cmdCode) ? 1 : -1;
+        int8_t dir = (UC_UP == cmdCode) ? 1 : -1;
 
         log_state("CHS\n");
 
@@ -1423,9 +1423,9 @@ static void SetOnOffTimeState_substateFinished(e_MenuStates finishedState, const
  * @see mode_setOnOffTimeState
  * @see SetOnOffTimeState
  * @see UserEepromParams::useAutoOffAnimation
- * @see e_userCommands::UI_DOWN
- * @see e_userCommands::UI_UP
- * @see e_userCommands::UI_SET_ONOFF_TIMES
+ * @see user_command_t::UC_DOWN
+ * @see user_command_t::UC_UP
+ * @see user_command_t::UC_SET_ONOFF_TIMES
  * @see quitMyself()
  */
 static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
@@ -1433,7 +1433,7 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
     if (UI_ONOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
 
-        if ((cmdCode == UI_DOWN) || (cmdCode == UI_UP)) {
+        if ((cmdCode == UC_DOWN) || (cmdCode == UC_UP)) {
 
             DisplayState disp;
             g_params->useAutoOffAnimation = !g_params->useAutoOffAnimation;
@@ -1444,7 +1444,7 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 
         }
 
-        if (cmdCode == UI_SET_ONOFF_TIMES) {
+        if (cmdCode == UC_SET_ONOFF_TIMES) {
 
             mode_setOnOffTimeState.prohibitLeave = false;
             g_animPreview = false;
@@ -1466,8 +1466,8 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
  * and/or "down" command was received and updates the user defined update
  * interval appropriately.
  *
- * @see e_userCommands::UI_UP
- * @see e_userCommands::UI_DOWN
+ * @see user_command_t::UC_UP
+ * @see user_command_t::UC_DOWN
  * @see UserEepromParams::pulseUpdateInterval
  * @see incDecRange()
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
@@ -1476,9 +1476,9 @@ static bool SetOnOffTimeState_handleIr(uint8_t cmdCode)
 static bool PulseState_handleIR(uint8_t cmdCode)
 {
 
-    if (UI_UP == cmdCode || UI_DOWN == cmdCode) {
+    if (UC_UP == cmdCode || UC_DOWN == cmdCode) {
 
-        int8_t dir = (UI_UP == cmdCode) ? -1 : 1;
+        int8_t dir = (UC_UP == cmdCode) ? -1 : 1;
 
         log_state("CPS \n");
 

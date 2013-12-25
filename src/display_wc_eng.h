@@ -233,7 +233,7 @@ enum e_displayWordPos
      * @see user.h
      */
     #define DISPLAY_SPECIAL_USER_COMMANDS \
-        UI_SELECT_DISP_MODE,
+        UC_SELECT_DISP_MODE,
 
     /**
      * @see user.h
@@ -254,7 +254,7 @@ enum e_displayWordPos
      * @see user.c
      */
     #define DISPLAY_SPECIAL_USER_COMMANDS_HANDLER \
-        USER_CREATE_IR_HANDLER(UI_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
+        USER_CREATE_IR_HANDLER(UC_SELECT_DISP_MODE, _DISP_TOGGLE_DISPMODE_CODE)
 
 #else
 
@@ -285,7 +285,7 @@ enum e_displayWordPos
     }
 
     /**
-     * @brief Defines the item within user.h::e_userCommands for changing the mode
+     * @brief Defines the item within user_command_t for changing the mode
      *
      * This represents the command, which enables the mode to be changed. The
      * implemented modes can be found within e_WcGerModes. The default value is

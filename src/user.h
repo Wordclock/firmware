@@ -58,10 +58,10 @@ typedef enum e_MenuStates
      * @brief Represents the "training" mode
      *
      * This mode is used to train the IR codes for the various commands defined
-     * in e_userCommands.
+     * in user_command_t.
      *
      * @see TrainIrState_enter()
-     * @see e_userCommands
+     * @see user_command_t
      */
     MS_irTrain = 0,
 
@@ -209,7 +209,7 @@ typedef enum e_MenuStates
 #define USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S 10
 
 /**
- * @brief All the commands that can be received via remote control
+ * @brief Enumeration of valid commands that can be executed
  *
  * This implicitly also defines the order in which the codes are expected to be
  * trained during the "training phase", see e_MenuStates::MS_irTrain.
@@ -218,13 +218,16 @@ typedef enum e_MenuStates
  * this enumeration is built dynamically and it depends upon the current
  * settings which members will be included and which won't.
  *
+ * The commands itself can be executed by passing items from this enumeration
+ * to UserState_HandleUserCommand() as argument.
+ *
  * @note If changing anything here, make sure to also change the default
  * settings within USER_COMMANDCODES_DEFAULTS.
  *
  * @see INDIVIDUAL_CONFIG
- * @see USER_COMMANDCODES_DEFAULTS
+ * @see UserState_HandleUserCommand()
  */
-typedef enum e_userCommands
+typedef enum
 {
 
     /**
@@ -234,17 +237,17 @@ typedef enum e_userCommands
      * display (along with the optional Ambilight). This command actually
      * toggles between "On" and/or "Off".
      */
-    UI_ONOFF = 0,
+    UC_ONOFF = 0,
 
     /**
      * @brief Represents an increase in brightness
      */
-    UI_BRIGHTNESS_UP,
+    UC_BRIGHTNESS_UP,
 
     /**
      * @brief Represents a decrease in brightness
      */
-    UI_BRIGHTNESS_DOWN,
+    UC_BRIGHTNESS_DOWN,
 
     /**
      * @brief Represents an "up" and/or "increase"
@@ -253,7 +256,7 @@ typedef enum e_userCommands
      * clock is in. Generally speaking it is used to change the value within
      * the current menu in an "upward" direction.
      */
-    UI_UP,
+    UC_UP,
 
     /**
      * @brief Represents a "down" and/or "decrease"
@@ -262,7 +265,7 @@ typedef enum e_userCommands
      * clock is in. Generally speaking it is used to change the value within
      * the current menu in an "downward" direction.
      */
-    UI_DOWN,
+    UC_DOWN,
 
     /**
      * @brief Initializes the manual setting of the time
@@ -271,7 +274,7 @@ typedef enum e_userCommands
      * setup the time manually. This is especially useful when no (valid) DCF77
      * signal can be received.
      */
-    UI_SET_TIME,
+    UC_SET_TIME,
 
     /**
      * @brief Initializes the configuration of the on/off time(s)
@@ -281,7 +284,7 @@ typedef enum e_userCommands
      *
      * @see e_MenuStates::MS_setOnOffTime
      */
-    UI_SET_ONOFF_TIMES,
+    UC_SET_ONOFF_TIMES,
 
     #if (INDIVIDUAL_CONFIG == 0 || DCF_PRESENT == 1)
 
@@ -296,7 +299,7 @@ typedef enum e_userCommands
          *
          * @see dcf77_enable()
          */
-        UI_DCF_GET_TIME,
+        UC_DCF_GET_TIME,
 
     #endif
 
@@ -304,12 +307,12 @@ typedef enum e_userCommands
      * @brief Display the time in the "normal" mode
      *
      * This represents the command, which will switch to the "normal" display
-     * mode. The current time will be displayed in a single color. This command
-     * can also switch the currently used color profile (assuming
-     * MONO_COLOR_CLOCK is not set), which effectively changes the color the
-     * current time is displayed in.
+     * mode (e_MenuStates::MS_normalMode). The current time will be displayed
+     * in a single color. This command can also switch the currently used color
+     * profile (assuming MONO_COLOR_CLOCK is not set), which effectively
+     * changes the color the current time is displayed in.
      */
-    UI_NORMAL_MODE,
+    UC_NORMAL_MODE,
 
     /**
      * @brief Display the time in the "pulse" mode
@@ -317,17 +320,17 @@ typedef enum e_userCommands
      * This represents the command, which will switch to the "pulse" display
      * mode. The color will "pulse", meaning the brightness will alternatively
      * increase and/or decrease. This is possible in both, the "normal"
-     * (e_userCommands::UI_NORMAL_MODE) and in the "hue fading"
-     * (e_userCommands::UI_HUE_MODE) mode.
+     * (e_MenuStates::MS_normalMode) and in the "hue fading"
+     * (e_MenuStates::MS_hueMode) mode.
      */
-    UI_PULSE_MODE,
+    UC_PULSE_MODE,
 
     /**
      * @brief Enters the "demo" mode
      *
-     * The "demo" mode makes it easier to test the construction as not
-     * working LEDs can be spotted quite easily. There are two different
-     * "demo" modes:
+     * The "demo" mode (e_MenuStates::MS_demoMode) makes it easier to test the
+     * construction as not working LEDs can be spotted quite easily. There are
+     * two different "demo" modes:
      *
      *  - The "normal" mode will display all the words in sequence, iterating
      *  over them one by one in sequence.
@@ -335,54 +338,50 @@ typedef enum e_userCommands
      *  - The "fast" mode will display all the words simultaneously. This
      *  is actually achieved by multiplexing.
      */
-    UI_DEMO_MODE,
+    UC_DEMO_MODE,
 
     #if (INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
 
         /**
-         * @brief Display the time in the "hue fading" mode
+         * @brief Displays the time in the "hue fading" mode
          *
          * This represents the command, which will switch to the "hue fading"
-         * display mode. The color the current time will be displayed in will
-         * slowly change.
+         * display mode (e_MenuStates::MS_hueMode). The color the current time
+         * will be displayed in will slowly change.
          */
-        UI_HUE_MODE,
+        UC_HUE_MODE,
 
         /**
          * @brief Change the red channel of the color with "up" and/or "down"
          *
          * This enables the red channel to be changed by issuing the "up"
-         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_DOWN)
-         * command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
          */
-        UI_CHANGE_R,
+        UC_CHANGE_R,
 
         /**
          * @brief Change the green channel of the color with "up" and/or "down"
          *
          * This enables the green channel to be changed by issuing the "up"
-         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_DOWN)
-         * command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
          */
-        UI_CHANGE_G,
+        UC_CHANGE_G,
 
         /**
          * @brief Change the blue channel of the color  with "up" and/or "down"
          *
          * This enables the blue channel to be changed by issuing the "up"
-         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_DOWN)
-         * command.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) command.
          */
-        UI_CHANGE_B,
+        UC_CHANGE_B,
 
         /**
          * @brief Change the current hue of the color with "up" and/or "down"
          *
          * This enables the current hue to be changed by issuing the "up"
-         * (e_userCommands::UI_UP) and/or "down" (e_userCommands::UI_DOWN)
-         * commands.
+         * (user_command_t::UC_UP) and/or "down" (user_command_t::UC_DOWN) commands.
          */
-        UI_CHANGE_HUE,
+        UC_CHANGE_HUE,
 
     #endif
 
@@ -394,7 +393,7 @@ typedef enum e_userCommands
      *
      * @see pwm_modifyLdrBrightness2pwmStep()
      */
-    UI_CALIB_BRIGHTNESS,
+    UC_CALIB_BRIGHTNESS,
 
     #if (INDIVIDUAL_CONFIG == 0 || AMBILIGHT_PRESENT == 1)
 
@@ -406,7 +405,7 @@ typedef enum e_userCommands
          *
          * @see USER_AMBILIGHT
          */
-        UI_AMBILIGHT,
+        UC_AMBILIGHT,
 
     #endif
 
@@ -421,7 +420,7 @@ typedef enum e_userCommands
          *
          * @see USER_BLUETOOTH
          */
-        UI_BLUETOOTH,
+        UC_BLUETOOTH,
 
     #endif
 
@@ -436,7 +435,7 @@ typedef enum e_userCommands
          *
          * @see USER_AUXPOWER
          */
-        UI_AUXPOWER,
+        UC_AUXPOWER,
 
     #endif
 
@@ -449,9 +448,12 @@ typedef enum e_userCommands
      */
     DISPLAY_SPECIAL_USER_COMMANDS
 
-    UI_COMMAND_COUNT
+    /**
+     * @brief Number of commands defined within this enumeration
+     */
+    UC_COMMAND_COUNT
 
-} e_userCommands;
+} user_command_t;
 
 /**
  * @brief Default address of the IR remote control
@@ -478,7 +480,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "ON" button.
  *
- * @see e_UserCommands::UI_ONOFF
+ * @see user_command_t::UC_ONOFF
  */
 #define USER_CMD_DEF_ONOFF 0x0007
 
@@ -492,7 +494,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the first button from the left in
  * the fourth row from the top.
  *
- * @see e_UserCommands::UI_BRIGHTNESS_UP
+ * @see user_command_t::UC_BRIGHTNESS_UP
  */
 #define USER_CMD_DEF_BRIGHTNESS_UP 0x0015
 
@@ -506,7 +508,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the first button from the left in
  * the fifth row from the top.
  *
- * @see e_UserCommands::UI_BRIGHTNESS_DOWN
+ * @see user_command_t::UC_BRIGHTNESS_DOWN
  */
 #define USER_CMD_DEF_BRIGHTNESS_DOWN 0x0019
 
@@ -519,7 +521,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "STROBE" button.
  *
- * @see e_UserCommands::UI_UP
+ * @see user_command_t::UC_UP
  */
 #define USER_CMD_DEF_UP 0x0017
 
@@ -532,7 +534,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "FADE" button.
  *
- * @see e_UserCommands::UI_DOWN
+ * @see user_command_t::UC_DOWN
  */
 #define USER_CMD_DEF_DOWN 0x001B
 
@@ -546,7 +548,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the third button from the left in
  * the fifth row from the top.
  *
- * @see e_UserCommands::UI_SET_TIME
+ * @see user_command_t::UC_SET_TIME
  */
 #define USER_CMD_DEF_SET_TIME 0x001A
 
@@ -560,7 +562,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the third button from the left in
  * the fourth row from the top.
  *
- * @see e_UserCommands::UI_SET_ONOFF_TIMES
+ * @see user_command_t::UC_SET_ONOFF_TIMES
  */
 #define USER_CMD_DEF_SET_ONOFF_TIMES 0x0016
 
@@ -574,7 +576,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the second button from the left in
  * the fifth row from the top.
  *
- * @see e_UserCommands::UI_DCF_GET_TIME
+ * @see user_command_t::UC_DCF_GET_TIME
  */
 #define USER_CMD_DEF_DCF_GET_TIME 0x0018
 
@@ -587,7 +589,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "R" button.
  *
- * @see e_UserCommands::UI_NORMAL_MODE
+ * @see user_command_t::UC_NORMAL_MODE
  */
 #define USER_CMD_DEF_NORMAL_MODE 0x0009
 
@@ -600,7 +602,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "G" button.
  *
- * @see e_UserCommands::UI_PULSE_MODE
+ * @see user_command_t::UC_PULSE_MODE
  */
 #define USER_CMD_DEF_PULSE_MODE 0x000A
 
@@ -613,7 +615,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "B" button.
  *
- * @see e_UserCommands::UI_DEMO_MODE
+ * @see user_command_t::UC_DEMO_MODE
  */
 #define USER_CMD_DEF_DEMO_MODE 0x000B
 
@@ -626,7 +628,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "W" button.
  *
- * @see e_UserCommands::UI_HUE_MODE
+ * @see user_command_t::UC_HUE_MODE
  */
 #define USER_CMD_DEF_HUE_MODE 0x0008
 
@@ -640,7 +642,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the first button from the left in
  * the third row from the top.
  *
- * @see e_UserCommands::UI_CHANGE_R
+ * @see user_command_t::UC_CHANGE_R
  */
 #define USER_CMD_DEF_CHANGE_R 0x000D
 
@@ -654,7 +656,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the second button from the left in
  * the third row from the top.
  *
- * @see e_UserCommands::UI_CHANGE_G
+ * @see user_command_t::UC_CHANGE_G
  */
 #define USER_CMD_DEF_CHANGE_G 0x000C
 
@@ -668,7 +670,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the third button from the left in
  * the third row from the top.
  *
- * @see e_UserCommands::UI_CHANGE_B
+ * @see user_command_t::UC_CHANGE_B
  */
 #define USER_CMD_DEF_CHANGE_B 0x000E
 
@@ -681,7 +683,7 @@ typedef enum e_userCommands
  *
  * The defined default value corresponds to the "FLASH" button.
  *
- * @see e_UserCommands::UI_CHANGE_HUE
+ * @see user_command_t::UC_CHANGE_HUE
  */
 #define USER_CMD_DEF_CHANGE_HUE 0x000F
 
@@ -695,7 +697,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the first button from the left in
  * the sixth row from the top.
  *
- * @see e_UserCommands::UI_CALIB_BRIGHTNESS
+ * @see user_command_t::UC_CALIB_BRIGHTNESS
  */
 #define USER_CMD_DEF_CALIB_BRIGHTNESS 0x0011
 
@@ -709,7 +711,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the second button from the left in
  * the sixth row from the top.
  *
- * @see e_UserCommands::UI_AMBILIGHT
+ * @see user_command_t::UC_AMBILIGHT
  */
 #define USER_CMD_DEF_AMBILIGHT 0x0010
 
@@ -723,7 +725,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the third button from the left in
  * the sixth row from the top.
  *
- * @see e_UserCommands::UI_BLUETOOTH
+ * @see user_command_t::UC_BLUETOOTH
  */
 #define USER_CMD_DEF_BLUETOOTH 0x0012
 
@@ -737,7 +739,7 @@ typedef enum e_userCommands
  * The defined default value corresponds to the third button from the left in
  * the sixth row from the top.
  *
- * @see e_UserCommands::UI_AUXPOWER
+ * @see user_command_t::UC_AUXPOWER
  */
 #define USER_CMD_DEF_AUXPOWER 0x0013
 
@@ -896,11 +898,11 @@ typedef struct UserEepromParams {
      * @brief The trained command codes
      *
      * For details about the specific allocation of the indexes refer to
-     * e_userCommands.
+     * user_command_t.
      *
-     * @see e_userCommands
+     * @see user_command_t
      */
-    uint16_t irCommandCodes[UI_COMMAND_COUNT];
+    uint16_t irCommandCodes[UC_COMMAND_COUNT];
 
     /**
      * @brief Struct to hold the RGB values for the color presets
@@ -1337,9 +1339,9 @@ extern void user_init();
  * @brief Default values for the command codes
  *
  * This defines the default values for the command codes defined in
- * e_userCommands.
+ * user_command_t.
  *
- * @see e_userCommands
+ * @see user_command_t
  */
 #define USER_COMMANDCODES_DEFAULTS { \
 \

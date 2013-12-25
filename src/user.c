@@ -713,7 +713,7 @@ static void quitMyself(e_MenuStates state, const void* result)
  * If currently in training state it will dispatch the handling to
  * TrainIrState_handleIR().
  *
- * Otherwise it will iterate over each element within e_userCommands and
+ * Otherwise it will iterate over each element within user_command_t and
  * compare it against the received IR command and execute the action associated
  * with this command and/or enter the appropriate state. For some states it
  * also possible to dispatch the handling of the IR command to a dedicated
@@ -779,14 +779,14 @@ void handle_ir_code()
 
             }
 
-            while ((ir_code < UI_COMMAND_COUNT)
+            while ((ir_code < UC_COMMAND_COUNT)
                     && (g_params->irCommandCodes[ir_code] != ir_data.command)) {
 
                 ++ir_code;
 
             }
 
-            if (UI_ONOFF == ir_code) {
+            if (UC_ONOFF == ir_code) {
 
                 log_state("OF\n");
 
@@ -827,29 +827,29 @@ void handle_ir_code()
 
                 if (!handled) {
 
-                    if (UI_BRIGHTNESS_UP == ir_code) {
+                    if (UC_BRIGHTNESS_UP == ir_code) {
 
                         log_state("B+\n");
                         pwm_step_up_brightness();
 
-                    } else if (UI_BRIGHTNESS_DOWN == ir_code) {
+                    } else if (UC_BRIGHTNESS_DOWN == ir_code) {
 
                         log_state("B-\n");
                         pwm_step_down_brightness();
 
-                    } else if (UI_NORMAL_MODE == ir_code) {
+                    } else if (UC_NORMAL_MODE == ir_code) {
 
                         addSubState(-1, MS_normalMode, (void*)1);
 
-                    } else if (UI_SET_TIME == ir_code) {
+                    } else if (UC_SET_TIME == ir_code) {
 
                         addState(MS_setSystemTime, NULL);
 
-                    } else if (UI_SET_ONOFF_TIMES == ir_code) {
+                    } else if (UC_SET_ONOFF_TIMES == ir_code) {
 
                         addState(MS_setOnOffTime, NULL);
 
-                    } else if (UI_DEMO_MODE == ir_code) {
+                    } else if (UC_DEMO_MODE == ir_code) {
 
                         e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
 
@@ -865,11 +865,11 @@ void handle_ir_code()
 
                         }
 
-                    } else if (UI_CALIB_BRIGHTNESS == ir_code) {
+                    } else if (UC_CALIB_BRIGHTNESS == ir_code) {
 
                         pwm_modifyLdrBrightness2pwmStep();
 
-                    } else if (UI_PULSE_MODE == ir_code) {
+                    } else if (UC_PULSE_MODE == ir_code) {
 
                         e_MenuStates curTop = g_stateStack[g_topOfStack - 1];
 
@@ -897,7 +897,7 @@ void handle_ir_code()
 
                         #if (MONO_COLOR_CLOCK != 1)
 
-                            } else if (UI_HUE_MODE == ir_code) {
+                            } else if (UC_HUE_MODE == ir_code) {
 
                                 log_state("HM");
 
@@ -907,7 +907,7 @@ void handle_ir_code()
 
                         #if (DCF_PRESENT == 1)
 
-                            } else if (UI_DCF_GET_TIME == ir_code) {
+                            } else if (UC_DCF_GET_TIME == ir_code) {
 
                                 log_state("DCF\n");
 
@@ -917,7 +917,7 @@ void handle_ir_code()
 
                         #if (AMBILIGHT_PRESENT == 1)
 
-                            } else if (UI_AMBILIGHT == ir_code) {
+                            } else if (UC_AMBILIGHT == ir_code) {
 
                                 log_state("AL\n");
 
@@ -927,7 +927,7 @@ void handle_ir_code()
 
                         #if (BLUETOOTH_PRESENT == 1)
 
-                            } else if (UI_BLUETOOTH == ir_code) {
+                            } else if (UC_BLUETOOTH == ir_code) {
 
                                 log_state("BT\n");
 
@@ -937,7 +937,7 @@ void handle_ir_code()
 
                         #if (AUXPOWER_PRESENT == 1)
 
-                            } else if (UI_AUXPOWER == ir_code) {
+                            } else if (UC_AUXPOWER == ir_code) {
 
                                 log_state("AUX\n");
 

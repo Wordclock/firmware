@@ -285,7 +285,7 @@
  * @see AMBILIGHT_PRESENT
  * @see BLUETOOTH_PRESENT
  * @see AUXPOWER_PRESENT
- * @see e_userCommands
+ * @see user_command_t
  * @see user.h
  * @see user.c
  */
