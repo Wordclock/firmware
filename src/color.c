@@ -145,7 +145,7 @@ void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
  *
  * @param step Current step of animation, ranges from 0 up to 255
  *
- *  @return The calculated value for the given step
+ * @return The calculated value for the given step
  */
 uint8_t color_pulse_waveform(uint8_t step)
 {
