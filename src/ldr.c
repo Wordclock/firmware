@@ -92,8 +92,9 @@ static volatile uint16_t curr_sum;
  * p. 255f.
  *
  * Besides setting up the hardware this function takes the first measurement
- * and saves it, so that ldr_get_brightness() can return it immediately when
- * called afterwards.
+ * directly and saves it, so that ldr_get_brightness() could return it
+ * immediately. When done initializing the internal state, it activates the
+ * ADC interrupt, which will handle the measurements from then on.
  *
  * If the logging for this module is activated (LOG_LDR == 1), it also will
  * output the value of the first measurement.
@@ -102,6 +103,7 @@ static volatile uint16_t curr_sum;
  *
  * @see curr_sum
  * @see LOG_LDR
+ * @see ISR(ADC_vect)
  */
 void ldr_init()
 {
@@ -119,10 +121,9 @@ void ldr_init()
 
     /*
      * ADEN: Enable ADC
-     * ADIE: ADC interrupt enable
      * ADC prescaler: 32 -> 8 MHz / 32 = 250 kHz
      */
-    ADCSRA = _BV(ADEN) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS0);
+    ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
 
     /*
      * Start first conversion
@@ -167,6 +168,11 @@ void ldr_init()
         uart_putc('\n');
 
     #endif
+
+    /*
+     * ADIE: ADC Enable interrupt
+     */
+    ADCSRA |= _BV(ADIE);
 
 }
 
