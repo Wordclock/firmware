@@ -22,9 +22,9 @@
  * @file color.c
  * @brief Actual implementation of the header declared in color.h
  *
- * This implements the function declared in color.h. To understand the
- * functions a bit of knowledge about the math concerning hues is needed.
- * Details can be found at [1].
+ * This implements the function declared in color.h. To get a better
+ * understanding about the details of this functions knowledge about the math
+ * concerning hues is helpful. Details can be found at [1].
  *
  * [1]: https://en.wikipedia.org/wiki/Hue
  *
@@ -95,14 +95,13 @@ static uint8_t color_hue_waveform(Hue_t x)
 }
 
 /**
- * @brief Generates RGB values for a given hue
+ * @brief Converts a hue into its RGB values
  *
  * The hue is interpreted as Hue_t and ranges from 0 up to COLOR_HUE_MAX. This
  * calculations will always consider the brightness and saturation to be 1.
- * Internally after some basic calculations it makes use of
- * color_hue_waveform().
+ * Internally it makes heavily use of color_hue_waveform().
  *
- * @param h The hue value to transform, range 0 up to COLOR_HUE_MAX
+ * @param h The hue value to convert, ranges from 0 up to COLOR_HUE_MAX
  * @param r Pointer to variable to store the calculated red value
  * @param g Pointer to variable to store the calculated green value
  * @param b Pointer to variable to store the calculated blue value
