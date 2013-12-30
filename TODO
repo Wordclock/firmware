@@ -203,3 +203,21 @@
   display gets disabled for a brief period of time, but reenables itself within
   a second or so. This is also the case with the original firmware, so nothing
   that was introduced by the changes itself.
+
+- Implement "user_command_handle()" and let it handle all of the user commands.
+  Move advanced commands into this module, too, as it makes more sense and
+  the commands itself could probably be also triggered by other sources, e.g.
+  I2C.
+
+- Not all of the functions within the "base" module are actually needed, when
+  certain components are disabled. Surround the not needed functions with some
+  conditionals to compile them in only when needed.
+
+- Synchronize various use cases of uart_puts(). As the uart module now works
+  asynchronously, debug output of various modules are not working correctly,
+  as the messages are too long.
+
+- Rename MONO_COLOR_CLOCK to ENABLE_COLOR_SUPPORT and invert logic.
+
+- The rework of the UART module rendered the reset functionality functionless.
+  Reimplement it in a clean way, along with the UART protocol.
