@@ -145,7 +145,7 @@ static inline uint8_t div10(uint8_t x, uint8_t* remainder)
 static inline char nibbleToHex(uint8_t nibble)
 {
 
-    return nibble + ((nibble < 10) ? '0' : 'A' - 10);
+    return nibble + ((nibble < 10) ? '0' : 'a' - 10);
 
 }
 
