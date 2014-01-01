@@ -164,7 +164,7 @@ static inline char nibbleToHex(uint8_t nibble)
  *
  * @see nibbleToHex()
  */
-static inline void uint16ToHexStr(uint16_t data, char* str)
+static inline void uint16ToHexStr(uint16_t data, char str[5])
 {
 
     str[4] = 0;
