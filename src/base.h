@@ -150,6 +150,29 @@ static inline char nibbleToHex(uint8_t nibble)
 }
 
 /**
+ * @brief Converts uint8_t into hexadecimal representation
+ *
+ * This function will convert the given data into a string containing the
+ * hexadecimal representation of it. The result will be stored at the given
+ * buffer. The string will be NULL terminated, so the buffer should at be
+ * 3 bytes long.
+ *
+ * @param data Data to convert
+ * @param str Pointer to a buffer where string will be stored stored
+ *
+ * @see nibbleToHex()
+ * @see uint16ToHexStr()
+ */
+static inline void uint8ToHexStr(uint8_t data, char str[3])
+{
+
+    str[2] = 0;
+    str[1] = nibbleToHex(data & 0xF);
+    str[0] = nibbleToHex((data >> 4) & 0xF);
+
+}
+
+/**
  * @brief Converts uint16_t into hexadecimal representation
  *
  * This function will convert the given data into a string containing the
@@ -161,6 +184,7 @@ static inline char nibbleToHex(uint8_t nibble)
  * @param str Pointer to a buffer where string will be stored stored
  *
  * @see nibbleToHex()
+ * @see uint8ToHexStr()
  */
 static inline void uint16ToHexStr(uint16_t data, char str[5])
 {
