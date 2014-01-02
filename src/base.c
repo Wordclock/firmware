@@ -30,6 +30,7 @@
  */
 
 #include <inttypes.h>
+#include <string.h>
 
 #include "base.h"
 
@@ -143,6 +144,74 @@ void byteToStr(uint8_t val, char str[4])
         }
 
     }
+
+}
+
+/**
+ * @brief Converts hex representation into byte (uint8_t)
+ *
+ * This converts a string containing the hex representation of a byte into its
+ * binary value (uint8_t). The status parameter indicates whether the operation
+ * could be performed successfully and/or whether some unexpected character
+ * was detected, in which case the status will be false and the return value
+ * has no real meaning.
+ *
+ * @warning Make sure to check the value of the status variable. The returned
+ * value makes only sense if the status variable is true.
+ *
+ * @param str String containing the hex representation of the byte to convert
+ * @param status Pointer to boolean variable indicating success
+ *
+ * @return Converted byte (uint8_t)
+ */
+uint8_t hexStrToUint8(char str[2], bool* status)
+{
+
+    if (strlen(str) != 2) {
+
+        *status = false;
+
+        return 0;
+
+    }
+
+    uint8_t result;
+
+    if (str[0] >= '0' && str[0] <= '9') {
+
+        result = (str[0] - '0') << 4;
+
+    } else if (str[0] >= 'a' && str[0] <= 'f') {
+
+        result = (10 + str[0] - 'a') << 4;
+
+    } else {
+
+        *status = false;
+
+        return 0;
+
+    }
+
+    if (str[1] >= '0' && str[1] <= '9') {
+
+        result |= (str[1] - '0');
+
+    } else if (str[1] >= 'a' && str[1] <= 'f') {
+
+        result |= (10 + str[1] - 'a');
+
+    } else {
+
+        *status = false;
+
+        return 0;
+
+    }
+
+    *status = true;
+
+    return result;
 
 }
 

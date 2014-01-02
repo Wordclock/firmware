@@ -32,6 +32,8 @@
 #ifndef _WC_BASE_H_
 #define _WC_BASE_H_
 
+#include <stdbool.h>
+
 /**
  * @brief Build byte by explicitly setting each bit
  *
@@ -196,6 +198,8 @@ static inline void uint16ToHexStr(uint16_t data, char str[5])
     str[0] = nibbleToHex((data >> 12) & 0xF);
 
 }
+
+extern uint8_t hexStrToUint8(char str[2], bool* status);
 
 extern void byteToStrLessOneHundred(uint8_t val, char str[3]);
 
