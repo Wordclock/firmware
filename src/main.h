@@ -97,8 +97,8 @@
  *
  * The actual version number consists of both the major and the minor version
  * number. It is "calculated" using the macro BUILD_VERSION(). This byte will
- * then actually be used to identy and/or compare different versions among each
- * other.
+ * then actually be used to identity and/or compare different versions among
+ * each other.
  *
  * @see MINOR_VERSION
  * @see MAJOR_VERSION
