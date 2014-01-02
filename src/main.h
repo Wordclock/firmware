@@ -400,7 +400,7 @@
  * This affects wceeprom.c and controls whether debug information about the
  * initialization process of the EEPROM module should be output.
  *
- * @see uart_putHexByte()
+ * @see uint8ToHexStr()
  * @see wcEeprom_init()
  * @see wceeprom.c
  */
@@ -413,7 +413,7 @@
  * writebacks to the EEPROM should be output.
  *
  * @see log_eeprom()
- * @see uart_putHexByte()
+ * @see uint8ToHexStr()
  * @see wcEeprom_writeIfChanged()
  * @see wcEeprom_writeback()
  * @see wceeprom.c

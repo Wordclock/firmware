@@ -130,27 +130,6 @@ const WcEepromData PROGMEM eepromDefaultParams_P = {
  */
 WcEepromData g_epromWorking;
 
-#if (LOG_EEPROM_INIT == 1) || (LOG_EEPROM_WRITEBACK == 1)
-
-    /**
-     * @brief Outputs a byte to UART in hexadecimal notation
-     *
-     * This can be used for debugging purposes. It will convert the byte into
-     * its hexadecimal notation and will output it using the UART module.
-     *
-     * @see uart_putc()
-     * @see nibbleToHex()
-     */
-    static void uart_putHexByte(uint8_t byte)
-    {
-
-        uart_putc(nibbleToHex(byte >> 4));
-        uart_putc(nibbleToHex(byte & 0xf));
-
-    }
-
-#endif
-
 /**
  * @brief Initializes this module by reading data from EEPROM and keeping a
  *   copy of it in memory
@@ -204,7 +183,10 @@ void wcEeprom_init()
 
         for (uint8_t i = 0; i < sizeof(eepromParams); i++) {
 
-            uart_putHexByte(*ptr++);
+            char buf[3];
+
+            uint8ToHexStr(*ptr++, buf);
+            uart_puts(buf);
 
         }
 
@@ -250,7 +232,7 @@ WcEepromData* wcEeprom_getData()
  *
  * @see wcEeprom_writeback()
  * @see LOG_EEPROM_WRITEBACK
- * @see uart_putHexByte()
+ * @see uint8ToHexStr()
  */
 static bool wcEeprom_writeIfChanged(uint8_t index)
 {
@@ -278,9 +260,11 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
             uint16ToHexStr((uint16_t)eepromAdress, buf);
             uart_puts(buf);
             uart_puts_P(", EEPROM: ");
-            uart_putHexByte(eepromByte);
+            uint8ToHexStr(eepromByte, buf);
+            uart_puts(buf);
             uart_puts_P(", SRAM: ");
-            uart_putHexByte(sramByte);
+            uint8ToHexStr(eepromByte, buf);
+            uart_puts(buf);
             uart_putc('\n');
 
         #endif
@@ -333,10 +317,14 @@ void wcEeprom_writeback(const void* start_p, uint8_t len)
 
     #if (LOG_EEPROM_WRITEBACK == 1)
 
+        char buf[3];
+
         uart_puts_P("EEPROM write: Index: ");
-        uart_putHexByte(eepromIndex);
+        uint8ToHexStr(eepromIndex, buf);
+        uart_puts(buf);
         uart_puts_P(", Length: ");
-        uart_putHexByte(len);
+        uint8ToHexStr(len, buf);
+        uart_puts(buf);
         uart_putc('\n');
 
     #endif
