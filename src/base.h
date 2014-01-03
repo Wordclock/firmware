@@ -33,6 +33,7 @@
 #define _WC_BASE_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @brief Build byte by explicitly setting each bit
