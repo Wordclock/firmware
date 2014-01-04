@@ -218,6 +218,3 @@
   as the messages are too long.
 
 - Rename MONO_COLOR_CLOCK to ENABLE_COLOR_SUPPORT and invert logic.
-
-- The rework of the UART module rendered the reset functionality functionless.
-  Reimplement it in a clean way, along with the UART protocol.

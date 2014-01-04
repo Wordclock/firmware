@@ -51,6 +51,12 @@
 #include "base.h"
 #include "wceeprom.h"
 
+#if (ENABLE_UART_PROTOCOL == 1)
+
+    #include "uart_protocol.h"
+
+#endif
+
 /**
  * @brief Interval to (re)read the time from the RTC
  *
@@ -473,6 +479,8 @@ __attribute__((OS_main)) int main()
          */
         handle_ir_code();
 
+        uart_protocol_handle();
+
         /*
          * Check if DCF77 functionality is enabled
          */
@@ -514,3 +522,29 @@ void main_ISR()
     soft_seconds++;
 
 }
+
+#if (ENABLE_UART_PROTOCOL == 1)
+
+    void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
+
+    /**
+    * @brief Turns of the watchdog after a watchdog reset has occurred
+    *
+    * In the case that a watchdog reset occurred this makes sure that the
+    * watchdog is turned off to prevent the microcontroller from resetting
+    * itself in an infinite loop.
+    *
+    * [1]: http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html
+    *
+    * @note This function is not actually called, but included in the "init3"
+    * section automatically.
+    */
+    void wdt_init()
+    {
+
+        MCUSR = 0;
+        wdt_disable();
+
+    }
+
+#endif

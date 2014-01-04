@@ -279,6 +279,39 @@
 #define USER_AUTOSAVE 1
 
 /**
+* @brief Controls how the reset of the microcontroller is performed
+*
+* When set to 1 a reset of the microcontroller is performed by enabling the
+* watchdog timer and letting it timeout, resulting in a reset. Otherwise it
+* will directly jump to the the bootloader, which technically is not a reset,
+* but is asked for by [chip45boot2][1].
+*
+* [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
+*
+* @see _reset()
+*/
+#define BOOTLOADER_RESET_WDT 1
+
+/**
+ * @brief Enable UART protocol
+ *
+ * This defines whether the UART protocol should be built into the resulting
+ * binary. This can be used to control the Wordclock using UART and is more
+ * powerful than a simple IR remote control.
+ *
+ * The protocol is documented in the "UART_PROTOCOL.md" document within the
+ * "doc" directory. The implementation itself is done within its own module
+ * called "uart_protocol".
+ *
+ * @todo Implement this in a way that is actually saves some amount of program
+ * space rather than just disabling the functionality but still compiling it
+ * in.
+ *
+ * @see uart_protocol.h
+ */
+#define ENABLE_UART_PROTOCOL 1
+
+/**
  * @brief Controls whether logging for the main "module" should be enabled
  *
  * This affects main.c and controls whether various functions within this file
@@ -433,6 +466,17 @@
  * @see dcf77.c
  */
 #define LOG_DCF77 0
+
+/**
+ * @brief Controls whether logging for UART protocol module should be enabled
+ *
+ * This affects uart_protocol.c and controls whether various debug information
+ * about the current state and any changes to it should be output in order to
+ * make the debugging easier.
+ *
+ * @see uart_protocol.c
+ */
+#define LOG_UART_PROTOCOL 0
 
 extern void main_ISR();
 
