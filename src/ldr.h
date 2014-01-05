@@ -37,6 +37,8 @@
 #ifndef _WC_LDR_H_
 #define _WC_LDR_H_
 
+#include <avr/io.h>
+
 /**
  * @brief Number of measurements to take into account for calculating the brightness
  *
