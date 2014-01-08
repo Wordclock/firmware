@@ -218,3 +218,18 @@
   as the messages are too long.
 
 - Rename MONO_COLOR_CLOCK to ENABLE_COLOR_SUPPORT and invert logic.
+
+- Once the UART protocol is fully implemented, make the IR remote control
+  optional saving a lot of program space.
+
+- Introduce struct for RGB as in user.h and use it consequently throughout the
+  project. Probably the best place for this would be the color module.
+
+- Implement EEPROM writeback after delay for UART protocol, too.
+
+- Make colorPresets hold an actual value from 0 to 255 rather than the step
+  value
+
+- uart_protocol: Make advanced mode optional during compilation
+
+- datetime: WD and MM is treated differently
