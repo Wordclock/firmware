@@ -730,7 +730,7 @@ void pwm_release_brightness()
 
         for (uint8_t i = 0; i < LDR2PWM_COUNT; i++) {
 
-            byteToStr(g_ldrBrightness2pwmStep[i], buf);
+            uint8ToStr(g_ldrBrightness2pwmStep[i], buf);
             uart_puts(buf);
 
         }

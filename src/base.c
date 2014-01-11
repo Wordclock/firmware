@@ -107,20 +107,21 @@ uint8_t itobcd(uint8_t i)
 }
 
 /**
- * @brief Converts a byte into a string
+ * @brief Converts a single byte (uint8_t) into a string
  *
- * This function converts a given byte to a string. It takes up considerable
- * less program space than the printf() equivalent.
+ * This function converts a given byte (uint8_t) to a string. It takes up
+ * considerable less program space than the printf() equivalent.
  *
- * The buffer needs to be large enough to hold at least 4 bytes. The string
- * will be NULL terminated automatically.
+ * The buffer needs to be large enough to hold at least 4 bytes.
  *
- * @param val The byte to convert into a string
+ * @note The string will be NULL terminated automatically.
+ *
+ * @param val The byte (uint8_t) to convert into a string
  * @param str Pointer to a buffer where the resulting string is stored
  *
- * @see byteToStrLessOneHundred()
+ * @see uint8ToStrLessOneHundred()
  */
-void byteToStr(uint8_t val, char str[4])
+void uint8ToStr(uint8_t val, char str[4])
 {
 
     uint8_t v = val;
@@ -216,21 +217,20 @@ uint8_t hexStrToUint8(char str[2], bool* status)
 }
 
 /**
- * @brief Converts a byte smaller than 100 into a string
+ * @brief Converts a byte (uint8_t) smaller than 100 into a string
  *
- * This function converts a given byte to a string - similar to byteToStr().
- * However this function is restricted to input values from 0 to 99. Therefore
- * the size of the buffer only needs to be 3 bytes big and the implementation
- * is easier.
+ * This function converts a given byte (uint8_t) to a string - quite similar to
+ * uint8ToStr(). However this function is restricted to input values from 0 to
+ * 99. Therefore the size of the buffer only needs to be 3 bytes big.
  *
- * The string will be NULL terminated automatically.
+ * @note The string will be NULL terminated automatically.
  *
- * @param val The byte to convert into a string
+ * @param val The byte (uint8_t) to convert into a string
  * @param str Pointer to a buffer where the resulting string is stored
  *
- * @see byteToStr()
+ * @see uint8ToStr()
  */
-void byteToStrLessOneHundred(uint8_t val, char str[3])
+void uint8ToStrLessOneHundred(uint8_t val, char str[3])
 {
 
     uint8_t v = val;

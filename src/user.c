@@ -459,17 +459,17 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
      * using UART. Other attributes of datetime_t will simply be ignored.
      *
      * @see datetime_t
-     * @see byteToStrLessOneHundred()
+     * @see uint8ToStrLessOneHundred()
      */
     void putTime(const datetime_t* time)
     {
 
         char txt[8];
 
-        byteToStrLessOneHundred(time->hh, txt);
+        uint8ToStrLessOneHundred(time->hh, txt);
         uart_puts(txt);
         uart_putc(':');
-        byteToStrLessOneHundred(time->mm, txt);
+        uint8ToStrLessOneHundred(time->mm, txt);
         uart_puts(txt);
         uart_putc('\n');
 
@@ -635,7 +635,7 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
 
             char buff[5];
 
-            byteToStrLessOneHundred(g_stateStack[i], buff);
+            uint8ToStrLessOneHundred(g_stateStack[i], buff);
             uart_puts(buff);
             uart_putc(':');
             uart_putc(canLeave ? 'y' : 'n');

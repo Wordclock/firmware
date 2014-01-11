@@ -201,9 +201,9 @@ static inline void uint16ToHexStr(uint16_t data, char str[5])
 
 extern uint8_t hexStrToUint8(char str[2], bool* status);
 
-extern void byteToStrLessOneHundred(uint8_t val, char str[3]);
+extern void uint8ToStrLessOneHundred(uint8_t val, char str[3]);
 
-extern void byteToStr(uint8_t val, char str[4]);
+extern void uint8ToStr(uint8_t val, char str[4]);
 
 extern uint8_t bcdtoi(uint8_t bcd);
 

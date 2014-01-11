@@ -162,7 +162,7 @@ void ldr_init()
 
         char buff[5];
 
-        byteToStr(result, buff);
+        uint8ToStr(result, buff);
         uart_puts_P("LDR init: ");
         uart_puts(buff);
         uart_putc('\n');
@@ -245,7 +245,7 @@ ISR(ADC_vect)
 
         char buff[5];
 
-        byteToStr(measurement, buff);
+        uint8ToStr(measurement, buff);
         uart_puts_P("LDR: ");
         uart_puts(buff);
         uart_putc('\n');

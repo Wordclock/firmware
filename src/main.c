@@ -322,7 +322,7 @@ static void handle_brightness()
 
             char buff[5];
 
-            byteToStrLessOneHundred(ldr_brightness, buff);
+            uint8ToStrLessOneHundred(ldr_brightness, buff);
             uart_puts_P("brightness: ");
             uart_puts(buff);
             uart_putc('\n');

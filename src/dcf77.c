@@ -516,23 +516,23 @@ static void dcf77_check_receiver_type()
 
             char log_text[8];
 
-            byteToStr(count_low, log_text);
+            uint8ToStr(count_low, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr(count_high, log_text);
+            uint8ToStr(count_high, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr(count_high+count_low, log_text);
+            uint8ToStr(count_high+count_low, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr(count_pass, log_text);
+            uint8ToStr(count_pass, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
-            byteToStr(count_switch, log_text);
+            uint8ToStr(count_switch, log_text);
             uart_puts(log_text);
             uart_puts("\n");
 
@@ -749,7 +749,7 @@ static bool dcf77_check()
             /*
              * Output the length of the last pause
              */
-            byteToStr(DCF.PauseCounter, log_text);
+            uint8ToStr(DCF.PauseCounter, log_text);
             uart_puts(log_text);
             uart_puts(" ");
 
