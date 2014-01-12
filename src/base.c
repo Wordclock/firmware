@@ -127,7 +127,7 @@ void uint8ToStr(uint8_t val, char str[4])
     uint8_t v = val;
     uint8_t r;
 
-    str[3] = 0;
+    str[3] = '\0';
     str[1] = ' ';
     str[0] = ' ';
     v = div10(v, &r);

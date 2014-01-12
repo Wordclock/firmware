@@ -169,7 +169,7 @@ static inline char nibbleToHex(uint8_t nibble)
 static inline void uint8ToHexStr(uint8_t data, char str[3])
 {
 
-    str[2] = 0;
+    str[2] = '\0';
     str[1] = nibbleToHex(data & 0xF);
     str[0] = nibbleToHex((data >> 4) & 0xF);
 
@@ -192,7 +192,7 @@ static inline void uint8ToHexStr(uint8_t data, char str[3])
 static inline void uint16ToHexStr(uint16_t data, char str[5])
 {
 
-    str[4] = 0;
+    str[4] = '\0';
     str[3] = nibbleToHex(data & 0xF);
     str[2] = nibbleToHex((data >> 4) & 0xF);
     str[1] = nibbleToHex((data >> 8) & 0xF);
