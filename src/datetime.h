@@ -43,49 +43,49 @@ typedef struct
      *
      * Ranges from 0 to 99
      */
-    unsigned char YY;
+    uint8_t YY;
 
     /**
      * @brief Month
      *
      * Ranges from 1 to 12
      */
-    unsigned char MM;
+    uint8_t MM;
 
     /**
      * @brief Day
      *
      * Ranges from 0 to 31
      */
-    unsigned char DD;
+    uint8_t DD;
 
     /**
      * @brief Hour
      *
      * Ranges from 0 to 23
      */
-    unsigned char hh;
+    uint8_t hh;
 
     /**
      * @brief Minute
      *
      * Ranges from 0 to 59
      */
-    unsigned char mm;
+    uint8_t mm;
 
     /**
      * @brief Seconds
      *
      * Ranges from 0 to 59
      */
-    unsigned char ss;
+    uint8_t ss;
 
     /**
      * @brief Weekday
      *
      * Ranges from 0 to 6, 0 represents Sunday
      */
-    unsigned char wd;
+    uint8_t wd;
 
 } datetime_t;
 
