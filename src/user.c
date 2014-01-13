@@ -295,11 +295,11 @@ static bool g_animPreview = false;
  *
  * This counter is used to implement the delay defined in
  * USER_DELAY_BEFORE_SAVE_EEPROM_S. The value itself is reset within
- * handle_ir_code() once a new command has been received. It is increased
+ * handle_user_command() once a new command has been received. It is increased
  * once a second within user_isr1Hz(). Once it reaches its threshold the
  * writeback to the EEPROM is initiated.
  *
- * @see handle_ir_code()
+ * @see handle_user_command()
  * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
  * @see user_isr1Hz()
  * @see wceeprom.h
