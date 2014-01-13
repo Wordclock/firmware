@@ -22,12 +22,15 @@
  * @brief Contains the datetime_t type definition
  *
  * The datetime_t type is used throughout the whole project whenever a date
- * and/or time has to be represented. Every module that needs access to this
- * is supposed to include this header.
+ * and/or time has to be represented. It also provides means to validate a
+ * given datetime.
  */
 
 #ifndef _WC_DATETIME_H_
 #define _WC_DATETIME_H_
+
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @brief Type definition describing a point in time
@@ -88,5 +91,7 @@ typedef struct
     uint8_t ss;
 
 } datetime_t;
+
+extern bool datetime_validate(const datetime_t* datetime);
 
 #endif /* _WC_DATETIME_H_ */
