@@ -244,7 +244,7 @@ bool uart_putc(char c)
  * something has been retrieved.
  *
  * @see uart_fifo_in
- * @see fifo_get_nowait
+ * @see fifo_get_nowait()
  */
 bool uart_getc_nowait(char* character)
 {
