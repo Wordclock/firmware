@@ -1168,7 +1168,7 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
             DateTime_p->mm = DCF.NewTime[0];
             DateTime_p->hh = DCF.NewTime[1];
             DateTime_p->DD = DCF.NewTime[2];
-            DateTime_p->wd = DCF.NewTime[3];
+            DateTime_p->WD = DCF.NewTime[3];
             DateTime_p->MM = DCF.NewTime[4];
             DateTime_p->YY = DCF.NewTime[5];
 

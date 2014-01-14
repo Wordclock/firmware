@@ -220,16 +220,16 @@ bool i2c_rtc_write(const datetime_t* datetime)
         /*
          * Write converted fields of the provided buffer in form of datetime_t
          * into the allocated buffer. Special care is needed in case
-         * of the "wd" field, which contains the day of the week.
+         * of the "WD" field, which contains the day of the week.
          *
-         * The definitions of datetime_t::wd and the one from the RTC itself
+         * The definitions of datetime_t::WD and the one from the RTC itself
          * differ, as datetime_t starts counting at 0, whereas the RTC starts
          * at 1.
          */
         rtcbuf[0] = itobcd(datetime->ss);
         rtcbuf[1] = itobcd(datetime->mm);
         rtcbuf[2] = itobcd(datetime->hh);
-        rtcbuf[3] = itobcd(datetime->wd) + 1;
+        rtcbuf[3] = itobcd(datetime->WD) + 1;
         rtcbuf[4] = itobcd(datetime->DD);
         rtcbuf[5] = itobcd(datetime->MM);
         rtcbuf[6] = itobcd(datetime->YY);
@@ -280,10 +280,10 @@ bool i2c_rtc_read(datetime_t* datetime)
 
             /*
              * Put the response into the buffer after converting the BCD
-             * encoded information. Special care is needed in case of the "wd"
+             * encoded information. Special care is needed in case of the "WD"
              * field, which contains the day of the week.
              *
-             * The definitions of datetime_t::wd and the one from the RTC
+             * The definitions of datetime_t::WD and the one from the RTC
              * itself differ, as datetime_t starts counting at 0, whereas the
              * RTC starts at 1.
              */
@@ -291,7 +291,7 @@ bool i2c_rtc_read(datetime_t* datetime)
             datetime->YY = bcdtoi(rtcbuf[6]);
             datetime->MM = bcdtoi(rtcbuf[5]);
             datetime->DD = bcdtoi(rtcbuf[4]);
-            datetime->wd = bcdtoi(rtcbuf[3]) - 1;
+            datetime->WD = bcdtoi(rtcbuf[3]) - 1;
             datetime->hh = bcdtoi(rtcbuf[2]);
             datetime->mm = bcdtoi(rtcbuf[1]);
             datetime->ss = bcdtoi(rtcbuf[0]);

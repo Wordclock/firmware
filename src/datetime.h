@@ -60,6 +60,13 @@ typedef struct
     uint8_t DD;
 
     /**
+     * @brief Weekday
+     *
+     * Ranges from 0 to 6, 0 represents Sunday
+     */
+    uint8_t WD;
+
+    /**
      * @brief Hour
      *
      * Ranges from 0 to 23
@@ -79,13 +86,6 @@ typedef struct
      * Ranges from 0 to 59
      */
     uint8_t ss;
-
-    /**
-     * @brief Weekday
-     *
-     * Ranges from 0 to 6, 0 represents Sunday
-     */
-    uint8_t wd;
 
 } datetime_t;
 
