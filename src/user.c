@@ -1252,7 +1252,7 @@ void user_isr1Hz()
 
     }
 
-    #if (USER_AUTOSAVE == 1)
+    #if (ENABLE_USER_AUTOSAVE == 1)
 
         if (g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_S) {
 

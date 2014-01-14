@@ -175,12 +175,12 @@ typedef enum
 
 #endif
 
-#ifndef USER_AUTOSAVE
+#ifndef ENABLE_USER_AUTOSAVE
 
     /**
-     * @copydoc main.h::USER_AUTOSAVE
+     * @copydoc main.h::ENABLE_USER_AUTOSAVE
      */
-    #define USER_AUTOSAVE 1
+    #define ENABLE_USER_AUTOSAVE 1
 
 #endif
 
@@ -190,7 +190,7 @@ typedef enum
  * This defines the time interval in seconds which has to elapse without
  * receiving an IR command before changed data is written back to EEPROM.
  *
- * @see USER_AUTOSAVE
+ * @see ENABLE_USER_AUTOSAVE
  * @see user_isr1Hz()
  */
 #define USER_DELAY_BEFORE_SAVE_EEPROM_S 120

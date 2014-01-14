@@ -276,7 +276,7 @@
  * @see user.h
  * @see user_isr1Hz()
  */
-#define USER_AUTOSAVE 1
+#define ENABLE_USER_AUTOSAVE 1
 
 /**
 * @brief Controls how the reset of the microcontroller is performed
