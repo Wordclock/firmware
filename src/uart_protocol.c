@@ -261,7 +261,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
             {'t', UC_SET_TIME},
             {'a', UC_SET_ONOFF_TIMES},
 
-            #if (INDIVIDUAL_CONFIG == 0 || DCF_PRESENT == 1)
+            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
                 {'d', UC_DCF_GET_TIME},
 

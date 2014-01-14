@@ -52,7 +52,7 @@
 
 #include "datetime.h"
 
-#if (DCF_PRESENT == 1)
+#if (ENABLE_DCF_SUPPORT == 1)
 
 extern void dcf77_init();
 
@@ -72,11 +72,11 @@ extern bool dcf77_getDateTime(datetime_t* DateTime_p);
  * When the DCF77 functionality is disabled during the compilation this empty
  * macro makes sure that the ISR won't be included.
  *
- * @see DCF_PRESENT
+ * @see ENABLE_DCF_SUPPORT
  * @see INTERRUPT_100HZ
  */
 #define dcf77_ISR()
 
-#endif /* (DCF_PRESENT == 1) */
+#endif /* (ENABLE_DCF_SUPPORT == 1) */
 
 #endif /* _WC_DCF77_H_ */

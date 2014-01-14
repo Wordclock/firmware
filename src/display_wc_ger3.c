@@ -551,7 +551,7 @@
      * - The "jester mode" was added (see DISPLAY_ADD_JESTER_MODE) and is the
      *  currently chosen mode (see e_WcGerModes).
      *
-     * - The software was compiled with support for DCF77 (see DCF_PRESENT)
+     * - The software was compiled with support for DCF77 (ENABLE_DCF_SUPPORT)
      *  and the current date is April 1st while the software was compiled with
      * DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL set to 1.
      *
@@ -566,7 +566,7 @@
      *
      * @see DISPLAY_ADD_JESTER_MODE
      * @see DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL
-     * @see DCF_PRESENT
+     * @see ENABLE_DCF_SUPPORT
      * @see e_WcGerModes
      */
     static bool isJesterModeActive(const datetime_t* i_dateTime, e_WcGerModes i_langmode)
@@ -574,7 +574,7 @@
 
         #if (DISPLAY_ADD_JESTER_MODE == 1)
 
-            #if ((DCF_PRESENT == 1) && (DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL == 1))
+            #if ((ENABLE_DCF_SUPPORT == 1) && (DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL == 1))
 
                 return (i_langmode == tm_jesterMode) || (i_dateTime->MM == 4  && i_dateTime->DD == 1);
 
@@ -586,7 +586,7 @@
 
         #else
 
-            #if ((DCF_PRESENT == 1) && (DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL == 1))
+            #if ((ENABLE_DCF_SUPPORT == 1) && (DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL == 1))
 
                 return (i_dateTime->MM == 4  && i_dateTime->DD == 1);
 

@@ -157,12 +157,12 @@
  *
  * This will enable the "Jester mode" on April 1st each year as kind of an
  * April fools' joke. It will only work when a DCF receiver is present
- * (DCF_PRESENT) to make sure the current date is set and valid.
+ * (ENABLE_DCF_SUPPORT) to make sure the current date is set and valid.
  *
  * The mode itself is described at DISPLAY_ADD_JESTER_MODE. This option can
  * be turned on and/or off independently of DISPLAY_ADD_JESTER_MODE itself.
  *
- * @see DCF_PRESENT
+ * @see ENABLE_DCF_SUPPORT
  * @see DISPLAY_ADD_JESTER_MODE
  */
 #define DISPLAY_USE_JESTER_MODE_ON_1ST_APRIL 1

@@ -1001,7 +1001,7 @@ extern void user_init();
         code \
         user_setNewTime(0);
 
-#if (INDIVIDUAL_CONFIG == 0 || DCF_PRESENT == 1)
+#if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_DCF_GET_TIME
@@ -1011,7 +1011,7 @@ extern void user_init();
 #else
 
     /**
-     * @brief Dummy in case of an individual config and DCF_PRESENT == 0
+     * @brief Dummy in case of an individual config and ENABLE_DCF_SUPPORT == 0
      */
     #define USER_CMD_DEFAULT_DCF
 

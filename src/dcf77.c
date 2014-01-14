@@ -52,7 +52,7 @@
 /*
  * Only compile the following if DCF77 functionality is enabled
  */
-#if (DCF_PRESENT == 1)
+#if (ENABLE_DCF_SUPPORT == 1)
 
 /*
  * Check whether logging for this module is enabled
@@ -1205,4 +1205,4 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
 
 }
 
-#endif /* (DCF_PRESENT == 1) */
+#endif /* (ENABLE_DCF_SUPPORT == 1) */

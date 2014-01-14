@@ -843,7 +843,7 @@ void handle_user_command(user_command_t user_command)
 
                 #endif
 
-                #if (DCF_PRESENT == 1)
+                #if (ENABLE_DCF_SUPPORT == 1)
 
                     } else if (UC_DCF_GET_TIME == user_command) {
 

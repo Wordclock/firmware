@@ -212,7 +212,7 @@ static void handle_datetime(datetime_t* datetime)
                     /*
                      * Check if software is compiled with DCF77 functionality
                      */
-                    #if (DCF_PRESENT == 1)
+                    #if (ENABLE_DCF_SUPPORT == 1)
 
                         /*
                          * Enable DCF77 reception to indicate that the time
@@ -394,7 +394,7 @@ __attribute__((OS_main)) int main()
     /*
      * Check whether DCF77 is enabled
      */
-    #if (DCF_PRESENT == 1)
+    #if (ENABLE_DCF_SUPPORT == 1)
 
         /*
          * Initialize DCF77 module
@@ -484,7 +484,7 @@ __attribute__((OS_main)) int main()
         /*
          * Check if DCF77 functionality is enabled
          */
-        #if (DCF_PRESENT == 1)
+        #if (ENABLE_DCF_SUPPORT == 1)
 
             /*
              * Check if a valid DCF77 time frame has been received

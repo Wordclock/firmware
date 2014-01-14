@@ -187,7 +187,7 @@
  *
  * @see dcf77.h
  */
-#define DCF_PRESENT 1
+#define ENABLE_DCF_SUPPORT 1
 
 /**
  * @brief Controls whether the software should be compiled with support for
@@ -252,7 +252,7 @@
  * trained. Otherwise all commands are expected to be trained (and/or skipped),
  * resulting in useless and unintuitive assignments.
  *
- * @see DCF_PRESENT
+ * @see ENABLE_DCF_SUPPORT
  * @see MONO_COLOR_CLOCK
  * @see AMBILIGHT_PRESENT
  * @see BLUETOOTH_PRESENT

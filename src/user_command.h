@@ -112,7 +112,7 @@ typedef enum
      */
     UC_SET_ONOFF_TIMES,
 
-    #if (INDIVIDUAL_CONFIG == 0 || DCF_PRESENT == 1)
+    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
         /**
          * @brief Forces to try to get an update with DCF77
