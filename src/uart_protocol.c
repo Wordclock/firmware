@@ -283,7 +283,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
 
             {'c', UC_CALIB_BRIGHTNESS},
 
-            #if (INDIVIDUAL_CONFIG == 0 || AMBILIGHT_PRESENT == 1)
+            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
                 {'A', UC_AMBILIGHT},
 

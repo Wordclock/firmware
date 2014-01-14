@@ -1042,7 +1042,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || AMBILIGHT_PRESENT == 1)
+#if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_AMBILIGHT
@@ -1052,7 +1052,7 @@ extern void user_init();
 #else
 
     /**
-     * @brief Dummy in case of an individual config and AMBILIGHT_PRESENT == 0
+     * @brief Dummy in case of an individual config and ENABLE_AMBILIGHT_SUPPORT == 0
      */
     #define USER_CMD_DEFAULT_AMBILIGHT
 

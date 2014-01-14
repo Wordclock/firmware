@@ -205,7 +205,7 @@
  *
  * @see user.h
  */
-#define AMBILIGHT_PRESENT 1
+#define ENABLE_AMBILIGHT_SUPPORT 1
 
 /**
  * @brief Controls whether the software should be compiled with support for
@@ -254,7 +254,7 @@
  *
  * @see ENABLE_DCF_SUPPORT
  * @see MONO_COLOR_CLOCK
- * @see AMBILIGHT_PRESENT
+ * @see ENABLE_AMBILIGHT_SUPPORT
  * @see BLUETOOTH_PRESENT
  * @see AUXPOWER_PRESENT
  * @see user_command_t

@@ -225,7 +225,7 @@ typedef enum
      */
     UC_CALIB_BRIGHTNESS,
 
-    #if (INDIVIDUAL_CONFIG == 0 || AMBILIGHT_PRESENT == 1)
+    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the Ambilight

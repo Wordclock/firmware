@@ -262,7 +262,7 @@ enum POWER_STATES {
  */
 static uint8_t g_powerState;
 
-#if (AMBILIGHT_PRESENT == 1)
+#if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
     /**
      * @brief Holds the state of the Ambilight before autoOff
@@ -853,7 +853,7 @@ void handle_user_command(user_command_t user_command)
 
                 #endif
 
-                #if (AMBILIGHT_PRESENT == 1)
+                #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
                     } else if (UC_AMBILIGHT == user_command) {
 
@@ -1022,7 +1022,7 @@ void user_init()
 
     addState(MS_irTrain, NULL);
 
-    #if (AMBILIGHT_PRESENT == 1)
+    #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
         DDR(USER_AMBILIGHT) |= _BV(BIT(USER_AMBILIGHT));
 
@@ -1097,7 +1097,7 @@ void user_setNewTime(const datetime_t* i_time)
 
                 if (g_powerState != UPS_MANUAL_OFF) {
 
-                    #if (AMBILIGHT_PRESENT == 1)
+                    #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
                         if (g_powerState == UPS_AUTO_OFF) {
 
@@ -1118,7 +1118,7 @@ void user_setNewTime(const datetime_t* i_time)
 
                     g_powerState = UPS_AUTO_OFF;
 
-                    #if (AMBILIGHT_PRESENT == 1)
+                    #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
                         g_settingOfAmbilightBeforeAutoOff = PORT(USER_AMBILIGHT) & _BV(BIT(USER_AMBILIGHT));
                         PORT(USER_AMBILIGHT) &= ~_BV(BIT(USER_AMBILIGHT));
