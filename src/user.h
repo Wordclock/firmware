@@ -1074,7 +1074,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || AUXPOWER_PRESENT == 1)
+#if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_BLUETOOTH
@@ -1084,7 +1084,7 @@ extern void user_init();
 #else
 
     /**
-     * @brief Dummy in case of an individual config and AUXPOWER_PRESENT == 0
+     * @brief Dummy in case of an individual config and ENABLE_AUXPOWER_SUPPORT == 0
      */
     #define USER_CMD_DEFAULT_AUXPOWER
 

@@ -254,7 +254,7 @@ typedef enum
 
     #endif
 
-    #if (INDIVIDUAL_CONFIG == 0 || AUXPOWER_PRESENT == 1)
+    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the auxiliary GPO

@@ -873,7 +873,7 @@ void handle_user_command(user_command_t user_command)
 
                 #endif
 
-                #if (AUXPOWER_PRESENT == 1)
+                #if (ENABLE_AUXPOWER_SUPPORT == 1)
 
                     } else if (UC_AUXPOWER == user_command) {
 
@@ -1006,7 +1006,7 @@ void handle_ir_code()
  * @see menu_state_t::MS_irTrain
  * @see USER_AMBILIGHT
  * @see USER_BLUETOOTH
- * @see AUXPOWER_PRESENT
+ * @see ENABLE_AUXPOWER_SUPPORT
  */
 void user_init()
 {
@@ -1034,7 +1034,7 @@ void user_init()
 
     #endif
 
-    #if (AUXPOWER_PRESENT == 1)
+    #if (ENABLE_AUXPOWER_SUPPORT == 1)
 
         DDR(USER_AUXPOWER) |= _BV(BIT(USER_AUXPOWER));
 

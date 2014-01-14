@@ -295,7 +295,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
 
             #endif
 
-            #if (INDIVIDUAL_CONFIG == 0 || AUXPOWER_PRESENT == 1)
+            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
                 {'X', UC_AUXPOWER},
 
