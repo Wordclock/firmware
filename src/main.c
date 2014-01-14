@@ -481,7 +481,7 @@ __attribute__((OS_main)) int main()
             /*
              * Check if a valid DCF77 time frame has been received
              */
-            if (dcf77_getDateTime(&datetime)) {
+            if (dcf77_getDateTime(&datetime) && datetime_validate(&datetime)) {
 
                 /*
                  * Set the time according to the just received DCF77 time frame
