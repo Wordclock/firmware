@@ -261,7 +261,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
             {'t', UC_SET_TIME},
             {'a', UC_SET_ONOFF_TIMES},
 
-            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
                 {'d', UC_DCF_GET_TIME},
 
@@ -271,7 +271,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
             {'P', UC_PULSE_MODE},
             {'D', UC_DEMO_MODE},
 
-            #if (INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
 
                 {'H', UC_HUE_MODE},
                 {'r', UC_CHANGE_R},
@@ -283,19 +283,19 @@ static void _ir_user_command(uint8_t argc, char* argv[])
 
             {'c', UC_CALIB_BRIGHTNESS},
 
-            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
                 {'A', UC_AMBILIGHT},
 
             #endif
 
-            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
                 {'B', UC_BLUETOOTH},
 
             #endif
 
-            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
                 {'X', UC_AUXPOWER},
 

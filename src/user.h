@@ -166,12 +166,12 @@ typedef enum
 
 } menu_state_t;
 
-#ifndef INDIVIDUAL_CONFIG
+#ifndef ENABLE_INDIVIDUAL_CONFIG
 
     /**
-     * @copydoc main.h::INDIVIDUAL_CONFIG
+     * @copydoc main.h::ENABLE_INDIVIDUAL_CONFIG
      */
-    #define INDIVIDUAL_CONFIG 1
+    #define ENABLE_INDIVIDUAL_CONFIG 1
 
 #endif
 
@@ -1001,7 +1001,7 @@ extern void user_init();
         code \
         user_setNewTime(0);
 
-#if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_DCF_GET_TIME
@@ -1017,7 +1017,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
 
     /**
      * @see USER_CMD_DEF_HUE_MODE
@@ -1042,7 +1042,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_AMBILIGHT
@@ -1058,7 +1058,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_BLUETOOTH
@@ -1074,7 +1074,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_BLUETOOTH

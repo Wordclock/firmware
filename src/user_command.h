@@ -40,9 +40,10 @@
  * This implicitly also defines the order in which the codes are expected to be
  * trained during the "training phase", see menu_state_t::MS_irTrain.
  *
- * If the flag for an individual configuration is set (INDIVIDUAL_CONFIG) then
- * this enumeration is built dynamically and it depends upon the current
- * settings which members will be included and which won't.
+ * If the flag for an individual configuration is set
+ * (ENABLE_INDIVIDUAL_CONFIG) then this enumeration is built dynamically and it
+ * depends upon the current settings which members will be included and which
+ * won't.
  *
  * The commands itself can be executed by passing items from this enumeration
  * to UserState_HandleUserCommand() as argument.
@@ -50,7 +51,7 @@
  * @note If changing anything here, make sure to also change the default
  * settings within USER_COMMANDCODES_DEFAULTS.
  *
- * @see INDIVIDUAL_CONFIG
+ * @see ENABLE_INDIVIDUAL_CONFIG
  * @see UserState_HandleUserCommand()
  */
 typedef enum
@@ -112,7 +113,7 @@ typedef enum
      */
     UC_SET_ONOFF_TIMES,
 
-    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_DCF_SUPPORT == 1)
 
         /**
          * @brief Forces to try to get an update with DCF77
@@ -166,7 +167,7 @@ typedef enum
      */
     UC_DEMO_MODE,
 
-    #if (INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
 
         /**
          * @brief Displays the time in the "hue fading" mode
@@ -225,7 +226,7 @@ typedef enum
      */
     UC_CALIB_BRIGHTNESS,
 
-    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AMBILIGHT_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the Ambilight
@@ -239,7 +240,7 @@ typedef enum
 
     #endif
 
-    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the Bluetooth GPO
@@ -254,7 +255,7 @@ typedef enum
 
     #endif
 
-    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_AUXPOWER_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the auxiliary GPO

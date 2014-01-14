@@ -167,8 +167,8 @@
  * specific code won't be compiled, which will result in a smaller binary.
  *
  * There are quite a bunch of IR commands that are associated with the RGB
- * functionality. These are expected to be trained, unless INDIVIDUAL_CONFIG
- * is set to 1.
+ * functionality. These are expected to be trained, unless
+ * ENABLE_INDIVIDUAL_CONFIG is set to 1.
  *
  * @note When set to 1 only the red PWM channel will actually work.
  *
@@ -195,9 +195,9 @@
  *
  * This controls whether or not support for Ambilight should be included.
  * Disabling it won't save too much program space, however when
- * INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR command
- * for it. Otherwise you'll have to train an IR command (and/or skip it),
- * although you actually can't use it anyway.
+ * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
+ * command for it. Otherwise you'll have to train an IR command (and/or skip
+ * it), although you actually can't use it anyway.
  *
  * The support itself basically consists only of a simple toggle between "on"
  * and/or "off". The Ambilight is expected to be connected as defined in
@@ -213,9 +213,9 @@
  *
  * This controls whether or not support for Bluetooth should be included.
  * Disabling it won't save too much program space, however when
- * INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR command
- * for it. Otherwise you'll have to train an IR command (and/or skip it),
- * although you actually can't use it anyway.
+ * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
+ * command for it. Otherwise you'll have to train an IR command (and/or skip
+ * it), although you actually can't use it anyway.
  *
  * The support itself basically consists only of a simple toggle between "on"
  * and/or "off". The Bluetooth module is expected to be connected as defined in
@@ -231,9 +231,9 @@
  *
  * This controls whether or not support for auxiliaries should be included.
  * Disabling it won't save too much program space, however when
- * INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR command
- * for it. Otherwise you'll have to train an IR command (and/or skip it),
- * although you actually can't use it anyway.
+ * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
+ * command for it. Otherwise you'll have to train an IR command (and/or skip
+ * it), although you actually can't use it anyway.
  *
  * The support itself basically consists only of a simple toggle between "on"
  * and/or "off". The auxiliaries are expected to be connected as defined in
@@ -261,7 +261,7 @@
  * @see user.h
  * @see user.c
  */
-#define INDIVIDUAL_CONFIG 1
+#define ENABLE_INDIVIDUAL_CONFIG 1
 
 /**
  * @brief Controls whether changes to the setting should be saved automatically
