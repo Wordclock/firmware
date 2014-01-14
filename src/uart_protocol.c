@@ -289,7 +289,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
 
             #endif
 
-            #if (INDIVIDUAL_CONFIG == 0 || BLUETOOTH_PRESENT == 1)
+            #if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
                 {'B', UC_BLUETOOTH},
 

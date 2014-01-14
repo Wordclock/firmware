@@ -239,7 +239,7 @@ typedef enum
 
     #endif
 
-    #if (INDIVIDUAL_CONFIG == 0 || BLUETOOTH_PRESENT == 1)
+    #if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
         /**
          * @brief Controls the "On" and/or "Off" status of the Bluetooth GPO

@@ -223,7 +223,7 @@
  *
  * @see user.h
  */
-#define BLUETOOTH_PRESENT 1
+#define ENABLE_BLUETOOTH_SUPPORT 1
 
 /**
  * @brief Controls whether the software should be compiled with support for
@@ -255,7 +255,7 @@
  * @see ENABLE_DCF_SUPPORT
  * @see MONO_COLOR_CLOCK
  * @see ENABLE_AMBILIGHT_SUPPORT
- * @see BLUETOOTH_PRESENT
+ * @see ENABLE_BLUETOOTH_SUPPORT
  * @see AUXPOWER_PRESENT
  * @see user_command_t
  * @see user.h

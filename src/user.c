@@ -863,7 +863,7 @@ void handle_user_command(user_command_t user_command)
 
                 #endif
 
-                #if (BLUETOOTH_PRESENT == 1)
+                #if (ENABLE_BLUETOOTH_SUPPORT == 1)
 
                     } else if (UC_BLUETOOTH == user_command) {
 
@@ -1028,7 +1028,7 @@ void user_init()
 
     #endif
 
-    #if (BLUETOOTH_PRESENT == 1)
+    #if (ENABLE_BLUETOOTH_SUPPORT == 1)
 
         DDR(USER_BLUETOOTH) |= _BV(BIT(USER_BLUETOOTH));
 

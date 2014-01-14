@@ -1058,7 +1058,7 @@ extern void user_init();
 
 #endif
 
-#if (INDIVIDUAL_CONFIG == 0 || BLUETOOTH_PRESENT == 1)
+#if (INDIVIDUAL_CONFIG == 0 || ENABLE_BLUETOOTH_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_BLUETOOTH
@@ -1068,7 +1068,7 @@ extern void user_init();
 #else
 
     /**
-     * @brief Dummy in case of an individual config and BLUETOOTH_PRESENT == 0
+     * @brief Dummy in case of an individual config and ENABLE_BLUETOOTH_SUPPORT == 0
      */
     #define USER_CMD_DEFAULT_BLUETOOTH
 
