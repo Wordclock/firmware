@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Karol Babioch <karol@babioch.de>
+ * Copyright (C) 2013, 2014 Karol Babioch <karol@babioch.de>
  *
  * This file is part of Wordclock.
  *

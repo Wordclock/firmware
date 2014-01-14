@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013 Karol Babioch <karol@babioch.de>
+ * Copyright (C) 2012, 2013, 2014 Karol Babioch <karol@babioch.de>
  * Copyright (c) 2012 Uwe Höß
  * Copyright (c) 2010 Vlad Tepesch
  *
