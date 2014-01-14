@@ -154,9 +154,9 @@
     /**
      * @brief Defining when an increment by one to the current hour is needed
      *
-     * Some entries of s_minData require the hour to be incremented by one for the
-     * displayed time to be correct. E.g. "8:45" can be displayed as "viertel
-     * vor neun" (quarter to nine).
+     * Some entries of s_minData require the hour to be incremented by one for
+     * the displayed time to be correct. E.g. "8:45" can be displayed as
+     * "viertel vor neun" (quarter to nine).
      *
      * The least significant byte represents the first eight entries within
      * s_minData. As there currently are only 28 entries within s_minData, the
