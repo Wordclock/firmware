@@ -181,8 +181,10 @@ ISR(USART_UDRE_vect)
 
     if (uart_fifo_out.count > 0) {
 
-        bool status;
-        UDR0 = fifo_get_nowait(&uart_fifo_out, &status);
+        uint8_t data;
+
+        fifo_get_nowait(&uart_fifo_out, &data);
+        UDR0 = data;
 
     } else {
 
@@ -229,24 +231,25 @@ bool uart_putc(char c)
 /**
  * @brief Retrieves next byte received by the UART hardware - if available
  *
- * This retrieves the next byte from the incoming buffer - if there was
- * actually something received at all. The status parameter is an indicator
- * for whether or not something senseful has actually been returned.
+ * This retrieves the next byte from the incoming buffer and puts it at the
+ * location pointed to by the parameter `character` and returns true. If there
+ * is nothing left in the buffer to be retrieved, the function simply returns
+ * false.
  *
- * @param status Pointer to a boolean variable for holding the success value
+ * @param character Pointer to location where retrieved character will be put
  *
- * @return The character retrieved from the buffer
+ * @return Indicates whether something was retrieved from the buffer
  *
- * @warning Make sure to check the value of the status variable. The returned
- * value makes only sense if the status variable is true.
+ * @warning Make sure to check the return value, which indicates whether or not
+ * something has been retrieved.
  *
  * @see uart_fifo_in
  * @see fifo_get_nowait
  */
-char uart_getc_nowait(bool* status)
+bool uart_getc_nowait(char* character)
 {
 
-    return fifo_get_nowait(&uart_fifo_in, status);
+    return fifo_get_nowait(&uart_fifo_in, (uint8_t*)character);
 
 }
 

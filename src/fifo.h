@@ -86,6 +86,6 @@ extern bool fifo_put(fifo_t* fifo, uint8_t data);
 
 extern uint8_t fifo_get_wait(fifo_t* fifo);
 
-extern uint8_t fifo_get_nowait(fifo_t* fifo, bool* status);
+extern bool fifo_get_nowait(fifo_t* fifo, uint8_t* data);
 
 #endif /* WC_FIFO_H */

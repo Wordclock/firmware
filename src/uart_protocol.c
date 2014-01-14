@@ -1062,11 +1062,10 @@ void uart_protocol_handle()
 {
 
     char c;
-    bool status;
 
     static uint8_t buffer_index = 0;
 
-    while (c = uart_getc_nowait(&status), status) {
+    while (uart_getc_nowait(&c)) {
 
         if (c == UART_PROTOCOL_INPUT_EOL) {
 

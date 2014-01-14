@@ -59,7 +59,7 @@ extern bool uart_putc(char c);
 
 extern char uart_getc_wait();
 
-extern char uart_getc_nowait(bool* status);
+extern bool uart_getc_nowait(char* character);
 
 extern void uart_puts(const char*);
 

@@ -183,34 +183,32 @@ uint8_t fifo_get_wait(fifo_t* fifo)
 /**
  * @brief Retrieves next byte from the FIFO - if available
  *
- * This retrieves the next byte from the FIFO and returns it - if there is
- * actually something left in the FIFO. The status parameter is an indicator
- * for whether or not something senseful has actually been returned.
+ * This retrieves the next byte from the FIFO and returns it and puts it at the
+ * location pointed to by the parameter `data` and returns true. If there is
+ * nothing left in the FIFO to retrieve the function simply returns false.
  *
  * @param fifo Pointer to the organizational data for the FIFO of type fifo_t
- * @param status Pointer to a boolean variable for holding the success value
+ * @param data Pointer to location where retrieved data will be put
  *
- * @return Actual data retrieved from the FIFO, only senseful if status is true
+ * @return Indicates whether something was retrieved from the FIFO
  *
- * @warning Make sure to check the value of the status variable. The returned
- * value makes only sense if the status variable is true.
+ * @warning Make sure to check the return value, which indicates whether or not
+ * something has been retrieved.
  *
  * @see fifo_get_wait()
  * @see fifo_t
  */
-uint8_t fifo_get_nowait(fifo_t* fifo, bool* status)
+bool fifo_get_nowait(fifo_t* fifo, uint8_t* data)
 {
 
     if (!fifo->count) {
 
-        *status = false;
-
-        return 0;
+        return false;
 
     }
 
-    *status = true;
+    *data = _inline_fifo_get(fifo);
 
-    return _inline_fifo_get(fifo);
+    return true;
 
 }
