@@ -27,8 +27,6 @@
  * is also equipped with SRAM to write to and/or read from. This SRAM is
  * battery backed, so it can be used to store things basically persistent.
  *
- * [1]: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
- *
  * @see i2c_rtc.c
  */
 
