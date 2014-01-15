@@ -50,7 +50,7 @@
  *
  * @see i2c_master_init()
  */
-#define SCL_CLOCK 100000
+#define I2C_MASTER_SCL_CLOCK 100000
 
 /**
  * @brief Loop waiting for the current transmission to be completed
@@ -270,7 +270,7 @@ bool i2c_master_init(i2c_master_error_t* error)
         }
 
         TWSR = 0;
-        TWBR = ((F_CPU / SCL_CLOCK) - 16) / 2;
+        TWBR = ((F_CPU / I2C_MASTER_SCL_CLOCK) - 16) / 2;
 
     } else {
 
