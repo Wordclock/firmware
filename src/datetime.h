@@ -58,7 +58,7 @@ typedef struct
     /**
      * @brief Day
      *
-     * Ranges from 0 to 31
+     * Ranges from 1 to 31
      */
     uint8_t DD;
 
