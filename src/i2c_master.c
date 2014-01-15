@@ -264,9 +264,6 @@ uint8_t i2c_master_init()
 
     } else {
 
-        /*
-         * Module has already been initialized successfully
-         */
         result = 0;
 
     }
