@@ -269,8 +269,8 @@ bool i2c_rtc_read(datetime_t* datetime)
 /**
  * @brief Writes data to the SRAM of the RTC
  *
- * This writes the data pointed to by `void_valuep` into the SRAM of the RTC.
- * The length of the data is specified by `length`. `addr` specifies the
+ * This writes the data pointed to by `data` into the SRAM of the RTC. The
+ * length of the data is specified by `length`. `address` specifies the
  * starting point within the SRAM of the RTC.
  *
  * The return value indicates whether the operation was performed successfully.
@@ -278,27 +278,27 @@ bool i2c_rtc_read(datetime_t* datetime)
  * @note Only addresses ranging from 0x8 to 0x3f are meant to be used for
  * general purposes, as the lower 7 bytes contain the date and time itself.
  *
- * @param addr Starting location in SRAM of the RTC
- * @param void_valuep Pointer to buffer in memory containing the actual data
+ * @param address Starting location in SRAM of the RTC
+ * @param data Pointer to buffer in memory containing the actual data
  * @param length Length of the data to be written
  *
  * @return Result of the operation, true if successful, false otherwise
  *
  * @see i2c_master_write()
  */
-bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
+bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
 {
 
-    unsigned char* valuep = void_valuep;
+    unsigned char* valuep = data;
     bool rtc = false;
 
     if (rtc_initialized) {
 
-        if (length && (addr + length <= 64)) {
+        if (length && (address + length <= 64)) {
 
             i2c_master_start_wait(DEVRTC + TW_WRITE);
 
-            if (i2c_master_write(addr, &i2c_rtc_status)) {
+            if (i2c_master_write(address, &i2c_rtc_status)) {
 
                 rtc = true;
 
@@ -330,8 +330,8 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * @brief Reads data from the SRAM of the RTC
  *
  * This reads data from the SRAM location of the RTC specified by `addr` and
- * puts it into the buffer pointed to by `void_valuep`. The length of the data
- * to be read is by the argument `length`.
+ * puts it into the buffer pointed to by `data`. The length of the data to be
+ * read is by the argument `length`.
  *
  * The return value indicates whether the operation was performed successfully.
  *
@@ -341,8 +341,8 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * @note Only addresses ranging from 0x8 to 0x3f are meant to be used for
  * general purposes, as the lower 7 bytes contain the date and time itself.
  *
- * @param addr Starting location in SRAM of the RTC
- * @param void_valuep Pointer to buffer in memory for holding the data
+ * @param address Starting location in SRAM of the RTC
+ * @param data Pointer to buffer in memory for holding the data
  * @param length Length of the data to be read
  *
  * @return Result of the operation, true if successful, false otherwise
@@ -350,19 +350,19 @@ bool i2c_rtc_sram_write(uint8_t addr, void* void_valuep, uint8_t length)
  * @see i2c_master_read_ack()
  * @see i2c_master_read_nak()
  */
-bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
+bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
 {
 
-    unsigned char* valuep = void_valuep;
+    unsigned char* valuep = data;
     bool rtc = false;
 
     if (rtc_initialized) {
 
-        if (length && (addr + length <= 64)) {
+        if (length && (address + length <= 64)) {
 
             i2c_master_start_wait(DEVRTC + TW_WRITE);
 
-            if (i2c_master_write(addr, &i2c_rtc_status)) {
+            if (i2c_master_write(address, &i2c_rtc_status)) {
 
                 if (i2c_master_rep_start(DEVRTC + TW_READ, &i2c_rtc_status)) {
 
@@ -400,8 +400,8 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  * If the initialization could be performed successfully, this function will
  * return true.
  *
- * @param errorcode_p Pointer to memory for holding possible error codes
- * @param status_p Pointer to memory for holding status codes
+ * @param error Pointer to memory for holding possible error codes
+ * @param status Pointer to memory for holding status codes
  *
  * @return Result of the operation, true if successful, false otherwise
  *
@@ -409,16 +409,16 @@ bool i2c_rtc_sram_read(uint8_t addr, void* void_valuep, uint8_t length)
  * @see rtc_initialized
  * @see i2c_rtc_sram_write()
  */
-bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
+bool i2c_rtc_init(uint8_t* error, uint8_t* status)
 {
 
     bool rtc = false;
     uint8_t seconds;
 
-    *status_p = 0xff;
-    *errorcode_p = i2c_master_init();
+    *status = 0xff;
+    *error = i2c_master_init();
 
-    if (*errorcode_p == 0) {
+    if (*error == 0) {
 
         rtc_initialized = true;
         uint8_t ctrlreg = CTRL_REG;
@@ -440,8 +440,8 @@ bool i2c_rtc_init(uint8_t* errorcode_p, uint8_t* status_p)
 
         } else {
 
-            *errorcode_p = I2C_ERROR_SLAVE_NOT_FOUND;
-            *status_p = i2c_rtc_status;
+            *error = I2C_ERROR_SLAVE_NOT_FOUND;
+            *status = i2c_rtc_status;
 
         }
 
