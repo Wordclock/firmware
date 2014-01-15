@@ -229,7 +229,7 @@ bool i2c_rtc_write(const datetime_t* datetime)
         rtcbuf[0] = itobcd(datetime->ss);
         rtcbuf[1] = itobcd(datetime->mm);
         rtcbuf[2] = itobcd(datetime->hh);
-        rtcbuf[3] = itobcd(datetime->WD) + 1;
+        rtcbuf[3] = itobcd(datetime->WD);
         rtcbuf[4] = itobcd(datetime->DD);
         rtcbuf[5] = itobcd(datetime->MM);
         rtcbuf[6] = itobcd(datetime->YY);
@@ -291,7 +291,7 @@ bool i2c_rtc_read(datetime_t* datetime)
             datetime->YY = bcdtoi(rtcbuf[6]);
             datetime->MM = bcdtoi(rtcbuf[5]);
             datetime->DD = bcdtoi(rtcbuf[4]);
-            datetime->WD = bcdtoi(rtcbuf[3]) - 1;
+            datetime->WD = bcdtoi(rtcbuf[3]);
             datetime->hh = bcdtoi(rtcbuf[2]);
             datetime->mm = bcdtoi(rtcbuf[1]);
             datetime->ss = bcdtoi(rtcbuf[0]);

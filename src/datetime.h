@@ -65,7 +65,7 @@ typedef struct
     /**
      * @brief Weekday
      *
-     * Ranges from 0 to 6, 0 represents Sunday
+     * Ranges from 1 to 7, 1 represents Monday
      */
     uint8_t WD;
 

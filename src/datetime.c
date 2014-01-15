@@ -128,7 +128,7 @@ bool datetime_validate(const datetime_t* datetime) {
 
     }
 
-    if (datetime->WD > 6) {
+    if (datetime->WD < 1 || datetime->WD > 7) {
 
         return false;
 
