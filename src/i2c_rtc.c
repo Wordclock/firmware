@@ -289,7 +289,7 @@ bool i2c_rtc_read(datetime_t* datetime)
 bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
 {
 
-    unsigned char* valuep = data;
+    uint8_t* value = data;
     bool rtc = false;
 
     if (rtc_initialized) {
@@ -304,7 +304,7 @@ bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
 
                 while (length--) {
 
-                    if (!i2c_master_write(*valuep++, &i2c_rtc_status)) {
+                    if (!i2c_master_write(*value++, &i2c_rtc_status)) {
 
                         rtc = false;
 
@@ -353,7 +353,7 @@ bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
 bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
 {
 
-    unsigned char* valuep = data;
+    uint8_t* value = data;
     bool rtc = false;
 
     if (rtc_initialized) {
@@ -370,11 +370,11 @@ bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
 
                     while (--length) {
 
-                        *valuep++ = i2c_master_read_ack();
+                        *value++ = i2c_master_read_ack();
 
                     }
 
-                    *valuep++ = i2c_master_read_nak();
+                    *value++ = i2c_master_read_nak();
 
                 }
 
