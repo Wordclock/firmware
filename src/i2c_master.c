@@ -137,14 +137,14 @@
 /**
  * @brief Resets the I2C bus
  *
- * This tries to reset the I2C bus and returns 0 if everything went fine.
- * Otherwise either `I2C_ERROR_SCL_LOW` and/or `I2C_ERROR_SDA_LOW` will be
- * returned.
+ * This tries to reset the I2C bus and returns true if everything went fine.
+ * Otherwise false will be returned and the error code will be put at the
+ * location pointed to by `error`.
  *
  * It checks both the SDA and the SCL line for its level. If the SCL line is
- * low, we can do nothing about it and return `I2C_ERROR_SCL_LOW`. If the SDA
- * line is low on the other hand, we try to "clock through the problem", which
- * is described in detail at [1].
+ * low, we can do nothing about it and the error code will be
+ * `I2C_MASTER_ERROR_SCL_LOW`. If the SDA line is low on the other hand, we
+ * try to "clock through the problem", which is described in detail at [1].
  *
  * This includes the following steps:
  *
@@ -153,21 +153,22 @@
  * 3) Examine SDA: If SDA = 0, repeat step 2, otherwise continue with 4
  * 4) Generate a STOP condition
  *
- * If this procedure does not release the SDA line, `I2C_ERROR_SDA_LOW` will
- * be returned.
+ * If this procedure does not release the SDA line, the error code will be
+ * `I2C_MASTER_ERROR_SDA_LOW`.
  *
  * [1]: http://www.analog.com/static/imported-files/application_notes/54305147357414AN686_0.pdf
  *
- * @return 0 if successful, else `I2C_ERROR_SCL_LOW` or `I2C_ERROR_SDA_LOW`
+ * @param error Pointer to variable holding the error code
+ *
+ * @return True if successful, false otherwise
  *
  * @see I2C_ERROR_SCL_LOW
  * @see I2C_ERROR_SDA_LOW
+ * @see i2c_master_error_t
  * @see i2c_master_init()
  */
-static uint8_t i2c_reset()
+static bool i2c_reset(i2c_master_error_t* error)
 {
-
-    uint8_t result = 0;
 
     #if (HAS_RESET == 1)
 
@@ -180,53 +181,55 @@ static uint8_t i2c_reset()
 
         if (SCL_IS_LOW) {
 
-            result = I2C_ERROR_SCL_LOW;
+            *error = I2C_MASTER_ERROR_SCL_LOW;
 
-        } else {
+            return false;
 
-            if (SDA_IS_LOW) {
+        }
+
+        if (SDA_IS_LOW) {
+
+            SCL_LOW;
+
+            _delay_ms(1);
+
+            for (uint8_t i = 0; i < 9; i++) {
+
+                SCL_HIGH;
+
+                _delay_ms(1);
+
+                if (SDA_IS_HIGH) {
+
+                    break;
+
+                }
 
                 SCL_LOW;
 
                 _delay_ms(1);
 
-                for (uint8_t i = 0; i < 9; i++) {
-
-                    SCL_HIGH;
-
-                    _delay_ms(1);
-
-                    if (SDA_IS_HIGH) {
-
-                        break;
-
-                    }
-
-                    SCL_LOW;
-
-                    _delay_ms(1);
-
-                }
-
-                DDR(SCL)  &= ~_BV(BIT(SCL));
-
             }
 
-            SCL_HIGH;
+            DDR(SCL)  &= ~_BV(BIT(SCL));
 
-            _delay_ms(1);
+        }
 
-            if (SDA_IS_LOW) {
+        SCL_HIGH;
 
-                result = I2C_ERROR_SDA_LOW;
+        _delay_ms(1);
 
-            }
+        if (SDA_IS_LOW) {
+
+            *error = I2C_MASTER_ERROR_SDA_LOW;
+
+            return false;
 
         }
 
     #endif
 
-    return result;
+    return true;
 
 }
 
@@ -237,23 +240,30 @@ static uint8_t i2c_reset()
  * This has to be called **once** before any other function of this module can
  * be used.
  *
- * @return 0 if successful, else anything returned by `i2c_reset()`
+ * The return value indicates whether the operation could be performed
+ * successfully. If there was an error false will be returned and the error
+ * code will be put at the location pointed to by `error`.
+ *
+ * @param error Pointer to variable holding the error code
+ *
+ * @return True if successful, false otherwise
  *
  * @see I2C_ERROR_SCL_LOW
  * @see I2C_ERROR_SDA_LOW
+ * @see i2c_master_error_t
  * @see i2c_reset()
  */
-uint8_t i2c_master_init()
+bool i2c_master_init(i2c_master_error_t* error)
 {
 
     static bool initialized;
-    uint8_t result;
+    bool result;
 
     if (!initialized) {
 
-        result = i2c_reset();
+        result = i2c_reset(error);
 
-        if (result == 0) {
+        if (result) {
 
             initialized = true;
 
@@ -264,7 +274,7 @@ uint8_t i2c_master_init()
 
     } else {
 
-        result = 0;
+        result = true;
 
     }
 

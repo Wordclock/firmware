@@ -36,6 +36,7 @@
 #include <stdbool.h>
 
 #include "datetime.h"
+#include "i2c_master.h"
 
 extern uint8_t i2c_rtc_get_status();
 
@@ -47,6 +48,6 @@ extern bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length);
 
 extern bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length);
 
-extern bool i2c_rtc_init(uint8_t* error, uint8_t* status);
+extern bool i2c_rtc_init(i2c_master_error_t* error);
 
 #endif /* _WC_I2C_RTC_H_ */

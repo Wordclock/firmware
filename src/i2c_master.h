@@ -41,43 +41,50 @@
 #include <stdbool.h>
 
 /**
- * @brief Indicates that the SCL line is low
- *
- * During initialization the line is checked for its level. When it is detected
- * that SCL is low, this error code will be returned. It usually is an
- * indicator for something being badly wrong, e.g. bad wiring, as the SCL line
- * should totally be in control by the master.
+ * @brief Defines the type of error codes during the initialization of the I2C
  *
  * @see i2c_master_init()
  */
-#define I2C_ERROR_SCL_LOW 1
+typedef enum {
 
-/**
- * @brief Indicates that the SDA line is low
- *
- * During initialization the line is checked for its level. Normally it should
- * be high. However, it might be the case that a device is "stuck", in which
- * case this error code will be returned.
- *
- * This condition itself is described in detail at [1].
- *
- * [1]: http://www.nxp.com/documents/user_manual/UM10204.pdf
- *
- * @see i2c_master_init()
- */
-#define I2C_ERROR_SDA_LOW 2
+    /**
+     * @brief Indicates that the SCL line is low
+     *
+     * During initialization the line is checked for its level. When it is
+     * detected that SCL is low, this error code will be returned. It usually
+     * is an indicator for something being badly wrong, e.g. bad wiring, as the
+     * SCL line should totally be in control by the master.
+     *
+     * @see i2c_master_init()
+     */
+    I2C_MASTER_ERROR_SCL_LOW,
 
-/**
- * @brief Indicates that the given slave couldn't be found
- *
- * In a case where everything seems fine with the I2C bus itself, but the slave
- * won't answer to the requests, this error code will be returned.
- *
- * @see i2c_master_init()
- */
-#define I2C_ERROR_SLAVE_NOT_FOUND 3
+    /**
+     * @brief Indicates that the SDA line is low
+     *
+     * During initialization the line is checked for its level. Normally it
+     * should be high. However, it might be the case that a device is "stuck",
+     * in which case this error code will be returned.
+     *
+     * This condition itself is described in detail at [1].
+     *
+     * [1]: http://www.nxp.com/documents/user_manual/UM10204.pdf
+     *
+     * @see i2c_master_init()
+     */
+    I2C_MASTER_ERROR_SDA_LOW,
 
-extern uint8_t i2c_master_init();
+    /**
+     * @brief Indicates that the addressed slave could not be found
+     *
+     * When the addressed slave is not responding to the requests addressed,
+     * this error code will be returned.
+     */
+    I2C_MASTER_ERROR_SLAVE_NOT_FOUND,
+
+} i2c_master_error_t;
+
+extern bool i2c_master_init(i2c_master_error_t* error);
 
 extern bool i2c_master_start(uint8_t address, uint8_t* status);
 

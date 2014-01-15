@@ -305,10 +305,9 @@ __attribute__((OS_main)) int main()
 
     {
 
-        uint8_t i2c_rtc_errorcode;
-        uint8_t i2c_rtc_status;
+        i2c_master_error_t i2c_rtc_error;
 
-        if (!i2c_rtc_init(&i2c_rtc_errorcode, &i2c_rtc_status)) {
+        if (!i2c_rtc_init(&i2c_rtc_error)) {
 
             log_main("RTC init failed\n");
 

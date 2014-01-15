@@ -41,7 +41,6 @@
 #include <util/twi.h>
 
 #include "base.h"
-#include "i2c_master.h"
 #include "i2c_rtc.h"
 
 /**
@@ -398,34 +397,32 @@ bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
  * 0) is set to 0, so the **clock** of the RTC is **not** being halted.
  *
  * If the initialization could be performed successfully, this function will
- * return true.
+ * return true. Otherwise false will be returned and the appropriate error
+ * code is written to the location pointed to by `error`.
  *
- * @param error Pointer to memory for holding possible error codes
- * @param status Pointer to memory for holding status codes
+ * @param error Pointer to memory holding possible error code
  *
  * @return Result of the operation, true if successful, false otherwise
  *
  * @see CTRL_REG
  * @see rtc_initialized
  * @see i2c_rtc_sram_write()
+ * @see i2c_master_error_t
+ * @see i2c_rtc_status
  */
-bool i2c_rtc_init(uint8_t* error, uint8_t* status)
+bool i2c_rtc_init(i2c_master_error_t* error)
 {
 
-    bool rtc = false;
-    uint8_t seconds;
+    i2c_rtc_status = 0;
 
-    *status = 0xff;
-    *error = i2c_master_init();
-
-    if (*error == 0) {
+    if (i2c_master_init(error)) {
 
         rtc_initialized = true;
         uint8_t ctrlreg = CTRL_REG;
 
         if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
 
-            rtc = true;
+            uint8_t seconds;
 
             if (i2c_rtc_sram_read(0x00, &seconds, 1)) {
 
@@ -438,15 +435,17 @@ bool i2c_rtc_init(uint8_t* error, uint8_t* status)
 
             }
 
+            return true;
+
+
         } else {
 
-            *error = I2C_ERROR_SLAVE_NOT_FOUND;
-            *status = i2c_rtc_status;
+            *error = I2C_MASTER_ERROR_SLAVE_NOT_FOUND;
 
         }
 
     }
 
-    return rtc;
+    return false;
 
 }
