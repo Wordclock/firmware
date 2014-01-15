@@ -49,7 +49,7 @@
  * This is the "base" address of the DS1307. In order to write to the device
  * `TW_WRITE` needs to be added, for reading use `TW_READ` instead.
  */
-#define DEVRTC 0xD0
+#define I2C_RTC_DEV_ADDR 0xD0
 
 /**
  * @brief Indicates whether this module has already been initialized
@@ -295,7 +295,7 @@ bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
 
         if (length && (address + length <= 64)) {
 
-            i2c_master_start_wait(DEVRTC + TW_WRITE);
+            i2c_master_start_wait(I2C_RTC_DEV_ADDR + TW_WRITE);
 
             if (i2c_master_write(address, &i2c_rtc_status)) {
 
@@ -359,11 +359,11 @@ bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
 
         if (length && (address + length <= 64)) {
 
-            i2c_master_start_wait(DEVRTC + TW_WRITE);
+            i2c_master_start_wait(I2C_RTC_DEV_ADDR + TW_WRITE);
 
             if (i2c_master_write(address, &i2c_rtc_status)) {
 
-                if (i2c_master_rep_start(DEVRTC + TW_READ, &i2c_rtc_status)) {
+                if (i2c_master_rep_start(I2C_RTC_DEV_ADDR + TW_READ, &i2c_rtc_status)) {
 
                     rtc = true;
 
