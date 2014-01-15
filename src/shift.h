@@ -23,9 +23,9 @@
  * @brief Header file for access to the shift register cascade
  *
  * This module is used to output data to the shift registers. It makes use of
- * the SPI hardware interface. It has to be initialized at first by
- * using shift24_init(). Afterwards data can be output by using
- * shift24_output().
+ * the SPI hardware interface of the AVR microcontroller itself. The module
+ * needs to be initialized `using shift24_init()`. Afterwards data can be
+ * output by using `shift24_output()`.
  *
  * @see shift.c
  */

@@ -22,8 +22,11 @@
  * @file shift.c
  * @brief Implementation of the header declared in shift.h
  *
- * This file contains the actual implementation of the header declared in
- * shift.h.
+ * This file contains the actual implementation of the functionality declared
+ * in `shift.h`. For details about the protocol and/or the hardware itself,
+ * refer to [1], p. 163, table 19-1.
+ *
+ * [1]: http://www.atmel.com/images/doc2545.pdf
  *
  * @see shift.c
  */
@@ -51,9 +54,7 @@
  * @brief The pin the MISO line of the SPI is attached to
  *
  * Although this pin is actually not needed to output data, it has to be set
- * to input in order for the SPI to act as master, see [1], p. 163, table 19-1.
- *
- * [1]: http://www.atmel.com/images/doc2545.pdf
+ * to input in order for the SPI to act as master.
  */
 #define SHIFT_SR_SPI_MISO 4
 
@@ -75,14 +76,9 @@
 /**
  * @brief Initializes this module
  *
- * This function has to be called once before using shift24_output(). It sets
- * up the hardware by writing the proper values into all relevant SPI control
- * registers. Afterwards data can be output using shift24_output().
- *
- * You'll find a description of the various registers used in this function at
- * [1], p. 168f, section 19.5.1.
- *
- * [1]: http://www.atmel.com/images/doc2545.pdf
+ * This function has to be called **once** before data can actually be output.
+ * It sets up the hardware by writing the proper values into all relevant SPI
+ * control registers. Afterwards data can be output using `shift24_output()`.
  *
  * @see shift24_output()
  */
@@ -126,16 +122,13 @@ void shift24_init() {
 /**
  * @brief Outputs the given data over the Serial Peripheral Interface (SPI)
  *
- * This function is responsible for the actual output. It splits the given data
- * in blocks of eight bits and puts them into the appropriate register (SPDR).
- * After the transfer of the current byte it proceeds with the next one.
+ * This function outputs the given data by splitting it into blocks of eight
+ * bits and writing it into the appropriate register of the SPI module. After
+ * all of the bits have been output the RCLK line is toggled, so that the
+ * shift registers will apply the new values.
  *
- * Before this function can be used, the module needs to be initialized by
- * calling shift24_init().
- *
- * Although the argument accepts 32 bits (uint32_t), only the 24 least
- * significant bits will be output. The eight most significant bits will
- * be ignored.
+ * @note Although the argument accepts 32 bits (uint32_t), only the 24 least
+ * significant bits will actually be output.
  *
  * @param data Data to be output
  *
