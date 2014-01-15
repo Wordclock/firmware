@@ -282,7 +282,7 @@ uint8_t i2c_master_init()
  * pointed to by `status_p`.
  *
  * @param address Address of device a start condition should be generated for
- * @param status_p Pointer to buffer storing the status of the transfer
+ * @param status Pointer to buffer storing the status of the transfer
  *
  * @return True if transfer was successful, otherwise false
  *
@@ -292,7 +292,7 @@ uint8_t i2c_master_init()
  * @see i2c_master_stop()
  * @see i2c_master_rep_start()
  */
-bool i2c_master_start(uint8_t address, uint8_t* status_p)
+bool i2c_master_start(uint8_t address, uint8_t* status)
 {
 
     uint8_t twst;
@@ -305,7 +305,7 @@ bool i2c_master_start(uint8_t address, uint8_t* status_p)
 
     if ((twst != TW_START) && (twst != TW_REP_START)) {
 
-        *status_p = twst;
+        *status = twst;
 
         return false;
 
@@ -320,7 +320,7 @@ bool i2c_master_start(uint8_t address, uint8_t* status_p)
 
     if ((twst != TW_MT_SLA_ACK) && (twst != TW_MR_SLA_ACK)) {
 
-        *status_p = twst;
+        *status = twst;
 
         return false;
 
@@ -395,7 +395,7 @@ void i2c_master_start_wait(uint8_t address)
  * pointed to by `status_p`.
  *
  * @param address Address of device a start condition should be generated for
- * @param status_p Pointer to buffer storing the status
+ * @param status Pointer to buffer storing the status
  *
  * @return True if transfer was successful, otherwise false
  *
@@ -405,10 +405,10 @@ void i2c_master_start_wait(uint8_t address)
  * @see i2c_master_stop()
  * @see i2c_master_start()
  */
-bool i2c_master_rep_start(uint8_t address, uint8_t* status_p)
+bool i2c_master_rep_start(uint8_t address, uint8_t* status)
 {
 
-    return i2c_master_start(address, status_p);
+    return i2c_master_start(address, status);
 
 }
 
@@ -441,14 +441,14 @@ void i2c_master_stop()
  * to be generated, addressing the device a byte should be written to.
  *
  * @param data Byte to be transfered
- * @param status_p Pointer to buffer storing the status of the transfer
+ * @param status Pointer to buffer storing the status of the transfer
  *
  * @return True if transfer was successful, otherwise false
  *
  * @see i2c_master_start()
  * @see i2c_master_rep_start()
  */
-bool i2c_master_write(uint8_t data, uint8_t* status_p)
+bool i2c_master_write(uint8_t data, uint8_t* status)
 {
 
     uint8_t twst;
@@ -462,7 +462,7 @@ bool i2c_master_write(uint8_t data, uint8_t* status_p)
 
     if (twst != TW_MT_DATA_ACK) {
 
-        *status_p = twst;
+        *status = twst;
 
         return false;
 

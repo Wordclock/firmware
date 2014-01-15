@@ -79,15 +79,15 @@
 
 extern uint8_t i2c_master_init();
 
-extern bool i2c_master_start(uint8_t address, uint8_t* status_p);
+extern bool i2c_master_start(uint8_t address, uint8_t* status);
 
 extern void i2c_master_start_wait(uint8_t address);
 
-extern bool i2c_master_rep_start(uint8_t address, uint8_t* status_p);
+extern bool i2c_master_rep_start(uint8_t address, uint8_t* status);
 
 extern void i2c_master_stop();
 
-extern bool i2c_master_write(uint8_t data, uint8_t* status_p);
+extern bool i2c_master_write(uint8_t data, uint8_t* status);
 
 extern uint8_t i2c_master_read_ack();
 
