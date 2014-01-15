@@ -23,12 +23,10 @@
  * @brief Header for access to the timer to execute functions on a regularly
  *
  * This module is responsible for setting up the timer including the
- * appropriate ISR. This ISR will then call various functions on a regular
- * basis.
+ * appropriate ISR (`ISR(TIMER1_CAPT_vect)`). This ISR will then execute
+ * functions previously defined on a regular basis.
  *
- * In order to initialize this module timer_init() needs to be called **once**.
- * Afterwards the appropriate ISR will be called automatically - presuming that
- * interrupts are enabled globally.
+ * In order to initialize this module `timer_init()` needs to be called once.
  *
  * @see timer.c
  */

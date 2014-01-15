@@ -22,19 +22,13 @@
  * @file timer.c
  * @brief Implementation of the header declared in timer.h
  *
- * This file contains the implementation of the header declared in timer.h.
- * Furthermore the appropriate timer ISR is registered and defined here.
+ * This file contains the implementation of the functionality declared in
+ * `timer.h`. Furthermore the appropriate timer ISR is defined here.
  *
- * For a detailed description of this unit see [1], p. 108f.
+ * For a detailed description of the hardware unit involved see [1], p. 108f.
  *
- * The various functions needed to be called on a regular basis can simply be
- * added to the appropriate macro definitions, that is INTERRUPT_10000HZ up to
- * INTERRUPT_1M. The names should be pretty self explanatory.
- *
- * These macros will then be added to the ISR, which will call them
- * appropriately.
- *
- * The frequency of the ISR itself can be defined with F_INTERRUPT.
+ * Functions, which need to be called on a regular basis can simply be added
+ * to the appropriate macro, that is `INTERRUPT_10000HZ` up to `INTERRUPT_1M`.
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
  *
@@ -59,14 +53,9 @@
 #include "wceeprom.h"
 
 /**
- * @brief Number of interrupts per second (frequency)
+ * @brief Defines how often the timer ISR itself is executed
  *
- * This defines how often per second the ISR itself will be executed. Within
- * the ISR various functions defined in the INTERRUPT_* macros will then be
- * called.
- *
- * Obviously enough this should be bigger and/or equal to the biggest
- * INTERRUPT_* macro, namely INTERRUPT_10000HZ
+ * @see ISR(TIMER1_CAPT_vect)
  */
 #define F_INTERRUPT 10000
 
@@ -101,18 +90,10 @@
 #define INTERRUPT_1M { }
 
 /**
- * @brief Initializes the timers
+ * @brief Initializes the timer
  *
- * This function has to be called once, which will initialize the timers
- * and - presumed that interrupts are enabled - will execute the appropriate
- * ISRs regularly.
- *
- * You'll find a description of the various registers used in this function at
- * [1], p. 130f, section 16.11.
- *
- * [1]: http://www.atmel.com/images/doc2545.pdf
- *
- * @see ISR(TIMER1_CAPT_vect)
+ * This function initializes the timer and sets it up in a way so that the
+ * appropriate ISR will be called regularly
  */
 void timer_init()
 {
@@ -148,13 +129,11 @@ void timer_init()
 /**
  * @brief Timer/Counter1 compare handler (ISR)
  *
- * This function is called with the frequency defined in F_INTERRUPT. It
- * has some internal counters to divide this frequency down into the various
- * smaller frequencies (e.g. INTERRUPT_1000HZ to INTERRUPT_1M). It then, if
- * necessary calls the functions defined in these macros.
+ * This function is called with the frequency defined by F_INTERRUPT. It
+ * divides this frequency down into various smaller frequencies and executes
+ * the appropriate functions sequentially.
  *
- * The timer has to be initialized using timer_init() **before** this is
- * actually executed.
+ * @note The timer needs to be initialized before this ISR will be executed.
  *
  * @warning You should make sure that the defined functions are short enough
  * to guarantee correct timings. Otherwise some interrupts could be missed,
