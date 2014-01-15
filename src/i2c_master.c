@@ -43,16 +43,6 @@
 #include "ports.h"
 
 /**
- * @brief Clock frequency of the I2C bus
- *
- * This defines the frequency of the I2C bus will be operated at (in Hz). The
- * default is 100 kHz, which should be fine in most cases.
- *
- * @see i2c_master_init()
- */
-#define I2C_MASTER_SCL_CLOCK 100000
-
-/**
  * @brief Loop waiting for the current transmission to be completed
  *
  * This busy waits for the current transmission to be completed by
