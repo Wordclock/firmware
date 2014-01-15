@@ -98,21 +98,9 @@
 void timer_init()
 {
 
-    /*
-     * Input capture register is used as compare value. The formula below
-     * ensures that the ISR will be triggered as often as defined in
-     * F_INTERRUPT.
-     */
     ICR1 = (F_CPU / F_INTERRUPT) - 1;
 
     /*
-     * Set up Timer/Counter1
-     *
-     * See [1], p. 132, Table 16-4 for an overview of the available modes
-     * See [1], p. 133, Table 16-5 for an overview of the available prescalers
-     *
-     * [1]: http://www.atmel.com/images/doc2545.pdf
-     *
      * Mode: 14 (Fast PWM)
      * Prescaler: 1
      */
@@ -151,26 +139,11 @@ void timer_init()
 ISR(TIMER1_CAPT_vect)
 {
 
-    /*
-     * Variables needed to divide the ISR frequency down to smaller frequencies
-     */
     static uint8_t thousands_counter;
     static uint8_t hundreds_counter;
     static uint8_t tenths_counter;
     static uint8_t seconds_counter;
     static uint8_t minutes_counter;
-
-    /*
-     * The following part works by incrementing the thousands_counter each
-     * time the ISR is called. It is then compared against 10, which of course
-     * will only be true every tenth time. In case this comparison returns
-     * false, the execution of the ISR is ended with a simple return. Otherwise
-     * the next smaller counter will be incremented and once again compared
-     * against ten. This is done until the desired resolution of one minute
-     * is reached. Between each of these comparisons the list of macros defined
-     * above is added, so that the appropriate functions will get called with
-     * the specified frequency.
-     */
 
     INTERRUPT_10000HZ;
 
