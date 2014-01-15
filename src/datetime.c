@@ -146,7 +146,8 @@ bool datetime_validate(const datetime_t* datetime) {
 
     }
 
-    if (datetime->DD > get_number_of_days_in_month(datetime->MM, datetime->YY)) {
+    if (datetime->DD < 1
+        || datetime->DD > get_number_of_days_in_month(datetime->MM, datetime->YY)) {
 
         return false;
 
