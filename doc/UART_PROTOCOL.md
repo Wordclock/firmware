@@ -2,7 +2,7 @@
 
 This document describes the protocol that allows the Wordclock to be controlled
 with specific commands sent to the the microcontroller via the UART interface.
-The revsion of the protocol this document describes is **1.0**.
+The revision of the protocol this document describes is **1.0**.
 
 ## MOTIVATION
 
