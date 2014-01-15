@@ -49,7 +49,7 @@
 #include "wceeprom.h"
 
 
-/*
+/**
  * @brief Outputs a message in the correct format
  *
  * This outputs the given message in the correct format (enclosed by
