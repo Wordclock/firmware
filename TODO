@@ -37,12 +37,6 @@
   be an option to enable and/or disable the ambilight depending on the
   time, so it can be activated in the evening.
 
-- Rename i2c modules to appropriate TWI modules. AVR calls this protocol
-  consequently TWI instead of I2C due to legal concers. Furthermore the header
-  file provided by avr-libc is also called "twi.h", so it makes more sense
-  to rename these modules. Moreover some rework is needed to make (more) use
-  of "twi.h".
-
 - Make the determination of the DCF77 module type optional. Although this is
   a nice gimmick, it only takes up program space and doesn't provide any real
   use, as the module type should be known when actually building the clock
@@ -146,11 +140,6 @@
   module disables itself after having received two valid time frames in a row,
   however it doesn't enable itself. This has to be done "manually" by invoking
   dcf77_enable().
-
-- i2c_master: Make both i2c_master_init() and i2c_reset() return boolean
-  values, by introducing a status parameter, which the status will be written
-  to. i2c_master_init() is basically the last remaining function not to return
-  true boolean values.
 
 - user.c: Currently usermodes.c is simply included. Check whether it is
   possible with a reasonable amount of time to outsource this into its own
