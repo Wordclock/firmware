@@ -60,7 +60,7 @@
  *
  * @see i2c_rtc_init()
  */
-static bool rtc_initialized = false;
+static bool i2c_rtc_initialized = false;
 
 /**
  * @brief Holds the status of the last operation on the I2C bus
@@ -200,7 +200,7 @@ bool i2c_rtc_write(const datetime_t* datetime)
     uint8_t rtcbuf[7];
     bool rtc = false;
 
-    if (rtc_initialized) {
+    if (i2c_rtc_initialized) {
 
         rtcbuf[0] = itobcd(datetime->ss);
         rtcbuf[1] = itobcd(datetime->mm);
@@ -243,7 +243,7 @@ bool i2c_rtc_read(datetime_t* datetime)
     uint8_t rtcbuf[7];
     bool rtc = false;
 
-    if (rtc_initialized) {
+    if (i2c_rtc_initialized) {
 
         if (i2c_rtc_sram_read(0x00, rtcbuf, 7)) {
 
@@ -291,7 +291,7 @@ bool i2c_rtc_sram_write(uint8_t address, void* data, uint8_t length)
     uint8_t* value = data;
     bool rtc = false;
 
-    if (rtc_initialized) {
+    if (i2c_rtc_initialized) {
 
         if (length && (address + length <= 64)) {
 
@@ -355,7 +355,7 @@ bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
     uint8_t* value = data;
     bool rtc = false;
 
-    if (rtc_initialized) {
+    if (i2c_rtc_initialized) {
 
         if (length && (address + length <= 64)) {
 
@@ -405,7 +405,7 @@ bool i2c_rtc_sram_read(uint8_t address, void* data, uint8_t length)
  * @return Result of the operation, true if successful, false otherwise
  *
  * @see CTRL_REG
- * @see rtc_initialized
+ * @see i2c_rtc_initialized
  * @see i2c_rtc_sram_write()
  * @see i2c_master_error_t
  * @see i2c_rtc_status
@@ -417,7 +417,7 @@ bool i2c_rtc_init(i2c_master_error_t* error)
 
     if (i2c_master_init(error)) {
 
-        rtc_initialized = true;
+        i2c_rtc_initialized = true;
         uint8_t ctrlreg = CTRL_REG;
 
         if (i2c_rtc_sram_write(0x07, &ctrlreg, 1)) {
