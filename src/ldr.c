@@ -103,8 +103,6 @@ void ldr_init()
     uint8_t result;
 
     /*
-     * Set up the ADC unit
-     *
      * Reference: AVCC with external capacitor at AREF pin
      * Alignment: Left adjusted
      * Channel: 0
@@ -117,39 +115,21 @@ void ldr_init()
      */
     ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
 
-    /*
-     * Start first conversion
-     */
     ADCSRA |= _BV(ADSC);
 
-    /*
-     * Wait for conversion to finish
-     */
     while (ADCSRA & _BV(ADSC));
 
-    /*
-     * Read out the measured value
-     */
     result = ADCH;
 
-    /*
-     * Initialize measurements by putting the measured value in every field
-     */
     for (uint8_t i = 0; i < MEASUREMENTS_ARRAY_SIZE; i++) {
 
         measurements[i] = result;
 
     }
 
-    /*
-     * Initialize curr_sum by multiplying it with MEASUREMENTS_ARRAY_SIZE
-     */
     curr_sum = result;
     curr_sum *= MEASUREMENTS_ARRAY_SIZE;
 
-    /*
-     * Check whether logging is enabled
-     */
     #if (LOG_LDR == 1)
 
         char buff[5];
@@ -208,19 +188,10 @@ uint8_t ldr_get_brightness()
 ISR(ADC_vect)
 {
 
-    /*
-     * This counter keeps track of the index we need to put the measurement in
-     */
     static uint8_t curr_index = 0;
 
-    /*
-     * Read out value of last conversion
-     */
     uint8_t measurement = ADCH;
 
-    /*
-     * Check whether logging is enabled
-     */
     #if (LOG_LDR == 1)
 
         char buff[5];
@@ -232,33 +203,12 @@ ISR(ADC_vect)
 
     #endif
 
-    /*
-     * As we are going to replace the value at curr_index with the value
-     * of the last conversion, we need to subtract it from curr_sum
-     */
     curr_sum -= measurements[curr_index];
-
-    /*
-     * Put value of last conversion into measurements
-     */
     measurements[curr_index] = measurement;
-
-    /*
-     * Add the value of the last measurement to curr_sum
-     */
     curr_sum += measurement;
 
-    /*
-     * Increment curr_index for next iteration of this function
-     */
     curr_index++;
 
-    /*
-     * Use modulo operation to get the next value for curr_index,
-     * see [ring buffer][1].
-     *
-     * [1]: https://en.wikipedia.org/wiki/Circular_buffer
-     */
     curr_index %= MEASUREMENTS_ARRAY_SIZE;
 
 }
