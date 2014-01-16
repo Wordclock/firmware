@@ -22,12 +22,10 @@
  * @file main.c
  * @brief The main program file
  *
- * This file contains the main function, which is responsible for
- * initialization and actually running the hardware by "gluing" together
- * various modules of the project.
+ * This file kind of glues together all of the other modules of the project
+ * and contains the main entry point.
  *
- * @see main()
- * @see config.h
+ *@see config.h
  */
 
 #include <inttypes.h>
@@ -67,26 +65,24 @@
 #endif
 
 /**
- * @brief Interval to (re)read the time from the RTC
+ * @brief Defines the interval the time should be (re)read from the RTC
  *
- * This defines the interval (in seconds) to (re)read the time from the RTC.
- * Between those reads there is a software clock running (see soft_seconds).
+ * This defines the interval (in seconds) which can pass at most before the
+ * time of the software clock is synchronized with the RTC again.
  *
- * @see soft_seconds
  * @see handle_datetime()
  */
 #define READ_DATETIME_INTERVAL 15
 
 /**
- * @brief Counter for seconds of software clock
+ * @brief Used to keep track of the seconds of the software
  *
- * This variable is actually needed to run a software clock. It is incremented
- * each second by main_ISR() and used within handle_datetime() quite heavily.
- * After READ_DATETIME_INTERVAL seconds have passed, the time is (re)read from
- * the RTC again.
+ * This keeps track of the seconds of the software clock internally. It is
+ * incremented each second by `main_ISR()` and processed within
+ * `handle_datetime()`. It is synchronized with the RTC when an interval of at
+ * most `READ_DATETIME_INTERVAL` has passed.
  *
  * @see main_ISR()
- * @see handle_datetime()
  * @see READ_DATETIME_INTERVAL
  */
 static volatile uint8_t soft_seconds;
@@ -99,9 +95,6 @@ static volatile uint8_t soft_seconds;
     /**
      * @brief Used to output logging information of this module
      *
-     * When the logging for this module is enabled (LOG_MAIN = 1), this macro
-     * is used to output various kinds of information.
-     *
      * @see LOG_MAIN
      */
     #define log_main(x) uart_puts_P(x)
@@ -109,10 +102,7 @@ static volatile uint8_t soft_seconds;
 #else
 
     /**
-     * @brief Used to output logging information of this module
-     *
-     * This makes sure that nothing is being output when the logging for this
-     * module is deactivated (LOG_MAIN = 0).
+     * @brief Dummy in case LOG_MAIN is disabled
      *
      * @see LOG_MAIN
      */
@@ -123,23 +113,21 @@ static volatile uint8_t soft_seconds;
 /**
  * @brief Handles the synchronization between the RTC and the software clock
  *
- * The time itself will only be (re)read from the RTC every
- * READ_DATETIME_INTERVAL seconds. Between those intervals the timekeeping
- * is done by a software clock (see soft_seconds).
+ * The time is being kept track of using a software clock and is **not**
+ * constantly synchronized with the RTC itself. In order for this software
+ * clock to be more accurate, it will adjust itself in a way described by
+ * the following:
  *
- * The software clock can "adjust" itself:
+ * - In case it runs too slow (for instance due to the RC oscillator) this
+ *   function will poll the RTC for the current time every second in the last
+ *   part of the minute in order to reach the transition to the next minute
+ *   as close as possible.
  *
- * - In case it runs too slow (for instance
- * due to the RC oscillator) this function will call i2c_rtc_read() every
- * second in the last part of a minute in order to reach the next full minute
- * as close as possible.
+ * - On the other hand it will slowdown the polling if it is detected that the
+ *   software clock runs too fast, so that the software clock is updated less
+ *   often.
  *
- * - On the other hand it will be slowdowned if the software clock runs too
- * fast, so that the software clock is only updated every
- * READ_DATETIME_INTERVAL - softclock_too_fast_seconds seconds.
- *
- * This function enables the DCF77 reception once an hour to signal to the
- * DCF77 module that it should try to retrieve the current time.
+ * This function also (re)enables the DCF77 decoding once a new hour begins.
  *
  * @see READ_DATETIME_INTERVAL
  * @see soft_seconds
@@ -298,14 +286,14 @@ static void handle_datetime(datetime_t* datetime)
 }
 
 /**
- * @brief Handles changes to the brightness due to changes in the ambient light
+ * @brief Handles changes to the brightness in response to ambient lightning
  *
- * This functions retrieves the brightness measured by the LDR (only using the
- * most upper five bits) and if there are any changes to the last measurement
- * it sets the base brightness according to the measured value.
+ * This functions retrieves the brightness as measured by the LDR and sets a
+ * new base brightness step for the PWM generation whenever there are changes
+ * in comparison with the last taken measurement.
  *
- * If logging for this aspect is enabled (LOG_MAIN_BRIGHTNESS = 1) then the
- * measured brightness will also be output.
+ * @note Only the most upper five bits of `ldr_get_brightness()` are taken into
+ * account, as only base brightness step values from 0 to 31 are valid.
  *
  * @see ldr_get_brightness()
  * @see LOG_MAIN_BRIGHTNESS
@@ -363,19 +351,16 @@ static void handle_brightness()
 /**
  * @brief Entry point to start execution at
  *
- * This is the entry point where execution will start. It will initialize the
- * hardware and enter an infinite loop, which will handle any upcoming events
- * not yet covered and/or initiated by various interrupts.
+ * This is the main entry point where execution will start. It initializes the
+ * hardware and enters an infinite loop handling any upcoming events not yet
+ * covered.
  *
- * As this function is the main entry point, it won't actually be called by
- * any other function. Therefore this function makes use of the attribute
- * "OS_main", which will save a couple of bytes as no prologue and/or epilogue
- * is needed to save the content of various registers. The description of
- * this attribute can be found at [1].
+ * @note This function makes use of the attribute "OS_main". For details
+ * refer to [1].
  *
  * [1]: http://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
  *
- * @return This function should actually never reach its end
+ * @return Should never return anything
  */
 __attribute__((OS_main)) int main()
 {
@@ -518,9 +503,7 @@ __attribute__((OS_main)) int main()
 /**
  * @brief ISR of the main module
  *
- * This basically only increases the "soft_seconds" by one each time it is
- * executed. Therefore it should be called every second by adding it
- * to INTERRUPT_1HZ within timer.c.
+ * This is executed once a second and simply increments `soft_seconds` by one.
  *
  * @see INTERRUPT_1HZ
  * @see timer.c
