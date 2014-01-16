@@ -413,6 +413,4 @@
  */
 #define LOG_UART_PROTOCOL 0
 
-extern void main_ISR();
-
 #endif /* _WC_MAIN_H_ */
