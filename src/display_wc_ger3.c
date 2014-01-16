@@ -41,7 +41,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#include "main.h"
+#include "config.h"
 #include "base.h"
 #include "display.h"
 #include "shift.h"

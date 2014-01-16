@@ -32,7 +32,7 @@
  */
 
 #include "color.h"
-#include "main.h"
+#include "config.h"
 
 /**
  * @brief Scale factor used for calculation of the signal within

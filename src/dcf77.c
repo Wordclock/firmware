@@ -44,7 +44,7 @@
 #include <stdbool.h>
 
 #include "base.h"
-#include "main.h"
+#include "config.h"
 #include "dcf77.h"
 #include "uart.h"
 #include "ports.h"

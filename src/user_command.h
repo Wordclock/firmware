@@ -31,7 +31,7 @@
 #ifndef _WC_USER_COMMAND_TIMER_H_
 #define _WC_USER_COMMAND_TIMER_H_
 
-#include "main.h"
+#include "config.h"
 #include "display.h"
 
 /**

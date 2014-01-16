@@ -42,7 +42,7 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
-#include "main.h"
+#include "config.h"
 #include "uart.h"
 #include "ldr.h"
 #include "base.h"

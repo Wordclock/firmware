@@ -42,6 +42,7 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
+#include "config.h"
 #include "main.h"
 #include "timer.h"
 #include "dcf77.h"

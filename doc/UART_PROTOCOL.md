@@ -17,7 +17,7 @@ much more direct way, which increases the ease of use by a great deal.
 ## REQUIREMENTS
 
 The protocol handling has to be built into the firmware itself. This is
-controlled by the `ENABLE_UART_PROTOCOL` switch within the `src/main.h` file
+controlled by the `ENABLE_UART_PROTOCOL` switch within the `src/config.h` file
 and is enabled by default. The baud rate of the connection is defined by the
 UART module. The appropriate setting is called `UART_BAUD` and can be found
 within `src/uart.h`. The other parameters for this connections are:
@@ -31,7 +31,7 @@ of the transmission, so make sure to set up everything correctly.
 
 ## DEBUGGING
 
-The `LOG_UART_PROTOCOL` switch within `src/main.h` can be used to enable
+The `LOG_UART_PROTOCOL` switch within `src/config.h` can be used to enable
 various debugging messages of the uart_protocol module and is disabled
 by default.
 
@@ -94,8 +94,8 @@ Valid arguments along with the user command they will trigger are listed below:
 
 For details about the user commands mentioned above, please refer to
 `user_command_t` within `src/user_command.h`. Depending upon the value of
-`ENABLE_INDIVIDUAL_CONFIG` within `src/main.h` and the appropriate switches
-within `src/main.h` not all of these commands might be available.
+`ENABLE_INDIVIDUAL_CONFIG` within `src/config.h` and the appropriate switches
+within `src/config.h` not all of these commands might be available.
 
 All of these commands will response with a plain simple `OK` once they were
 executed. The response for anything other than mentioned above and/or for

@@ -27,7 +27,7 @@
  * various modules of the project.
  *
  * @see main()
- * @see main.h
+ * @see config.h
  */
 
 #include <inttypes.h>
@@ -37,7 +37,7 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 
-#include "main.h"
+#include "config.h"
 #include "dcf77.h"
 #include "display.h"
 #include "i2c_master.h"

@@ -36,7 +36,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "main.h"
+#include "config.h"
 #include "base.h"
 #include "datetime.h"
 #include "i2c_rtc.h"

@@ -47,7 +47,7 @@ features, is highly recommended to replace the microcontroller with the
 ATmega328, which is drop in replacement. As the microcontroller was designed to
 be put into a socket anyway, this shouldn't be too much of a problem.
 Alternatively you can always give up some functionality by disabling the
-appropriate switches within `src/main.h`.
+appropriate switches within `src/config.h`.
 
 ## SOFTWARE REQUIREMENTS
 
@@ -72,7 +72,7 @@ versions might work just fine, but are not fully tested.
 ## CONFIGURATION
 
 There are various options, which influence the building process and hence the
-resulting binary. These options can be found within `main.h` in the `src`
+resulting binary. These options can be found within `config.h` in the `src`
 directory, along with comments about their meaning and possible values.
 
 ## BUILDING
@@ -110,7 +110,7 @@ on its own. There are also a few other bootloaders that are supported directly,
 namely [chip45boot2][9] and [FastBoot][10] from Peter Danegger.
 
 Depending upon the bootloader you choose, you might have to change the fuses
-and/or the `BOOTLOADER_RESET_WDT` directive within `main.h`:
+and/or the `BOOTLOADER_RESET_WDT` directive within `config.h`:
 
 - **AVRootloader, FastBoot**: Set **efuse** to `0xfc`
 

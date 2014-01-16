@@ -37,7 +37,7 @@
 
 #include <avr/pgmspace.h>
 
-#include "main.h"
+#include "config.h"
 #include "display.h"
 #include "shift.h"
 #include "uart.h"

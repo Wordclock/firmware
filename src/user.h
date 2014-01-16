@@ -36,7 +36,7 @@
 
 #include <stdbool.h>
 
-#include "main.h"
+#include "config.h"
 #include "user_command.h"
 
 /**
@@ -169,7 +169,7 @@ typedef enum
 #ifndef ENABLE_INDIVIDUAL_CONFIG
 
     /**
-     * @copydoc main.h::ENABLE_INDIVIDUAL_CONFIG
+     * @copydoc config.h::ENABLE_INDIVIDUAL_CONFIG
      */
     #define ENABLE_INDIVIDUAL_CONFIG 1
 
@@ -178,7 +178,7 @@ typedef enum
 #ifndef ENABLE_USER_AUTOSAVE
 
     /**
-     * @copydoc main.h::ENABLE_USER_AUTOSAVE
+     * @copydoc config.h::ENABLE_USER_AUTOSAVE
      */
     #define ENABLE_USER_AUTOSAVE 1
 

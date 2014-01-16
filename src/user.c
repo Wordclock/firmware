@@ -32,7 +32,7 @@
  * @see usermodes.c
  */
 
-#include "main.h"
+#include "config.h"
 #include "user.h"
 #include "IRMP/irmp.h"
 #include "pwm.h"

@@ -48,7 +48,7 @@
 
 #include "uart.h"
 #include "base.h"
-#include "main.h"
+#include "config.h"
 #include "pwm.h"
 #include "ports.h"
 
