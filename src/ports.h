@@ -19,12 +19,15 @@
 
 /**
  * @file ports.h
- * @brief Helper macros to make dealing with ports easier
+ * @brief Macros making it easier to access pins and their appropriate ports
  *
- * This file contains various macros, which will make it easier and more
- * intuitive to deal with the ports of the microcontroller. This basically
- * means that instead of defining up to four different macros for the PINx,
- * PORTx and DDRx registers of a pin, a single definition is enough.
+ * This file contains macros, which make it easier and more intuitive to deal
+ * with single pins and their appropriate ports. In its current form it is
+ * very specific to AVR microcontrollers, however.
+ *
+ * Basically instead of defining up multiple, quite redundant, macros for
+ * `PINx`, `PORTx`, `DDRx` and pin number itself, a single definition is
+ * sufficient.
  *
  * Consider the following example, which is used in this form quite often:
  *
@@ -36,17 +39,21 @@
  * \endcode
  *
  * This is kind of ugly for various reasons one of which is the implied
- * redundancy. With the macros defined in this file a single macro is enough:
+ * redundancy. Using the macros defined in this file a single macro is enough:
  *
  * \code
  *  #define WHATEVER PORTD, 4
  * \endcode
  *
- * This works because the addresses of the involved registers can be calculated
- * as there is a system behind them. Normally the PINx register comes first and
- * is followed by the DDRx register, which in return is followed by the PORTx
- * register itself. For instance in case of the port C of an ATmega168 it looks
- * like this (see [1], p. 343, chapter 31).
+ * All of the macros defined here expect two arguments, separated by a `,`,
+ * just like shown above. The first argument is always expected to describe the
+ * name of the port, whereas the second one describes the pin number itself.
+ *
+ * Internally these macros exploit the fact that addresses of the involved
+ * registers can be calculated quite easily. Normally the `PINx` register comes
+ * first and is followed by the `DDRx` register, which in return is followed by
+ * the `PORTx` register itself. For instance in case of the port C of an
+ * ATmega168 it looks like this (see [1], p. 343, chapter 31).
  *
  * \code
  *   [...]
@@ -56,18 +63,16 @@
  *   [...]
  * \endcode
  *
- * So by knowing the address location of PORTC both of the addresses for DDRC
- * as well as PINC can easily be calculated by simply subtracting one and/or
- * two.
+ * By knowing the address location of `PORTC` both of the addresses for `DDRC`
+ * and `PINC` can be calculated.
  *
- * However there is an exception to this in case of ATmega64's and ATmega128's,
- * which provide an additional port F. For whatever reason the PINF register is
- * located at 0x00 instead of 0x60, which one would expect following the scheme
- * described above. For details see [2], p. 369ff. However the appropriate
- * PIN() macro accommodates for this with a relative simple distinction of the
- * used microcontroller.
+ * However there is an exception to this simple scheme in case of the ATmega64
+ * and ATmega128. These provide an additional port F, which differs a little
+ * bit from the other available ports, as the `PINF` register is located at
+ * 0x00 instead of 0x60, which would be expected. For details refer to [2], p.
+ * 369ff. However, this is also covered by the macros provided by this file.
  *
- * The macros are based on a concept known as [variadic macro's][3].
+ * These macros are based on a concept known as [variadic macro's][3].
  *
  * This implementation is a combination of ideas taken from [4] and [5].
  *
@@ -84,17 +89,9 @@
 #define _WC_PORTS_H_
 
 /**
- * @brief Returns the port given its name followed by the pin number
+ * @brief Returns the PORT register of an appropriate definition
  *
- * This macro expects two arguments, the first of which is the name of the
- * port. The second one is the number of the pin. A valid input would be:
- * `PORTD, 0`. This input will then be transformed into "PORTD".
- *
- * This might seem trivial, however it makes things simpler and provides a
- * consequent way of addressing pin numbers analogous to DDR() and PIN().
- * Furthermore it enables the use of a single macro definition.
- *
- * @return Port with the given name
+ * @return PORT register for the given definition
  *
  * @see PORT_()
  */
@@ -111,17 +108,9 @@
 #define PORT_(a, b) (a)
 
 /**
- * @brief References the DDR of a port given its name followed by the pin
- *        number
+ * @brief Returns the DDR register of an appropriate definition
  *
- * This macro expects two arguments, the first of which is the name of the
- * port. The second one is the number of the pin. A valid input would be:
- * `PORTD, 0`. This input will then be transformed into "DDRD".
- *
- * This works because the DDRs are actually always next to the port register
- * itself, only separated by one.
- *
- * @return DDR referenced by the port with the provided name
+ * @return DDR register for the given definition
  *
  * @see DDR_()
  */
@@ -138,20 +127,13 @@
 #define DDR_(a, b) (*(&a - 1))
 
 /**
- * @brief References the PIN register of a port given its name followed by the
- *     pin number
+ * @brief Returns the PIN register of an appropriate definition
  *
- * This macro expects two arguments, the first of which is the name of the
- * port. The second one is the number of the pin. A valid input would be:
- * `PORTD, 0`. This input will then be transformed into "PIND".
+ * @note As the ATmega64 and ATmega128 differ from other AVR microcontrollers
+ * when it comes down to `PORTF`, there are actually two implementations of
+ * `PIN_()`.
  *
- * This works because the PIN registers are actually always next to the port
- * register itself, only separated by two. It is a little more complex in
- * the case of ATmega64's and ATmega128's as their PINF is actually located at
- * somewhere else (0x00) instead of the expected (0x60) location. This macro
- * accommodates for this.
- *
- * @return PIN register referenced by the port with the provided name
+ * @return PIN register for the given definition
  *
  * @see PIN_()
  */
@@ -160,45 +142,36 @@
 #if defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
 
     /**
-    * @brief Helper macro needed to implement PIN() for ATmega64 and ATmega128
-    *     devices
-    *
-    * With these devices the location of the PINF register is located at an
-    * address contrary to the one you might expect, namely 0x00.
-    *
-    * @param a Name of the port
-    * @param b Number of the pin
-    *
-    * @see PIN()
-    */
+     * @brief Helper macro needed to implement PIN()
+     *
+     * With these devices the location of the `PINF` register is located at an
+     * address contrary to the expected one, making a distinction necessary.
+     *
+     * @param a Name of the port
+     * @param b Number of the pin
+     *
+     * @see PIN()
+     */
     #define PIN_(a, b) ((&PORTF == &(x)) ? _SFR_IO8(0x00) : (*(&a - 2)))
 
 #else
 
     /**
-    * @brief Helper macro needed to implement PIN()
-    *
-    * @param a Name of the port
-    * @param b Number of the pin
-    *
-    * @see PIN()
-    */
+     * @brief Helper macro needed to implement PIN()
+     *
+     * @param a Name of the port
+     * @param b Number of the pin
+     *
+     * @see PIN()
+     */
     #define PIN_(a, b) (*(&a - 2))
 
 #endif
 
 /**
- * @brief Returns the bit number given a port name followed by the pin number
+ * @brief Returns the pin number of an appropriate definition
  *
- * This macro expects two arguments, the first of which is the name of the
- * port. The second one is the number of the pin. A valid input would be:
- * `PORTD, 0`. This input will then be transformed into "0".
- *
- * This might seem trivial, however it makes things simpler and provides a
- * consequent way of addressing pin numbers analogous to DDR() and PIN().
- * Furthermore it enables the use of a single macro definition.
- *
- * @return BIT number provided with the port name and pin number
+ * @return Pin number of the given definition
  *
  * @see BIT_()
  */
