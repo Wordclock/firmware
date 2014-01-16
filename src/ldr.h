@@ -25,7 +25,7 @@
  *
  * This module handles the access to the brightness measured by the LDR sensor.
  * The returned brightness is the mean value of the last n measurements,
- * where n = MEASUREMENTS_ARRAY_SIZE.
+ * where n = `MEASUREMENTS_ARRAY_SIZE`.
  *
  * It is used to provide ambient light influenced behavior, e.g. increasing the
  * brightness of the LEDs involved when the light in the room the Wordclock is
@@ -40,16 +40,13 @@
 #include <avr/io.h>
 
 /**
- * @brief Number of measurements to take into account for calculating the brightness
+ * @brief Number of measurements taken account for calculating the brightness
  *
- * This effectively acts as a low pass filter. The brightness calculated by
- * ldr_get_brightness() will be the mean value of the values stored in an array
- * of this size.
+ * The brightness calculated by `ldr_get_brightness()` will be the mean value
+ * of the values stored in an array of this size, which effectively acts as a
+ * low pass filter.
  *
- * This is actually used as a [ring buffer][1], which means that
- * MEASUREMENTS_ARRAY_SIZE should be a multiple of two to keep things fast.
- *
- * [1]: https://en.wikipedia.org/wiki/Circular_buffer
+ * @note For performance reasons this should be a multiple of two.
  *
  * @see ldr_get_brightness()
  */
@@ -62,20 +59,11 @@ extern uint8_t ldr_get_brightness();
 /**
  * @brief Starts a new ADC conversion
  *
- * This is executed within INTERRUPT_1HZ to start a new ADC measurement each
- * second. However before this can be used the module has to initialized first
- * using ldr_init(), otherwise this function won't have any effect at all.
+ * This is executed within `INTERRUPT_1HZ` to start a new ADC measurement each
+ * second. However, before this can be used the module has to initialized first
+ * using `ldr_init()`.
  *
- * The measurement itself is being processed by the appropriate ISR
- * (ISR(ADC_vect)).
- *
- * The meaning of the register and bits are described at [1], p. 256f.
- *
- * As this function is pretty simple it is declared as "inline" and defined
- * directly within this header file, which keeps the needed program space
- * smaller.
- *
- * [1]: http://www.atmel.com/images/doc2545.pdf
+ * The measurement itself is being processed by the ISR `ISR(ADC_vect)`.
  *
  * @see ldr_init()
  * @see INTERRUPT_1HZ

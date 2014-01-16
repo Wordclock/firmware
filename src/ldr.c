@@ -27,7 +27,7 @@
  * uses the ADC unit. For further details refer to [1], p. 244f, chapter 24.
  *
  * Before you can actually retrieve the "current" brightness using
- * ldr_get_brightness() you need to initialize the module **once** by
+ * `ldr_get_brightness()` you need to initialize the module **once** by
  * calling ldr_init().
  *
  * [1]: http://www.atmel.com/images/doc2545.pdf
@@ -51,11 +51,10 @@
  * @brief Stores the last measurements taken
  *
  * This effectively acts as a low pass filter, as the brightness calculated by
- * ldr_get_brightness() will be the mean value of the values stored in this
- * array. The size of the array is defined in MEASUREMENTS_ARRAY_SIZE.
+ * `ldr_get_brightness()` will be the mean value of the values stored in this
+ * array.
  *
- * This is actually a [ring buffer][1], which means that
- * MEASUREMENTS_ARRAY_SIZE should be a multiple of two.
+ * This array is actually organized as a [ring buffer][1].
  *
  * [1]: https://en.wikipedia.org/wiki/Circular_buffer
  *
@@ -70,10 +69,10 @@ static volatile uint8_t measurements[MEASUREMENTS_ARRAY_SIZE];
  *
  * Although this is redundant and could be calculated by simply adding up the
  * values in measurements itself, it speeds things up when it comes down to
- * actually returning the "current" brightness with ldr_get_brightness().
+ * actually returning the "current" brightness with `ldr_get_brightness()`.
  *
  * @note: Consider that the datatype must be able to store values at least as
- *   big as MEASUREMENTS_ARRAY_SIZE * 255.
+ * big as MEASUREMENTS_ARRAY_SIZE * 255.
  *
  * @see measurements
  * @see ldr_get_brightness()
@@ -84,22 +83,15 @@ static volatile uint16_t curr_sum;
 /**
  * @brief Initializes this module
  *
- * This function needs to be called **once** before any brightness can be
- * retrieved using ldr_get_brightness(). It primarily initializes the ADC
- * unit, see [1], p. 244f, chapter 24 for details.
+ * This function initializes the ADC unit and has to be called **once** in
+ * order for this module to work correctly. Besides setting up the hardware
+ * itself this function takes also the first measurement and saves it, so that
+ * `ldr_get_brightness()` could return it immediately. When done initializing
+ * the internal state, it activates the ADC interrupt, which will handle the
+ * measurements from then on.
  *
- * For an overview of the various registers involved take a look at [1],
- * p. 255f.
- *
- * Besides setting up the hardware this function takes the first measurement
- * directly and saves it, so that ldr_get_brightness() could return it
- * immediately. When done initializing the internal state, it activates the
- * ADC interrupt, which will handle the measurements from then on.
- *
- * If the logging for this module is activated (LOG_LDR == 1), it also will
+ * If the logging for this module is activated (`LOG_LDR`), it will also
  * output the value of the first measurement.
- *
- * [1]: http://www.atmel.com/images/doc2545.pdf
  *
  * @see curr_sum
  * @see LOG_LDR
@@ -177,18 +169,10 @@ void ldr_init()
 }
 
 /**
- * @brief Returns the "current" brightness - calculated from the last taken
- * measurements
- *
- * Before this function can be called, the module needs to be initialized
- * by calling ldr_init().
+ * @brief Returns the "current" brightness
  *
  * This function returns the "current" brightness. "Current" means that it
- * is actually the mean of the last taken measurements. The number of
- * measurements taken into account is defined in MEASUREMENTS_ARRAY_SIZE.
- *
- * The returned value is actually the mean value of the last measurements.
- * This makes it more robust against sudden changes of the ambient light.
+ * is actually the mean of all of the last taken measurements.
  *
  * @return Current brightness, 0 = dark, 255 = bright
  *
@@ -206,18 +190,14 @@ uint8_t ldr_get_brightness()
  * @brief Processes the last taken measurement
  *
  * This ISR will be executed once a new conversion has been completed. The
- * conversion itself is started using ldr_ADC().
+ * conversion itself is started using `ldr_ADC()`.
  *
  * It will read out the value from the ADC measurement started in the last
- * cycle and put it into measurements. It will then also recalculate the new
- * value for curr_sum, which is needed by ldr_get_brightness().
+ * cycle and put it into `measurements`. It will then also recalculate the new
+ * value for `curr_sum`.
  *
- * If logging is enabled it will also output the value of the ADC measurement.
- *
- * It uses a counter in order to keep track of the current index for
- * measurements. It uses a modulo operation to get the new value of this index,
- * which is the reason why MEASUREMENTS_ARRAY_SIZE should be a multiple of 2,
- * so this can be performed by a bit shift more effectively.
+ * If logging is enabled (`LOG_LDR`) it will also output the value of the ADC
+ * measurement.
  *
  * @see ldr_ADC()
  * @see measurements
