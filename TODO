@@ -233,3 +233,6 @@
 - uart_protocol: Make advanced mode optional during compilation
 
 - datetime: WD and MM is treated differently
+
+- main: The whole soft second implementation should be moved into own module
+  making main_ISR() useless.
