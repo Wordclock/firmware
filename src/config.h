@@ -30,15 +30,6 @@
 #ifndef _WC_CONFIG_H_
 #define _WC_CONFIG_H_
 
-/*
- * Make sure F_CPU is set
- */
-#ifndef F_CPU
-
-    #error F_CPU unknown!
-
-#endif
-
 /**
  * @brief Macro building the actual version number
  *

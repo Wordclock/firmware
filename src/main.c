@@ -57,6 +57,15 @@
 
 #endif
 
+/*
+ * Make sure F_CPU is set
+ */
+#ifndef F_CPU
+
+    #error F_CPU unknown!
+
+#endif
+
 /**
  * @brief Interval to (re)read the time from the RTC
  *
