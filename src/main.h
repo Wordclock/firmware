@@ -23,24 +23,18 @@
  * @file main.h
  * @brief The main configuration file
  *
- * This file contains the most important configuration options of the project.
- * It gets included by various other modules to read back the options and
- * depending upon their value actually change the compilation.
- *
- * @see main.c
+ * This file contains global configuration options for the whole project and
+ * is used throughout the project.
  */
 
 #ifndef _WC_MAIN_H_
 #define _WC_MAIN_H_
 
 /*
- * Check whether CPU frequency is set
+ * Make sure F_CPU is set
  */
 #ifndef F_CPU
 
-    /*
-     * Output error message and thereby stop compilation
-     */
     #error F_CPU unknown!
 
 #endif
@@ -48,26 +42,19 @@
 /**
  * @brief Macro building the actual version number
  *
- * This macro will "return" the MAJOR_VERSION and MINOR_VERSION combined into
- * a single byte. It is used to determine the exact version number of the
- * software being compiled.
+ * This macro will build actual version number by combining `MAJOR_VERSION`
+ * and `MINOR_VERSION` and shifting it appropriately.
  *
  * @see MAJOR_VERSION
  * @see MINOR_VERSION
- * @see SW_VERSION
  */
 #define BUILD_VERSION(x, y) ((uint8_t)((x << 4) | (y)))
 
 /**
  * @brief Major version number
  *
- * Along with the major version number there is a minor version number. Small
- * changes will only result in an increase of the minor version number, whereas
- * bigger releases will result in an increase of the major version number.
- *
- * @note As this is combined with MINOR_VERSION into a single byte, actually
- * only 4 bits are available for this number, which means that only 0 - 15 are
- * valid values.
+ * @note As this is combined with `MINOR_VERSION` into a single byte, so
+ * actually only values between 0 - 15 are valid.
  *
  * @see BUILD_VERSION()
  * @see MINOR_VERSION
@@ -78,16 +65,11 @@
 /**
  * @brief Minor version number
  *
- * Along with the minor version number there is a major version number. Small
- * changes will only result in an increase of the minor version number, whereas
- * bigger releases will result in an increase of the major version number.
- *
- * @note As this is combined with MAJOR_VERSION into a single byte, actually
- * only 4 bits are available for this number, which means that only 0 - 15 are
- * valid values.
+ * @note As this is combined with `MINOR_VERSION` into a single byte, so
+ * actually only values between 0 - 15 are valid.
  *
  * @see BUILD_VERSION()
- * @see MAJOR_VERSION
+ * @see MINOR_VERSION
  * @see SW_VERSION
  */
 #define MINOR_VERSION 13
@@ -96,9 +78,7 @@
  * @brief Actual version number
  *
  * The actual version number consists of both the major and the minor version
- * number. It is "calculated" using the macro BUILD_VERSION(). This byte will
- * then actually be used to identity and/or compare different versions among
- * each other.
+ * number. It is build by the the macro `BUILD_VERSION()`.
  *
  * @see MINOR_VERSION
  * @see MAJOR_VERSION
@@ -107,150 +87,145 @@
 #define SW_VERSION BUILD_VERSION(MAJOR_VERSION, MINOR_VERSION)
 
 /**
- * @brief Represents the classic German display
+ * @brief Classic German frtonpanel layout
  *
- * If set to 1 the software will be compiled with support for the classic
- * German layout. This effectively will make sure that display_wc_ger.h will
- * be included and compiled.
+ * If set to 1, the software will be compiled with support for the classic
+ * German frontpanel layout. This layout supports up to three different idioms:
  *
- * @note Only of the following options should be set to 1: WC_DISP_GER,
- * WC_DISP_GER3, WC_DISP_ENG.
+ *  - Wessi
+ *  - Ossi
+ *
+ * For further details please refer to [1].
+ *
+ * [1]: https://www.mikrocontroller.net/articles/Word_Clock#Deutsch_.282-sprachig.29
+ *
+ * @note Only of the following options should be set to 1: `WC_DISP_GER`,
+ * `WC_DISP_GER3`, `WC_DISP_ENG`.
  *
  * @see WC_DISP_GER3
  * @see WC_DISP_ENG
- * @see display_wc_ger.h
+ * @see display.h
  */
 #define WC_DISP_GER 0
 
 /**
- * @brief Represents the "new" German display
+ * @brief Modern German frontpanel layout
  *
- * If set to 1 the software will be compiled with support for the "new"
- * German layout. This effectively will make sure that display_wc_ger3.h will
- * be included and compiled.
+ * If set to 1, the software will be compiled with support for the modern
+ * German frontpanel layout. This layout supports up to three different idioms:
  *
- * The "new" German layout supports three different "modes": Wessi, Rhein-Ruhr,
- * Ossi. For further details refer to [1].
+ *  - Wessi
+ *  - Rhein-Ruhr
+ *  - Ossi
  *
- * @note Only of the following options should be set to 1: WC_DISP_GER,
- * WC_DISP_GER3, WC_DISP_ENG.
+ * For further details please refer to [1].
  *
  * [1]: https://www.mikrocontroller.net/articles/Word_Clock#Deutsch_.283-sprachig.29
  *
+ * @note Only of the following options should be set to 1: `WC_DISP_GER`,
+ * `WC_DISP_GER3`, `WC_DISP_ENG`.
+ *
  * @see WC_DISP_GER
  * @see WC_DISP_ENG
- * @see display_wc_ger3.h
+ * @see display.h
  */
 #define WC_DISP_GER3 1
 
 /**
- * @brief Represents the English display
+ * @brief English frontpanel layout
  *
- * If set to 1 the software will be compiled with support for the English
- * layout. This effectively will make sure that display_wc_eng.h will be
- * included and compiled.
+ * If set to 1, the software will be compiled with support for the English
+ * frontpanel layout. For further details please refer to [1].
  *
- * @note Only of the following options should be set to 1: WC_DISP_GER,
- * WC_DISP_GER3, WC_DISP_ENG.
+ * [1]: https://www.mikrocontroller.net/articles/Word_Clock#Englisch
+ *
+ * @note Only of the following options should be set to 1: `WC_DISP_GER`,
+ * `WC_DISP_GER3`, `WC_DISP_ENG`.
  *
  * @see WC_DISP_GER
  * @see WC_DISP_GER3
- * @see display_wc_eng.h
+ * @see display.h
  */
 #define WC_DISP_ENG 0
 
 /**
- * @brief Controls whether the software should be compiled with support for RGB
+ * @brief Controls whether the software should include support for RGB
  *
- * The software itself supports RGB LEDs. However if non-RGB LEDs are used in a
- * particular build, this can be set to 1. It will make sure that any RGB
- * specific code won't be compiled, which will result in a smaller binary.
+ * If set to 0, the firmware will be built with full support for RGB LEDs.
+ * Otherwise the resulting firmware will not contain any RGB specific code,
+ * rendering it into a monochromatic build.
  *
- * There are quite a bunch of IR commands that are associated with the RGB
- * functionality. These are expected to be trained, unless
- * ENABLE_INDIVIDUAL_CONFIG is set to 1.
+ * @note Depending upon the value of `ENABLE_INDIVIDUAL_CONFIG` the appropriate
+ * user commands might be unavailable when disabling this option.
  *
- * @note When set to 1 only the red PWM channel will actually work.
+ * @note In a monochromatic build only the red channel will output a signal.
  *
  * @see pwm.h
  */
 #define MONO_COLOR_CLOCK 0
 
 /**
- * @brief Controls whether the software should be compiled with support for
- * DCF77
+ * @brief Defines whether support for DCF77 should be included
  *
- * This controls whether or not the DCF77 functionality should be included.
- * Disabling it will save about 1 kilobyte of program space, so in case you
- * don't attach a DCF77 receiver to your build, you probably want to disable
- * this.
+ * If set to 1, the firmware will be built with support for decoding the
+ * DCF77 time signal in order to be able to get the current date and time
+ * automatically.
+ *
+ * @note Depending upon the value of `ENABLE_INDIVIDUAL_CONFIG` the appropriate
+ * user command might be unavailable when disabling this option.
  *
  * @see dcf77.h
  */
 #define ENABLE_DCF_SUPPORT 1
 
 /**
- * @brief Controls whether the software should be compiled with support for
- *   Ambilight
+ * @brief Defines whether support for Ambilight should be included
  *
- * This controls whether or not support for Ambilight should be included.
- * Disabling it won't save too much program space, however when
- * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
- * command for it. Otherwise you'll have to train an IR command (and/or skip
- * it), although you actually can't use it anyway.
+ * If set to 1, the firmware will be built with support for the Ambilight,
+ * which basically comes down to toggling the pin defined in `USER_AMBILIGHT`.
  *
- * The support itself basically consists only of a simple toggle between "on"
- * and/or "off". The Ambilight is expected to be connected as defined in
- * USER_AMBILIGHT.
+ * @note Depending upon the value of `ENABLE_INDIVIDUAL_CONFIG` the appropriate
+ * user command might be unavailable when disabling this option.
  *
  * @see user.h
  */
 #define ENABLE_AMBILIGHT_SUPPORT 1
 
 /**
- * @brief Controls whether the software should be compiled with support for
- *   Bluetooth
+ * @brief Defines whether support for Bluetooth should be included
  *
- * This controls whether or not support for Bluetooth should be included.
- * Disabling it won't save too much program space, however when
- * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
- * command for it. Otherwise you'll have to train an IR command (and/or skip
- * it), although you actually can't use it anyway.
+ * If set to 1, the firmware will be built with support for a Bluetooth
+ * transceiver, which basically comes down to toggling the pin defined in
+ * `USER_BLUETOOTH`. This makes it possible to enable and/or disable the
+ * Bluetooth transceiver using the IR remote control.
  *
- * The support itself basically consists only of a simple toggle between "on"
- * and/or "off". The Bluetooth module is expected to be connected as defined in
- * USER_BLUETOOTH.
+ * @note Depending upon the value of `ENABLE_INDIVIDUAL_CONFIG` the appropriate
+ * user command might be unavailable when disabling this option.
  *
  * @see user.h
  */
 #define ENABLE_BLUETOOTH_SUPPORT 1
 
 /**
- * @brief Controls whether the software should be compiled with support for
- *   auxiliaries
+ * @brief Defines whether support for auxiliary should be included
  *
- * This controls whether or not support for auxiliaries should be included.
- * Disabling it won't save too much program space, however when
- * ENABLE_INDIVIDUAL_CONFIG is set to 1, you are not expected to train an IR
- * command for it. Otherwise you'll have to train an IR command (and/or skip
- * it), although you actually can't use it anyway.
+ * If set to 1, the firmware will be built with support for auxiliary, which
+ * basically comes down to toggling the pin defined in `USER_AUXPOWER`.
  *
- * The support itself basically consists only of a simple toggle between "on"
- * and/or "off". The auxiliaries are expected to be connected as defined in
- * USER_AUXPOWER.
+ * @note Depending upon the value of `ENABLE_INDIVIDUAL_CONFIG` the appropriate
+ * user command might be unavailable when disabling this option.
  *
  * @see user.h
  */
 #define ENABLE_AUXPOWER_SUPPORT 1
 
 /**
- * @brief Controls whether the software should be compiled with support for an
- *   individual config
+ * @brief Defines whether unused user command should be included
  *
- * When set to 1 the IR commands that are expected to be trained will be built
- * dynamically, so that commands of modules not enabled are not expected to be
- * trained. Otherwise all commands are expected to be trained (and/or skipped),
- * resulting in useless and unintuitive assignments.
+ * If set to 1, the firmware will be built without support for user commands
+ * of disabled options. This makes the resulting binary a smaller and doesn't
+ * require the user to train user commands that wouldn't have any effect
+ * anyway.
  *
  * @see ENABLE_DCF_SUPPORT
  * @see MONO_COLOR_CLOCK
@@ -258,50 +233,42 @@
  * @see ENABLE_BLUETOOTH_SUPPORT
  * @see ENABLE_AUXPOWER_SUPPORT
  * @see user_command_t
- * @see user.h
- * @see user.c
  */
 #define ENABLE_INDIVIDUAL_CONFIG 1
 
 /**
- * @brief Controls whether changes to the setting should be saved automatically
+ * @brief Defines whether changed settings should be saved automatically
  *
- * When set to 1 any changes to the settings done by the user will be saved
- * automatically after USER_DELAY_BEFORE_SAVE_EEPROM_S seconds. Otherwise the
- * user will have to trigger the saving manually.
- *
- * The saving itself is done within user_isr1Hz().
+ * If set to 1, the firmware will be built in a way that settings changed by
+ * the user will be saved automatically after a timeout defined by
+ * `USER_DELAY_BEFORE_SAVE_EEPROM_S`.
  *
  * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
- * @see user.h
- * @see user_isr1Hz()
  */
 #define ENABLE_USER_AUTOSAVE 1
 
 /**
-* @brief Controls how the reset of the microcontroller is performed
-*
-* When set to 1 a reset of the microcontroller is performed by enabling the
-* watchdog timer and letting it timeout, resulting in a reset. Otherwise it
-* will directly jump to the the bootloader, which technically is not a reset,
-* but is asked for by [chip45boot2][1].
-*
-* [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
-*
-* @see _reset()
-*/
+ * @brief Defines how a reset of the microcontroller will be performed
+ *
+ * If set to 1, the firmware will be built in a way that a reset of the
+ * microcontroller is being performed by making use of the watchdog timer.
+ * Otherwise the microcontroller will simply jump directly to the the
+ * bootloader, which technically is not a reset, but is the way
+ * [chip45boot2][1] expects it to be.
+ *
+ * [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
+ *
+ * @see _reset()
+ */
 #define BOOTLOADER_RESET_WDT 1
 
 /**
- * @brief Enable UART protocol
+ * @brief Defines whether support for the UART protocol should be included
  *
- * This defines whether the UART protocol should be built into the resulting
- * binary. This can be used to control the Wordclock using UART and is more
- * powerful than a simple IR remote control.
+ * This defines whether the support for the UART protocol should be built into
+ * the resulting binary. This can be used to control the Wordclock using UART.
  *
- * The protocol is documented in the "UART_PROTOCOL.md" document within the
- * "doc" directory. The implementation itself is done within its own module
- * called "uart_protocol".
+ * The protocol itself is documented in the `doc/UART_PROTOCOL.md`.
  *
  * @todo Implement this in a way that is actually saves some amount of program
  * space rather than just disabling the functionality but still compiling it
@@ -312,167 +279,135 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
- * @brief Controls whether logging for the main "module" should be enabled
+ * @brief Defines whether the main module should output logging information
  *
- * This affects main.c and controls whether various functions within this file
- * should output debug information. This includes information about the
- * Initialization process as well as some basic information during actual
+ * This affects `main.c` and controls whether functions within this file
+ * should output debugging information. This includes information about the
+ * initialization process as well as some rudimentary information during
  * runtime.
  *
- * @see log_main()
- * @see handle_datetime()
- * @see main()
  * @see main.c
  */
 #define LOG_MAIN 0
 
 /**
- * @brief Controls whether logging for changes in brightness should be enabled
+ * @brief Defines whether changes in the brightness should be logged
  *
- * This affects main.c and controls whether debug information about changes
- * in the brightness should be output.
+ * This affects `main.c` and controls whether debug information about changes
+ * in the brightness should be logged.
  *
- * @see handle_brightness()
  * @see main.c
  */
 #define LOG_MAIN_BRIGHTNESS 0
 
 /**
- * @brief Controls whether logging for LDR measurements should be enabled
+ * @brief Defines whether the measured LDR values should be logged
  *
- * This affects ldr.c and controls whether debug information about measured
+ * This affects `ldr.c` and controls whether debug information about measured
  * values from the LDR should be output.
  *
- * @see ldr_init()
- * @see ldr_ADC()
  * @see ldr.c
  */
 #define LOG_LDR 0
 
 /**
- * @brief Controls whether logging of changes to the PWM due to changes in
- *   brightness should be enabled
+ * @brief Defines whether changes of the PWM signal should be logged
  *
- * This affects pwm.c and controls whether debug information about changes to
+ * This affects `pwm.c` and controls whether debug information about changes to
  * the generated PWM signal due to changes in brightness of the ambient light
  * should be output.
  *
- * @see outputVals()
- * @see modifyLdrBrightness2pwmStep()
  * @see pwm.c
  */
 #define LOG_LDR2PWM 0
 
 /**
- * @brief Controls whether logging of changes to the display state should be
- *   enabled
+ * @brief Defines whether changes of the display state should be logged
  *
- * This affects display_wc.c and controls whether debug information about any
+ * This affects `display_wc.c` and controls whether debug information about any
  * changes to the display state should be output.
  *
- * @see display_outputData()
  * @see display_wc.c
  */
 #define LOG_DISPLAY_STATE 0
 
 /**
- * @brief Controls whether logging of received IR codes should be enabled
+ * @brief Defines whether received IR codes should be logged
  *
- * This affects user.c and controls whether debug information about any
+ * This affects `user.c` and controls whether debug information about any
  * received IR codes should be output. This includes the protocol, address and
- * the command of the received IR frame.
+ * the actual command of the received IR frame.
  *
- * @see handle_ir_code()
  * @see user.c
  */
 #define LOG_USER_IR_CMD 0
 
 /**
- * @brief Controls whether logging of the user state should be enabled
+ * @brief Defines whether information about the user state should be logged
  *
- * This affects user.c and controls whether debug information about the user
- * state should be output. The user state is organized as a stack and this
- * enables that the content of the stack is output.
+ * This affects `user.c` and controls whether debug information about the user
+ * state should be output.
  *
- * @see printStateStack()
- * @see log_state()
- * @see addState()
  * @see user.c
  */
 #define LOG_USER_STATE 0
 
 /**
- * @brief Controls whether logging of changes to the time should be enabled
+ * @brief Defines whether changes in time within user module should be logged
  *
- * This affects user.c and controls whether debug information about changes
+ * This affects `user.c` and controls whether debug information about changes
  * to the time should be output.
  *
- * @see log_time()
- * @see user_setNewTime()
  * @see user.c
  */
 #define LOG_USER_TIME 0
 
 /**
- * @brief Controls whether logging of the IR training process should be enabled
+ * @brief Defines whether information during IR training should be logged
  *
- * This affects usermodes.c and controls whether debug information about the IR
- * training process should be output.
+ * This affects `usermodes.c` and controls whether debug information about the
+ * IR training process should be output.
  *
- * @see log_irTrain()
- * @see TrainIrState_1Hz()
- * @see TrainIrState_handleIR()
  * @see usermodes.c
  */
 #define LOG_USER_IR_TRAIN 0
 
 /**
- * @brief Controls whether logging of the initialization of the EEPROM module
- *   should be enabled
  *
- * This affects wceeprom.c and controls whether debug information about the
+ * @brief Defines whether information about EEPROM init should be logged
+ *
+ * This affects `wceeprom.c` and controls whether debug information about the
  * initialization process of the EEPROM module should be output.
  *
- * @see uint8ToHexStr()
- * @see wcEeprom_init()
  * @see wceeprom.c
  */
 #define LOG_EEPROM_INIT 0
 
 /**
- * @brief Controls whether logging of writebacks to the EEPROM should be enabled
+ * @brief Defines whether information about EEPROM writeback should be logged
  *
- * This affects wceeprom.c and controls whether debug information about
+ * This affects `wceeprom.c` and controls whether debug information about
  * writebacks to the EEPROM should be output.
  *
- * @see log_eeprom()
- * @see uint8ToHexStr()
- * @see wcEeprom_writeIfChanged()
- * @see wcEeprom_writeback()
  * @see wceeprom.c
  */
 #define LOG_EEPROM_WRITEBACK 0
 
 /**
- * @brief Controls whether logging of the DCF77 modules should be enabled
+ * @brief Defines whether information about the DCF77 decoding should be logged
  *
- * This affects dcf77.c and controls whether various debug information about
- * actions within the DCF77 modules should be output.
+ * This affects `dcf77.c` and controls whether various debug information about
+ * the current state of the DCF77 module should be output.
  *
- * @see log_dcf77()
- * @see dcf77_reset()
- * @see dcf77_check_receiver_type()
- * @see dcf77_check()
  * @see dcf77.c
  */
 #define LOG_DCF77 0
 
 /**
- * @brief Controls whether logging for UART protocol module should be enabled
+ * @brief Defines whether information about the UART protocol should be logged
  *
- * This affects uart_protocol.c and controls whether various debug information
- * about the current state and any changes to it should be output in order to
- * make the debugging easier.
+ * This affects `uart_protocol.c` and controls whether various debug
+ * information about the current state should be output.
  *
  * @see uart_protocol.c
  */
