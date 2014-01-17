@@ -125,20 +125,24 @@ in order to get these bootloaders working correctly.
 ## CONTRIBUTIONS
 
 The source code itself is maintained using git. The project along with its
-repositories lives over at [gitorious.org][11]. Contributions of any kind
-(bug reports, feature requests, patches) are welcome. The `TODO` file within
-the projects root directory contains a list of things that still need to be
-done, so feel free to start hacking away ;).
+repositories lives over at [github.com][11]. Contributions of any kind (bug
+reports, feature requests, patches) are welcome. The `TODO` file within the
+projects root directory contains a list of things that still need to be done,
+so feel free to start hacking away ;).
+
+There is also a [gitorious.org][12] repository, which currently is being used
+as a mirror only.
 
 [0]: https://www.mikrocontroller.net/wikifiles/1/17/Wordclock-frontpanel.png "Wordclock Frontpanel"
 [1]: https://www.mikrocontroller.net/topic/156661
 [2]: https://www.mikrocontroller.net/articles/Word_Clock
 [3]: https://www.mikrocontroller.net/articles/Word_Clock_Variante_1
-[4]: https://gitorious.org/wordclock/firmware/commits/
-[5]: https://gitorious.org/wordclock/manual
+[4]: https://github.com/Wordclock/firmware/commits/master
+[5]: https://github.com/Wordclock/manual
 [6]: https://www.stack.nl/~dimitri/doxygen/
 [7]: http://www.nongnu.org/avrdude/
 [8]: https://www.mikrocontroller.net/articles/AVR-Bootloader_mit_Verschl%C3%BCsselung_von_Hagen_Re
 [9]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
 [10]: https://www.mikrocontroller.net/articles/AVR_Bootloader_FastBoot_von_Peter_Dannegger
-[11]: https://gitorious.org/wordclock/
+[11]: https://github.com/Wordclock
+[12]: https://gitorious.org/Wordclock
