@@ -66,20 +66,20 @@ versions might work just fine, but are not fully tested.
 
 - The source code itself is documented quite heavily using [Doxygen][6]. An
   appropriate Doxyfile is provided along with the sources and can be found
-  within the `doc` directory. It can be used to generate a HTML and/or PDF
+  within the `doc/` directory. It can be used to generate a HTML and/or PDF
   reference.
 
 ## CONFIGURATION
 
 There are various options, which influence the building process and hence the
-resulting binary. These options can be found within `config.h` in the `src`
-directory, along with comments about their meaning and possible values.
+resulting binary. These options can be found within `src/config.h`, along with
+comments about their meaning and possible values.
 
 ## BUILDING
 
 Until a Makefile will be provided along with this package, the source code
 needs to be built manually and/or using an IDE. Make sure to exclude
-`src/usermodes.c` from the build. It will be included within `user.c`
+`src/usermodes.c` from the build. It will be included within `src/user.c`
 automatically and does not need to be compiled on its own.
 
 ## FLASHING
@@ -110,7 +110,7 @@ on its own. There are also a few other bootloaders that are supported directly,
 namely [chip45boot2][9] and [FastBoot][10] from Peter Danegger.
 
 Depending upon the bootloader you choose, you might have to change the fuses
-and/or the `BOOTLOADER_RESET_WDT` directive within `config.h`:
+and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`:
 
 - **AVRootloader, FastBoot**: Set **efuse** to `0xfc`
 
