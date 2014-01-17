@@ -971,6 +971,14 @@ extern bool useAutoOffAnimation;
  */
 #define USER_ENTER_ONOFF_TIME_STEP 15
 
+extern void addState(menu_state_t mode, const void* param);
+
+extern void addSubState(int8_t curState, menu_state_t mode, const void* param);
+
+extern bool leaveSubState(int8_t indexOfStateToLeave);
+
+extern void quitMyself(menu_state_t state, const void* result);
+
 extern void handle_user_command(user_command_t user_command);
 
 extern void handle_ir_code();

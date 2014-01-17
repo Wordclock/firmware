@@ -73,14 +73,6 @@
  */
 bool useAutoOffAnimation;
 
-static bool leaveSubState(int8_t indexOfStateToLeave);
-
-static void addState(menu_state_t mode, const void* param);
-
-static void addSubState(int8_t curState, menu_state_t mode, const void* param);
-
-static void quitMyself(menu_state_t state, const void* result);
-
 /**
  * @brief Depth of the state stack
  *
@@ -519,7 +511,7 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
  * @see g_currentIdxs
  * @see UserState_enter()
  */
-static void addState(menu_state_t mode, const void* param)
+void addState(menu_state_t mode, const void* param)
 {
 
     log_state("addstate\n");
@@ -562,7 +554,7 @@ static void addState(menu_state_t mode, const void* param)
  * @see leaveSubState()
  * @see addState()
  */
-static void addSubState(int8_t curState, menu_state_t mode, const void* param)
+void addSubState(int8_t curState, menu_state_t mode, const void* param)
 {
 
     bool success = true;
@@ -616,7 +608,7 @@ static void addSubState(int8_t curState, menu_state_t mode, const void* param)
  * @see UserState_prohibitLeave()
  * @see UserState_LeaveState()
  */
-static bool leaveSubState(int8_t indexOfStateToLeave)
+bool leaveSubState(int8_t indexOfStateToLeave)
 {
 
     int8_t i;
@@ -681,7 +673,7 @@ static bool leaveSubState(int8_t indexOfStateToLeave)
  * @see g_currentIdxs
  * @see UserState_SubstateFinished()
  */
-static void quitMyself(menu_state_t state, const void* result)
+void quitMyself(menu_state_t state, const void* result)
 {
 
     bool success;
