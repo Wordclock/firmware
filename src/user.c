@@ -516,7 +516,7 @@ void addState(menu_state_t mode, const void* param)
 
     log_state("addstate\n");
 
-    if ((g_topOfStack == 0) || (g_stateStack[g_topOfStack - 1] != mode)) {
+    if ((g_topOfStack == 0) || (user_get_current_menu_state() != mode)) {
 
         g_stateStack[g_topOfStack] = mode;
         g_currentIdxs[mode] = g_topOfStack;
@@ -797,7 +797,7 @@ void handle_user_command(user_command_t user_command)
 
             } else if (UC_DEMO_MODE == user_command) {
 
-                menu_state_t curTop = g_stateStack[g_topOfStack - 1];
+                menu_state_t curTop = user_get_current_menu_state();
 
                 log_state("BS\n");
 
@@ -817,7 +817,7 @@ void handle_user_command(user_command_t user_command)
 
             } else if (UC_PULSE_MODE == user_command) {
 
-                menu_state_t curTop = g_stateStack[g_topOfStack - 1];
+                menu_state_t curTop = user_get_current_menu_state();
 
                 log_state("PLS\n");
 
@@ -967,7 +967,7 @@ void handle_ir_code()
 
         g_keyDelay = USER_KEY_PRESS_DELAY_100MS;
 
-        if (g_stateStack[g_topOfStack - 1] == MS_irTrain) {
+        if (user_get_current_menu_state() == MS_irTrain) {
 
             TrainIrState_handleIR(&ir_data);
 
@@ -1147,7 +1147,7 @@ void user_setNewTime(const datetime_t* i_time)
 
     }
 
-    if (!UserState_prohibitTimeDisplay(g_stateStack[g_topOfStack - 1])
+    if (!UserState_prohibitTimeDisplay(user_get_current_menu_state())
             && (g_powerState != UPS_AUTO_OFF)) {
 
         log_time("disp Time ");
@@ -1174,7 +1174,7 @@ void user_setNewTime(const datetime_t* i_time)
 void user_isr1000Hz()
 {
 
-    UserState_Isr1000Hz(g_stateStack[g_topOfStack - 1]);
+    UserState_Isr1000Hz(user_get_current_menu_state());
 
 }
 
@@ -1191,7 +1191,7 @@ void user_isr1000Hz()
 void user_isr100Hz()
 {
 
-    UserState_Isr100Hz(g_stateStack[g_topOfStack - 1]);
+    UserState_Isr100Hz(user_get_current_menu_state());
 
 }
 
@@ -1210,7 +1210,7 @@ void user_isr100Hz()
 void user_isr10Hz()
 {
 
-    UserState_Isr10Hz(g_stateStack[g_topOfStack - 1]);
+    UserState_Isr10Hz(user_get_current_menu_state());
 
     if (g_keyDelay != 0) {
 
@@ -1272,7 +1272,7 @@ void user_isr1Hz()
 
     if ((g_powerState != UPS_AUTO_OFF) && (!g_animPreview)) {
 
-        UserState_Isr1Hz(g_stateStack[g_topOfStack - 1]);
+        UserState_Isr1Hz(user_get_current_menu_state());
 
     } else {
 
