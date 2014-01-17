@@ -631,7 +631,9 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @brief Sets the color for the given color preset
  *
  * This retrieves the hex presentation of the RGB values for the given color
- * preset and applies them appropriately.
+ * preset and saves them. If the current mode is equal to `MS_normalMode` and
+ * the preset written was equal to the one currently being used, it will be
+ * applied immediately.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
@@ -692,6 +694,16 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     wcEeprom_writeback(&wcEeprom_getData()->userParams.colorPresets[preset],
         sizeof(wcEeprom_getData()->userParams.colorPresets[preset]));
+
+    if (preset == (&(wcEeprom_getData()->userParams))->curColorProfile) {
+
+        if (user_get_current_menu_state() == MS_normalMode) {
+
+            addState(MS_normalMode, &preset);
+
+        }
+
+    }
 
     uart_protocol_ok();
 
