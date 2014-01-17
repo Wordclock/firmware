@@ -697,6 +697,22 @@ void quitMyself(menu_state_t state, const void* result)
 }
 
 /**
+ * @brief Returns the currently active menu state
+ *
+ * @return Currently active menu state
+ *
+ * @see g_stateStack
+ * @see g_topOfStack
+ * @see menu_state_t
+ */
+menu_state_t user_get_current_menu_state()
+{
+
+    return g_stateStack[g_topOfStack - 1];
+
+}
+
+/**
  * @brief Handles the given user command
  *
  * This handles the given user command (user_command_t) either by processing

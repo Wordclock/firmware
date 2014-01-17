@@ -979,6 +979,8 @@ extern bool leaveSubState(int8_t indexOfStateToLeave);
 
 extern void quitMyself(menu_state_t state, const void* result);
 
+extern menu_state_t user_get_current_menu_state();
+
 extern void handle_user_command(user_command_t user_command);
 
 extern void handle_ir_code();
