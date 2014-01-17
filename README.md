@@ -125,10 +125,15 @@ in order to get these bootloaders working correctly.
 ## CONTRIBUTIONS
 
 The source code itself is maintained using git. The project along with its
-repositories lives over at [github.com][11]. Contributions of any kind (bug
-reports, feature requests, patches) are welcome. The `TODO` file within the
-projects root directory contains a list of things that still need to be done,
-so feel free to start hacking away ;).
+repositories lives over at [github.com][11]. Contributions of any kind are
+welcome. Please, if possible, use the means provided by github.com to report
+bugs and/or request features. The preferred way to submit patches are pull
+requests. If you new to git and/or are not familiar with this process, refer
+to [12] for a detailed description on how to submit a pull request.
+
+In case you are looking for something to work on, you probably want to take a
+look at the `TODO` file within the projects root directory. It contains a list
+of things that still need to be done, so feel free to start hacking away ;).
 
 There is also a [gitorious.org][12] repository, which currently is being used
 as a mirror only.
@@ -145,4 +150,5 @@ as a mirror only.
 [9]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
 [10]: https://www.mikrocontroller.net/articles/AVR_Bootloader_FastBoot_von_Peter_Dannegger
 [11]: https://github.com/Wordclock
-[12]: https://gitorious.org/Wordclock
+[12]: https://help.github.com/articles/using-pull-requests
+[13]: https://gitorious.org/Wordclock
