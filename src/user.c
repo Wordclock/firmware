@@ -108,7 +108,7 @@ static void quitMyself(menu_state_t state, const void* result);
  * @see g_topOfStack
  * @see g_currentIdxs
  */
-static uint8_t g_stateStack[USER_MAX_STATE_DEPTH];
+static menu_state_t g_stateStack[USER_MAX_STATE_DEPTH];
 
 /**
  * @brief Contains the current index for each currently active mode
