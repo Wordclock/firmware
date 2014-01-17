@@ -555,15 +555,14 @@ static void _preset_active(uint8_t argc, char* argv[])
  * @brief Sets the currently active color preset
  *
  * This retrieves the hex representation of the number to set for the currently
- * active color preset from the command buffer and applies it.
+ * active color preset from the command buffer and saves it. If the current
+ * mode is equal to `MS_normalMode`, it will be changed immediately.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
  * @see UserEepromParams::curColorProfile
  * @see pwm_set_colors()
- *
- * @todo Return error when currently not in normal mode?
  */
 static void _preset_set(uint8_t argc, char* argv[])
 {
@@ -577,6 +576,12 @@ static void _preset_set(uint8_t argc, char* argv[])
 
         wcEeprom_writeback(&wcEeprom_getData()->userParams.curColorProfile,
             sizeof(wcEeprom_getData()->userParams.curColorProfile));
+
+        if (user_get_current_menu_state() == MS_normalMode) {
+
+            addState(MS_normalMode, &preset);
+
+        }
 
         uart_protocol_ok();
 
