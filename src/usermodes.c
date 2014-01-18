@@ -748,7 +748,7 @@ static void NormalState_enter(const void* param)
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
-        pwm_set_color_step(g_params->colorPresets[g_params->curColorProfile].r,
+        pwm_set_colors(g_params->colorPresets[g_params->curColorProfile].r,
             g_params->colorPresets[g_params->curColorProfile].g,
             g_params->colorPresets[g_params->curColorProfile].b);
 
@@ -858,8 +858,8 @@ static bool NormalState_handleUserCommand(user_command_t command)
 
                 uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
 
-                incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, MAX_PWM_STEPS - 1);
-                pwm_set_color_step(rgb[0], rgb[1], rgb[2]);
+                incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, 255);
+                pwm_set_colors(rgb[0], rgb[1], rgb[2]);
 
             }
 

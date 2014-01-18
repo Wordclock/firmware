@@ -213,9 +213,6 @@
 
 - Implement EEPROM writeback after delay for UART protocol, too.
 
-- Make colorPresets hold an actual value from 0 to 255 rather than the step
-  value
-
 - uart_protocol: Make advanced mode optional during compilation
 
 - main: The whole soft second implementation should be moved into own module

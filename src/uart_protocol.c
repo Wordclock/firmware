@@ -642,10 +642,6 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @see hexStrToUint8()
  * @see UserEepromParams::colorPresets
  * @see uart_protocol_ok()
- *
- * @todo RGB values can only take values from 0 to MAX_PWM_STEPS - 1, as
- * the color preset currently stores the PWM steps, not the RGB colors itself.
- * Once this has been fixed the check within this function can be removed!
  */
 static void _preset_write(uint8_t argc, char* argv[])
 {
@@ -672,7 +668,7 @@ static void _preset_write(uint8_t argc, char* argv[])
 
             rgb[i - 2] = hexStrToUint8(argv[i], &status);
 
-            if (!status || rgb[i - 2] >= MAX_PWM_STEPS) {
+            if (!status) {
 
                 break;
 

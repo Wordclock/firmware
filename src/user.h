@@ -610,7 +610,7 @@ typedef struct UiTime {
  *
  * This defines the default values for the color presets times. Each entry
  * expects three parameters for the colors "red", "green" and "blue". The
- * values can range from 0 to MAX_PWM_STEPS - 1.
+ * values can range from 0 to 255.
  *
  * The default is to assign a preset for the colors "red" (1), "green" (2) and
  * "blue" (3). On top of that there is a "white" (4) preset.
@@ -623,10 +623,10 @@ typedef struct UiTime {
  */
 #define USER_COLORPRESETS_DEFAULTS \
 { \
-    {MAX_PWM_STEPS - 1, 0, 0}, \
-    {0, MAX_PWM_STEPS - 1, 0}, \
-    {0, 0, MAX_PWM_STEPS - 1}, \
-    {MAX_PWM_STEPS - 1, MAX_PWM_STEPS - 1, MAX_PWM_STEPS - 1 }, \
+    {255, 0, 0}, \
+    {0, 255, 0}, \
+    {0, 0, 255}, \
+    {255, 255, 255}, \
 }
 
 /**
