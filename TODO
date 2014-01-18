@@ -75,9 +75,6 @@
 - color: Make hueWaveform() more general with a 2nd parameter asking for the
   color, so its not working with green only.
 
-- Define and implement an UART protocol to control the Wordclock. This could
-  then be used for a smartphone application or something similar like that.
-
 - Add support for motion sensors, so that the Wordclock can be disabled and
   will enable itself once there is someone in the surrounding.
 
@@ -220,8 +217,6 @@
   value
 
 - uart_protocol: Make advanced mode optional during compilation
-
-- datetime: WD and MM is treated differently
 
 - main: The whole soft second implementation should be moved into own module
   making main_ISR() useless.
