@@ -475,9 +475,9 @@ void pwm_on_off()
 
         uint16_t brightnessFactor = ((uint16_t)brightness_pwm_val) + 1;
 
-        red_pwm   = red;
+        red_pwm = red;
         green_pwm = green;
-        blue_pwm  = blue;
+        blue_pwm = blue;
 
         OCR0A = 255 - ((brightnessFactor * red) / 256);
         OCR0B = 255 - ((brightnessFactor * green) / 256);
@@ -548,9 +548,9 @@ void pwm_on_off()
 
         }
 
-        red_pwm_idx   = red;
+        red_pwm_idx = red;
         green_pwm_idx = green;
-        blue_pwm_idx  = blue;
+        blue_pwm_idx = blue;
 
         pwm_set_color(pgm_read_byte(pwm_table + red),
                 pgm_read_byte(pwm_table + green),
