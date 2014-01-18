@@ -50,7 +50,7 @@
  * @see MINOR_VERSION
  * @see SW_VERSION
  */
-#define MAJOR_VERSION 0
+#define MAJOR_VERSION 1
 
 /**
  * @brief Minor version number
@@ -61,7 +61,7 @@
  * @see MINOR_VERSION
  * @see SW_VERSION
  */
-#define MINOR_VERSION 13
+#define MINOR_VERSION 0
 
 /**
  * @brief Actual version number
