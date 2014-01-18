@@ -89,9 +89,7 @@ typedef struct WcEepromData {
      * This is used as a basic integrity check. Whenever there is difference
      * in the version number provided by the software itself and the one stored
      * in EEPROM, the EEPROM data will be ignored and overwritten by the
-     * default values. This is especially for cases when a new version of the
-     * software has changed the struct WcEeepromData. It guarantees that no
-     * incompatible versions of WcEepromData are mixed with each other.
+     * default values.
      *
      * @see BUILD_VERSION()
      * @see MAJOR_VERSION()
