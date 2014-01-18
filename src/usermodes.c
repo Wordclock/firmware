@@ -106,7 +106,7 @@ typedef struct ShowNumberState {
  */
 static ShowNumberState mode_showNumberState;
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @brief Allowed properties which can be set in "normal" mode
@@ -228,7 +228,7 @@ typedef struct PulseState {
  */
 static PulseState mode_pulseState;
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @brief Data needed for the "hue fading" mode
@@ -725,7 +725,7 @@ static void ShowNumberState_enter(const void* param)
  *
  * This routine gets executed whenever the "normal"
  * (menu_state_t::MS_normalMode) mode is entered. In case the software is built
- * with support for RGB colors (MONO_COLOR_CLOCK != 1), it applies the color
+ * with support for RGB colors (ENABLE_RGB_SUPPORT == 1), it applies the color
  * settings of the current color profile for each channel. When a parameter
  * is given it will display the number of the the appropriate color profile for
  * a short period of time. In case of no RGB support all of the logic mentioned
@@ -733,7 +733,7 @@ static void ShowNumberState_enter(const void* param)
  *
  * @param param Pointer to number of the color profile to work on
  *
- * @see MONO_COLOR_CLOCK
+ * @see ENABLE_RGB_SUPPORT
  * @see pwm_set_color_step()
  * @see UserEepromParams::curColorProfile
  * @see UserEepromParams::colorPresets
@@ -746,7 +746,7 @@ static void NormalState_enter(const void* param)
 
     log_state("nm\n");
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         pwm_set_color_step(g_params->colorPresets[g_params->curColorProfile].r,
             g_params->colorPresets[g_params->curColorProfile].g,
@@ -795,7 +795,7 @@ static void NormalState_enter(const void* param)
 static bool NormalState_handleUserCommand(user_command_t command)
 {
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         if (UC_NORMAL_MODE == command) {
 
@@ -879,7 +879,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
 
 }
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @brief ISR for the "hue fading" mode executed with a frequency of 10 Hz
@@ -1619,7 +1619,7 @@ static void UserState_enter(menu_state_t state, const void* param)
 
         TrainIrState_enter(param);
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         } else if (MS_hueMode == state) {
 
@@ -1703,7 +1703,7 @@ static bool UserState_HandleUserCommand(menu_state_t state, user_command_t comma
 
         handled = SetOnOffTimeState_handleUserCommand(command);
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         } else if (MS_hueMode == state) {
 
@@ -1790,7 +1790,7 @@ static void UserState_Isr10Hz(menu_state_t state)
 
         PulseState_10Hz();
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         } else if (MS_hueMode == state) {
 
