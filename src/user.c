@@ -828,7 +828,7 @@ void handle_user_command(user_command_t user_command)
                 } else {
 
                     if ((MS_normalMode == curTop)
-                    #if (MONO_COLOR_CLOCK != 1)
+                    #if (ENABLE_RGB_SUPPORT == 1)
                         || (MS_hueMode == curTop)
                     #endif
                     ) {
@@ -841,7 +841,7 @@ void handle_user_command(user_command_t user_command)
 
                 DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
 
-                #if (MONO_COLOR_CLOCK != 1)
+                #if (ENABLE_RGB_SUPPORT == 1)
 
                     } else if (UC_HUE_MODE == user_command) {
 

@@ -140,7 +140,7 @@
 /**
  * @brief Controls whether the software should include support for RGB
  *
- * If set to 0, the firmware will be built with full support for RGB LEDs.
+ * If set to 1, the firmware will be built with full support for RGB LEDs.
  * Otherwise the resulting firmware will not contain any RGB specific code,
  * rendering it into a monochromatic build.
  *
@@ -151,7 +151,7 @@
  *
  * @see pwm.h
  */
-#define MONO_COLOR_CLOCK 0
+#define ENABLE_RGB_SUPPORT 1
 
 /**
  * @brief Defines whether support for DCF77 should be included
@@ -217,7 +217,7 @@
  * anyway.
  *
  * @see ENABLE_DCF_SUPPORT
- * @see MONO_COLOR_CLOCK
+ * @see ENABLE_RGB_SUPPORT
  * @see ENABLE_AMBILIGHT_SUPPORT
  * @see ENABLE_BLUETOOTH_SUPPORT
  * @see ENABLE_AUXPOWER_SUPPORT

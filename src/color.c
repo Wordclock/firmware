@@ -42,7 +42,7 @@
  */
 #define COLOR_PULSE_WAVEFORM_SCALE 128
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
 /**
  * @brief Returns the green portion of a given hue
@@ -134,7 +134,7 @@ void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 
 }
 
-#endif /* (MONO_COLOR_CLOCK != 1) */
+#endif /* (ENABLE_RGB_SUPPORT == 1) */
 
 /**
  * @brief Generates a cyclic spiky signal

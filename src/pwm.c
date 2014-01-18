@@ -28,8 +28,8 @@
  * Green = OC0B, Blue = OC2B). This means that actually two timers, namely
  * Timer/Counter0 and Timer/Counter2 are used.
  *
- * In case the software is compiled with monochromatic LED support only
- * (MONO_COLOR_CLOCK == 1), Timer/Counter2 will be left untouched.
+ * In case the software is compiled without support for RGB LEDs
+ * (ENABLE_RGB_SUPPORT == 0), Timer/Counter2 will be left untouched.
  *
  * For details about the various counters and registers involved it might be
  * useful to take a look at [1].
@@ -224,7 +224,7 @@ static bool brightness_lock;
  */
 static uint8_t base_ldr_idx;
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @brief Keeps track of the current PWM index for the red channel
@@ -274,7 +274,7 @@ static uint8_t base_ldr_idx;
      */
     static uint8_t blue_pwm;
 
-#endif
+#endif /* (ENABLE_RGB_SUPPORT == 1) */
 
 /**
  * @brief Sets brightness according to a value from pwm_table
@@ -316,13 +316,13 @@ static void pwm_set_brightness()
 
     }
 
-    #if (MONO_COLOR_CLOCK == 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
-        OCR0A = 255 - brightness_pwm_val;
+        pwm_set_colors(red_pwm, green_pwm, blue_pwm);
 
     #else
 
-        pwm_set_colors(red_pwm, green_pwm, blue_pwm);
+        OCR0A = 255 - brightness_pwm_val;
 
     #endif
 
@@ -347,7 +347,7 @@ void pwm_init()
     PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
     DDR(PWM_RED) |= _BV(BIT(PWM_RED));
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
         DDR(PWM_GREEN) |= _BV(BIT(PWM_GREEN));
@@ -381,7 +381,7 @@ void pwm_on()
 
     TCCR0A |= _BV(COM0A1) | _BV(COM0A0);
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         TCCR0A |= _BV(COM0B1) | _BV(COM0B0);
         TCCR2A |= _BV(COM2B1) | _BV(COM2B0);
@@ -410,7 +410,7 @@ void pwm_off()
     TCCR0A &= ~_BV(COM0A1) | _BV(COM0A0);
     PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         TCCR0A &= ~(_BV(COM0B1) | _BV(COM0B0));
         PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
@@ -449,7 +449,7 @@ void pwm_on_off()
 
 }
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @brief Sets the RGB colors
@@ -583,7 +583,7 @@ void pwm_on_off()
 
     }
 
-#endif
+#endif /* (ENABLE_RGB_SUPPORT == 1) */
 
 /**
  * @brief Sets the base brightness by step value

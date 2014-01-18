@@ -136,8 +136,8 @@ typedef enum
      * This represents the command, which will switch to the "normal" display
      * mode (menu_state_t::MS_normalMode). The current time will be displayed
      * in a single color. This command can also switch the currently used color
-     * profile (assuming MONO_COLOR_CLOCK is not set), which effectively
-     * changes the color the current time is displayed in.
+     * profile (assuming ENABLE_RGB_SUPPORT is set), which effectively changes
+     * the color the current time is displayed in.
      */
     UC_NORMAL_MODE,
 
@@ -167,7 +167,7 @@ typedef enum
      */
     UC_DEMO_MODE,
 
-    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_RGB_SUPPORT == 1)
 
         /**
          * @brief Displays the time in the "hue fading" mode

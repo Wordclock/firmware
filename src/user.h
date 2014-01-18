@@ -49,7 +49,7 @@
  *
  * @warning Some "modes" may not be available due to configuration settings.
  *
- * @see MONO_COLOR_CLOCK
+ * @see ENABLE_RGB_SUPPORT
  */
 typedef enum
 {
@@ -85,7 +85,7 @@ typedef enum
      */
     MS_demoMode,
 
-    #if (MONO_COLOR_CLOCK != 1)
+    #if (ENABLE_RGB_SUPPORT == 1)
 
         /**
          * @brief Represents the "hue fading" mode
@@ -1027,7 +1027,7 @@ extern void user_init();
 
 #endif
 
-#if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+#if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_RGB_SUPPORT == 1)
 
     /**
      * @see USER_CMD_DEF_HUE_MODE
@@ -1046,7 +1046,7 @@ extern void user_init();
 #else
 
     /**
-     * @brief Dummy in case of an individual config and MONO_COLOR_CLOCK == 1
+     * @brief Dummy in case of an individual config and ENABLE_RGB_SUPPORT != 1
      */
     #define USER_CMD_DEFAULT_MULTICOLOR
 

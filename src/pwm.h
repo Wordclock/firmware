@@ -130,7 +130,7 @@ extern void pwm_off();
 
 extern void pwm_on_off();
 
-#if (MONO_COLOR_CLOCK != 1)
+#if (ENABLE_RGB_SUPPORT == 1)
 
     extern void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue);
 

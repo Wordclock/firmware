@@ -271,7 +271,7 @@ static void _ir_user_command(uint8_t argc, char* argv[])
             {'P', UC_PULSE_MODE},
             {'D', UC_DEMO_MODE},
 
-            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || MONO_COLOR_CLOCK != 1)
+            #if (ENABLE_INDIVIDUAL_CONFIG == 0 || ENABLE_RGB_SUPPORT == 1)
 
                 {'H', UC_HUE_MODE},
                 {'r', UC_CHANGE_R},
