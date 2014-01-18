@@ -225,3 +225,8 @@
 
 - main: The whole soft second implementation should be moved into own module
   making main_ISR() useless.
+
+- When in normal mode and the color is changed "pa" will still return the
+  "active" preset, although it is no longer active anymore. This could be
+  problematic for applications to detect. It probably would make sense to
+  return an error when no preset is currently active.
