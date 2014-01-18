@@ -78,7 +78,7 @@
 #define SW_VERSION BUILD_VERSION(MAJOR_VERSION, MINOR_VERSION)
 
 /**
- * @brief Classic German frtonpanel layout
+ * @brief Classic German frontpanel layout
  *
  * If set to 1, the software will be compiled with support for the classic
  * German frontpanel layout. This layout supports up to three different idioms:
