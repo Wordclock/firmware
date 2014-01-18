@@ -254,7 +254,7 @@ static uint8_t base_ldr_idx;
      * @brief Keeps track of the current PWM value for the red channel
      *
      * @see pwm_set_color()
-     * @see pwm_get_colors()
+     * @see pwm_get_color()
      */
     static uint8_t red_pwm;
 
@@ -262,7 +262,7 @@ static uint8_t base_ldr_idx;
      * @brief Keeps track of the current PWM value for the green channel
      *
      * @see pwm_set_color()
-     * @see pwm_get_colors()
+     * @see pwm_get_color()
      */
     static uint8_t green_pwm;
 
@@ -270,7 +270,7 @@ static uint8_t base_ldr_idx;
      * @brief Keeps track of the current PWM value for the blue channel
      *
      * @see pwm_set_color()
-     * @see pwm_get_colors()
+     * @see pwm_get_color()
      */
     static uint8_t blue_pwm;
 
@@ -500,7 +500,7 @@ void pwm_on_off()
      * @see blue_pwm
      * @see pwm_set_color()
      */
-    void pwm_get_colors(uint8_t* red, uint8_t* green, uint8_t* blue)
+    void pwm_get_color(uint8_t* red, uint8_t* green, uint8_t* blue)
     {
 
         *red   = red_pwm;

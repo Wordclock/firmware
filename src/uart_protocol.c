@@ -444,7 +444,7 @@ static void _ldr_brightness(uint8_t argc, char* argv[])
  * and passes them over to uart_protocol_output_args_hex().
  *
  * @see uart_protocol_command_callback_t
- * @see pwm_get_colors()
+ * @see pwm_get_color()
  * @see uart_protocol_output_args_hex()
  *
  * @todo Built-in when RGB support not activated?
@@ -457,7 +457,7 @@ static void _color_read(uint8_t argc, char* argv[])
     uint8_t green;
     uint8_t blue;
 
-    pwm_get_colors(&red, &green, &blue);
+    pwm_get_color(&red, &green, &blue);
 
     uart_protocol_output_args_hex(3, red, green, blue);
 
