@@ -132,7 +132,7 @@ extern void pwm_on_off();
 
 #if (ENABLE_RGB_SUPPORT == 1)
 
-    extern void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue);
+    extern void pwm_set_color(uint8_t red, uint8_t green, uint8_t blue);
 
     extern void pwm_get_colors(uint8_t* red, uint8_t* green, uint8_t* blue);
 

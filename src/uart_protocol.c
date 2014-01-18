@@ -477,7 +477,7 @@ static void _color_read(uint8_t argc, char* argv[])
  * @see uart_protocol_error()
  * @see uart_protocol_ok()
  * @see hexStrToUint8()
- * @see pwm_set_colors()
+ * @see pwm_set_color()
  *
  * @todo Not real 8 bits, but 2^8-1?
  * @todo Let the user set 00 00 00? Disable?
@@ -510,7 +510,7 @@ static void _color_write(uint8_t argc, char* argv[])
 
     }
 
-    pwm_set_colors(rgb[0], rgb[1], rgb[2]);
+    pwm_set_color(rgb[0], rgb[1], rgb[2]);
 
     uart_protocol_ok();
 
@@ -564,7 +564,7 @@ static void _preset_active(uint8_t argc, char* argv[])
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
  * @see UserEepromParams::curColorProfile
- * @see pwm_set_colors()
+ * @see pwm_set_color()
  */
 static void _preset_set(uint8_t argc, char* argv[])
 {

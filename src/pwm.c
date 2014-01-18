@@ -165,7 +165,7 @@ static uint8_t base_pwm_idx;
  * @see base_pwm_idx
  * @see pwm_table
  * @see pwm_set_brightness()
- * @see pwm_set_colors()
+ * @see pwm_set_color()
  * @see pwm_lock_brightness_val()
  */
 static uint8_t brightness_pwm_val;
@@ -253,7 +253,7 @@ static uint8_t base_ldr_idx;
     /**
      * @brief Keeps track of the current PWM value for the red channel
      *
-     * @see pwm_set_colors()
+     * @see pwm_set_color()
      * @see pwm_get_colors()
      */
     static uint8_t red_pwm;
@@ -261,7 +261,7 @@ static uint8_t base_ldr_idx;
     /**
      * @brief Keeps track of the current PWM value for the green channel
      *
-     * @see pwm_set_colors()
+     * @see pwm_set_color()
      * @see pwm_get_colors()
      */
     static uint8_t green_pwm;
@@ -269,7 +269,7 @@ static uint8_t base_ldr_idx;
     /**
      * @brief Keeps track of the current PWM value for the blue channel
      *
-     * @see pwm_set_colors()
+     * @see pwm_set_color()
      * @see pwm_get_colors()
      */
     static uint8_t blue_pwm;
@@ -283,7 +283,7 @@ static uint8_t base_ldr_idx;
  * adding up base_pwm_idx and offset_pwm_idx. If it is out of bounds either the
  * biggest or smallest value is taken. It will then set brightness_pwm_val
  * accordingly. Furthermore it will accommodate the colors using
- * pwm_set_colors() in case of RGB and by setting OCR0A in case of
+ * pwm_set_color() in case of RGB and by setting OCR0A in case of
  * monochromatic LEDs.
  *
  * @warning This will only work if the brightness is not locked.
@@ -292,7 +292,7 @@ static uint8_t base_ldr_idx;
  * @see base_pwm_idx
  * @see offset_pwm_idx
  * @see brightness_pwm_val
- * @see pwm_set_colors()
+ * @see pwm_set_color()
  * @see brightness_lock()
  */
 static void pwm_set_brightness()
@@ -318,7 +318,7 @@ static void pwm_set_brightness()
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
-        pwm_set_colors(red_pwm, green_pwm, blue_pwm);
+        pwm_set_color(red_pwm, green_pwm, blue_pwm);
 
     #else
 
@@ -470,7 +470,7 @@ void pwm_on_off()
      * @see blue_pwm
      * @see pwm_get_color()
      */
-    void pwm_set_colors(uint8_t red, uint8_t green, uint8_t blue)
+    void pwm_set_color(uint8_t red, uint8_t green, uint8_t blue)
     {
 
         uint16_t brightnessFactor = ((uint16_t)brightness_pwm_val) + 1;
@@ -552,7 +552,7 @@ void pwm_on_off()
         green_pwm_idx = green;
         blue_pwm_idx  = blue;
 
-        pwm_set_colors(pgm_read_byte(pwm_table + red),
+        pwm_set_color(pgm_read_byte(pwm_table + red),
                 pgm_read_byte(pwm_table + green),
                 pgm_read_byte (pwm_table + blue));
 

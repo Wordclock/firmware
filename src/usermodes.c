@@ -748,7 +748,7 @@ static void NormalState_enter(const void* param)
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
-        pwm_set_colors(g_params->colorPresets[g_params->curColorProfile].r,
+        pwm_set_color(g_params->colorPresets[g_params->curColorProfile].r,
             g_params->colorPresets[g_params->curColorProfile].g,
             g_params->colorPresets[g_params->curColorProfile].b);
 
@@ -852,7 +852,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
                 }
 
                 color_hue2rgb(mode_normalState.curHue, &r, &g, &b);
-                pwm_set_colors(r, g, b);
+                pwm_set_color(r, g, b);
 
             } else {
 
@@ -861,7 +861,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
                 uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
 
                 incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, 255);
-                pwm_set_colors(rgb[0], rgb[1], rgb[2]);
+                pwm_set_color(rgb[0], rgb[1], rgb[2]);
 
             }
 
@@ -896,7 +896,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
      * @see mode_autoHueState
      * @see UserEepromParams::hueChangeInterval
      * @see color_hue2rgb()
-     * @see pwm_set_colors()
+     * @see pwm_set_color()
      */
     static void AutoHueState_10Hz()
     {
@@ -910,7 +910,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
             ++mode_autoHueState.curHue;
             mode_autoHueState.curHue %= (COLOR_HUE_MAX + 1);
             color_hue2rgb(mode_autoHueState.curHue, &r, &g, &b);
-            pwm_set_colors(r, g, b);
+            pwm_set_color(r, g, b);
             mode_autoHueState.delay100ms = 0;
 
         }
