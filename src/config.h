@@ -33,19 +33,18 @@
 /**
  * @brief Macro building the actual version number
  *
- * This macro will build actual version number by combining `MAJOR_VERSION`
+ * This macro will build the actual version number by combining `MAJOR_VERSION`
  * and `MINOR_VERSION` and shifting it appropriately.
  *
  * @see MAJOR_VERSION
  * @see MINOR_VERSION
  */
-#define BUILD_VERSION(x, y) ((uint8_t)((x << 4) | (y)))
+#define BUILD_VERSION(x, y) ((uint16_t)((x << 8) | (y)))
 
 /**
  * @brief Major version number
  *
- * @note As this is combined with `MINOR_VERSION` into a single byte, so
- * actually only values between 0 - 15 are valid.
+ * @note This is effectively a byte wide and can hold values between 0 and 255.
  *
  * @see BUILD_VERSION()
  * @see MINOR_VERSION
@@ -56,8 +55,7 @@
 /**
  * @brief Minor version number
  *
- * @note As this is combined with `MINOR_VERSION` into a single byte, so
- * actually only values between 0 - 15 are valid.
+ * @note This is effectively a byte wide and can hold values between 0 and 255.
  *
  * @see BUILD_VERSION()
  * @see MINOR_VERSION

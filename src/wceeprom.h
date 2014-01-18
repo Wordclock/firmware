@@ -95,7 +95,7 @@ typedef struct WcEepromData {
      * @see MAJOR_VERSION()
      * @see MINOR_VERSION()
      */
-    uint8_t swVersion;
+    uint16_t swVersion;
 
     /**
      * @brief Size of this struct
