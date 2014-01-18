@@ -1110,7 +1110,7 @@ void uart_protocol_handle()
                 for (uint8_t i = 0; i < j; i++) {
 
                     bool compare = strncmp(uart_protocol_commands[i].command,
-                        argv[0], strlen(argv[0]));
+                        argv[0], strlen(uart_protocol_commands[i].command));
 
                     if (compare == 0
                         && (argc - 1) == uart_protocol_commands[i].arguments) {
