@@ -434,6 +434,8 @@ static void _ldr_brightness(uint8_t argc, char* argv[])
 
 }
 
+#if (ENABLE_RGB_SUPPORT == 1)
+
 /**
  * @brief Puts out the RGB values of the color currently being used
  *
@@ -708,6 +710,8 @@ static void _preset_write(uint8_t argc, char* argv[])
     uart_protocol_ok();
 
 }
+
+#endif /* (ENABLE_RGB_SUPPORT == 1) */
 
 /**
  * @brief Puts out the currently used time
@@ -1004,14 +1008,19 @@ static uart_protocol_command_t uart_protocol_commands[] = {
 
     {"lb", 0, _ldr_brightness},
 
-    {"cr", 0, _color_read},
-    {"cw", 3, _color_write},
+    #if (ENABLE_RGB_SUPPORT == 1)
 
-    {"pn", 0, _preset_number},
-    {"pa", 0, _preset_active},
-    {"ps", 1, _preset_set},
-    {"pr", 1, _preset_read},
-    {"pw", 4, _preset_write},
+        {"cr", 0, _color_read},
+        {"cw", 3, _color_write},
+
+        {"pn", 0, _preset_number},
+        {"pa", 0, _preset_active},
+        {"ps", 1, _preset_set},
+        {"pr", 1, _preset_read},
+        {"pw", 4, _preset_write},
+
+    #endif /* (ENABLE_RGB_SUPPORT == 1) */
+
 
     {"tg", 0, _time_get},
     {"ts", 3, _time_set},
