@@ -38,6 +38,8 @@
 #ifndef _WC_PWM_H_
 #define _WC_PWM_H_
 
+#include "color.h"
+
 /**
  * @brief Number of PWM steps
  *
@@ -132,9 +134,9 @@ extern void pwm_on_off();
 
 #if (ENABLE_RGB_SUPPORT == 1)
 
-    extern void pwm_set_color(uint8_t red, uint8_t green, uint8_t blue);
+    extern void pwm_set_color(color_rgb_t color);
 
-    extern void pwm_get_color(uint8_t* red, uint8_t* green, uint8_t* blue);
+    extern void pwm_get_color(color_rgb_t* color);
 
     extern void pwm_set_color_step(uint8_t red, uint8_t green, uint8_t blue);
 

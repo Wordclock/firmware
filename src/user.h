@@ -36,6 +36,7 @@
 
 #include <stdbool.h>
 
+#include "color.h"
 #include "config.h"
 #include "user_command.h"
 
@@ -660,29 +661,12 @@ typedef struct UserEepromParams {
     /**
      * @brief Struct to hold the RGB values for the color presets
      *
-     * This holds the value for the "red", "green" and "blue" channels for
-     * each color preset.
+     * This holds the color for each color preset.
      *
+     * @see color_rgb_t
      * @see UI_COLOR_PRESET_COUNT
      */
-    struct rgb {
-
-        /**
-         * @brief The value for the "red" channel
-         */
-        uint8_t r;
-
-        /**
-         * @brief The value for the "green" channel
-         */
-        uint8_t g;
-
-        /**
-         * @brief The value for the "blue" channel
-         */
-        uint8_t b;
-
-    } colorPresets[UI_COLOR_PRESET_COUNT];
+    color_rgb_t colorPresets[UI_COLOR_PRESET_COUNT];
 
     /**
      * @brief Holds the color preset currently selected by the user

@@ -453,13 +453,11 @@ static void _ldr_brightness(uint8_t argc, char* argv[])
 static void _color_read(uint8_t argc, char* argv[])
 {
 
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
+    color_rgb_t color;
 
-    pwm_get_color(&red, &green, &blue);
+    pwm_get_color(&color);
 
-    uart_protocol_output_args_hex(3, red, green, blue);
+    uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
 }
 
@@ -485,24 +483,12 @@ static void _color_read(uint8_t argc, char* argv[])
 static void _color_write(uint8_t argc, char* argv[])
 {
 
-    uint8_t rgb[3];
-    uint8_t i;
+    color_rgb_t color;
+    bool status;
 
-    for (i = 1; i < 4; i++) {
+    color.red = hexStrToUint8(argv[1], &status);
 
-        bool status;
-
-        rgb[i - 1] = hexStrToUint8(argv[i], &status);
-
-        if (!status) {
-
-            break;
-
-        }
-
-    }
-
-    if (i != 4) {
+    if (!status) {
 
         uart_protocol_error();
 
@@ -510,7 +496,27 @@ static void _color_write(uint8_t argc, char* argv[])
 
     }
 
-    pwm_set_color(rgb[0], rgb[1], rgb[2]);
+    color.green = hexStrToUint8(argv[2], &status);
+
+    if (!status) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    color.blue = hexStrToUint8(argv[3], &status);
+
+    if (!status) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    pwm_set_color(color);
 
     uart_protocol_ok();
 
@@ -615,11 +621,9 @@ static void _preset_read(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        uint8_t red = (&(wcEeprom_getData()->userParams))->colorPresets[preset].r;
-        uint8_t green = (&(wcEeprom_getData()->userParams))->colorPresets[preset].g;
-        uint8_t blue = (&(wcEeprom_getData()->userParams))->colorPresets[preset].b;
+        color_rgb_t color = (&(wcEeprom_getData()->userParams))->colorPresets[preset];
 
-        uart_protocol_output_args_hex(3, red, green, blue);
+        uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
         return;
 
@@ -647,38 +651,12 @@ static void _preset_write(uint8_t argc, char* argv[])
 {
 
     uint8_t preset;
-    uint8_t rgb[3];
-    uint8_t i = 0;
+    color_rgb_t color;
+    bool status;
 
-    for (i = 1; i < 5; i++) {
+    preset = hexStrToUint8(argv[1], &status);
 
-        bool status;
-
-        if (i == 1) {
-
-            preset = hexStrToUint8(argv[i], &status);
-
-            if (preset >= UI_COLOR_PRESET_COUNT) {
-
-                break;
-
-            }
-
-        } else {
-
-            rgb[i - 2] = hexStrToUint8(argv[i], &status);
-
-            if (!status) {
-
-                break;
-
-            }
-
-        }
-
-    }
-
-    if (i != 5) {
+    if (!status || preset >= UI_COLOR_PRESET_COUNT) {
 
         uart_protocol_error();
 
@@ -686,9 +664,37 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     }
 
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset].r = rgb[0];
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset].g = rgb[1];
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset].b = rgb[2];
+    color.red = hexStrToUint8(argv[2], &status);
+
+    if (!status) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    color.green = hexStrToUint8(argv[3], &status);
+
+    if (!status) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    color.blue = hexStrToUint8(argv[4], &status);
+
+    if (!status) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    (&(wcEeprom_getData()->userParams))->colorPresets[preset] = color;
 
     wcEeprom_writeback(&wcEeprom_getData()->userParams.colorPresets[preset],
         sizeof(wcEeprom_getData()->userParams.colorPresets[preset]));

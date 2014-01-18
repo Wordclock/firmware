@@ -251,28 +251,16 @@ static uint8_t base_ldr_idx;
     static uint8_t blue_pwm_idx;
 
     /**
-     * @brief Keeps track of the current PWM value for the red channel
+     * @brief Keeps track of the current color
      *
+     * This is used within the module to keep track of the currently set color.
+     * It can be set by `pwm_set_color()` and retrieved by `pwm_get_color()`.
+     *
+     * @see color_rgb_t
      * @see pwm_set_color()
      * @see pwm_get_color()
      */
-    static uint8_t red_pwm;
-
-    /**
-     * @brief Keeps track of the current PWM value for the green channel
-     *
-     * @see pwm_set_color()
-     * @see pwm_get_color()
-     */
-    static uint8_t green_pwm;
-
-    /**
-     * @brief Keeps track of the current PWM value for the blue channel
-     *
-     * @see pwm_set_color()
-     * @see pwm_get_color()
-     */
-    static uint8_t blue_pwm;
+    static color_rgb_t pwm_color;
 
 #endif /* (ENABLE_RGB_SUPPORT == 1) */
 
@@ -318,7 +306,7 @@ static void pwm_set_brightness()
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
-        pwm_set_color(red_pwm, green_pwm, blue_pwm);
+        pwm_set_color(pwm_color);
 
     #else
 
@@ -454,34 +442,31 @@ void pwm_on_off()
     /**
      * @brief Sets the RGB colors
      *
-     * This sets the color by providing a value for each channel
-     * (red, green ,blue) separately. Each parameter expects values from 0 up
-     * to 255. It then sets the appropriate output compare registers of the
-     * involved timers/counters. For details take a look at [1].
+     * This sets the color by applying the values from the given color to
+     * each channel appropriately after accommodating for the current
+     * brightness.
+     *
+     * The values are applied to the appropriate output compare registers of
+     * the involved timers/counters. For details take a look at [1].
      *
      * [1]: http://www.atmel.com/images/doc2545.pdf
      *
-     * @param red Value for the red channel (0 - 255).
-     * @param green Value for the green channel (0 - 255).
-     * @param blue Value for the blue channel (0 - 255).
+     * @param color The color to be set
      *
-     * @see red_pwm
-     * @see green_pwm
-     * @see blue_pwm
+     * @see color_rgb_t
+     * @see pwm_color
      * @see pwm_get_color()
      */
-    void pwm_set_color(uint8_t red, uint8_t green, uint8_t blue)
+    void pwm_set_color(color_rgb_t color)
     {
 
         uint16_t brightnessFactor = ((uint16_t)brightness_pwm_val) + 1;
 
-        red_pwm = red;
-        green_pwm = green;
-        blue_pwm = blue;
+        pwm_color = color;
 
-        OCR0A = 255 - ((brightnessFactor * red) / 256);
-        OCR0B = 255 - ((brightnessFactor * green) / 256);
-        OCR2B = 255 - ((brightnessFactor * blue) / 256);
+        OCR0A = 255 - ((brightnessFactor * color.red) / 256);
+        OCR0B = 255 - ((brightnessFactor * color.green) / 256);
+        OCR2B = 255 - ((brightnessFactor * color.blue) / 256);
 
     }
 
@@ -489,23 +474,17 @@ void pwm_on_off()
      * @brief Gets the RGB colors
      *
      * This gets the color of each channel (red, green ,blue) and puts them
-     * into the provided buffers.
+     * into the provided buffer.
      *
-     * @param red Pointer to store value of the red channel.
-     * @param green Pointer to store value of the green channel.
-     * @param blue Pointer to store value of the blue channel.
+     * @param color Pointer to color_rgb_t struct where color will be put
      *
-     * @see red_pwm
-     * @see green_pwm
-     * @see blue_pwm
+     * @see color_rgb_t
      * @see pwm_set_color()
      */
-    void pwm_get_color(uint8_t* red, uint8_t* green, uint8_t* blue)
+    void pwm_get_color(color_rgb_t* color)
     {
 
-        *red   = red_pwm;
-        *green = green_pwm;
-        *blue  = blue_pwm;
+        *color = pwm_color;
 
     }
 
@@ -552,9 +531,13 @@ void pwm_on_off()
         green_pwm_idx = green;
         blue_pwm_idx = blue;
 
-        pwm_set_color(pgm_read_byte(pwm_table + red),
-                pgm_read_byte(pwm_table + green),
-                pgm_read_byte (pwm_table + blue));
+        color_rgb_t color;
+
+        color.red = pgm_read_byte(pwm_table + red);
+        color.green = pgm_read_byte(pwm_table + green);
+        color.blue = pgm_read_byte (pwm_table + blue);
+
+        pwm_set_color(color);
 
     }
 

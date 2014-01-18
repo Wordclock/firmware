@@ -71,7 +71,33 @@
  */
 typedef uint16_t Hue_t;
 
-extern void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b);
+/**
+ * @brief Type definition for a RGB color
+ *
+ * This is a simple container for a RGB color. It simply combines all of the
+ * three colors into a single struct and should be used whenever dealing with
+ * RGB colors.
+ */
+typedef struct {
+
+        /**
+         * @brief The red portion of the color
+         */
+        uint8_t red;
+
+        /**
+         * @brief The green portion of the color
+         */
+        uint8_t green;
+
+        /**
+         * @brief The blue portion of the color
+         */
+        uint8_t blue;
+
+} color_rgb_t;
+
+extern void color_hue2rgb(Hue_t h, color_rgb_t* color);
 
 extern uint8_t color_pulse_waveform(uint8_t step);
 

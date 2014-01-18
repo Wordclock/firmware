@@ -102,15 +102,14 @@ static uint8_t color_hue_waveform(Hue_t x)
  * Internally it makes heavily use of color_hue_waveform().
  *
  * @param h The hue value to convert, ranges from 0 up to COLOR_HUE_MAX
- * @param r Pointer to variable to store the calculated red value
- * @param g Pointer to variable to store the calculated green value
- * @param b Pointer to variable to store the calculated blue value
+ * @param color Pointer to color struct where converted values will be put
  *
  * @see Hue_t
+ * @see color_rgb_t
  * @see COLOR_HUE_MAX
  * @see color_hue_waveform()
  */
-void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
+void color_hue2rgb(Hue_t h, color_rgb_t* color)
 {
 
     uint16_t barg = (((uint16_t)h) + 2 * COLOR_HUE_MAX / 3);
@@ -128,9 +127,9 @@ void color_hue2rgb(Hue_t h, uint8_t* r, uint8_t* g, uint8_t* b)
 
     }
 
-    *g = color_hue_waveform(h);
-    *b = color_hue_waveform((Hue_t)barg);
-    *r = color_hue_waveform((Hue_t)rarg);
+    color->green = color_hue_waveform(h);
+    color->blue = color_hue_waveform((Hue_t)barg);
+    color->red = color_hue_waveform((Hue_t)rarg);
 
 }
 
