@@ -22,15 +22,18 @@ original one and make it more attractive:
   making it more easy to understand and/or extend them.
 
 - **Restructuring:** Some rework of a few interrupt routines was performed,
-  leading to a significant disburdening of the microcontroller..
+  leading to a significant disburdening of the microcontroller. Quite a few
+  datatypes that previously were reimplemented by different modules have been
+  unified, too, which not only saves program space, but also integrates the
+  modules in a more consequent way.
 
 - **UART protocol:** There is support for controlling the Wordclock via a
   serial connection, making the IR remote control completely obsolete and
   providing a much more convenient way of interacting with the Wordclock.
 
 - **IRMP:** As the version in the original firmware hasn't been touched for a
-  couple of years now and actually misses a lot of features and/or bug fixes
-  newer versions of IRMP offer.
+  couple of years now, it misses a lot of protocols that have been added to
+  the meantime.
 
 Refer to the [commit logs][4] for a full list of changes.
 
@@ -40,14 +43,14 @@ The structure, hardware and electronics of this project are explained in detail
 [here][2] and [there][3]. Keep in mind that this firmware will only work with
 "Variante 1".
 
-One of the goals of this fork is definitely to stay as compatible as possible
-with the original project and the corresponding hardware. However, as the
-program space of the ATmega168 is simply not sufficient for all of the new
-features, is highly recommended to replace the microcontroller with the
-ATmega328, which is drop in replacement. As the microcontroller was designed to
-be put into a socket anyway, this shouldn't be too much of a problem.
-Alternatively you can always give up some functionality by disabling the
-appropriate switches within `src/config.h`.
+One of the goals of this fork is to stay as compatible as possible with the
+original project and the corresponding hardware. However, as the program space
+of the ATmega168 is simply not sufficient for all of the new features, it is
+highly recommended to replace the microcontroller with the ATmega328, which is
+a drop in replacement. As the microcontroller was designed to be put into a
+socket anyway, this shouldn't be too much of a problem. Alternatively you can
+always give up some functionality by disabling the appropriate switches within
+`src/config.h`.
 
 ## SOFTWARE REQUIREMENTS
 
@@ -73,11 +76,11 @@ versions might work just fine, but are not fully tested.
 
 There are various options, which influence the building process and hence the
 resulting binary. These options can be found within `src/config.h`, along with
-comments about their meaning and possible values.
+comments about their actual meaning and possible values.
 
 ## BUILDING
 
-Until a Makefile will be provided along with this package, the source code
+Until a Makefile will be provided along with this project, the source code
 needs to be built manually and/or using an IDE. Make sure to exclude
 `src/usermodes.c` from the build. It will be included within `src/user.c`
 automatically and does not need to be compiled on its own.
@@ -109,8 +112,8 @@ taken over into this project itself. It is still supported, and can be obtained
 on its own. There are also a few other bootloaders that are supported directly,
 namely [chip45boot2][9] and [FastBoot][10] from Peter Danegger.
 
-Depending upon the bootloader you choose, you might have to change the fuses
-and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`:
+Depending upon the bootloader you want to use, you might have to change the
+fuses and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`:
 
 - **AVRootloader, FastBoot**: Set **efuse** to `0xfc`
 
@@ -126,10 +129,11 @@ in order to get these bootloaders working correctly.
 
 The source code itself is maintained using git. The project along with its
 repositories lives over at [github.com][11]. Contributions of any kind are
-welcome. Please, if possible, use the means provided by github.com to report
-bugs and/or request features. The preferred way to submit patches are pull
-requests. If you new to git and/or are not familiar with this process, refer
-to [12] for a detailed description on how to submit a pull request.
+highly welcome. The simplest and fastest way for these kind of things is to use
+the means provided by github.com itself, which allows for reporting bugs and/or
+requesting features. It is also the preferred way to submit patches in form of
+pull requests. If you are new to git and/or are not familiar with this process,
+refer to [12] for a detailed description on how to submit a pull request.
 
 In case you are looking for something to work on, you probably want to take a
 look at the `TODO` file within the projects root directory. It contains a list
