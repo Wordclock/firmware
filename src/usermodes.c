@@ -734,7 +734,7 @@ static void ShowNumberState_enter(const void* param)
  * @param param Pointer to number of the color profile to work on
  *
  * @see ENABLE_RGB_SUPPORT
- * @see pwm_set_color_step()
+ * @see pwm_set_color()
  * @see UserEepromParams::curColorProfile
  * @see UserEepromParams::colorPresets
  * @see addSubState()

@@ -84,7 +84,6 @@
      * human eye as close as possible.
      *
      * @see pwm_set_brightness()
-     * @see pwm_set_color_step()
      */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
         {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 21, 24, 28, 32, 37,
@@ -101,7 +100,6 @@
      * human eye as close as possible.
      *
      * @see pwm_set_brightness()
-     * @see pwm_set_color_step()
      */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
         {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
