@@ -856,6 +856,8 @@ static bool NormalState_handleUserCommand(user_command_t command)
 
             } else {
 
+                dir *= USER_COLOR_CHANGE_MANUAL_STEPS;
+
                 uint8_t* rgb = (uint8_t*)(&g_params->colorPresets[g_params->curColorProfile]);
 
                 incDecRange(&rgb[mode_normalState.propertyToSet], dir, 0, 255);

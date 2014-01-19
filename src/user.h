@@ -841,6 +841,18 @@ extern bool useAutoOffAnimation;
 #define USER_HUE_CHANGE_MANUAL_STEPS 10
 
 /**
+ * @brief Amount of steps to change when requested manually
+ *
+ * Whenever a color change is requested ("up" and/or "down") manually by the
+ * user this defines the amount of steps to change the color by. Each color
+ * can be assigned with values from 0 up to 255. This is basically a tradeoff
+ * between granular control and an actual visible change to the color.
+ *
+ * @see NormalState_handleUserCommand()
+ */
+#define USER_COLOR_CHANGE_MANUAL_STEPS 8
+
+/**
  * @brief Default value for interval between two animation steps in pulse mode
  *
  * This defines the default value for the interval (in multiples of 10 ms)
