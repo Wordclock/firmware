@@ -262,7 +262,7 @@ static void handle_brightness()
 
         #endif
 
-        pwm_set_base_brightness_step(ldr_brightness);
+        pwm_set_base_brightness(ldr_brightness);
 
         last_ldr_brightness = ldr_brightness;
 

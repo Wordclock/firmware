@@ -134,7 +134,7 @@ extern void pwm_off();
 
 #endif
 
-extern void pwm_set_base_brightness_step(uint8_t pwm_idx);
+extern void pwm_set_base_brightness(uint8_t base_brightness);
 
 extern void pwm_step_up_brightness();
 

@@ -400,31 +400,31 @@ void pwm_off()
 #endif /* (ENABLE_RGB_SUPPORT == 1) */
 
 /**
- * @brief Sets the base brightness by step value
+ * @brief Sets the given base brightness and applies it
  *
  * This sets the base brightness (`base_pwm_idx`) to the appropriate value from
  * `g_ldrBrightness2pwmStep`. Valid values range from 0 to `LDR2PWM_COUNT - 1`.
  * After the base brightness has been set, `pwm_set_brightness()` is invoked to
  * accommodate for the change.
  *
- * @param pwm_idx Step value, range 0 - LDR2PWM_COUNT
+ * @param base_brightness Base brightness to set,range 0 - LDR2PWM_COUNT - 1
  *
- * @see g_ldrBrightness2pwmStep
  * @see base_ldr_idx
  * @see base_pwm_idx
+ * @see g_ldrBrightness2pwmStep
  * @see pwm_set_brightness()
  */
-void pwm_set_base_brightness_step(uint8_t pwm_idx)
+void pwm_set_base_brightness(uint8_t base_brightness)
 {
 
-    if (pwm_idx >= LDR2PWM_COUNT) {
+    if (base_brightness >= LDR2PWM_COUNT) {
 
-        pwm_idx = LDR2PWM_COUNT - 1;
+        base_brightness = LDR2PWM_COUNT - 1;
 
     }
 
-    base_ldr_idx = pwm_idx;
-    base_pwm_idx = g_ldrBrightness2pwmStep[pwm_idx];
+    base_ldr_idx = base_brightness;
+    base_pwm_idx = g_ldrBrightness2pwmStep[base_brightness];
     pwm_set_brightness();
 
 }
