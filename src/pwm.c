@@ -227,30 +227,6 @@ static uint8_t base_ldr_idx;
 #if (ENABLE_RGB_SUPPORT == 1)
 
     /**
-     * @brief Keeps track of the current PWM index for the red channel
-     *
-     * @see pwm_set_color_step()
-     * @see pwm_get_color_step()
-     */
-    static uint8_t red_pwm_idx;
-
-    /**
-     * @brief Keeps track of the current PWM index for the green channel
-     *
-     * @see pwm_set_color_step()
-     * @see pwm_get_color_step()
-     */
-    static uint8_t green_pwm_idx;
-
-    /**
-     * @brief Keeps track of the current PWM index for the blue channel
-     *
-     * @see pwm_set_color_step()
-     * @see pwm_get_color_step()
-     */
-    static uint8_t blue_pwm_idx;
-
-    /**
      * @brief Keeps track of the current color
      *
      * This is used within the module to keep track of the currently set color.
@@ -485,84 +461,6 @@ void pwm_on_off()
     {
 
         *color = pwm_color;
-
-    }
-
-    /**
-     * @brief Sets the RGB colors by step values
-     *
-     * This sets the color by providing a step value for each channel
-     * (red, green ,blue) separately. A step value is a value between 0
-     * and MAX_PWM_STEPS, that is an index of pwm_table. Internally it makes
-     * use of pwm_set_color() by reading the appropriate value from pwm_table.
-     *
-     * @param red Step for the red channel, range 0 - MAX_PWM_STEPS
-     * @param green Step for the green channel, range 0 - MAX_PWM_STEPS
-     * @param blue Step for the blue channel, range 0 - MAX_PWM_STEPS
-     *
-     * @see red_pwm_idx
-     * @see green_pwm_idx
-     * @see blue_pwm_idx
-     * @see pwm_table
-     * @see pwm_set_color()
-     */
-    void pwm_set_color_step(uint8_t red, uint8_t green, uint8_t blue)
-    {
-
-        if (red >= MAX_PWM_STEPS) {
-
-            red = MAX_PWM_STEPS - 1;
-
-        }
-
-        if (green >= MAX_PWM_STEPS) {
-
-            green = MAX_PWM_STEPS - 1;
-
-        }
-
-        if (blue >= MAX_PWM_STEPS) {
-
-            blue = MAX_PWM_STEPS - 1;
-
-        }
-
-        red_pwm_idx = red;
-        green_pwm_idx = green;
-        blue_pwm_idx = blue;
-
-        color_rgb_t color;
-
-        color.red = pgm_read_byte(pwm_table + red);
-        color.green = pgm_read_byte(pwm_table + green);
-        color.blue = pgm_read_byte (pwm_table + blue);
-
-        pwm_set_color(color);
-
-    }
-
-    /**
-     * @brief Gets the RGB color step values
-     *
-     * This gets the color step values of each channel (red, green ,blue) and
-     * puts them into the provided buffers. A step value is a value between 0
-     * and MAX_PWM_STEPS, that is an index of pwm_table.
-     *
-     * @param red Pointer to store step value of the red channel.
-     * @param green Pointer to store step value of the green channel.
-     * @param blue Pointer to store step value of the blue channel.
-     *
-     * @see red_pwm_idx
-     * @see green_pwm_idx
-     * @see blue_pwm_idx
-     * @see pwm_table
-     */
-    void pwm_get_color_step(uint8_t* red, uint8_t* green, uint8_t* blue)
-    {
-
-        *red   = red_pwm_idx;
-        *green = green_pwm_idx;
-        *blue  = blue_pwm_idx;
 
     }
 

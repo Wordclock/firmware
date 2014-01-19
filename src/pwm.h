@@ -138,10 +138,6 @@ extern void pwm_on_off();
 
     extern void pwm_get_color(color_rgb_t* color);
 
-    extern void pwm_set_color_step(uint8_t red, uint8_t green, uint8_t blue);
-
-    extern void pwm_get_color_step(uint8_t* red, uint8_t* green, uint8_t* blue);
-
 #endif
 
 extern void pwm_set_base_brightness_step(uint8_t pwm_idx);
