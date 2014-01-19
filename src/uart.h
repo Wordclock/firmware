@@ -85,7 +85,7 @@ extern void uart_puts_p(const char*);
  *
  * @see ISR(USART_UDRE_vect)
  */
-static inline void uart_flush_output()
+inline void uart_flush_output()
 {
 
     while (UCSR0B & _BV(UDRIE0));
