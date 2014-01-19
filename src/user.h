@@ -822,7 +822,7 @@ extern bool useAutoOffAnimation;
  * @see COLOR_HUE_MAX
  * @see NormalState_handleUserCommand()
  */
-#define USER_HUE_CHANGE_MANUAL_STEPS 10
+#define USER_HUE_CHANGE_MANUAL_STEPS 16
 
 /**
  * @brief Amount of steps to change when requested manually
