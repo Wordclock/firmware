@@ -41,7 +41,7 @@ Refer to the [commit logs][4] for a full list of changes.
 
 The structure, hardware and electronics of this project are explained in detail
 [here][2] and [there][3]. Keep in mind that this firmware will only work with
-"Variante 1".
+"Variante 1", which supports frontpanels for both English and German.
 
 One of the goals of this fork is to stay as compatible as possible with the
 original project and the corresponding hardware. However, as the program space
