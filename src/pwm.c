@@ -274,7 +274,7 @@ static void pwm_set_brightness()
 
         }
 
-        brightness_pwm_val = pgm_read_byte(pwm_table + pwm_idx);
+        brightness_pwm_val = pgm_read_byte(&pwm_table[pwm_idx]);
 
     }
 
