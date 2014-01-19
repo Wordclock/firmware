@@ -355,28 +355,6 @@ void pwm_off()
 
 }
 
-/**
- * @brief Toggle the generation of the PWM signal on and/or off
- *
- * @see pwm_is_on
- * @see pwm_off()
- * @see pwm_on()
- */
-void pwm_on_off()
-{
-
-    if (pwm_is_on) {
-
-        pwm_off();
-
-    } else {
-
-        pwm_on();
-
-    }
-
-}
-
 #if (ENABLE_RGB_SUPPORT == 1)
 
     /**
@@ -885,9 +863,16 @@ void pwm_modifyLdrBrightness2pwmStep()
         /*
          * Indicate that the settings have been applied successfully
          */
-        pwm_on_off();
-        _delay_ms(500);
-        pwm_on_off();
+
+        if (pwm_is_on) {
+
+            pwm_off();
+
+            _delay_ms(500);
+
+            pwm_on();
+
+        }
 
     }
 

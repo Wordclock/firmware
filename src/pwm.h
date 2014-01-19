@@ -126,8 +126,6 @@ extern void pwm_on();
 
 extern void pwm_off();
 
-extern void pwm_on_off();
-
 #if (ENABLE_RGB_SUPPORT == 1)
 
     extern void pwm_set_color(color_rgb_t color);
