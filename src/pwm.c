@@ -786,7 +786,7 @@ static void interpolate(uint8_t left, uint8_t right)
         int8_t rightVal = (int8_t)(g_ldrBrightness2pwmStep[right]);
 
         int16_t l =
-                (((int16_t)leftVal) << SHIFT) + (((uint16_t)1) << (SHIFT - 1));
+            (((int16_t)leftVal) << SHIFT) + (((uint16_t)1) << (SHIFT - 1));
 
         int16_t slope = ((int16_t)(rightVal - leftVal )) << SHIFT;
         slope /= d;
