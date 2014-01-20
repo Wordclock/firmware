@@ -471,7 +471,7 @@ void pwm_set_base_brightness(uint8_t base_brightness)
  * @see pwm_is_on
  * @see MAX_PWM_STEPS
  */
-void pwm_step_up_brightness()
+void pwm_increase_brightness()
 {
 
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx + 1 < MAX_PWM_STEPS)) {
@@ -495,7 +495,7 @@ void pwm_step_up_brightness()
  * @see pwm_set_brightness()
  * @see pwm_is_on
  */
-void pwm_step_down_brightness()
+void pwm_decrease_brightness()
 {
 
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx > 0)) {

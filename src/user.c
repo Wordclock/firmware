@@ -776,12 +776,12 @@ void handle_user_command(user_command_t user_command)
             if (UC_BRIGHTNESS_UP == user_command) {
 
                 log_state("B+\n");
-                pwm_step_up_brightness();
+                pwm_increase_brightness();
 
             } else if (UC_BRIGHTNESS_DOWN == user_command) {
 
                 log_state("B-\n");
-                pwm_step_down_brightness();
+                pwm_decrease_brightness();
 
             } else if (UC_NORMAL_MODE == user_command) {
 
