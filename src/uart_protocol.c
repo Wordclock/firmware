@@ -447,7 +447,6 @@ static void _ldr_brightness(uint8_t argc, char* argv[])
  * @see pwm_get_color()
  * @see uart_protocol_output_args_hex()
  *
- * @todo Built-in when RGB support not activated?
  * @todo Not real 8 bits, but 2^8-1?
  */
 static void _color_read(uint8_t argc, char* argv[])
@@ -764,9 +763,6 @@ static void _time_get(uint8_t argc, char* argv[])
  * @see user_setNewTime()
  * @see uart_protocol_ok()
  * @see uart_protocol_error()
- *
- * @todo Check whether it is necessary to check the values by looking at what
- * happens when invalid values are written to the RTC.
  */
 static void _time_set(uint8_t argc, char* argv[])
 {
@@ -881,8 +877,6 @@ static void _date_get(uint8_t argc, char* argv[])
  * @see uart_protocol_error()
  *
  * @todo Check whether user_setNewTime() is necessary or would even make sense
- * @todo Check whether it is necessary to check the values by looking at what
- * happens when invalid values are written to the RTC.
  */
 static void _date_set(uint8_t argc, char* argv[])
 {
