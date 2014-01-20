@@ -290,11 +290,23 @@ void pwm_init()
         PORT(PWM_BLUE) &= ~_BV(BIT(PWM_BLUE));
         DDR(PWM_BLUE) |= _BV(BIT(PWM_BLUE));
 
+        /*
+         * Waveform generation mode: Fast PWM
+         * Top: 0xFF
+         * Update of OCRx: Bottom
+         * Prescaler: 8
+         */
         TCCR2A = _BV(WGM21) | _BV(WGM20);
         TCCR2B = _BV(CS21);
 
     #endif
 
+    /*
+     * Waveform generation mode: Fast PWM
+     * Top: 0xFF
+     * Update of OCRx: Bottom
+     * Prescaler: 8
+     */
     TCCR0A = _BV(WGM01) | _BV(WGM00);
     TCCR0B = _BV(CS01);
 
@@ -313,10 +325,17 @@ void pwm_init()
 void pwm_on()
 {
 
+    /*
+     * Set OC0A on compare match, clear OC0A at BOTTOM, (inverting mode)
+     */
     TCCR0A |= _BV(COM0A1) | _BV(COM0A0);
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
+        /*
+         * Set OC0B on compare match, clear OC0B at BOTTOM, (inverting mode)
+         * Set OC2A on compare match, clear OC2A at BOTTOM, (inverting mode)
+         */
         TCCR0A |= _BV(COM0B1) | _BV(COM0B0);
         TCCR2A |= _BV(COM2B1) | _BV(COM2B0);
 
@@ -338,14 +357,23 @@ void pwm_on()
 void pwm_off()
 {
 
+    /*
+     * Normal port operation, OC0A disconnected
+     */
     TCCR0A &= ~_BV(COM0A1) | _BV(COM0A0);
     PORT(PWM_RED) &= ~_BV(BIT(PWM_RED));
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
+        /*
+         * Normal port operation, OC0B disconnected
+         */
         TCCR0A &= ~(_BV(COM0B1) | _BV(COM0B0));
         PORT(PWM_GREEN) &= ~_BV(BIT(PWM_GREEN));
 
+        /*
+         * Normal port operation, OC2A disconnected
+         */
         TCCR2A &= ~(_BV(COM2B1) | _BV(COM2B0));
         PORT(PWM_BLUE)  &= ~_BV(BIT(PWM_BLUE));
 
