@@ -1060,7 +1060,7 @@ void user_init()
  * blink.
  *
  * @param i_time The new date and time to set
- * @param i_blinkstates Defines words that should be blinking
+ * @param blinkmask Defines words that should be blinking
  *
  * @see display_setDisplayState()
  * @see display_getTimeState()
