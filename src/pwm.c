@@ -559,7 +559,7 @@ void pwm_release_brightness()
      * @see g_occupancy
      * @see uart.h
      */
-    void outputVals()
+    static void outputVals()
     {
 
         char buf[4];
@@ -616,7 +616,7 @@ void pwm_release_brightness()
      * @see LDR2PWM_COUNT
      * @see uart_putc()
      */
-    void outputPointer(uint8_t ind, uint8_t l, uint8_t r)
+    static void outputPointer(uint8_t ind, uint8_t l, uint8_t r)
     {
 
         for (uint8_t i = 0; i < LDR2PWM_COUNT; i++) {
