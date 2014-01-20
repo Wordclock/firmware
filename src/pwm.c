@@ -819,15 +819,15 @@ static void interpolate(uint8_t left, uint8_t right)
 static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
 {
 
-    uint8_t left;
-    uint8_t right;
-
     #if (LOG_LDR2PWM == 1)
 
         uart_puts_P("before\n");
         outputVals();
 
     #endif
+
+    uint8_t left;
+    uint8_t right;
 
     g_ldrBrightness2pwmStep[ind] = val;
     getBounds(ind, val, &left, &right);
