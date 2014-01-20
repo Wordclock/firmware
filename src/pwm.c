@@ -83,7 +83,7 @@
      * values are precalculated to fit the logarithmic nature of the human eye
      * as close as possible.
      *
-     * @see pwm_set_brightness()
+     * @see pwm_accommodate_brightness()
      */
     const uint8_t pwm_table[MAX_PWM_STEPS] PROGMEM =
         {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 21, 24, 28, 32, 37,
@@ -231,7 +231,7 @@ static uint8_t base_ldr_idx;
  * @see brightness_pwm_val
  * @see pwm_set_color()
  */
-static void pwm_set_brightness()
+static void pwm_accommodate_brightness()
 {
 
     if (!brightness_lock) {
@@ -317,10 +317,10 @@ void pwm_init()
  *
  * This sets up the timers involved in a way that the generated PWM signal
  * is actually being output on the appropriate pins. Furthermore it invokes
- * `pwm_set_brightness()` to make sure the brightness is set correctly.
+ * `pwm_accommodate_brightness()` to make sure the brightness is set correctly.
  *
  * @see pwm_is_on
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  */
 void pwm_on()
 {
@@ -342,7 +342,7 @@ void pwm_on()
     #endif
 
     pwm_is_on = true;
-    pwm_set_brightness();
+    pwm_accommodate_brightness();
 
 }
 
@@ -433,15 +433,15 @@ void pwm_off()
  *
  * This sets the base brightness (`base_pwm_idx`) to the appropriate value from
  * `g_ldrBrightness2pwmStep`. Valid values range from 0 to `LDR2PWM_COUNT - 1`.
- * After the base brightness has been set, `pwm_set_brightness()` is invoked to
- * accommodate for the change.
+ * After the base brightness has been set, `pwm_accommodate_brightness()` is
+ * invoked to accommodate for the change.
  *
  * @param base_brightness Base brightness to set,range 0 - LDR2PWM_COUNT - 1
  *
  * @see base_ldr_idx
  * @see base_pwm_idx
  * @see g_ldrBrightness2pwmStep
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  */
 void pwm_set_base_brightness(uint8_t base_brightness)
 {
@@ -454,7 +454,7 @@ void pwm_set_base_brightness(uint8_t base_brightness)
 
     base_ldr_idx = base_brightness;
     base_pwm_idx = g_ldrBrightness2pwmStep[base_brightness];
-    pwm_set_brightness();
+    pwm_accommodate_brightness();
 
 }
 
@@ -462,12 +462,13 @@ void pwm_set_base_brightness(uint8_t base_brightness)
  * @brief Increases the brightness
  *
  * This increases the brightness by a single step. It increments
- * `offset_pwm_idx` by one and invokes `pwm_set_brightness()` afterwards.
+ * `offset_pwm_idx` by one and invokes `pwm_accommodate_brightness()`
+ * afterwards.
  *
  * @note This only works if the maximum brightness hasn't been reached yet.
  *
  * @see offset_pwm_idx
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  * @see pwm_is_on
  * @see MAX_PWM_STEPS
  */
@@ -477,7 +478,7 @@ void pwm_increase_brightness()
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx + 1 < MAX_PWM_STEPS)) {
 
         offset_pwm_idx++;
-        pwm_set_brightness();
+        pwm_accommodate_brightness();
 
     }
 
@@ -487,12 +488,13 @@ void pwm_increase_brightness()
  * @brief Decreases the brightness
  *
  * This decreases the brightness by a single step. It decrements
- * `offset_pwm_idx` by one and invokes `pwm_set_brightness()` afterwards.
+ * `offset_pwm_idx` by one and invokes `pwm_accommodate_brightness()`
+ * afterwards.
  *
  * @note This only works if the minimum brightness hasn't been reached yet.
  *
  * @see offset_pwm_idx
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  * @see pwm_is_on
  */
 void pwm_decrease_brightness()
@@ -501,7 +503,7 @@ void pwm_decrease_brightness()
     if (pwm_is_on && (base_pwm_idx + offset_pwm_idx > 0)) {
 
         offset_pwm_idx--;
-        pwm_set_brightness();
+        pwm_accommodate_brightness();
 
     }
 
@@ -515,7 +517,7 @@ void pwm_decrease_brightness()
  *
  * @param val The value you want to lock the brightness to, range 0 to 255
  *
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  * @see pwm_release_brightness()
  */
 void pwm_lock_brightness_val(uint8_t val)
@@ -523,7 +525,7 @@ void pwm_lock_brightness_val(uint8_t val)
 
     brightness_lock = true;
     brightness_pwm_val = val;
-    pwm_set_brightness();
+    pwm_accommodate_brightness();
 
 }
 
@@ -531,17 +533,17 @@ void pwm_lock_brightness_val(uint8_t val)
  * @brief Releases brightness lock
  *
  * This releases a brightness lock previously acquired by
- * `pwm_lock_brightness_val` and invokes `pwm_set_brightness()` afterwards to
- * make sure the correct brightness will be set.
+ * `pwm_lock_brightness_val` and invokes `pwm_accommodate_brightness()`
+ * afterwards to make sure the correct brightness will be set.
  *
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  * @see pwm_lock_brightness_val()
  */
 void pwm_release_brightness()
 {
 
     brightness_lock = false;
-    pwm_set_brightness();
+    pwm_accommodate_brightness();
 
 }
 
@@ -860,7 +862,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
  * This takes over the offset defined by the user (`offset_pwm_idx`) and
  * incorporates it into `base_pwm_idx`. `modifyLdrBrightness2pwmStep()` is
  * invoked to make sure that the internal data is updated appropriately.
- * After the data has been altered, `pwm_set_brightness()` is invoked to
+ * After the data has been altered, `pwm_accommodate_brightness()` is invoked to
  * actually change the brightness in accordance to the newly calculated values.
  *
  * The user is informed about this change by disabling the PWM for 500 ms and
@@ -869,7 +871,7 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
  * @see base_pwm_idx
  * @see offset_pwm_idx
  * @see modifyLdrBrightness2pwmStep()
- * @see pwm_set_brightness()
+ * @see pwm_accommodate_brightness()
  */
 void pwm_modifyLdrBrightness2pwmStep()
 {
@@ -887,7 +889,7 @@ void pwm_modifyLdrBrightness2pwmStep()
         modifyLdrBrightness2pwmStep(base_ldr_idx, val);
         base_pwm_idx = val;
         offset_pwm_idx = 0;
-        pwm_set_brightness();
+        pwm_accommodate_brightness();
 
         /*
          * Indicate that the settings have been applied successfully
