@@ -452,11 +452,9 @@ static void _ldr_brightness(uint8_t argc, char* argv[])
 static void _color_read(uint8_t argc, char* argv[])
 {
 
-    color_rgb_t color;
+    const color_rgb_t* color = pwm_get_color();
 
-    pwm_get_color(&color);
-
-    uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
+    uart_protocol_output_args_hex(3, color->red, color->green, color->blue);
 
 }
 

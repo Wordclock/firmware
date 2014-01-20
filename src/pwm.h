@@ -130,7 +130,7 @@ extern void pwm_off();
 
     extern void pwm_set_color(color_rgb_t color);
 
-    extern void pwm_get_color(color_rgb_t* color);
+    extern const color_rgb_t* pwm_get_color();
 
 #endif
 

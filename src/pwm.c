@@ -410,18 +410,19 @@ void pwm_off()
     }
 
     /**
-     * @brief Gets the RGB color currently being used
+     * @brief Returns the RGB color currently being used
      *
-     * This puts the color currently being used into the provided buffer.
+     * This returns a pointer to `pwm_color`, which holds the color currently
+     * being used.
      *
-     * @param color Pointer to color_rgb_t struct where color should be put
+     * @return color Pointer to pwm_color
      *
      * @see color_rgb_t
      */
-    void pwm_get_color(color_rgb_t* color)
+    const color_rgb_t* pwm_get_color()
     {
 
-        *color = pwm_color;
+        return &pwm_color;
 
     }
 
