@@ -45,24 +45,6 @@
 #include "uart.h"
 #include "base.h"
 
-#if (LOG_EEPROM_WRITEBACK == 1)
-
-    /**
-     * @brief Used to put out logging information within this module
-     *
-     * @see LOG_EEPROM_WRITEBACK
-     */
-    #define log_eeprom(x) uart_puts_P(x)
-
-#else
-
-    /**
-     * @brief Dummy in case logging is disabled
-     */
-    #define log_eeprom(x)
-
-#endif
-
 /**
  * @brief Represents the data stored persistently within EEPROM
  *
