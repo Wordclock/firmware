@@ -28,8 +28,8 @@
  * @see user_command_t
  */
 
-#ifndef _WC_USER_COMMAND_TIMER_H_
-#define _WC_USER_COMMAND_TIMER_H_
+#ifndef _WC_USER_COMMAND_H_
+#define _WC_USER_COMMAND_H_
 
 #include "config.h"
 #include "display.h"
@@ -286,4 +286,4 @@ typedef enum
 
 } user_command_t;
 
-#endif /* _WC_USER_COMMAND_TIMER_H_ */
+#endif /* _WC_USER_COMMAND_H_ */
