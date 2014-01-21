@@ -117,44 +117,47 @@ const WcEepromData PROGMEM eepromDefaultParams_P = {
 };
 
 /**
- * @brief Working copy hold in SRAM backed by the content from EEPROM
+ * @brief Copy of data hold in SRAM backed by the content of EEPROM
  *
- * This variable is stored in SRAM and can be used just like every other
- * variable, too. It will filled with the contents from EEPROM during
- * initialization, see wcEeprom_init(). In order for changes to this variable
- * to be stored persistently in EEPROM, wcEeprom_writeback() has to be used.
+ * This is holding all of the data defined by `WcEepromData` in SRAM. It will
+ * be filled with the appropriate content from EEPROM during initialization and
+ * can be accessed by other modules using `wcEeprom_getData()`. Once changes
+ * to it are made, `wcEeprom_writeback()` needs to be invoked in order for the
+ * changes to be written back.
  *
+ * @see WcEepromData
  * @see wcEeprom_init()
+ * @see wcEeprom_getData()
  * @see wcEeprom_writeback()
- * @see eepromParams
  */
 WcEepromData g_epromWorking;
 
 /**
- * @brief Initializes this module by reading data from EEPROM and keeping a
- *   copy of it in memory
+ * @brief Initializes this module by copying over the content of the EEPROM
  *
  * This has to be called **before** any other functions of this module can be
- * used. It copies the data from EEPROM into memory and makes it accessible
- * with wcEeprom_getData(). Changes to the data done in memory can be written
- * back to be stored persistently using wcEeprom_writeback().
+ * used.
  *
- * @see wcEeprom_getData()
- * @see wcEeprom_writeback()
+ * It reads in the contents of EEPROM into `g_epromWorking` and performs some
+ * basic integrity checks. These include:
+ *
+ * - Compare software version stored in EEPROM against SW_VERSION
+ * - Compare struct size stored in EEPROM against WcEepromData::structSize
+ *
+ * When this check fails, the default values (`eepromDefaultParams_P`) will be
+ * used. Otherwise the data from EEPROM is considered to be valid and will end
+ * up being used.
+ *
+ * @see WcEepromData::swVersion
+ * @see SW_VERSION
+ * @see g_epromWorking
+ * @see eepromParams
  */
 void wcEeprom_init()
 {
 
-    /*
-     * Copy content from EEPROM into SRAM
-     */
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
 
-    /*
-     * Basic integrity check: Check whether there are differences between
-     * either the SW_VERSION or the size of g_epromWorking between the
-     * version actually running and the one stored in EEPROM.
-     */
     if ((g_epromWorking.swVersion != SW_VERSION)
         || (g_epromWorking.structSize != sizeof(g_epromWorking))) {
 
@@ -164,9 +167,6 @@ void wcEeprom_init()
 
         #endif
 
-        /*
-         * Copy default settings into g_epromWorking
-         */
         memcpy_P(&g_epromWorking, &eepromDefaultParams_P, sizeof(WcEepromData));
 
     }
@@ -174,10 +174,6 @@ void wcEeprom_init()
     #if (LOG_EEPROM_INIT == 1)
 
         uart_puts_P("EEPROM: ");
-
-        /*
-         * Iterate over EEPROM content and output to UART
-         */
 
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
 
@@ -240,11 +236,6 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
     uint8_t eepromByte;
     uint8_t sramByte;
 
-    /*
-     * Get the content of the byte at the given index from both, the SRAM
-     * and EEPROM
-     */
-
     uint8_t* eepromAdress = ((uint8_t*)&eepromParams) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
@@ -269,10 +260,6 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 
         #endif
 
-        /*
-         * Content of EEPROM and SRAM are different, therefore we need to
-         * write the new value into EEPROM.
-         */
         eeprom_write_byte(eepromAdress, sramByte);
 
         return true;
@@ -284,34 +271,25 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 }
 
 /**
- * @brief Writes changes done to the WcEepromData instance in RAM into EEPROM
+ * @brief Initiates the writeback to EEPROM
  *
- * As stated in the description of WcEepromData there are basically two
- * "instances" of this variable. One in RAM and one in EEPROM, which the one
- * in RAM is based on. If any changes are done to the instance in RAM this
- * function has to be called in order for the changes to be written back to
- * EEPROM so they are stored persistently.
- *
- * Instead of writing the whole struct into EEPROM each and every time again,
- * it is also possible to only write back bytes that actually have changed,
- * which not only saves space, but also helps to increase the expected lifetime
- * of the EEPROM cells involved.
+ *  This initiates the writeback to the EEPROM in order for data to be stored
+ *  persistently. This function will iterate over the range described by the
+ *  parameters `start` and `length` and invoke `wcEeprom_writeIfChanged()` for
+ *  each of them.
  *
  * @warning Because writing to EEPROM takes quite some time it is possible
  * that interrupts will be missed.
- *  *
- * @param start_p Pointer to the start of the data that has to be written back
- * @param len The length of the data that has to be written back
+ *
+ * @param start Pointer to the start of the data that has to be written back
+ * @param length The length of the data that has to be written back
  *
  * @see wcEeprom_writeIfChanged()
- * @see WcEepromData
+ * @see g_epromWorking
  */
 void wcEeprom_writeback(const void* start, uint8_t length)
 {
 
-    /*
-     * Calculate the index represented by the start pointer.
-     */
     uint8_t eepromIndex = (((uint8_t*)start) - ((uint8_t*)&g_epromWorking));
     uint8_t eepromIndexEnd = eepromIndex + length - 1;
 
@@ -329,9 +307,6 @@ void wcEeprom_writeback(const void* start, uint8_t length)
 
     #endif
 
-    /*
-     * Iterate over each index and write changes back
-     */
     while (eepromIndex <= eepromIndexEnd) {
 
         wcEeprom_writeIfChanged(eepromIndex++);
