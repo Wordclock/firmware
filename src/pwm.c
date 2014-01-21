@@ -790,7 +790,7 @@ static void interpolate(uint8_t left, uint8_t right)
         int16_t l =
             (((int16_t)leftVal) << SHIFT) + (((uint16_t)1) << (SHIFT - 1));
 
-        int16_t slope = ((int16_t)(rightVal - leftVal )) << SHIFT;
+        int16_t slope = ((int16_t)(rightVal - leftVal)) << SHIFT;
         slope /= d;
 
         for (uint8_t i = 1; i < d; i++) {
