@@ -778,6 +778,15 @@ static void interpolate(uint8_t left, uint8_t right)
 
     enum {
 
+        /**
+         * @brief Scaling factor for operands
+         *
+         * This is the amount of bits operands within this function will be
+         * shifted.
+         *
+         * @note For reasons of performance this was chosen to be eight as it
+         * can be better optimized for.
+         */
         SHIFT = 8,
 
     };
