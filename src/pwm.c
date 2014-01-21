@@ -762,12 +762,14 @@ static void getBounds(uint8_t ind, uint8_t val, uint8_t* left, uint8_t* right)
  * Both parameters are actually indexes for values within
  * `g_ldrBrightness2pwmStep`. The corresponding values for both of these
  * indexes are retrieved and a linear interpolation between these two points
- * and is performed, see [1] for details.
+ * is performed, see [1] for details. Fixed point arithmetic [2] is used within
+ * this function for better accuracy.
  *
  * [1]: https://en.wikipedia.org/wiki/Linear_interpolation
+ * [2]: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
  *
- * @param left The left point
- * @param right The right point
+ * @param left The left point, index within g_ldrBrightness2pwmStep
+ * @param right The right point, index within g_ldrBrightness2pwmStep
  *
  * @see g_ldrBrightness2pwmStep
  */
