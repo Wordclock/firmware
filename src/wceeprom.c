@@ -22,30 +22,17 @@
  * @file wceeprom.c
  * @brief Implementation of the header declared in wceeprom.h
  *
- * This idea behind this module is to keep a copy of the content of the EEPROM
- * (see [1]) within the SRAM, see g_epromWorking. g_epromWorking will be
- * initialized during bootup. It will either contain the content of the EEPROM
- * and/or if there is some sort of an error regarding the integrity (e.g.
- * different size and/or different SW_VERSION) it will contain the default
- * parameters defined in eepromDefaultParams_P.
+ * During initialization this modules copies over the content of the EEPROM
+ * into the SRAM and makes it available to other modules. Once the data has
+ * been changed, a writeback needs to be initiated in order for the data to
+ * be written back to the EEPROM.
  *
- * g_epromWorking can basically be changed like any other variable.
- * wcEeprom_writeback() can then be used to write these changes back to EEPROM
- * in order to make them persistent.
+ * For details about how the EEPROM works in detail and how to access it from
+ * within the program, refer to [1] and/or [2].
  *
- * For further information about the EEPROM memory integrated into the AVR
- * microcontroller see [2], p. 20f, chapter 8.4. Furhtermore it might be useful
- * to take a look at [3] as these functions are used quite heavily within this
- * module.
+ * [1]: http://www.atmel.com/images/doc2545.pdf
+ * [2]: http://www.nongnu.org/avr-libc/user-manual/group__avr__eeprom.html
  *
- * [1]: https://en.wikipedia.org/wiki/EEPROM
- * [2]: http://www.atmel.com/images/doc2545.pdf
- * [3]: http://www.nongnu.org/avr-libc/user-manual/group__avr__eeprom.html
- *
- * @see SW_VERSION
- * @see WcEepromData::structSize
- * @see eepromDefaultParams_P
- * @see wcEeprom_writeback()
  * @see wceeprom.h
  */
 
@@ -61,11 +48,7 @@
 #if (LOG_EEPROM_WRITEBACK == 1)
 
     /**
-     * @brief Used to output logging information for changes written back to
-     *  EEPROM
-     *
-     * When the logging is enabled (LOG_EEPROM_WRITEBACK == 1), this macro is
-     * used to output changes that are written back to EEPROM.
+     * @brief Used to put out logging information within this module
      *
      * @see LOG_EEPROM_WRITEBACK
      */
@@ -74,37 +57,32 @@
 #else
 
     /**
-     * @brief Used to output logging information for changes written back to
-     *  EEPROM
-     *
-     * When the logging is disabled (LOG_EEPROM_WRITEBACK == 0), this macro is
-     * used, so that actually there is nothing being output. This allows to
-     * use log_eeprom(x) in the code without needing to check whether the
-     * logging is enabled over and over again.
-     *
-     * @see LOG_EEPROM_WRITEBACK
+     * @brief Dummy in case logging is disabled
      */
     #define log_eeprom(x)
 
 #endif
 
 /**
- * @brief Represents the settings to be stored persistently within the EEPROM
+ * @brief Represents the data stored persistently within EEPROM
  *
- * @see wcEeprom_init()
- * @see wcEeprom_writeback()
- * @see g_epromWorking
+ * @see WcEepromData
  */
 WcEepromData EEMEM eepromParams;
 
 /**
- * @brief The default settings to be used in case the content from EEPROM is
- *   invalid
+ * @brief Default settings for WcEepromData stored within program space
  *
- * These settings are used whenever the basic integrity check fails, see
- * wcEeprom_init().
+ * These are the default settings for `WcEepromData`, which are stored within
+ * program space and will get used whenever the data in the EEPROM is
+ * considered to be invalid.
  *
+ * @see WcEepromData
  * @see wcEeprom_init()
+ * @see USEREEPROMPARAMS_DEFAULT
+ * @see DISPLAYEEPROMPARAMS_DEFAULT
+ * @see PWMEEPROMPARAMS_DEFAULT
+ * @see SW_VERSION
  */
 const WcEepromData PROGMEM eepromDefaultParams_P = {
 
@@ -192,20 +170,14 @@ void wcEeprom_init()
 }
 
 /**
- * @brief Returns a pointer to a copy of WcEepromData
+ * @brief Returns pointer to working copy WcEepromData
  *
- * This returns a pointer to a variable of type WcEepromData. This variable
- * can then be used to get the persistently stored values. It can also be
- * used to modify the values. In order for the changes to get written back
- * into EEPROM, wcEeprom_writeback() needs to be called.
+ * This returns a pointer to `g_epromWorking` and can be used to access the
+ * data for reading and/or writing. Once data has been changed,
+ * `wcEeprom_writeback()` needs to be invoked in order to write it back to the
+ * EEPROM.
  *
- * @warning WcEepromData shouldn't become larger than 254 bytes for now, as
- *  the code right now uses a lot of 8 bit counters.
- *
- * @warning WcEepromData definitely shouldn't become bigger than the size of
- *  EEPROM itself, which is 512 bytes for the ATmega168.
- *
- * @see WcEepromData
+ * @see g_epromWorking
  * @see wcEeprom_writeback()
  */
 WcEepromData* wcEeprom_getData()
@@ -216,19 +188,14 @@ WcEepromData* wcEeprom_getData()
 }
 
 /**
- * @brief Writes byte at the given index to EEPROM if it has been changed
+ * @brief Writes byte at given index back to EEPROM - if it has been changed
  *
- * In order to speed up the process of writing to EEPROM we only write bytes
- * to EEPROM that actually have been changed. This also increases the lifespan
- * of the EEPROM itself. If logging is enabled (LOG_EEPROM_WRITEBACK == 1) the
- * difference between the byte in SRAM and the one in EEPROM will be output,
- * too.
- *
- * This function will be invoked by wcEeprom_writeback() automatically.
+ * This writes the byte at the given index into EEPROM. Only bytes that have
+ * changed compared to their EEPROM counterpart, will actually be written to
+ * EEPROM. This improves the performance as well as the expected lifespan of
+ * the EEPROM itself as the amount of erase/write cycles is limited.
  *
  * @see wcEeprom_writeback()
- * @see LOG_EEPROM_WRITEBACK
- * @see uint8ToHexStr()
  */
 static bool wcEeprom_writeIfChanged(uint8_t index)
 {
@@ -273,13 +240,10 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 /**
  * @brief Initiates the writeback to EEPROM
  *
- *  This initiates the writeback to the EEPROM in order for data to be stored
- *  persistently. This function will iterate over the range described by the
- *  parameters `start` and `length` and invoke `wcEeprom_writeIfChanged()` for
- *  each of them.
- *
- * @warning Because writing to EEPROM takes quite some time it is possible
- * that interrupts will be missed.
+ * This initiates the writeback to the EEPROM in order for data to be stored
+ * persistently. This function will iterate over the range described by the
+ * parameters `start` and `length` and invokes `wcEeprom_writeIfChanged()` for
+ * each of them.
  *
  * @param start Pointer to the start of the data that has to be written back
  * @param length The length of the data that has to be written back
