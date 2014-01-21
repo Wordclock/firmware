@@ -306,14 +306,14 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @see wcEeprom_writeIfChanged()
  * @see WcEepromData
  */
-void wcEeprom_writeback(const void* start_p, uint8_t len)
+void wcEeprom_writeback(const void* start, uint8_t length)
 {
 
     /*
      * Calculate the index represented by the start pointer.
      */
-    uint8_t eepromIndex = (((uint8_t*)start_p) - ((uint8_t*)&g_epromWorking));
-    uint8_t eepromIndexEnd = eepromIndex + len - 1;
+    uint8_t eepromIndex = (((uint8_t*)start) - ((uint8_t*)&g_epromWorking));
+    uint8_t eepromIndexEnd = eepromIndex + length - 1;
 
     #if (LOG_EEPROM_WRITEBACK == 1)
 
@@ -323,7 +323,7 @@ void wcEeprom_writeback(const void* start_p, uint8_t len)
         uint8ToHexStr(eepromIndex, buf);
         uart_puts(buf);
         uart_puts_P(", Length: ");
-        uint8ToHexStr(len, buf);
+        uint8ToHexStr(length, buf);
         uart_puts(buf);
         uart_putc('\n');
 
