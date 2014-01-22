@@ -128,7 +128,7 @@ in order to get these bootloaders working correctly.
 ## CONTRIBUTIONS
 
 The source code itself is maintained using git. The project along with its
-repositories lives over at [github.com][11]. Contributions of any kind are
+[repositories][11] lives over at github.com. Contributions of any kind are
 highly welcome. The simplest and fastest way for these kind of things is to use
 the means provided by github.com itself, which allows for reporting bugs and/or
 requesting features. It is also the preferred way to submit patches in form of
@@ -139,8 +139,8 @@ In case you are looking for something to work on, you probably want to take a
 look at the `TODO` file within the projects root directory. It contains a list
 of things that still need to be done, so feel free to start hacking away ;).
 
-There is also a [gitorious.org][13] repository, which currently is being used
-as a mirror only.
+There is also a [repository][13] over at gitorious.org, which currently is
+being used as a mirror only.
 
 [0]: https://www.mikrocontroller.net/wikifiles/1/17/Wordclock-frontpanel.png "Wordclock Frontpanel"
 [1]: https://www.mikrocontroller.net/topic/156661
