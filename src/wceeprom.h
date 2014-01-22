@@ -54,7 +54,7 @@
  * @see eepromDefaultParams_P
  * @see g_epromWorking
  */
-typedef struct WcEepromData {
+typedef struct {
 
     /**
      * @brief Data of the user module to be stored persistently in EEPROM
