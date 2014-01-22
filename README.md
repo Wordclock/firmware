@@ -133,13 +133,13 @@ highly welcome. The simplest and fastest way for these kind of things is to use
 the means provided by github.com itself, which allows for reporting bugs and/or
 requesting features. It is also the preferred way to submit patches in form of
 pull requests. If you are new to git and/or are not familiar with this process,
-refer to [12] for a detailed description on how to submit a pull request.
+refer to [this][12] for a detailed description on how to submit a pull request.
 
 In case you are looking for something to work on, you probably want to take a
 look at the `TODO` file within the projects root directory. It contains a list
 of things that still need to be done, so feel free to start hacking away ;).
 
-There is also a [gitorious.org][12] repository, which currently is being used
+There is also a [gitorious.org][13] repository, which currently is being used
 as a mirror only.
 
 [0]: https://www.mikrocontroller.net/wikifiles/1/17/Wordclock-frontpanel.png "Wordclock Frontpanel"
