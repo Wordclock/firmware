@@ -63,6 +63,11 @@ generate.
 
 ### IR user command
 
+**Command**: i UC  
+UC: **See list below**  
+**Description:** Issues the appropriate user command  
+**Response:** OK  
+
 These commands are equivalent to the appropriate IR user commands. They allow
 the control the Wordclock in the same way it would be possible via an IR remote
 control. The user command you want to issue is provided as the first and only
