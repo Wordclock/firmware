@@ -83,16 +83,16 @@ static uint8_t g_lastVal = 1;
  * This sets the initial seed value, which the next requested random number
  * (by simpleRand_get()) will be based upon.
  *
- * @param i_seed The seed value you want to set
+ * @param value The seed value you want to set
  *
  * @see g_lastVal
  * @see simpleRand_get()
  *
  */
-void prng_set_seed(uint8_t i_seed)
+void prng_set_seed(uint8_t value)
 {
 
-    g_lastVal = i_seed;
+    g_lastVal = value;
 
 }
 

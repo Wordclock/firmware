@@ -35,7 +35,7 @@
 
 #include <stdint.h>
 
-extern void prng_set_seed(uint8_t i_seed);
+extern void prng_set_seed(uint8_t value);
 
 extern uint8_t simpleRand_get();
 
