@@ -645,7 +645,7 @@
 
         if (jesterMode) {
 
-            subInd = simpleRand_get() % s_minVariants[minutes];
+            subInd = prng_rand() % s_minVariants[minutes];
 
         } else {
 
@@ -677,7 +677,7 @@
 
         if (jesterMode) {
 
-            uint8_t r = simpleRand_get() % 4;
+            uint8_t r = prng_rand() % 4;
 
             if (minuteLeds <= 2) {
 
@@ -685,7 +685,7 @@
 
                 if (minuteLeds == 2) {
 
-                    uint8_t r2 = simpleRand_get() % 3;
+                    uint8_t r2 = prng_rand() % 3;
                     r2 = r2 < r ? r2 : r2 + 1;
 
                     minuteLedSubState |= (1 << r2);

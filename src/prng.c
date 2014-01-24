@@ -43,22 +43,22 @@
 /**
  * @brief The prime multiplier used for calculating the next random number
  *
- * This is used within simpleRand_get() to calculate the next random number
+ * This is used within prng_rand() to calculate the next random number
  * based upon the last generated number and/or the initial seed value.
  *
  * @see SR_PRIME_ADD
- * @see simpleRand_get()
+ * @see prng_rand()
  */
 #define SR_PRIME_MULT 17
 
 /**
  * @brief The prime summand used for calculating the next random number
  *
- * This is used within simpleRand_get() to calculate the next random number
+ * This is used within prng_rand() to calculate the next random number
  * based upon the last generated number and/or the initial seed value.
  *
  * @see SR_PRIME_MULT
- * @see simpleRand_get()
+ * @see prng_rand()
  *
  */
 #define SR_PRIME_ADD 37
@@ -66,13 +66,13 @@
 /**
  * @brief The last generated random number and/or the initial seed value
  *
- * This contains either the last generated random number (simpleRand_get())
+ * This contains either the last generated random number (prng_rand())
  * and/or the initial seed value (prng_set_seed()). In either case it
  * is used as the basis for the next random number requested by
- * simpleRand_get().
+ * prng_rand().
  *
  * @see prng_set_seed()
- * @see simpleRand_get()
+ * @see prng_rand()
  *
  */
 static uint8_t g_lastVal = 1;
@@ -81,12 +81,12 @@ static uint8_t g_lastVal = 1;
  * @brief Sets the initial seed value
  *
  * This sets the initial seed value, which the next requested random number
- * (by simpleRand_get()) will be based upon.
+ * (by prng_rand()) will be based upon.
  *
  * @param value The seed value you want to set
  *
  * @see g_lastVal
- * @see simpleRand_get()
+ * @see prng_rand()
  *
  */
 void prng_set_seed(uint8_t value)
@@ -110,7 +110,7 @@ void prng_set_seed(uint8_t value)
  * @see g_lastVal
  *
  */
-uint8_t simpleRand_get()
+uint8_t prng_rand()
 {
 
     g_lastVal = (g_lastVal * SR_PRIME_MULT) + SR_PRIME_ADD;

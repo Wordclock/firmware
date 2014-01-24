@@ -37,6 +37,6 @@
 
 extern void prng_set_seed(uint8_t value);
 
-extern uint8_t simpleRand_get();
+extern uint8_t prng_rand();
 
 #endif /* _WC_PRNG_H_ */
