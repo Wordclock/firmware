@@ -67,11 +67,11 @@
  * @brief The last generated random number and/or the initial seed value
  *
  * This contains either the last generated random number (simpleRand_get())
- * and/or the initial seed value (simpleRand_setSeed()). In either case it
+ * and/or the initial seed value (prng_set_seed()). In either case it
  * is used as the basis for the next random number requested by
  * simpleRand_get().
  *
- * @see simpleRand_setSeed()
+ * @see prng_set_seed()
  * @see simpleRand_get()
  *
  */
@@ -89,7 +89,7 @@ static uint8_t g_lastVal = 1;
  * @see simpleRand_get()
  *
  */
-void simpleRand_setSeed(uint8_t i_seed)
+void prng_set_seed(uint8_t i_seed)
 {
 
     g_lastVal = i_seed;
