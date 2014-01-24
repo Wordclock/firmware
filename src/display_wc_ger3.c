@@ -46,7 +46,7 @@
 #include "display.h"
 #include "shift.h"
 #include "wceeprom.h"
-#include "simple_random.h"
+#include "prng.h"
 
 #if (WC_DISP_GER3 == 1)
 

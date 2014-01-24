@@ -19,7 +19,7 @@
  */
 
 /**
- * @file simple_random.h
+ * @file prng.h
  * @brief Header file of a simple 8 bit random number generator (PRNG)
  *
  * This module can be used to generate 8 bit **pseudo** random numbers.
@@ -27,11 +27,11 @@
  * implementation is significantly smaller, as it doesn't fulfill the
  * requirements of <stdlib.h> and uint8_t is good enough in most cases.
  *
- * @see simple_random.c
+ * @see prng.c
  */
 
-#ifndef _WC_SIMPLE_RNG_H_
-#define _WC_SIMPLE_RNG_H_
+#ifndef _WC_PRNG_H_
+#define _WC_PRNG_H_
 
 #include <stdint.h>
 
@@ -39,4 +39,4 @@ extern void simpleRand_setSeed(uint8_t i_seed);
 
 extern uint8_t simpleRand_get();
 
-#endif /* _WC_SIMPLE_RNG_H_ */
+#endif /* _WC_PRNG_H_ */

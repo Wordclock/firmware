@@ -19,8 +19,8 @@
  */
 
 /**
- * @file simple_random.c
- * @brief Implementation of the header declared in simple_random.h
+ * @file prng.c
+ * @brief Implementation of the header declared in prng.h
  *
  * This module will generate **pseudo** random numbers. The principle is based
  * upon a concept known as Linear congruential generator, refer to [1] for
@@ -35,10 +35,10 @@
  * [2]: http://www.mikrocontroller.net/topic/112114#998347
  * [3]: https://www.mikrocontroller.net/topic/112114#998667
  *
- * @see simple_random.h
+ * @see prng.h
  */
 
-#include "simple_random.h"
+#include "prng.h"
 
 /**
  * @brief The prime multiplier used for calculating the next random number
