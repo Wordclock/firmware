@@ -75,7 +75,7 @@
  * @see prng_rand()
  *
  */
-static uint8_t g_lastVal = 1;
+static uint8_t seed = 1;
 
 /**
  * @brief Sets the initial seed value
@@ -85,14 +85,14 @@ static uint8_t g_lastVal = 1;
  *
  * @param value The seed value you want to set
  *
- * @see g_lastVal
+ * @see seed
  * @see prng_rand()
  *
  */
 void prng_set_seed(uint8_t value)
 {
 
-    g_lastVal = value;
+    seed = value;
 
 }
 
@@ -100,21 +100,21 @@ void prng_set_seed(uint8_t value)
  * @brief Returns a pseudo random number
  *
  * The pseudo random number is based upon the last value and/or seed value
- * (g_lastVal).
+ * (seed).
  *
  * @note The modulo 256 operation is done implicitly as the used data type of
- * g_lastVal is uint8_t.
+ * seed is uint8_t.
  *
  * @return The calculated pseudo random number
  *
- * @see g_lastVal
+ * @see seed
  *
  */
 uint8_t prng_rand()
 {
 
-    g_lastVal = (g_lastVal * SR_PRIME_MULT) + SR_PRIME_ADD;
+    seed = (seed * SR_PRIME_MULT) + SR_PRIME_ADD;
 
-    return g_lastVal;
+    return seed;
 
 }
