@@ -115,6 +115,9 @@ void ldr_init()
      */
     ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS0);
 
+    /*
+     * ADSC: ADC start conversion
+     */
     ADCSRA |= _BV(ADSC);
 
     while (ADCSRA & _BV(ADSC));
@@ -142,7 +145,7 @@ void ldr_init()
     #endif
 
     /*
-     * ADIE: ADC Enable interrupt
+     * ADIE: ADC interrupt enable
      */
     ADCSRA |= _BV(ADIE);
 

@@ -71,6 +71,9 @@ extern uint8_t ldr_get_brightness();
  */
 void inline ldr_ADC() {
 
+    /*
+     * ADSC: ADC start conversion
+     */
     ADCSRA |= _BV(ADSC);
 
 }
