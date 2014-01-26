@@ -65,7 +65,7 @@ versions might work just fine, but are not fully tested.
   itself. It is based upon LaTeX and managed in a separate repository. It can
   be found [here][5]. The user manual does not cover the technical aspects, but
   can be useful in case you want to know how a specific feature is expected to
-  work.
+  work. However, it wasn't updated for quite a while, so it might be incorrect.
 
 - The source code itself is documented quite heavily using [Doxygen][6]. An
   appropriate Doxyfile is provided along with the sources and can be found
