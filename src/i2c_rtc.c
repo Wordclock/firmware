@@ -198,7 +198,6 @@ bool i2c_rtc_write(const datetime_t* datetime)
 {
 
     uint8_t rtcbuf[7];
-    bool rtc = false;
 
     if (i2c_rtc_initialized) {
 
@@ -212,13 +211,13 @@ bool i2c_rtc_write(const datetime_t* datetime)
 
         if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
-            rtc = true;
+            return true;
 
         }
 
     }
 
-    return rtc;
+    return false;
 
 }
 
