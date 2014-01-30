@@ -804,14 +804,6 @@ static void _time_set(uint8_t argc, char* argv[])
     datetime.mm = time[1];
     datetime.ss = time[2];
 
-    if (!datetime_validate(&datetime)) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
     if (!i2c_rtc_write(&datetime)) {
 
         uart_protocol_error();
@@ -918,14 +910,6 @@ static void _date_set(uint8_t argc, char* argv[])
     datetime.MM = date[1];
     datetime.YY = date[2];
     datetime.WD = date[3];
-
-    if (!datetime_validate(&datetime)) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
 
     if (!i2c_rtc_write(&datetime)) {
 
