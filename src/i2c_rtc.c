@@ -203,6 +203,12 @@ bool i2c_rtc_write(const datetime_t* datetime)
 
     }
 
+    if (!datetime_validate(datetime)) {
+
+        return false;
+
+    }
+
     uint8_t rtcbuf[7];
 
     rtcbuf[0] = itobcd(datetime->ss);
