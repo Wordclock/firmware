@@ -197,23 +197,25 @@ uint8_t i2c_rtc_get_status()
 bool i2c_rtc_write(const datetime_t* datetime)
 {
 
+    if (!i2c_rtc_initialized) {
+
+        return false;
+
+    }
+
     uint8_t rtcbuf[7];
 
-    if (i2c_rtc_initialized) {
+    rtcbuf[0] = itobcd(datetime->ss);
+    rtcbuf[1] = itobcd(datetime->mm);
+    rtcbuf[2] = itobcd(datetime->hh);
+    rtcbuf[3] = itobcd(datetime->WD);
+    rtcbuf[4] = itobcd(datetime->DD);
+    rtcbuf[5] = itobcd(datetime->MM);
+    rtcbuf[6] = itobcd(datetime->YY);
 
-        rtcbuf[0] = itobcd(datetime->ss);
-        rtcbuf[1] = itobcd(datetime->mm);
-        rtcbuf[2] = itobcd(datetime->hh);
-        rtcbuf[3] = itobcd(datetime->WD);
-        rtcbuf[4] = itobcd(datetime->DD);
-        rtcbuf[5] = itobcd(datetime->MM);
-        rtcbuf[6] = itobcd(datetime->YY);
+    if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
 
-        if (i2c_rtc_sram_write(0x00, rtcbuf, 7)) {
-
-            return true;
-
-        }
+        return true;
 
     }
 
