@@ -69,7 +69,7 @@ static bool is_leap_year(uint8_t year)
 /**
  * @brief Returns the number of days for the given month and year
  *
- * @param month Month to return the number of days for
+ * @param month Month to return the number of days for, ranges from 1 to 12
  * @param year Year of month to return the number of days for
  *
  * @return Number of days for given month and year
@@ -88,7 +88,7 @@ static uint8_t get_number_of_days_in_month(uint8_t month, uint8_t year)
 
    }
 
-   return days[month];
+   return days[month - 1];
 
 }
 
