@@ -766,7 +766,7 @@ static void _time_set(uint8_t argc, char* argv[])
 {
 
     uint8_t time[3];
-    uint8_t i = 0;
+    uint8_t i;
 
     for (i = 1; i < 4; i++) {
 
