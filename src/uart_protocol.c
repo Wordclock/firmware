@@ -1123,7 +1123,7 @@ void uart_protocol_handle()
 
                 char str[3];
 
-                byteToStrLessOneHundred(buffer_index, str);
+                uint8ToStrLessOneHundred(buffer_index, str);
 
                 uart_puts_P("Buffer index: ");
                 uart_puts(str);
