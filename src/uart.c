@@ -54,12 +54,6 @@
 
 #include <util/setbaud.h>
 
-/**
- * @brief Defines the size of uart_buffer_in
- *
- * @see uart_buffer_in
- */
-#define UART_BUFFER_SIZE_IN 16
 
 /**
  * @brief Buffer used for incoming data
@@ -79,13 +73,6 @@ static uint8_t uart_buffer_in[UART_BUFFER_SIZE_IN];
  * @see uart_buffer_in
  */
 fifo_t uart_fifo_in;
-
-/**
- * @brief Defines the size of uart_buffer_out
- *
- * @see uart_buffer_out
- */
-#define UART_BUFFER_SIZE_OUT 48
 
 /**
  * @brief Buffer used for outgoing data

@@ -53,6 +53,20 @@
  */
 #define UART_BAUD 9600
 
+/**
+ * @brief Defines the size of uart_buffer_in
+ *
+ * @see uart_buffer_in
+ */
+#define UART_BUFFER_SIZE_IN 16
+
+/**
+ * @brief Defines the size of uart_buffer_out
+ *
+ * @see uart_buffer_out
+ */
+#define UART_BUFFER_SIZE_OUT 48
+
 extern void uart_init();
 
 extern bool uart_putc(char c);
