@@ -1081,7 +1081,6 @@ void uart_protocol_handle()
                 uart_puts_P("Command: ");
                 uart_puts(uart_protocol_command_buffer);
                 uart_putc('\n');
-                uart_flush_output();
 
             #endif
 
@@ -1129,12 +1128,10 @@ void uart_protocol_handle()
                 uart_puts_P("Buffer index: ");
                 uart_puts(str);
                 uart_putc('\n');
-                uart_flush_output();
 
                 uart_puts_P("Character: ");
                 uart_putc(c);
                 uart_putc('\n');
-                uart_flush_output();
 
             #endif
 
