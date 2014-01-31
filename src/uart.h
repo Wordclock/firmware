@@ -58,7 +58,7 @@
  *
  * @see uart_buffer_in
  */
-#define UART_BUFFER_SIZE_IN 16
+#define UART_BUFFER_SIZE_IN 32
 
 /**
  * @brief Defines the size of uart_buffer_out
