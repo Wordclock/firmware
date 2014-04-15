@@ -53,7 +53,7 @@
  * @brief Outputs a message in the correct format
  *
  * This outputs the given message in the correct format (enclosed by
- * UART_PROTOCOL_OUTPUT_PREFIX and UART_PROTOCOL_OUTPUT_EOL).
+ * #UART_PROTOCOL_OUTPUT_PREFIX and #UART_PROTOCOL_OUTPUT_EOL).
  *
  * @see UART_PROTOCOL_OUTPUT_PREFIX
  * @see UART_PROTOCOL_OUTPUT_EOL
@@ -102,6 +102,9 @@ static void uart_protocol_error()
  *
  * @see uint8ToHexStr()
  * @see uart_protocol_output()
+ *
+ * @note This is a variadic function based upon `<stdarg.h>`. The number of
+ * arguments varies and is described by the first argument.
  */
 static void uart_protocol_output_args_hex(uint8_t args, ...)
 {
@@ -136,19 +139,22 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
 /**
  * @brief Defines the size of the command buffer
  *
- * @note As the command is handled as a simple string, this also needs to
- * include the null terminator, making it effectively one character smaller.
+ * @note Commands are represented as simple strings, this also needs to include
+ * the null terminator, making the possible command length effectively one
+ * character smaller than defined here.
  *
  * @see uart_protocol_command_buffer
  */
 #define UART_PROTOCOL_COMMAND_BUFFER_SIZE 16
 
 /**
- * Maximum length of command (without arguments)
+ * Maximum length of a command (without arguments)
  *
  * A command along with its arguments can be as long as defined by
- * UART_PROTOCOL_COMMAND_BUFFER_SIZE. The command itself without arguments,
+ * #UART_PROTOCOL_COMMAND_BUFFER_SIZE. The command itself without arguments,
  * however, can only be as long as defined here.
+ *
+ * @note Keep the length of commands short to make more arguments possible.
  *
  * @see UART_PROTOCOL_COMMAND_BUFFER_SIZE
  * @see uart_protocol_command_t::command
@@ -156,13 +162,13 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
 #define UART_PROTOCOL_COMMAND_MAX_LENGTH 3
 
 /**
- * @brief Maximum amount of arguments for a single commands
+ * @brief Maximum amount of arguments for a single command
  *
- * This defines the maximum amount of arguments a single command can have.
  * The command itself can be as long as defined by
- * UART_PROTOCOL_COMMAND_MAX_LENGTH. Everything following the command is
+ * #UART_PROTOCOL_COMMAND_MAX_LENGTH. Everything following the command is
  * considered to be one or more argument(s). Arguments are separated by a space
- * character between them.
+ * character between them. This defines the maximum amount of arguments a
+ * single command can have.
  *
  * @see UART_PROTOCOL_COMMAND_MAX_LENGTH
  * @see uart_protocol_tokenize_command_buffer()
@@ -173,22 +179,22 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
 /**
  * @brief The actual command buffer
  *
- * This holds all of the characters received via UART until the EOL character
- * (UART_PROTOCOL_INPUT_EOL) is received, which is the moment when the content
- * in the buffer is tokenized by uart_protocol_tokenize_command_buffer().
+ * This holds all of the characters received via UART until the
+ * {@link #UART_PROTOCOL_INPUT_EOL EOL character} is received, which will
+ * trigger the command parsing and clear the buffer.
  *
- * @see uart_protocol_tokenize_command_buffer()
+ * @see uart_protocol_handle()
  * @see UART_PROTOCOL_COMMAND_BUFFER_SIZE
  */
 static char uart_protocol_command_buffer[UART_PROTOCOL_COMMAND_BUFFER_SIZE];
 
 /**
- * @brief Type definition for callback function for processing a command
+ * @brief Type definition of callback function for processing a command
  *
- * All callback functions registered within uart_protocol_commands need to
+ * All callback functions registered within #uart_protocol_commands need to
  * fulfill this type. The first argument contains the number of arguments
  * found, whereas the second one is an array of char pointers to each argument.
- * This can be compared to the typical `main` function of a C program.
+ * This is somewhat analogous to the `main` function of a typical C program.
  *
  * @see uart_protocol_command_t
  * @see uart_protocol_commands
@@ -328,10 +334,13 @@ static void _ir_user_command(uint8_t argc, char* argv[])
 }
 
 /**
- * @brief Puts out the version number (major & minor) of the firmware
+ * @brief Puts out the version number of the firmware
  *
- * This puts out the hex representation of the version number of the firmware.
+ * This puts out the hex representation of the version number (major & minor)
+ * of the firmware.
  *
+ * @see MAJOR_VERSION
+ * @see MINOR_VERSION
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
  */
@@ -363,9 +372,9 @@ static void _keepalive(uint8_t argc, char* argv[])
  * @brief Resets the microcontroller
  *
  * This performs a reset of the microcontroller. Depending upon the setting of
- * `BOOTLOADER_RESET_WDT` this is either performed by letting the watchdog
- * timeout or by directly jumping to a specific address location 0x3800. To make
- * absolutely sure that this whole procedure will not be interrupted, the
+ * #BOOTLOADER_RESET_WDT this is either performed by letting the watchdog
+ * timeout or by directly jumping to a specific address location `0x3800`. To
+ * make absolutely sure that this whole procedure will not be interrupted, the
  * global interrupt service flag is disabled.
  *
  * @see uart_protocol_command_callback_t
@@ -397,7 +406,7 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by setting WcEepromData::swVersion to zero
+ * This performs a factory reset by setting WcEepromData#swVersion to zero
  * and resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
@@ -561,7 +570,7 @@ static void _preset_active(uint8_t argc, char* argv[])
  *
  * This retrieves the hex representation of the number to set for the currently
  * active color preset from the command buffer and saves it. If the current
- * mode is equal to `MS_normalMode`, it will be changed immediately.
+ * mode is equal to #MS_normalMode, it will be applied immediately.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
@@ -634,7 +643,7 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @brief Sets the color for the given color preset
  *
  * This retrieves the hex presentation of the RGB values for the given color
- * preset and saves them. If the current mode is equal to `MS_normalMode` and
+ * preset and saves them. If the current mode is equal to #MS_normalMode and
  * the preset written was equal to the one currently being used, it will be
  * applied immediately.
  *
@@ -751,8 +760,8 @@ static void _time_get(uint8_t argc, char* argv[])
  * it reads the date first and overwrites only the actual time values. Any
  * error while interacting with the RTC will result in an error message,
  * otherwise a success message will be output. Once the time was successfully
- * written to the RTC, the time is also passed to the user module making sure
- * it immediately affects the display, too.
+ * written to the RTC, the time is also passed over to the user module making
+ * sure it will be applied immediately to the display itself.
  *
  * @see uart_protocol_command_callback_t
  * @see datetime_t
@@ -924,7 +933,7 @@ static void _date_set(uint8_t argc, char* argv[])
 }
 
 /**
- * @brief Defines the type of each entry within uart_protocol_commands
+ * @brief Defines the type of each entry within #uart_protocol_commands
  *
  * @see uart_protocol_commands
  */
@@ -943,7 +952,7 @@ typedef struct
      *
      * Defines the number of arguments this command is expected to have. The
      * maximum amount of arguments is defined by
-     * UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS.
+     * #UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS.
      *
      * @warning If the received command does not provide exactly the amount of
      * arguments as specified here, the command won't be recognized.
@@ -999,7 +1008,6 @@ static uart_protocol_command_t uart_protocol_commands[] = {
 
     #endif /* (ENABLE_RGB_SUPPORT == 1) */
 
-
     {"tg", 0, _time_get},
     {"ts", 3, _time_set},
     {"dg", 0, _date_get},
@@ -1010,7 +1018,7 @@ static uart_protocol_command_t uart_protocol_commands[] = {
 /**
  * @brief Tokenizes the command buffer
  *
- * This tokenizes uart_protocol_command_buffer using the space character as
+ * This tokenizes #uart_protocol_command_buffer using the space character as
  * delimiter and returns an array of char pointers to the beginning of each
  * token. The first pointer within this array points to the command itself.
  *
@@ -1042,15 +1050,15 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
 /**
  * @brief Processes the UART protocol
  *
- * This retrieves the input received by the UART hardware and puts it into
- * the buffer provided by uart_protocol_command_buffer. Once a EOL character
- * (as defined in UART_PROTOCOL_INPUT_EOL) has been detected, it will call
- * uart_protocol_execute_command().
+ * This retrieves the input received by the UART hardware and puts it into the
+ * {@link #uart_protocol_command_buffer command buffer}. Once a
+ * {@link UART_PROTOCOL_INPUT_EOL EOL character} has been detected, the
+ * command is tokenized and the appropriate callback function will be executed.
  *
  * If the command could not be detected successfully an error message will be
  * output.
  *
- * If logging is enabled (LOG_UART_PROTOCOL) some debugging information will
+ * If logging is enabled (#LOG_UART_PROTOCOL) some debugging information will
  * be output, too.
  *
  * @warning This function should be called on a regular basis. It is not time
