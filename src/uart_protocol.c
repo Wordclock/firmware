@@ -999,7 +999,6 @@ static uart_protocol_command_t uart_protocol_commands[] = {
 
     #endif /* (ENABLE_RGB_SUPPORT == 1) */
 
-
     {"tg", 0, _time_get},
     {"ts", 3, _time_set},
     {"dg", 0, _date_get},
