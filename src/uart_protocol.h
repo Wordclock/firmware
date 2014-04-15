@@ -54,10 +54,11 @@
 /**
  * @brief EOL marker for any input processed by this module
  *
- * Once this character has been detected, the command preceding it will be
- * processed and executed - if possible.
+ * Once this character has been detected, the command will be parsed and
+ * executed
  *
- * @note Keep in mind that this can only be a single character.
+ * @note Keep in mind that this needs to be a single character, so enclose it
+ * by single quotes.
  */
 #define UART_PROTOCOL_INPUT_EOL '\r'
 
