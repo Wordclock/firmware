@@ -56,7 +56,7 @@ always give up some functionality by disabling the appropriate switches within
 
 In order to build the source code, you'll need a current toolchain for Atmel
 AVR microcontrollers. The code itself is tested and developed with avr-gcc
-4.8.x, avr-binutils 2.23.x and avr-libc 1.8.x in mind. Other toolchains and/or
+4.8.x, avr-binutils 2.24.x and avr-libc 1.8.x in mind. Other toolchains and/or
 versions might work just fine, but are not fully tested.
 
 ## DOCUMENTATION
