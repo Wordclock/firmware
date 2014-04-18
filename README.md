@@ -19,7 +19,7 @@ These are some of the highlights, which differentiate this version from the
 original one and make it more attractive:
 
 - **Sources:** Completely reorganized, fully documented and mostly cleaned up,
-  making it more easy to understand and/or extend them.
+  making it more easy to understand and/or extend.
 
 - **Restructuring:** Some rework of a few interrupt routines was performed,
   leading to a significant disburdening of the microcontroller. Quite a few
@@ -33,7 +33,7 @@ original one and make it more attractive:
 
 - **IRMP:** As the version in the original firmware hasn't been touched for a
   couple of years now, it misses a lot of protocols that have been added to
-  the meantime.
+  the mainline version in the meantime.
 
 Refer to the [commit logs][4] for a full list of changes.
 
@@ -46,7 +46,7 @@ The structure, hardware and electronics of this project are explained in detail
 One of the goals of this fork is to stay as compatible as possible with the
 original project and the corresponding hardware. However, as the program space
 of the ATmega168 is simply not sufficient for all of the new features, it is
-highly recommended to replace the microcontroller with the ATmega328, which is
+highly recommended to replace the microcontroller with an ATmega328, which is
 a drop in replacement. As the microcontroller was designed to be put into a
 socket anyway, this shouldn't be too much of a problem. Alternatively you can
 always give up some functionality by disabling the appropriate switches within
@@ -65,7 +65,7 @@ versions might work just fine, but are not fully tested.
   itself. It is based upon LaTeX and managed in a separate repository. It can
   be found [here][5]. The user manual does not cover the technical aspects, but
   can be useful in case you want to know how a specific feature is expected to
-  work. However, it wasn't updated for quite a while, so it might be incorrect.
+  work. However, it wasn't updated for quite a while, so it is incomplete.
 
 - The source code itself is documented quite heavily using [Doxygen][6]. An
   appropriate Doxyfile is provided along with the sources and can be found
@@ -140,7 +140,7 @@ look at the `TODO` file within the projects root directory. It contains a list
 of things that still need to be done, so feel free to start hacking away ;).
 
 There is also a [repository][13] over at gitorious.org, which currently is
-being used as a mirror only.
+being used only as a mirror.
 
 [0]: https://www.mikrocontroller.net/wikifiles/1/17/Wordclock-frontpanel.png "Wordclock Frontpanel"
 [1]: https://www.mikrocontroller.net/topic/156661
