@@ -904,8 +904,8 @@ void pwm_modifyLdrBrightness2pwmStep()
 
         /*
          * Indicate that the settings have been applied successfully
+         * TODO Move this out of here as this is used to inform user
          */
-
         if (pwm_is_on) {
 
             pwm_off();

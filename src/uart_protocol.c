@@ -112,6 +112,7 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
     va_list va;
     va_start(va, args);
 
+    // Three bytes per character (2 byte hex representation + space/terminator)
     char str[args * 3];
 
     for (uint8_t i = 0; i < args; i++) {
@@ -120,10 +121,12 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
 
         if (i == args - 1) {
 
+            // String terminator at the very end
             str[i * 3 + 2] = '\0';
 
         } else {
 
+            // Space between arguments
             str[i * 3 + 2] = ' ';
 
         }
@@ -318,7 +321,6 @@ static void _ir_user_command(uint8_t argc, char* argv[])
             if (argv[1][0] == user_command_assignments[i].command) {
 
                 handle_user_command(user_command_assignments[i].user_command);
-
                 uart_protocol_ok();
 
                 return;
@@ -373,9 +375,9 @@ static void _keepalive(uint8_t argc, char* argv[])
  *
  * This performs a reset of the microcontroller. Depending upon the setting of
  * #BOOTLOADER_RESET_WDT this is either performed by letting the watchdog
- * timeout or by directly jumping to a specific address location `0x3800`. To
- * make absolutely sure that this whole procedure will not be interrupted, the
- * global interrupt service flag is disabled.
+ * timeout or by directly jumping to a specific address location (`0x3800`). To
+ * make sure that this whole procedure will not be interrupted, the interrupt
+ * are disabled globally.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_ok()
@@ -407,8 +409,8 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by setting WcEepromData#swVersion to zero
- * and resetting the microcontroller afterwards. The built-in integrity check
+ * This performs a factory reset by invalidating WcEepromData#swVersion and
+ * resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
  *
@@ -463,7 +465,6 @@ static void _color_read(uint8_t argc, char* argv[])
 {
 
     const color_rgb_t* color = pwm_get_color();
-
     uart_protocol_output_args_hex(3, color->red, color->green, color->blue);
 
 }
@@ -524,7 +525,6 @@ static void _color_write(uint8_t argc, char* argv[])
     }
 
     pwm_set_color(color);
-
     uart_protocol_ok();
 
 }
@@ -823,7 +823,6 @@ static void _time_set(uint8_t argc, char* argv[])
     }
 
     user_setNewTime(&datetime);
-
     uart_protocol_ok();
 
 }
@@ -1074,14 +1073,16 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
 void uart_protocol_handle()
 {
 
-    char c;
-
     static uint8_t buffer_index = 0;
+
+    char c;
 
     while (uart_getc_nowait(&c)) {
 
+        // Check whether EOL was received, triggering the command detection
         if (c == UART_PROTOCOL_INPUT_EOL) {
 
+            // Preparing buffer for processing and next iteration
             uart_protocol_command_buffer[buffer_index] = '\0';
             buffer_index = 0;
 
@@ -1098,6 +1099,7 @@ void uart_protocol_handle()
 
             argc = uart_protocol_tokenize_command_buffer(argv);
 
+            // Check whether at least a single command was detected
             if (argc != 0) {
 
                 uint8_t j= sizeof(uart_protocol_commands) / sizeof(uart_protocol_command_t);
@@ -1126,6 +1128,7 @@ void uart_protocol_handle()
 
         }
 
+        // Check whether there is enough space in buffer to put character in
         if (buffer_index < UART_PROTOCOL_COMMAND_BUFFER_SIZE - 1) {
 
             #if (LOG_UART_PROTOCOL == 1)
@@ -1144,6 +1147,7 @@ void uart_protocol_handle()
 
             #endif
 
+            // Put character into buffer
             uart_protocol_command_buffer[buffer_index++] = c;
 
         }
