@@ -386,6 +386,7 @@ static void _reset(uint8_t argc, char* argv[])
 
     cli();
     uart_protocol_ok();
+    uart_flush_output();
 
     #if (BOOTLOADER_RESET_WDT == 1)
 
