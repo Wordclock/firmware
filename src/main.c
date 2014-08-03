@@ -370,15 +370,14 @@ void main_ISR()
     void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
 
     /**
-    * @brief Turns of the watchdog after a watchdog reset has occurred
+    * @brief Turns off the watchdog after a reset has occurred
     *
-    * In the case that a watchdog reset occurred this makes sure that the
-    * watchdog is turned off to prevent the microcontroller from resetting
-    * itself in an infinite loop.
+    * This disables the watchdog upon each reset, which prevents the
+    * microcontroller from resetting itself indefinitely.
     *
     * [1]: http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html
     *
-    * @note This function is not actually called, but included in the "init3"
+    * @note This function is not actually called, but included in the `init3`
     * section automatically.
     */
     void wdt_init()
