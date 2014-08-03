@@ -89,11 +89,11 @@ automatically and does not need to be compiled on its own.
 
 The Intel HEX file can be flashed using [avrdude][7], which can also be used to
 configure the Fuse values. In its default configuration the following values
-are expected:
+are expected (this is referring to the ATmega328P):
 
-- **lfuse**: `0xe2`
-- **hfuse**: `0xdc`
-- **efuse**: `0xfd`
+- **lfuse**: `0xE2`
+- **hfuse**: `0xD9`
+- **efuse**: `0xFC`
 
 Make sure your Fuse values match these or program them appropriately otherwise.
 
@@ -113,11 +113,12 @@ on its own. There are also a few other bootloaders that are supported directly,
 namely [chip45boot2][9] and [FastBoot][10] from Peter Danegger.
 
 Depending upon the bootloader you want to use, you might have to change the
-fuses and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`:
+fuses and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`
+(once again, this is referring to the ATmega328P):
 
-- **AVRootloader, FastBoot**: Set **efuse** to `0xfc`
+- **AVRootloader, FastBoot**: Set **hfuse** to `0xDE`
 
-- **chip45boot2**: Set **efuse** to `0xf8` and **disable**
+- **chip45boot2**: Set **efuse** to `0xDA` and **disable**
   `BOOTLOADER_RESET_WDT`
 
 Instructions on how to actually use the bootloaders mentioned above can be
