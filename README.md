@@ -46,7 +46,7 @@ The structure, hardware and electronics of this project are explained in detail
 One of the goals of this fork is to stay as compatible as possible with the
 original project and the corresponding hardware. However, as the program space
 of the ATmega168 is simply not sufficient for all of the new features, it is
-highly recommended to replace the microcontroller with an ATmega328, which is
+highly recommended to replace the microcontroller with an ATmega328P, which is
 a drop in replacement. As the microcontroller was designed to be put into a
 socket anyway, this shouldn't be too much of a problem. Alternatively you can
 always give up some functionality by disabling the appropriate switches within
