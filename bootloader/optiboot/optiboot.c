@@ -223,19 +223,6 @@
 #define OPTIBOOT_CUSTOMVER 0
 #endif
 
-#if 0
-#define MAKESTR(a) #a
-#define MAKEVER(a, b) MAKESTR(a*256+b)
-
-asm("  .section .version\n"
-    "optiboot_version:  .word " MAKEVER(OPTIBOOT_MAJVER, OPTIBOOT_MINVER) "\n"
-    "  .section .text\n");
-#else
-unsigned int __attribute__((section(".version"))) 
-optiboot_version = 256*OPTIBOOT_MAJVER + OPTIBOOT_MINVER + OPTIBOOT_CUSTOMVER;
-#endif
-
-
 #include <inttypes.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
