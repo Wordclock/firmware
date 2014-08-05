@@ -207,9 +207,7 @@
 #include <avr/pgmspace.h>
 #include <avr/eeprom.h>
 #include <avr/boot.h>
-
-
-// We don't use <avr/wdt.h> as those routines have interrupt overhead we don't need.
+#include <avr/wdt.h>
 
 /*
  * stk500.h contains the constant definitions for the stk500v1 comm protocol
@@ -256,21 +254,6 @@
 #endif
 #endif // baud rate fastn check
 
-/* Watchdog settings */
-#define WATCHDOG_OFF    (0)
-#define WATCHDOG_16MS   (_BV(WDE))
-#define WATCHDOG_32MS   (_BV(WDP0) | _BV(WDE))
-#define WATCHDOG_64MS   (_BV(WDP1) | _BV(WDE))
-#define WATCHDOG_125MS  (_BV(WDP1) | _BV(WDP0) | _BV(WDE))
-#define WATCHDOG_250MS  (_BV(WDP2) | _BV(WDE))
-#define WATCHDOG_500MS  (_BV(WDP2) | _BV(WDP0) | _BV(WDE))
-#define WATCHDOG_1S     (_BV(WDP2) | _BV(WDP1) | _BV(WDE))
-#define WATCHDOG_2S     (_BV(WDP2) | _BV(WDP1) | _BV(WDP0) | _BV(WDE))
-#ifndef __AVR_ATmega8__
-#define WATCHDOG_4S     (_BV(WDP3) | _BV(WDE))
-#define WATCHDOG_8S     (_BV(WDP3) | _BV(WDP0) | _BV(WDE))
-#endif
-
 /* Function Prototypes
  * The main() function is in init9, which removes the interrupt vector table
  * we don't need. It is also 'OS_main', which means the compiler does not
@@ -283,11 +266,9 @@ int main(void) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
 void __attribute__((noinline)) putch(char);
 uint8_t __attribute__((noinline)) getch(void);
 void __attribute__((noinline)) verifySpace();
-void __attribute__((noinline)) watchdogConfig(uint8_t x);
 
 static inline void getNch(uint8_t);
 static inline void flash_led(uint8_t);
-static inline void watchdogReset();
 static inline void writebuffer(int8_t memtype, uint8_t *mybuff,
 			       uint16_t address, uint16_t len);
 static inline void read_mem(uint8_t memtype,
@@ -340,8 +321,7 @@ int main(void) {
   UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
   UBRR0L = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
 
-  // Set up watchdog to trigger after 500ms
-  watchdogConfig(WATCHDOG_1S);
+  wdt_enable(WDTO_1S);
 
 #if (LED_START_FLASHES > 0) || defined(LED_DATA_FLASH)
 
@@ -477,7 +457,7 @@ int main(void) {
     }
     else if (ch == STK_LEAVE_PROGMODE) { /* 'Q' */
       // Adaboot no-wait mod
-      watchdogConfig(WATCHDOG_16MS);
+      wdt_enable(WDTO_15MS);
       verifySpace();
     }
     else {
@@ -513,7 +493,7 @@ uint8_t getch(void) {
        * the application "soon", if it keeps happening.  (Note that we
        * don't care that an invalid char is returned...)
        */
-    watchdogReset();
+    wdt_reset();
   }
   
   ch = UDR0;
@@ -532,7 +512,7 @@ void getNch(uint8_t count) {
 
 void verifySpace() {
   if (getch() != CRC_EOP) {
-    watchdogConfig(WATCHDOG_16MS);    // shorten WD timeout
+    wdt_enable(WDTO_15MS);    // shorten WD timeout
     while (1)			      // and busy-loop so that WD causes
       ;				      //  a reset and app start.
   }
@@ -548,22 +528,10 @@ void flash_led(uint8_t count) {
 
     PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 
-    watchdogReset();
+    wdt_reset();
   } while (--count);
 }
 #endif
-
-// Watchdog functions. These are only safe with interrupts turned off.
-void watchdogReset() {
-  __asm__ __volatile__ (
-    "wdr\n"
-  );
-}
-
-void watchdogConfig(uint8_t x) {
-  WDTCSR = _BV(WDCE) | _BV(WDE);
-  WDTCSR = x;
-}
 
 void appStart(uint8_t rstFlags) {
   // save the reset flags in the designated register
@@ -571,7 +539,7 @@ void appStart(uint8_t rstFlags) {
   //  executes before normal c init code) to save R2 to a global variable.
   __asm__ __volatile__ ("mov r2, %0\n" :: "r" (rstFlags));
 
-  watchdogConfig(WATCHDOG_OFF);
+  wdt_disable();
   __asm__ __volatile__ (
     // Jump to RST vector
     "clr r30\n"
