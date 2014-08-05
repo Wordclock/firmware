@@ -244,10 +244,6 @@
 #endif
 #endif
 
-#ifndef UART
-#define UART 0
-#endif
-
 #define BAUD_SETTING (( (F_CPU + BAUD_RATE * 4L) / ((BAUD_RATE * 8L))) - 1 )
 #define BAUD_ACTUAL (F_CPU/(8 * ((BAUD_SETTING)+1)))
 #define BAUD_ERROR (( 100*(BAUD_RATE - BAUD_ACTUAL) ) / BAUD_RATE)
@@ -262,20 +258,6 @@
 #warning BAUD_RATE error greater than -2%
 #endif
 
-#if 0
-/* Switch in soft UART for hard baud rates */
-/*
- * I don't understand what this was supposed to accomplish, where the
- * constant "280" came from, or why automatically (and perhaps unexpectedly)
- * switching to a soft uart is a good thing, so I'm undoing this in favor
- * of a range check using the same calc used to config the BRG...
- */
-#if (F_CPU/BAUD_RATE) > 280 // > 57600 for 16MHz
-#ifndef SOFT_UART
-#define SOFT_UART
-#endif
-#endif
-#else // 0
 #if (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 > 250
 #error Unachievable baud rate (too slow) BAUD_RATE 
 #endif // baud rate slow check
@@ -284,7 +266,6 @@
 #error Unachievable baud rate (too fast) BAUD_RATE 
 #endif
 #endif // baud rate fastn check
-#endif
 
 /* Watchdog settings */
 #define WATCHDOG_OFF    (0)
@@ -323,36 +304,12 @@ static inline void writebuffer(int8_t memtype, uint8_t *mybuff,
 static inline void read_mem(uint8_t memtype,
 			    uint16_t address, uint16_t len);
 
-#ifdef SOFT_UART
-void uartDelay() __attribute__ ((naked));
-#endif
 void appStart(uint8_t rstFlags) __attribute__ ((naked));
-
-/*
- * RAMSTART should be self-explanatory.  It's bigger on parts with a
- * lot of peripheral registers.  Let 0x100 be the default
- * Note that RAMSTART need not be exactly at the start of RAM.
- */
-#if !defined(RAMSTART)  // newer versions of gcc avr-libc define RAMSTART
-#define RAMSTART 0x100
-#if defined (__AVR_ATmega644P__)
-// correct for a bug in avr-libc
-#undef SIGNATURE_2
-#define SIGNATURE_2 0x0A
-#elif defined(__AVR_ATmega1280__)
-#undef RAMSTART
-#define RAMSTART (0x200)
-#endif
-#endif
 
 /* C zero initialises all global variables. However, that requires */
 /* These definitions are NOT zero initialised, but that doesn't matter */
 /* This allows us to drop the zero init code, saving us memory */
 #define buff    ((uint8_t*)(RAMSTART))
-#ifdef VIRTUAL_BOOT_PARTITION
-#define rstVect (*(uint16_t*)(RAMSTART+SPM_PAGESIZE*2+4))
-#define wdtVect (*(uint16_t*)(RAMSTART+SPM_PAGESIZE*2+6))
-#endif
 
 
 /* main program starts here */
@@ -378,9 +335,6 @@ int main(void) {
   // If not, uncomment the following instructions:
   // cli();
   asm volatile ("clr __zero_reg__");
-#if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
-  SP=RAMEND;  // This is done by hardware reset
-#endif
 
   // Adaboot no-wait mod
   ch = MCUSR;
@@ -392,19 +346,10 @@ int main(void) {
   TCCR1B = _BV(CS12) | _BV(CS10); // div 1024
 #endif
 
-#ifndef SOFT_UART
-#if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
-  UCSRA = _BV(U2X); //Double speed mode USART
-  UCSRB = _BV(RXEN) | _BV(TXEN);  // enable Rx & Tx
-  UCSRC = _BV(URSEL) | _BV(UCSZ1) | _BV(UCSZ0);  // config USART; 8N1
-  UBRRL = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
-#else
   UCSR0A = _BV(U2X0); //Double speed mode USART0
   UCSR0B = _BV(RXEN0) | _BV(TXEN0);
   UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
   UBRR0L = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
-#endif
-#endif
 
   // Set up watchdog to trigger after 500ms
   watchdogConfig(WATCHDOG_1S);
@@ -445,11 +390,6 @@ int main(void) {
   PORTB &= ~_BV(PB2);
   PORTB |= _BV(PB2);
 
-#endif
-
-#ifdef SOFT_UART
-  /* Set TX pin as output */
-  UART_DDR |= _BV(UART_TX_BIT);
 #endif
 
 #if LED_START_FLASHES > 0
@@ -493,10 +433,6 @@ int main(void) {
       uint16_t newAddress;
       newAddress = getch();
       newAddress = (newAddress & 0xff) | (getch() << 8);
-#ifdef RAMPZ
-      // Transfer top bit to RAMPZ
-      RAMPZ = (newAddress & 0x8000) ? 1 : 0;
-#endif
       newAddress += newAddress; // Convert from word address to byte address
       address = newAddress;
       verifySpace();
@@ -525,25 +461,6 @@ int main(void) {
 
       // Read command terminator, start reply
       verifySpace();
-
-#ifdef VIRTUAL_BOOT_PARTITION
-      if ((uint16_t)(void*)address == 0) {
-        // This is the reset vector page. We need to live-patch the code so the
-        // bootloader runs.
-        //
-        // Move RESET vector to WDT vector
-        uint16_t vect = buff[0] | (buff[1]<<8);
-        rstVect = vect;
-        wdtVect = buff[8] | (buff[9]<<8);
-        vect -= 4; // Instruction is a relative jump (rjmp), so recalculate.
-        buff[8] = vect & 0xff;
-        buff[9] = vect >> 8;
-
-        // Add jump to bootloader at RESET vector
-        buff[0] = 0x7f;
-        buff[1] = 0xce; // rjmp 0x1d00 instruction
-      }
-#endif
 
       writebuffer(desttype, buff, address, savelength);
 
@@ -583,71 +500,19 @@ int main(void) {
 }
 
 void putch(char ch) {
-#ifndef SOFT_UART
+
   while (!(UCSR0A & _BV(UDRE0)));
   UDR0 = ch;
-#else
-  __asm__ __volatile__ (
-    "   com %[ch]\n" // ones complement, carry set
-    "   sec\n"
-    "1: brcc 2f\n"
-    "   cbi %[uartPort],%[uartBit]\n"
-    "   rjmp 3f\n"
-    "2: sbi %[uartPort],%[uartBit]\n"
-    "   nop\n"
-    "3: rcall uartDelay\n"
-    "   rcall uartDelay\n"
-    "   lsr %[ch]\n"
-    "   dec %[bitcnt]\n"
-    "   brne 1b\n"
-    :
-    :
-      [bitcnt] "d" (10),
-      [ch] "r" (ch),
-      [uartPort] "I" (_SFR_IO_ADDR(UART_PORT)),
-      [uartBit] "I" (UART_TX_BIT)
-    :
-      "r25"
-  );
-#endif
+
 }
 
 uint8_t getch(void) {
   uint8_t ch;
 
 #ifdef LED_DATA_FLASH
-#if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
-  LED_PORT ^= _BV(LED);
-#else
   PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 #endif
-#endif
 
-#ifdef SOFT_UART
-  __asm__ __volatile__ (
-    "1: sbic  %[uartPin],%[uartBit]\n"  // Wait for start edge
-    "   rjmp  1b\n"
-    "   rcall uartDelay\n"          // Get to middle of start bit
-    "2: rcall uartDelay\n"              // Wait 1 bit period
-    "   rcall uartDelay\n"              // Wait 1 bit period
-    "   clc\n"
-    "   sbic  %[uartPin],%[uartBit]\n"
-    "   sec\n"
-    "   dec   %[bitCnt]\n"
-    "   breq  3f\n"
-    "   ror   %[ch]\n"
-    "   rjmp  2b\n"
-    "3:\n"
-    :
-      [ch] "=r" (ch)
-    :
-      [bitCnt] "d" (9),
-      [uartPin] "I" (_SFR_IO_ADDR(UART_PIN)),
-      [uartBit] "I" (UART_RX_BIT)
-    :
-      "r25"
-);
-#else
   while(!(UCSR0A & _BV(RXC0)))
     ;
   if (!(UCSR0A & _BV(FE0))) {
@@ -663,37 +528,13 @@ uint8_t getch(void) {
   }
   
   ch = UDR0;
-#endif
 
 #ifdef LED_DATA_FLASH
-#if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
-  LED_PORT ^= _BV(LED);
-#else
   PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
-#endif
 #endif
 
   return ch;
 }
-
-#ifdef SOFT_UART
-// AVR305 equation: #define UART_B_VALUE (((F_CPU/BAUD_RATE)-23)/6)
-// Adding 3 to numerator simulates nearest rounding for more accurate baud rates
-#define UART_B_VALUE (((F_CPU/BAUD_RATE)-20)/6)
-#if UART_B_VALUE > 255
-#error Baud rate too slow for soft UART
-#endif
-
-void uartDelay() {
-  __asm__ __volatile__ (
-    "ldi r25,%[count]\n"
-    "1:dec r25\n"
-    "brne 1b\n"
-    "ret\n"
-    ::[count] "M" (UART_B_VALUE)
-  );
-}
-#endif
 
 void getNch(uint8_t count) {
   do getch(); while (--count);
@@ -715,11 +556,9 @@ void flash_led(uint8_t count) {
     TCNT1 = -(F_CPU/(1024*16));
     TIFR1 = _BV(TOV1);
     while(!(TIFR1 & _BV(TOV1)));
-#if defined(__AVR_ATmega8__)  || defined (__AVR_ATmega32__)
-    LED_PORT ^= _BV(LED);
-#else
+
     PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
-#endif
+
     watchdogReset();
   } while (--count);
 }
@@ -745,15 +584,9 @@ void appStart(uint8_t rstFlags) {
 
   watchdogConfig(WATCHDOG_OFF);
   __asm__ __volatile__ (
-#ifdef VIRTUAL_BOOT_PARTITION
-    // Jump to WDT vector
-    "ldi r30,4\n"
-    "clr r31\n"
-#else
     // Jump to RST vector
     "clr r30\n"
     "clr r31\n"
-#endif
     "ijmp\n"
   );
 }
@@ -766,19 +599,11 @@ static inline void writebuffer(int8_t memtype, uint8_t *mybuff,
 {
     switch (memtype) {
     case 'E': // EEPROM
-#if defined(SUPPORT_EEPROM) || defined(BIGBOOT)
+
         while(len--) {
 	    eeprom_write_byte((uint8_t *)(address++), *mybuff++);
         }
-#else
-	/*
-	 * On systems where EEPROM write is not supported, just busy-loop
-	 * until the WDT expires, which will eventually cause an error on
-	 * host system (which is what it should do.)
-	 */
-	while (1)
-	    ; // Error: wait for WDT
-#endif
+
 	break;
     default:  // FLASH
 	/*
@@ -816,10 +641,10 @@ static inline void writebuffer(int8_t memtype, uint8_t *mybuff,
 	     */
 	    boot_page_write((uint16_t)(void*)address);
 	    boot_spm_busy_wait();
-#if defined(RWWSRE)
+
 	    // Reenable read access to flash
 	    boot_rww_enable();
-#endif
+
 	} // default block
 	break;
     } // switch
@@ -831,34 +656,16 @@ static inline void read_mem(uint8_t memtype, uint16_t address, uint16_t length)
 
     switch (memtype) {
 
-#if defined(SUPPORT_EEPROM) || defined(BIGBOOT)
     case 'E': // EEPROM
 	do {
 	    putch(eeprom_read_byte((uint8_t *)(address++)));
 	} while (--length);
 	break;
-#endif
+
     default:
 	do {
-#ifdef VIRTUAL_BOOT_PARTITION
-        // Undo vector patch in bottom page so verify passes
-	    if (address == 0)       ch=rstVect & 0xff;
-	    else if (address == 1)  ch=rstVect >> 8;
-	    else if (address == 8)  ch=wdtVect & 0xff;
-	    else if (address == 9) ch=wdtVect >> 8;
-	    else ch = pgm_read_byte_near(address);
-	    address++;
-#elif defined(RAMPZ)
-	    // Since RAMPZ should already be set, we need to use EPLM directly.
-	    // Also, we can use the autoincrement version of lpm to update "address"
-	    //      do putch(pgm_read_byte_near(address++));
-	    //      while (--length);
-	    // read a Flash and increment the address (may increment RAMPZ)
-	    __asm__ ("elpm %0,Z+\n" : "=r" (ch), "=z" (address): "1" (address));
-#else
 	    // read a Flash byte and increment the address
 	    __asm__ ("lpm %0,Z+\n" : "=r" (ch), "=z" (address): "1" (address));
-#endif
 	    putch(ch);
 	} while (--length);
 	break;
