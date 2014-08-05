@@ -229,13 +229,6 @@
 // We don't use <avr/wdt.h> as those routines have interrupt overhead we don't need.
 
 /*
- * pin_defs.h
- * This contains most of the rather ugly defines that implement our
- * ability to use UART=n and LED=D3, and some avr family bit name differences.
- */
-#include "pin_defs.h"
-
-/*
  * stk500.h contains the constant definitions for the stk500v1 comm protocol
  */
 #include "stk500.h"
@@ -412,10 +405,10 @@ int main(void) {
   UCSRC = _BV(URSEL) | _BV(UCSZ1) | _BV(UCSZ0);  // config USART; 8N1
   UBRRL = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
 #else
-  UART_SRA = _BV(U2X0); //Double speed mode USART0
-  UART_SRB = _BV(RXEN0) | _BV(TXEN0);
-  UART_SRC = _BV(UCSZ00) | _BV(UCSZ01);
-  UART_SRL = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
+  UCSR0A = _BV(U2X0); //Double speed mode USART0
+  UCSR0B = _BV(RXEN0) | _BV(TXEN0);
+  UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
+  UBRR0L = (uint8_t)( (F_CPU + BAUD_RATE * 4L) / (BAUD_RATE * 8L) - 1 );
 #endif
 #endif
 
@@ -597,8 +590,8 @@ int main(void) {
 
 void putch(char ch) {
 #ifndef SOFT_UART
-  while (!(UART_SRA & _BV(UDRE0)));
-  UART_UDR = ch;
+  while (!(UCSR0A & _BV(UDRE0)));
+  UDR0 = ch;
 #else
   __asm__ __volatile__ (
     "   com %[ch]\n" // ones complement, carry set
@@ -661,9 +654,9 @@ uint8_t getch(void) {
       "r25"
 );
 #else
-  while(!(UART_SRA & _BV(RXC0)))
+  while(!(UCSR0A & _BV(RXC0)))
     ;
-  if (!(UART_SRA & _BV(FE0))) {
+  if (!(UCSR0A & _BV(FE0))) {
       /*
        * A Framing Error indicates (probably) that something is talking
        * to us at the wrong bit rate.  Assume that this is because it
@@ -675,7 +668,7 @@ uint8_t getch(void) {
     watchdogReset();
   }
   
-  ch = UART_UDR;
+  ch = UDR0;
 #endif
 
 #ifdef LED_DATA_FLASH
