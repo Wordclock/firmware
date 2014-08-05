@@ -1,5 +1,3 @@
-#define FUNC_READ 1
-#define FUNC_WRITE 1
 /**********************************************************/
 /* Optiboot bootloader for Arduino                        */
 /*                                                        */
