@@ -480,11 +480,6 @@ include Makefile.custom
 
 FORCE:
 
-baudcheck: FORCE
-	- @$(CC) --version
-	- @$(CC) $(CFLAGS) -E baudcheck.c -o baudcheck.tmp.sh
-	- @$(SH) baudcheck.tmp.sh
-
 isp: $(TARGET)
 	$(MAKE) -f Makefile.isp isp TARGET=$(TARGET)
 
@@ -492,7 +487,7 @@ isp-stk500: $(PROGRAM)_$(TARGET).hex
 	$(STK500-1)
 	$(STK500-2)
 
-%.elf: $(OBJ) baudcheck $(dummy)
+%.elf: $(OBJ) $(dummy)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 	$(SIZE) $@
 
