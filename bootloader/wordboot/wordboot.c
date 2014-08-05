@@ -18,7 +18,7 @@
  */
 
 /**
- * @file optiboot.c
+ * @file wordboot.c
  * @brief Bootloader of the Wordclock project
  *
  * This file contains the officially supported bootloader of the Wordclock

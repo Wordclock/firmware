@@ -1,4 +1,4 @@
-PROGRAM     = optiboot
+PROGRAM     = wordboot
 GCCROOT     =
 OBJ         = $(PROGRAM).o
 OPTIMIZE    = -Os -fno-split-wide-types -mrelax
@@ -16,8 +16,8 @@ wordclock: AVR_FREQ = 8000000L
 wordclock: CFLAGS += -DBAUD_RATE=9600
 wordclock: CFLAGS += -DLED_START_FLASHES=3
 wordclock: CFLAGS += -DLED_DATA_FLASH=1
-wordclock: $(PROGRAM)_wordclock.hex
-wordclock: $(PROGRAM)_wordclock.lst
+wordclock: $(PROGRAM).hex
+wordclock: $(PROGRAM).lst
 
 %.elf: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
