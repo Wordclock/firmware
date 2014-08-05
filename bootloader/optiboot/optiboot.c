@@ -208,6 +208,7 @@
 #include <avr/eeprom.h>
 #include <avr/boot.h>
 #include <avr/wdt.h>
+#include <avr/interrupt.h>
 
 /*
  * stk500.h contains the constant definitions for the stk500v1 comm protocol
@@ -303,7 +304,7 @@ int main(void) {
   //  r1 contains zero
   //
   // If not, uncomment the following instructions:
-  // cli();
+  cli();
   asm volatile ("clr __zero_reg__");
 
   // Adaboot no-wait mod
