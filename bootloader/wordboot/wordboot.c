@@ -31,8 +31,8 @@
  * [1]: https://code.google.com/p/optiboot/
  */
 
-#define OPTIBOOT_MAJVER 6
-#define OPTIBOOT_MINVER 0
+#define MAJOR_VERSION 6
+#define MINOR_VERSION 0
 
 #include <inttypes.h>
 #include <avr/io.h>
@@ -182,9 +182,9 @@ int main(void) {
 	/*
 	 * Send optiboot version as "minor SW version"
 	 */
-	putch(OPTIBOOT_MINVER);
+	putch(MINOR_VERSION);
       } else if (which == 0x81) {
-	  putch(OPTIBOOT_MAJVER);
+	  putch(MAJOR_VERSION);
       } else {
 	/*
 	 * GET PARAMETER returns a generic 0x03 reply for
