@@ -2,3 +2,18 @@
 # Makefile for "custom" platforms.   Add your board here.
 #
 
+wordclock: TARGET = $@
+wordclock: CHIP = atmega328
+wordclock: LDSECTIONS = -Wl,--section-start=.text=0x7c00 -Wl,--section-start=.version=0x7ffe
+wordclock:
+	$(MAKE) $(CHIP) $(LDSECTIONS) AVR_FREQ=8000000L BAUD_RATE=9600 BIGBOOT=1 SUPPORT_EEPROM=1 LED_START_FLASHES=3 LED_DATA_FLASH=1
+	mv $(PROGRAM)_$(CHIP).hex $(PROGRAM)_$(TARGET).hex
+	mv $(PROGRAM)_$(CHIP).lst $(PROGRAM)_$(TARGET).lst
+
+wordclock_m168: TARGET = $@
+wordclock_m168: CHIP = atmega168
+wordclock_m168: LDSECTIONS = -Wl,--section-start=.text=0x3c00 -Wl,--section-start=.version=0x3ffe
+wordclock_m168:
+	$(MAKE) $(CHIP) $(LDSECTIONS) AVR_FREQ=8000000L BAUD_RATE=9600 LED=B0 LED_START_FLASHES=3 LED_DATA_FLASH=1
+	mv $(PROGRAM)_$(CHIP).hex $(PROGRAM)_$(TARGET).hex
+	mv $(PROGRAM)_$(CHIP).lst $(PROGRAM)_$(TARGET).lst
