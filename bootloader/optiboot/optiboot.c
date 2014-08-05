@@ -423,8 +423,41 @@ int main(void) {
   watchdogConfig(WATCHDOG_1S);
 
 #if (LED_START_FLASHES > 0) || defined(LED_DATA_FLASH)
-  /* Set LED pin as output */
-  LED_DDR |= _BV(LED);
+
+  // Disable PWM output
+  TCCR0A = 0;
+  TCCR2A = 0;
+
+  // Enable minute LEDs
+  DDRB = _BV(PB0);
+  PORTB = _BV(PB0);
+
+  DDRC = _BV(PC3) | _BV(PC2);
+  PORTC = _BV(PC3) | _BV(PC2);
+
+  DDRD = _BV(PD7);
+  PORTD = _BV(PD7);
+
+  // Set PWM pins as output
+  DDRD |= _BV(PD6) | _BV(PD5) | _BV(PD3);
+
+  // Clear matrix
+  DDRB |= _BV(PB5) | _BV(PB3) | _BV(PB2);
+  PORTB |= _BV(PB2);
+
+  SPCR = _BV(SPE) | _BV(MSTR) | _BV(CPOL);
+
+  uint8_t i;
+  for (i = 0; i < 3; i++) {
+
+      SPDR = 0;
+      while (!(SPSR & (_BV(SPIF))));
+
+  }
+
+  PORTB &= ~_BV(PB2);
+  PORTB |= _BV(PB2);
+
 #endif
 
 #ifdef SOFT_UART
@@ -599,7 +632,7 @@ uint8_t getch(void) {
 #if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
   LED_PORT ^= _BV(LED);
 #else
-  LED_PIN |= _BV(LED);
+  PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 #endif
 #endif
 
@@ -649,7 +682,7 @@ uint8_t getch(void) {
 #if defined(__AVR_ATmega8__) || defined (__AVR_ATmega32__)
   LED_PORT ^= _BV(LED);
 #else
-  LED_PIN |= _BV(LED);
+  PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 #endif
 #endif
 
@@ -698,7 +731,7 @@ void flash_led(uint8_t count) {
 #if defined(__AVR_ATmega8__)  || defined (__AVR_ATmega32__)
     LED_PORT ^= _BV(LED);
 #else
-    LED_PIN |= _BV(LED);
+    PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 #endif
     watchdogReset();
   } while (--count);
