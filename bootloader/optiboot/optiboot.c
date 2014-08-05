@@ -1,203 +1,34 @@
-/**********************************************************/
-/* Optiboot bootloader for Arduino                        */
-/*                                                        */
-/* http://optiboot.googlecode.com                         */
-/*                                                        */
-/* Arduino-maintained version : See README.TXT            */
-/* http://code.google.com/p/arduino/                      */
-/*  It is the intent that changes not relevant to the     */
-/*  Arduino production envionment get moved from the      */
-/*  optiboot project to the arduino project in "lumps."   */
-/*                                                        */
-/* Heavily optimised bootloader that is faster and        */
-/* smaller than the Arduino standard bootloader           */
-/*                                                        */
-/* Enhancements:                                          */
-/*   Fits in 512 bytes, saving 1.5K of code space         */
-/*   Background page erasing speeds up programming        */
-/*   Higher baud rate speeds up programming               */
-/*   Written almost entirely in C                         */
-/*   Customisable timeout with accurate timeconstant      */
-/*   Optional virtual UART. No hardware UART required.    */
-/*   Optional virtual boot partition for devices without. */
-/*                                                        */
-/* What you lose:                                         */
-/*   Implements a skeleton STK500 protocol which is       */
-/*     missing several features including EEPROM          */
-/*     programming and non-page-aligned writes            */
-/*   High baud rate breaks compatibility with standard    */
-/*     Arduino flash settings                             */
-/*                                                        */
-/* Fully supported:                                       */
-/*   ATmega168 based devices  (Diecimila etc)             */
-/*   ATmega328P based devices (Duemilanove etc)           */
-/*                                                        */
-/* Beta test (believed working.)                          */
-/*   ATmega8 based devices (Arduino legacy)               */
-/*   ATmega328 non-picopower devices                      */
-/*   ATmega644P based devices (Sanguino)                  */
-/*   ATmega1284P based devices                            */
-/*   ATmega1280 based devices (Arduino Mega)              */
-/*                                                        */
-/* Alpha test                                             */
-/*   ATmega32                                             */
-/*                                                        */
-/* Work in progress:                                      */
-/*   ATtiny84 based devices (Luminet)                     */
-/*                                                        */
-/* Does not support:                                      */
-/*   USB based devices (eg. Teensy, Leonardo)             */
-/*                                                        */
-/* Assumptions:                                           */
-/*   The code makes several assumptions that reduce the   */
-/*   code size. They are all true after a hardware reset, */
-/*   but may not be true if the bootloader is called by   */
-/*   other means or on other hardware.                    */
-/*     No interrupts can occur                            */
-/*     UART and Timer 1 are set to their reset state      */
-/*     SP points to RAMEND                                */
-/*                                                        */
-/* Code builds on code, libraries and optimisations from: */
-/*   stk500boot.c          by Jason P. Kyle               */
-/*   Arduino bootloader    http://arduino.cc              */
-/*   Spiff's 1K bootloader http://spiffie.org/know/arduino_1k_bootloader/bootloader.shtml */
-/*   avr-libc project      http://nongnu.org/avr-libc     */
-/*   Adaboot               http://www.ladyada.net/library/arduino/bootloader.html */
-/*   AVR305                Atmel Application Note         */
-/*                                                        */
-/* This program is free software; you can redistribute it */
-/* and/or modify it under the terms of the GNU General    */
-/* Public License as published by the Free Software       */
-/* Foundation; either version 2 of the License, or        */
-/* (at your option) any later version.                    */
-/*                                                        */
-/* This program is distributed in the hope that it will   */
-/* be useful, but WITHOUT ANY WARRANTY; without even the  */
-/* implied warranty of MERCHANTABILITY or FITNESS FOR A   */
-/* PARTICULAR PURPOSE.  See the GNU General Public        */
-/* License for more details.                              */
-/*                                                        */
-/* You should have received a copy of the GNU General     */
-/* Public License along with this program; if not, write  */
-/* to the Free Software Foundation, Inc.,                 */
-/* 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA */
-/*                                                        */
-/* Licence can be viewed at                               */
-/* http://www.fsf.org/licenses/gpl.txt                    */
-/*                                                        */
-/**********************************************************/
+/*
+ * Copyright (C) 2014 Karol Babioch <karol@babioch.de>
+ *
+ * This file is part of Wordclock.
+ *
+ * Wordclock is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Wordclock is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Wordclock. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-
-/**********************************************************/
-/*                                                        */
-/* Optional defines:                                      */
-/*                                                        */
-/**********************************************************/
-/*                                                        */
-/* BIGBOOT:                                               */
-/* Build a 1k bootloader, not 512 bytes. This turns on    */
-/* extra functionality.                                   */
-/*                                                        */
-/* BAUD_RATE:                                             */
-/* Set bootloader baud rate.                              */
-/*                                                        */
-/* LED_START_FLASHES:                                     */
-/* Number of LED flashes on bootup.                       */
-/*                                                        */
-/* LED_DATA_FLASH:                                        */
-/* Flash LED when transferring data. For boards without   */
-/* TX or RX LEDs, or for people who like blinky lights.   */
-/*                                                        */
-/* SUPPORT_EEPROM:                                        */
-/* Support reading and writing from EEPROM. This is not   */
-/* used by Arduino, so off by default.                    */
-/*                                                        */
-/**********************************************************/
-
-/**********************************************************/
-/* Version Numbers!                                       */
-/*                                                        */
-/* Arduino Optiboot now includes this Version number in   */
-/* the source and object code.                            */
-/*                                                        */
-/* Version 3 was released as zip from the optiboot        */
-/*  repository and was distributed with Arduino 0022.     */
-/* Version 4 starts with the arduino repository commit    */
-/*  that brought the arduino repository up-to-date with   */
-/*  the optiboot source tree changes since v3.            */
-/* Version 5 was created at the time of the new Makefile  */
-/*  structure (Mar, 2013), even though no binaries changed*/
-/* It would be good if versions implemented outside the   */
-/*  official repository used an out-of-seqeunce version   */
-/*  number (like 104.6 if based on based on 4.5) to       */
-/*  prevent collisions.                                   */
-/*                                                        */
-/**********************************************************/
-
-/**********************************************************/
-/* Edit History:					  */
-/*							  */
-/* Jun 2014						  */
-/* 6.0 WestfW: Modularize memory read/write functions	  */
-/*             Remove serial/flash overlap		  */
-/*              (and all references to NRWWSTART/etc)	  */
-/*             Correctly handle pagesize > 255bytes       */
-/*             Add EEPROM support in BIGBOOT (1284)       */
-/*             EEPROM write on small chips now causes err */
-/*             Split Makefile into smaller pieces         */
-/*             Add Wicked devices Wildfire		  */
-/*	       Move UART=n conditionals into pin_defs.h   */
-/*	       Remove LUDICOUS_SPEED option		  */
-/*	       Replace inline assembler for .version      */
-/*              and add OPTIBOOT_CUSTOMVER for user code  */
-/*             Fix LED value for Bobuino (Makefile)       */
-/*             Make all functions explicitly inline or    */
-/*              noinline, so we fit when using gcc4.8     */
-/*             Change optimization options for gcc4.8	  */
-/*             Make ENV=arduino work in 1.5.x trees.	  */
-/* May 2014                                               */
-/* 5.0 WestfW: Add support for 1Mbps UART                 */
-/* Mar 2013                                               */
-/* 5.0 WestfW: Major Makefile restructuring.              */
-/*             See Makefile and pin_defs.h                */
-/*             (no binary changes)                        */
-/*                                                        */
-/* 4.6 WestfW/Pito: Add ATmega32 support                  */
-/* 4.6 WestfW/radoni: Don't set LED_PIN as an output if   */
-/*                    not used. (LED_START_FLASHES = 0)   */
-/* Jan 2013						  */
-/* 4.6 WestfW/dkinzer: use autoincrement lpm for read     */
-/* 4.6 WestfW/dkinzer: pass reset cause to app in R2      */
-/* Mar 2012                                               */
-/* 4.5 WestfW: add infrastructure for non-zero UARTS.     */
-/* 4.5 WestfW: fix SIGNATURE_2 for m644 (bad in avr-libc) */
-/* Jan 2012:                                              */
-/* 4.5 WestfW: fix NRWW value for m1284.                  */
-/* 4.4 WestfW: use attribute OS_main instead of naked for */
-/*             main().  This allows optimizations that we */
-/*             count on, which are prohibited in naked    */
-/*             functions due to PR42240.  (keeps us less  */
-/*             than 512 bytes when compiler is gcc4.5     */
-/*             (code from 4.3.2 remains the same.)        */
-/* 4.4 WestfW and Maniacbug:  Add m1284 support.  This    */
-/*             does not change the 328 binary, so the     */
-/*             version number didn't change either. (?)   */
-/* June 2011:                                             */
-/* 4.4 WestfW: remove automatic soft_uart detect (didn't  */
-/*             know what it was doing or why.)  Added a   */
-/*             check of the calculated BRG value instead. */
-/*             Version stays 4.4; existing binaries are   */
-/*             not changed.                               */
-/* 4.4 WestfW: add initialization of address to keep      */
-/*             the compiler happy.  Change SC'ed targets. */
-/*             Return the SW version via READ PARAM       */
-/* 4.3 WestfW: catch framing errors in getch(), so that   */
-/*             AVRISP works without HW kludges.           */
-/*  http://code.google.com/p/arduino/issues/detail?id=368n*/
-/* 4.2 WestfW: reduce code size, fix timeouts, change     */
-/*             verifySpace to use WDT instead of appstart */
-/* 4.1 WestfW: put version number in binary.		  */
-/**********************************************************/
+/**
+ * @file optiboot.c
+ * @brief Bootloader of the Wordclock project
+ *
+ * This file contains the officially supported bootloader of the Wordclock
+ * project. It is based upon [optiboot][1], but was heavily modified. These
+ * modifications not only include massive clean-ups and simplifications, but
+ * also support to indicate the current status visually on the Wordclock
+ * itself by making use of the minute LEDs.
+ *
+ * [1]: https://code.google.com/p/optiboot/
+ */
 
 #define OPTIBOOT_MAJVER 6
 #define OPTIBOOT_MINVER 0
@@ -210,18 +41,15 @@
 #include <avr/wdt.h>
 #include <avr/interrupt.h>
 
-/*
- * stk500.h contains the constant definitions for the stk500v1 comm protocol
- */
 #include "stk500.h"
 
 #ifndef LED_START_FLASHES
-#define LED_START_FLASHES 0
+    #define LED_START_FLASHES 3
 #endif
 
 /* set the UART baud rate defaults */
 #ifndef BAUD_RATE
-#define BAUD_RATE 9600L
+    #define BAUD_RATE 9600L
 #endif
 
 #define BAUD BAUD_RATE
