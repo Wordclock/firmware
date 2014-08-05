@@ -35,6 +35,10 @@ original one and make it more attractive:
   couple of years now, it misses a lot of protocols that have been added to
   the mainline version in the meantime.
 
+- **wordboot:** A new bootloader was developed, which is more feature-rich and
+  better adopted to the Wordclock project, visually indicating its current
+  status on the frontpanel display.
+
 Refer to the [commit logs][4] for a full list of changes.
 
 ## HARDWARE REQUIREMENTS
@@ -106,41 +110,39 @@ reinitialized with useful default values.
 
 ## BOOTLOADER
 
-The original firmware was shipped with a bootloader called [AVRootloader][8]
-from Hagen Re. However, this bootloader is in no way FLOSS and hence was not
-taken over into this project itself. It is still supported, and can be obtained
-on its own. There are also a few other bootloaders that are supported directly,
-namely [chip45boot2][9] and [FastBoot][10] from Peter Danegger.
+The original firmware was shipped with a bootloader, which in no way was FLOSS
+and hence was not taken over into this project. The suggested alternatives were
+platform dependent and did not implement any official standard. A new
+bootloader named *wordboot* was developed. It can be found within the
+`bootloader/wordboot` directory along with documentation about its usage.
 
-Depending upon the bootloader you want to use, you might have to change the
-fuses and/or the `BOOTLOADER_RESET_WDT` directive within `src/config.h`
-(once again, this is referring to the ATmega328P):
+wordboot makes use of the Wordclock hardware to visually indicate its current
+status on the frontpanel display. Furthermore it implements the STK500 protocol
+and is directly supported by [avrdude][7], so no proprietary tools are needed.
 
-- **AVRootloader, FastBoot**: Set **hfuse** to `0xDE`
+In order to be able to use *wordboot* the following change is necessary to the
+fuse settings (once again, this is referring to the ATmega328P):
 
-- **chip45boot2**: Set **efuse** to `0xDA` and **disable**
-  `BOOTLOADER_RESET_WDT`
+- **hfuse**: `0xDC`
 
-Instructions on how to actually use the bootloaders mentioned above can be
-found on the appropriate project sites itself. You'll also find some German
-assistance [here][3], which contains a short description of what you have to do
-in order to get these bootloaders working correctly.
+Support for other bootloaders has been completely dropped in favour of
+wordboot, so they are probably no longer working as expected.
 
 ## CONTRIBUTIONS
 
 The source code itself is maintained using git. The project along with its
-[repositories][11] lives over at github.com. Contributions of any kind are
+[repositories][8] lives over at github.com. Contributions of any kind are
 highly welcome. The simplest and fastest way for these kind of things is to use
 the means provided by github.com itself, which allows for reporting bugs and/or
 requesting features. It is also the preferred way to submit patches in form of
 pull requests. If you are new to git and/or are not familiar with this process,
-refer to [this][12] for a detailed description on how to submit a pull request.
+refer to [this][9] for a detailed description on how to submit a pull request.
 
 In case you are looking for something to work on, you probably want to take a
 look at the `TODO` file within the projects root directory. It contains a list
 of things that still need to be done, so feel free to start hacking away ;).
 
-There is also a [repository][13] over at gitorious.org, which currently is
+There is also a [repository][10] over at gitorious.org, which currently is
 being used only as a mirror.
 
 ## DONATIONS
@@ -176,9 +178,6 @@ Bitcoin: `1Dn6MEKgRAgdRS8Aeg88fug9XmdgTRpCDA`
 [5]: https://github.com/Wordclock/manual
 [6]: https://www.stack.nl/~dimitri/doxygen/
 [7]: http://www.nongnu.org/avrdude/
-[8]: https://www.mikrocontroller.net/articles/AVR-Bootloader_mit_Verschl%C3%BCsselung_von_Hagen_Re
-[9]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
-[10]: https://www.mikrocontroller.net/articles/AVR_Bootloader_FastBoot_von_Peter_Dannegger
-[11]: https://github.com/Wordclock
-[12]: https://help.github.com/articles/using-pull-requests
-[13]: https://gitorious.org/Wordclock
+[8]: https://github.com/Wordclock
+[9]: https://help.github.com/articles/using-pull-requests
+[10]: https://gitorious.org/Wordclock
