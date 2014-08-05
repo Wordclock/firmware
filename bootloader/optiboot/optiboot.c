@@ -213,16 +213,6 @@
 #define OPTIBOOT_MAJVER 6
 #define OPTIBOOT_MINVER 0
 
-/*
- * OPTIBOOT_CUSTOMVER should be defined (by the makefile) for custom edits
- * of optiboot.  That way you don't wind up with very different code that
- * matches the version number of a "released" optiboot.
- */
-
-#if !defined(OPTIBOOT_CUSTOMVER)
-#define OPTIBOOT_CUSTOMVER 0
-#endif
-
 #include <inttypes.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
