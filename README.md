@@ -7,7 +7,7 @@ that emerged from a quite popular [thread][1] started over at the German
 mikrocontroller.net forums. It is not *officially* linked with this project,
 however. The reason for forking the project in the first place was to clean up
 the sources in order to have a better foundation for future modifications. The
-upstream project wasn't interested in this effort and appears to be quite dead,
+upstream project was not interested in this effort and appears to be quite dead,
 anyway. Although not completely finished with the clean up yet, a couple of
 issues have been fixed and a bunch of features were already added. This project
 is based upon version 0.12 of the original firmware and is diverging from it
@@ -31,7 +31,7 @@ original one and make it more attractive:
   serial connection, making the IR remote control completely obsolete and
   providing a much more convenient way of interacting with the Wordclock.
 
-- **IRMP:** As the version in the original firmware hasn't been touched for a
+- **IRMP:** As the version in the original firmware has not been touched for a
   couple of years now, it misses a lot of protocols that have been added to
   the mainline version in the meantime.
 
@@ -48,7 +48,7 @@ original project and the corresponding hardware. However, as the program space
 of the ATmega168 is simply not sufficient for all of the new features, it is
 highly recommended to replace the microcontroller with an ATmega328P, which is
 a drop in replacement. As the microcontroller was designed to be put into a
-socket anyway, this shouldn't be too much of a problem. Alternatively you can
+socket anyway, this should not be too much of a problem. Alternatively you can
 always give up some functionality by disabling the appropriate switches within
 `src/config.h`.
 
@@ -65,7 +65,7 @@ versions might work just fine, but are not fully tested.
   itself. It is based upon LaTeX and managed in a separate repository. It can
   be found [here][5]. The user manual does not cover the technical aspects, but
   can be useful in case you want to know how a specific feature is expected to
-  work. However, it wasn't updated for quite a while, so it is incomplete.
+  work. However, it was not updated for quite a while, so it is incomplete.
 
 - The source code itself is documented quite heavily using [Doxygen][6]. An
   appropriate Doxyfile is provided along with the sources and can be found
