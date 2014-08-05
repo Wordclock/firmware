@@ -94,15 +94,12 @@
 /*                                                        */
 /**********************************************************/
 /*                                                        */
-/* BIGBOOT:                                              */
+/* BIGBOOT:                                               */
 /* Build a 1k bootloader, not 512 bytes. This turns on    */
 /* extra functionality.                                   */
 /*                                                        */
 /* BAUD_RATE:                                             */
 /* Set bootloader baud rate.                              */
-/*                                                        */
-/* SOFT_UART:                                             */
-/* Use AVR305 soft-UART instead of hardware UART.         */
 /*                                                        */
 /* LED_START_FLASHES:                                     */
 /* Number of LED flashes on bootup.                       */
@@ -114,14 +111,6 @@
 /* SUPPORT_EEPROM:                                        */
 /* Support reading and writing from EEPROM. This is not   */
 /* used by Arduino, so off by default.                    */
-/*                                                        */
-/* TIMEOUT_MS:                                            */
-/* Bootloader timeout period, in milliseconds.            */
-/* 500,1000,2000,4000,8000 supported.                     */
-/*                                                        */
-/* UART:                                                  */
-/* UART number (0..n) for devices with more than          */
-/* one hardware uart (644P, 1284P, etc)                   */
 /*                                                        */
 /**********************************************************/
 
