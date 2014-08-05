@@ -470,8 +470,6 @@ atmega328_pro8_isp: isp
 
 #
 # Include additional platforms
-include Makefile.extras
-include Makefile.1284
 include Makefile.custom
 
 
