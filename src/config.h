@@ -237,21 +237,6 @@
 #define ENABLE_USER_AUTOSAVE 1
 
 /**
- * @brief Defines how a reset of the microcontroller will be performed
- *
- * If set to 1, the firmware will be built in a way that a reset of the
- * microcontroller is being performed by making use of the watchdog timer.
- * Otherwise the microcontroller will simply jump directly to the the
- * bootloader, which technically is not a reset, but is the way
- * [chip45boot2][1] expects it to be.
- *
- * [1]: http://www.chip45.com/avr_bootloader_atmega_xmega_chip45boot2.php
- *
- * @see _reset()
- */
-#define BOOTLOADER_RESET_WDT 1
-
-/**
  * @brief Defines whether support for the UART protocol should be included
  *
  * This defines whether the support for the UART protocol should be built into

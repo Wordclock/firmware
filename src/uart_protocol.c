@@ -373,15 +373,12 @@ static void _keepalive(uint8_t argc, char* argv[])
 /**
  * @brief Resets the microcontroller
  *
- * This performs a reset of the microcontroller. Depending upon the setting of
- * #BOOTLOADER_RESET_WDT this is either performed by letting the watchdog
- * timeout or by directly jumping to a specific address location (`0x3800`). To
- * make sure that this whole procedure will not be interrupted, the interrupt
- * are disabled globally.
+ * This performs a reset of the microcontroller by directly jumping to a
+ * specific address location. To make sure that this whole procedure will not
+ * be interrupted, the interrupt are disabled globally.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_ok()
- * @see BOOTLOADER_RESET_WDT
  */
 static void _reset(uint8_t argc, char* argv[])
 {
@@ -390,19 +387,7 @@ static void _reset(uint8_t argc, char* argv[])
     uart_flush_output();
     cli();
 
-    #if (BOOTLOADER_RESET_WDT == 1)
-
-        #include <avr/wdt.h>
-
-        wdt_enable(WDTO_15MS);
-
-        while (1);
-
-    #else
-
-        asm volatile("jmp 0x3800");
-
-    #endif
+    asm volatile("jmp 0x7c00");
 
 }
 
