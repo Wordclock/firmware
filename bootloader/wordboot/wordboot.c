@@ -346,9 +346,7 @@ void appStart(uint8_t rstFlags) {
   wdt_disable();
   __asm__ __volatile__ (
     // Jump to RST vector
-    "clr r30\n"
-    "clr r31\n"
-    "ijmp\n"
+    "jmp 0x0000\n"
   );
 }
 
