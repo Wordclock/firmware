@@ -50,7 +50,7 @@
 
 /* set the UART baud rate defaults */
 #ifndef BAUD_RATE
-    #define BAUD_RATE 9600L
+    #define BAUD_RATE 115200L
 #endif
 
 #define BAUD BAUD_RATE
