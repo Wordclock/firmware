@@ -193,7 +193,7 @@ int main(int argc, char* argv[])
 
         if (ch == Cmnd_STK_GET_PARAMETER) {
 
-            unsigned char which = get_ch();
+            uint8_t which = get_ch();
             verify_space();
 
             if (which == Parm_STK_SW_MINOR) {
