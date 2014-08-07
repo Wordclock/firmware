@@ -356,13 +356,13 @@ void put_ch(char ch)
 void verify_space()
 {
 
-    if (get_ch() == CRC_EOP){
+    if (get_ch() == Sync_CRC_EOP){
     7e6e:	ef df       	rcall	.-34     	; 0x7e4e <get_ch>
     7e70:	80 32       	cpi	r24, 0x20	; 32
     7e72:	11 f4       	brne	.+4      	; 0x7e78 <verify_space+0xa>
     7e74:	84 e1       	ldi	r24, 0x14	; 20
 
-        put_ch(STK_INSYNC);
+        put_ch(Resp_STK_INSYNC);
     7e76:	e4 cf       	rjmp	.-56     	; 0x7e40 <put_ch>
     7e78:	28 e0       	ldi	r18, 0x08	; 8
     7e7a:	88 e1       	ldi	r24, 0x18	; 24

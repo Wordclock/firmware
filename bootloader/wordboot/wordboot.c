@@ -191,16 +191,16 @@ int main(int argc, char* argv[])
         // Get character from UART
         ch = get_ch();
 
-        if (ch == STK_GET_PARAMETER) {
+        if (ch == Cmnd_STK_GET_PARAMETER) {
 
             unsigned char which = get_ch();
             verify_space();
 
-            if (which == 0x82) {
+            if (which == Parm_STK_SW_MINOR) {
 
                 put_ch(MINOR_VERSION);
 
-            } else if (which == 0x81) {
+            } else if (which == Parm_STK_SW_MAJOR) {
 
                 put_ch(MAJOR_VERSION);
 
@@ -214,17 +214,17 @@ int main(int argc, char* argv[])
 
             }
 
-        } else if(ch == STK_SET_DEVICE) {
+        } else if(ch == Cmnd_STK_SET_DEVICE) {
 
             // SET DEVICE is ignored
             drop_ch(20);
 
-        } else if(ch == STK_SET_DEVICE_EXT) {
+        } else if(ch == Cmnd_STK_SET_DEVICE_EXT) {
 
             // SET DEVICE EXT is ignored
             drop_ch(5);
 
-        } else if(ch == STK_LOAD_ADDRESS) {
+        } else if(ch == Cmnd_STK_LOAD_ADDRESS) {
 
             // LOAD ADDRESS
             uint16_t newAddress;
@@ -237,13 +237,13 @@ int main(int argc, char* argv[])
 
             verify_space();
 
-        } else if(ch == STK_UNIVERSAL) {
+        } else if(ch == Cmnd_STK_UNIVERSAL) {
 
             // UNIVERSAL command is ignored
             drop_ch(4);
             put_ch(0x00);
 
-        } else if(ch == STK_PROG_PAGE) {
+        } else if(ch == Cmnd_STK_PROG_PAGE) {
 
             uint8_t desttype;
             uint8_t *bufPtr;
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
 
             write_memory(desttype, buff, address, savelength);
 
-        } else if(ch == STK_READ_PAGE) {
+        } else if(ch == Cmnd_STK_READ_PAGE) {
 
             uint8_t desttype;
             // length is big endian
@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
 
             read_memory(desttype, address, length);
 
-        } else if(ch == STK_READ_SIGN) {
+        } else if(ch == Cmnd_STK_READ_SIGN) {
 
             // READ SIGN - return what Avrdude wants to hear
             verify_space();
@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
             put_ch(SIGNATURE_1);
             put_ch(SIGNATURE_2);
 
-        } else if (ch == STK_LEAVE_PROGMODE) {
+        } else if (ch == Cmnd_STK_LEAVE_PROGMODE) {
 
             // Adaboot no-wait mod
             wdt_enable(WDTO_15MS);
@@ -301,7 +301,7 @@ int main(int argc, char* argv[])
 
         }
 
-        put_ch(STK_OK);
+        put_ch(Resp_STK_OK);
 
     }
 
@@ -370,9 +370,9 @@ void drop_ch(uint8_t count)
 void verify_space()
 {
 
-    if (get_ch() == CRC_EOP){
+    if (get_ch() == Sync_CRC_EOP){
 
-        put_ch(STK_INSYNC);
+        put_ch(Resp_STK_INSYNC);
 
     } else {
 
