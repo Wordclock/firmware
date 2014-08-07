@@ -414,7 +414,9 @@ void start_application(uint8_t reset_flags)
     __asm__ __volatile__ ("mov r2, %0\n" :: "r" (reset_flags));
 
     wdt_disable();
-    __asm__ __volatile__ ("jmp 0x0000\n");
+
+    // Jump to reset vector
+    ((void(*)(void)) 0x0000)();
 
 }
 
