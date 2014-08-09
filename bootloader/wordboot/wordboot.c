@@ -99,15 +99,6 @@ int main(int argc, char* argv[])
     register uint16_t address = 0;
     register uint16_t length;
 
-    // After the zero init loop, this is the first code to run.
-    // This code makes the following assumptions:
-    // - No interrupts will execute
-    // - SP points to RAMEND
-    // - r1 contains zero
-    // If not, uncomment the following instructions:
-    cli();
-    asm volatile ("clr __zero_reg__");
-
     // Adaboot no-wait mod
     ch = MCUSR;
     MCUSR = 0;
