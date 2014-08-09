@@ -9,9 +9,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
   2 .stab         00000ea0  00000000  00000000  00000358  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000d81  00000000  00000000  000011f8  2**0
+  3 .stabstr      00000d8e  00000000  00000000  000011f8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  00001f79  2**0
+  4 .comment      00000011  00000000  00000000  00001f86  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
@@ -110,7 +110,7 @@ Disassembly of section .text:
     7cca:	69 f4       	brne	.+26     	; 0x7ce6 <main+0xe6>
     7ccc:	c0 d0       	rcall	.+384    	; 0x7e4e <get_ch>
     7cce:	89 83       	std	Y+1, r24	; 0x01
-    7cd0:	ce d0       	rcall	.+412    	; 0x7e6e <verify_space>
+    7cd0:	ce d0       	rcall	.+412    	; 0x7e6e <verify_command_terminator>
     7cd2:	89 81       	ldd	r24, Y+1	; 0x01
     7cd4:	82 38       	cpi	r24, 0x82	; 130
     7cd6:	f9 f0       	breq	.+62     	; 0x7d16 <main+0x116>
@@ -171,7 +171,7 @@ Disassembly of section .text:
     7d44:	cf 1a       	sub	r12, r31
     7d46:	d1 08       	sbc	r13, r1
     7d48:	c1 f7       	brne	.-16     	; 0x7d3a <main+0x13a>
-    7d4a:	91 d0       	rcall	.+290    	; 0x7e6e <verify_space>
+    7d4a:	91 d0       	rcall	.+290    	; 0x7e6e <verify_command_terminator>
     7d4c:	85 e4       	ldi	r24, 0x45	; 69
     7d4e:	48 12       	cpse	r4, r24
     7d50:	12 c0       	rjmp	.+36     	; 0x7d76 <main+0x176>
@@ -241,7 +241,7 @@ Disassembly of section .text:
     7dd8:	e8 2a       	or	r14, r24
     7dda:	39 d0       	rcall	.+114    	; 0x7e4e <get_ch>
     7ddc:	89 83       	std	Y+1, r24	; 0x01
-    7dde:	47 d0       	rcall	.+142    	; 0x7e6e <verify_space>
+    7dde:	47 d0       	rcall	.+142    	; 0x7e6e <verify_command_terminator>
     7de0:	89 81       	ldd	r24, Y+1	; 0x01
     7de2:	81 01       	movw	r16, r2
     7de4:	85 34       	cpi	r24, 0x45	; 69
@@ -269,7 +269,7 @@ Disassembly of section .text:
     7e10:	14 c0       	rjmp	.+40     	; 0x7e3a <main+0x23a>
     7e12:	85 37       	cpi	r24, 0x75	; 117
     7e14:	39 f4       	brne	.+14     	; 0x7e24 <main+0x224>
-    7e16:	2b d0       	rcall	.+86     	; 0x7e6e <verify_space>
+    7e16:	2b d0       	rcall	.+86     	; 0x7e6e <verify_command_terminator>
     7e18:	8e e1       	ldi	r24, 0x1E	; 30
     7e1a:	12 d0       	rcall	.+36     	; 0x7e40 <put_ch>
     7e1c:	85 e9       	ldi	r24, 0x95	; 149
@@ -284,7 +284,7 @@ Disassembly of section .text:
     7e2e:	a0 92 60 00 	sts	0x0060, r10
     7e32:	0f be       	out	0x3f, r0	; 63
     7e34:	90 92 60 00 	sts	0x0060, r9
-    7e38:	1a d0       	rcall	.+52     	; 0x7e6e <verify_space>
+    7e38:	1a d0       	rcall	.+52     	; 0x7e6e <verify_command_terminator>
     7e3a:	80 e1       	ldi	r24, 0x10	; 16
     7e3c:	01 d0       	rcall	.+2      	; 0x7e40 <put_ch>
     7e3e:	43 cf       	rjmp	.-378    	; 0x7cc6 <main+0xc6>
@@ -350,16 +350,16 @@ void put_ch(char ch)
 }
     7e6c:	08 95       	ret
 
-00007e6e <verify_space>:
+00007e6e <verify_command_terminator>:
 }
 
-void verify_space()
+void verify_command_terminator()
 {
 
     if (get_ch() == Sync_CRC_EOP){
     7e6e:	ef df       	rcall	.-34     	; 0x7e4e <get_ch>
     7e70:	80 32       	cpi	r24, 0x20	; 32
-    7e72:	11 f4       	brne	.+4      	; 0x7e78 <verify_space+0xa>
+    7e72:	11 f4       	brne	.+4      	; 0x7e78 <verify_command_terminator+0xa>
     7e74:	84 e1       	ldi	r24, 0x14	; 20
 
         put_ch(Resp_STK_INSYNC);
@@ -377,7 +377,7 @@ void verify_space()
     7e84:	80 93 60 00 	sts	0x0060, r24
     7e88:	0f be       	out	0x3f, r0	; 63
     7e8a:	20 93 60 00 	sts	0x0060, r18
-    7e8e:	ff cf       	rjmp	.-2      	; 0x7e8e <verify_space+0x20>
+    7e8e:	ff cf       	rjmp	.-2      	; 0x7e8e <verify_command_terminator+0x20>
 
 00007e90 <drop_ch>:
     return ch;
@@ -399,10 +399,10 @@ void drop_ch(uint8_t count)
     7e98:	e9 f7       	brne	.-6      	; 0x7e94 <drop_ch+0x4>
     7e9a:	cf 91       	pop	r28
 
-    verify_space();
+    verify_command_terminator();
 
 }
-    7e9c:	e8 cf       	rjmp	.-48     	; 0x7e6e <verify_space>
+    7e9c:	e8 cf       	rjmp	.-48     	; 0x7e6e <verify_command_terminator>
 
 00007e9e <start_application>:
 {

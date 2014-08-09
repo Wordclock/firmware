@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((secti
 
 void __attribute__((noinline)) put_ch(char ch);
 uint8_t __attribute__((noinline)) get_ch();
-void __attribute__((noinline)) verify_space();
+void __attribute__((noinline)) verify_command_terminator();
 
 static inline void drop_ch(uint8_t count);
 static inline void flash_leds(uint8_t count);
@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
         if (ch == Cmnd_STK_GET_PARAMETER) {
 
             uint8_t which = get_ch();
-            verify_space();
+            verify_command_terminator();
 
             if (which == Parm_STK_SW_MINOR) {
 
@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
             newAddress += newAddress;
             address = newAddress;
 
-            verify_space();
+            verify_command_terminator();
 
         } else if(ch == Cmnd_STK_UNIVERSAL) {
 
@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
             } while (--length);
 
             // Read command terminator, start reply
-            verify_space();
+            verify_command_terminator();
 
             write_memory(desttype, buff, address, savelength);
 
@@ -275,14 +275,14 @@ int main(int argc, char* argv[])
             length |= get_ch();
             desttype = get_ch();
 
-            verify_space();
+            verify_command_terminator();
 
             read_memory(desttype, address, length);
 
         } else if(ch == Cmnd_STK_READ_SIGN) {
 
             // READ SIGN - return what Avrdude wants to hear
-            verify_space();
+            verify_command_terminator();
             put_ch(SIGNATURE_0);
             put_ch(SIGNATURE_1);
             put_ch(SIGNATURE_2);
@@ -292,12 +292,12 @@ int main(int argc, char* argv[])
             // Adaboot no-wait mod
             wdt_enable(WDTO_15MS);
 
-            verify_space();
+            verify_command_terminator();
 
         } else {
 
             // This covers the response to commands like STK_ENTER_PROGMODE
-            verify_space();
+            verify_command_terminator();
 
         }
 
@@ -363,11 +363,11 @@ void drop_ch(uint8_t count)
 
     } while (--count);
 
-    verify_space();
+    verify_command_terminator();
 
 }
 
-void verify_space()
+void verify_command_terminator()
 {
 
     if (get_ch() == Sync_CRC_EOP){
