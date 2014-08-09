@@ -31,8 +31,8 @@
  * [1]: https://code.google.com/p/optiboot/
  */
 
-#define MAJOR_VERSION 6
-#define MINOR_VERSION 0
+#define WORDBOOT_MAJOR_VERSION 6
+#define WORDBOOT_MINOR_VERSION 0
 
 #include <inttypes.h>
 #include <avr/io.h>
@@ -198,11 +198,11 @@ int main(int argc, char* argv[])
 
             if (which == Parm_STK_SW_MINOR) {
 
-                put_ch(MINOR_VERSION);
+                put_ch(WORDBOOT_MINOR_VERSION);
 
             } else if (which == Parm_STK_SW_MAJOR) {
 
-                put_ch(MAJOR_VERSION);
+                put_ch(WORDBOOT_MAJOR_VERSION);
 
             } else {
 
