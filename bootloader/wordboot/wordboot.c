@@ -73,7 +73,7 @@ uint8_t __attribute__((noinline)) get_ch();
 void __attribute__((noinline)) verify_command_terminator();
 
 static inline void drop_ch(uint8_t count);
-static inline void flash_leds(uint8_t count);
+static inline void flash_start_leds(uint8_t count);
 static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint16_t length);
 static inline void read_memory(char memtype, uint16_t address, uint16_t length);
 
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     #if (LED_START_FLASHES > 0)
 
         // Flash LEDs to signal start of bootloader
-        flash_leds(LED_START_FLASHES * 2);
+        flash_start_leds(LED_START_FLASHES * 2);
 
     #endif
 
@@ -385,7 +385,7 @@ void verify_command_terminator()
 
 #if (LED_START_FLASHES > 0)
 
-    void flash_leds(uint8_t count)
+    void flash_start_leds(uint8_t count)
     {
 
         do {
