@@ -74,8 +74,8 @@ void __attribute__((noinline)) verify_command_terminator();
 
 static inline void drop_ch(uint8_t count);
 static inline void flash_start_leds(uint8_t count);
-static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint16_t length);
-static inline void read_memory(char memtype, uint16_t address, uint16_t length);
+static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint8_t length);
+static inline void read_memory(char memtype, uint16_t address, uint8_t length);
 
 void start_application(uint8_t reset_flags) __attribute__ ((naked));
 
@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
     uint8_t ch;
 
     uint16_t address = 0;
-    uint16_t length;
+    uint8_t length;
 
     // Adaboot no-wait mod
     ch = MCUSR;
@@ -233,9 +233,9 @@ int main(int argc, char* argv[])
             uint8_t desttype;
             uint8_t *bufPtr;
             uint16_t savelength;
-            // Length is big endian and is in bytes
-            length = get_ch() << 8;
-            length |= get_ch();
+            // Drop high byte of length
+            (void)get_ch();
+            length = get_ch();
             savelength = length;
             desttype = get_ch();
 
@@ -255,9 +255,9 @@ int main(int argc, char* argv[])
         } else if(ch == Cmnd_STK_READ_PAGE) {
 
             uint8_t desttype;
-            // length is big endian
-            length = get_ch() << 8;
-            length |= get_ch();
+            // Drop high byte of length
+            (void)get_ch();
+            length = get_ch();
             desttype = get_ch();
 
             verify_command_terminator();
@@ -405,7 +405,7 @@ void start_application(uint8_t reset_flags)
 
 }
 
-static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint16_t length)
+static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint8_t length)
 {
 
     switch (memtype) {
@@ -460,7 +460,7 @@ static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address,
 
 }
 
-static inline void read_memory(char memtype, uint16_t address, uint16_t length)
+static inline void read_memory(char memtype, uint16_t address, uint8_t length)
 {
 
     switch (memtype) {

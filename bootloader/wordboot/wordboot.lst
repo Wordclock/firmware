@@ -3,15 +3,15 @@ wordboot.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00007ee4  00000358  2**0
+  0 .data         00000000  00800100  00007ec6  0000033a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002e4  00007c00  00007c00  00000074  2**1
+  1 .text         000002c6  00007c00  00007c00  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .stab         00000eac  00000000  00000000  00000358  2**2
+  2 .stab         00000f30  00000000  00000000  0000033c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000d8e  00000000  00000000  00001204  2**0
+  3 .stabstr      00000dcf  00000000  00000000  0000126c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  00001f92  2**0
+  4 .comment      00000011  00000000  00000000  0000203b  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
@@ -23,7 +23,7 @@ Disassembly of section .text:
     7c06:	84 b7       	in	r24, 0x34	; 52
     7c08:	14 be       	out	0x34, r1	; 52
     7c0a:	83 fd       	sbrc	r24, 3
-    7c0c:	49 d1       	rcall	.+658    	; 0x7ea0 <start_application>
+    7c0c:	3a d1       	rcall	.+628    	; 0x7e82 <start_application>
     7c0e:	85 e0       	ldi	r24, 0x05	; 5
     7c10:	80 93 81 00 	sts	0x0081, r24
     7c14:	82 e0       	ldi	r24, 0x02	; 2
@@ -90,368 +90,353 @@ Disassembly of section .text:
     7ca2:	a9 f7       	brne	.-22     	; 0x7c8e <main+0x8e>
     7ca4:	21 2c       	mov	r2, r1
     7ca6:	31 2c       	mov	r3, r1
-    7ca8:	58 e1       	ldi	r21, 0x18	; 24
-    7caa:	a5 2e       	mov	r10, r21
-    7cac:	b1 2c       	mov	r11, r1
-    7cae:	68 e0       	ldi	r22, 0x08	; 8
-    7cb0:	96 2e       	mov	r9, r22
-    7cb2:	73 e0       	ldi	r23, 0x03	; 3
-    7cb4:	87 2e       	mov	r8, r23
-    7cb6:	77 24       	eor	r7, r7
-    7cb8:	73 94       	inc	r7
-    7cba:	e5 e0       	ldi	r30, 0x05	; 5
-    7cbc:	6e 2e       	mov	r6, r30
-    7cbe:	f1 e1       	ldi	r31, 0x11	; 17
-    7cc0:	5f 2e       	mov	r5, r31
-    7cc2:	c6 d0       	rcall	.+396    	; 0x7e50 <get_ch>
-    7cc4:	81 34       	cpi	r24, 0x41	; 65
-    7cc6:	69 f4       	brne	.+26     	; 0x7ce2 <main+0xe2>
-    7cc8:	c3 d0       	rcall	.+390    	; 0x7e50 <get_ch>
-    7cca:	89 83       	std	Y+1, r24	; 0x01
-    7ccc:	d1 d0       	rcall	.+418    	; 0x7e70 <verify_command_terminator>
-    7cce:	89 81       	ldd	r24, Y+1	; 0x01
-    7cd0:	82 38       	cpi	r24, 0x82	; 130
-    7cd2:	f9 f0       	breq	.+62     	; 0x7d12 <main+0x112>
-    7cd4:	81 38       	cpi	r24, 0x81	; 129
-    7cd6:	11 f4       	brne	.+4      	; 0x7cdc <main+0xdc>
-    7cd8:	86 e0       	ldi	r24, 0x06	; 6
-    7cda:	01 c0       	rjmp	.+2      	; 0x7cde <main+0xde>
-    7cdc:	83 e0       	ldi	r24, 0x03	; 3
-    7cde:	b1 d0       	rcall	.+354    	; 0x7e42 <put_ch>
-    7ce0:	ad c0       	rjmp	.+346    	; 0x7e3c <main+0x23c>
-    7ce2:	82 34       	cpi	r24, 0x42	; 66
-    7ce4:	11 f4       	brne	.+4      	; 0x7cea <main+0xea>
-    7ce6:	84 e1       	ldi	r24, 0x14	; 20
-    7ce8:	03 c0       	rjmp	.+6      	; 0x7cf0 <main+0xf0>
-    7cea:	85 34       	cpi	r24, 0x45	; 69
-    7cec:	19 f4       	brne	.+6      	; 0x7cf4 <main+0xf4>
-    7cee:	85 e0       	ldi	r24, 0x05	; 5
-    7cf0:	d0 d0       	rcall	.+416    	; 0x7e92 <drop_ch>
-    7cf2:	a4 c0       	rjmp	.+328    	; 0x7e3c <main+0x23c>
-    7cf4:	85 35       	cpi	r24, 0x55	; 85
-    7cf6:	49 f4       	brne	.+18     	; 0x7d0a <main+0x10a>
-    7cf8:	ab d0       	rcall	.+342    	; 0x7e50 <get_ch>
-    7cfa:	18 2f       	mov	r17, r24
-    7cfc:	a9 d0       	rcall	.+338    	; 0x7e50 <get_ch>
-    7cfe:	21 2e       	mov	r2, r17
-    7d00:	31 2c       	mov	r3, r1
-    7d02:	38 2a       	or	r3, r24
-    7d04:	22 0c       	add	r2, r2
-    7d06:	33 1c       	adc	r3, r3
-    7d08:	98 c0       	rjmp	.+304    	; 0x7e3a <main+0x23a>
-    7d0a:	86 35       	cpi	r24, 0x56	; 86
-    7d0c:	21 f4       	brne	.+8      	; 0x7d16 <main+0x116>
-    7d0e:	84 e0       	ldi	r24, 0x04	; 4
-    7d10:	c0 d0       	rcall	.+384    	; 0x7e92 <drop_ch>
-    7d12:	80 e0       	ldi	r24, 0x00	; 0
-    7d14:	e4 cf       	rjmp	.-56     	; 0x7cde <main+0xde>
-    7d16:	84 36       	cpi	r24, 0x64	; 100
-    7d18:	09 f0       	breq	.+2      	; 0x7d1c <main+0x11c>
-    7d1a:	54 c0       	rjmp	.+168    	; 0x7dc4 <main+0x1c4>
-    7d1c:	99 d0       	rcall	.+306    	; 0x7e50 <get_ch>
-    7d1e:	08 2f       	mov	r16, r24
-    7d20:	10 e0       	ldi	r17, 0x00	; 0
-    7d22:	10 2f       	mov	r17, r16
-    7d24:	00 27       	eor	r16, r16
-    7d26:	94 d0       	rcall	.+296    	; 0x7e50 <get_ch>
-    7d28:	08 2b       	or	r16, r24
-    7d2a:	92 d0       	rcall	.+292    	; 0x7e50 <get_ch>
-    7d2c:	48 2e       	mov	r4, r24
-    7d2e:	68 01       	movw	r12, r16
-    7d30:	e1 2c       	mov	r14, r1
-    7d32:	ff 24       	eor	r15, r15
-    7d34:	f3 94       	inc	r15
-    7d36:	8c d0       	rcall	.+280    	; 0x7e50 <get_ch>
-    7d38:	f7 01       	movw	r30, r14
-    7d3a:	81 93       	st	Z+, r24
-    7d3c:	7f 01       	movw	r14, r30
-    7d3e:	f1 e0       	ldi	r31, 0x01	; 1
-    7d40:	cf 1a       	sub	r12, r31
-    7d42:	d1 08       	sbc	r13, r1
-    7d44:	c1 f7       	brne	.-16     	; 0x7d36 <main+0x136>
-    7d46:	94 d0       	rcall	.+296    	; 0x7e70 <verify_command_terminator>
-    7d48:	85 e4       	ldi	r24, 0x45	; 69
-    7d4a:	48 12       	cpse	r4, r24
-    7d4c:	12 c0       	rjmp	.+36     	; 0x7d72 <main+0x172>
-    7d4e:	13 95       	inc	r17
-    7d50:	61 01       	movw	r12, r2
-    7d52:	e1 2c       	mov	r14, r1
-    7d54:	ff 24       	eor	r15, r15
-    7d56:	f3 94       	inc	r15
-    7d58:	e0 16       	cp	r14, r16
-    7d5a:	f1 06       	cpc	r15, r17
-    7d5c:	09 f4       	brne	.+2      	; 0x7d60 <main+0x160>
-    7d5e:	6e c0       	rjmp	.+220    	; 0x7e3c <main+0x23c>
-    7d60:	f7 01       	movw	r30, r14
-    7d62:	61 91       	ld	r22, Z+
-    7d64:	7f 01       	movw	r14, r30
-    7d66:	c6 01       	movw	r24, r12
-    7d68:	af d0       	rcall	.+350    	; 0x7ec8 <__eewr_byte_m328p>
-    7d6a:	ff ef       	ldi	r31, 0xFF	; 255
-    7d6c:	cf 1a       	sub	r12, r31
-    7d6e:	df 0a       	sbc	r13, r31
-    7d70:	f3 cf       	rjmp	.-26     	; 0x7d58 <main+0x158>
-    7d72:	f1 01       	movw	r30, r2
-    7d74:	80 92 57 00 	sts	0x0057, r8
-    7d78:	e8 95       	spm
-    7d7a:	07 b6       	in	r0, 0x37	; 55
-    7d7c:	00 fc       	sbrc	r0, 0
-    7d7e:	fd cf       	rjmp	.-6      	; 0x7d7a <main+0x17a>
-    7d80:	80 e0       	ldi	r24, 0x00	; 0
-    7d82:	90 e0       	ldi	r25, 0x00	; 0
-    7d84:	fc 01       	movw	r30, r24
-    7d86:	f3 95       	inc	r31
-    7d88:	20 81       	ld	r18, Z
-    7d8a:	fc 01       	movw	r30, r24
-    7d8c:	e2 0d       	add	r30, r2
-    7d8e:	f3 1d       	adc	r31, r3
-    7d90:	dc 01       	movw	r26, r24
-    7d92:	af 5f       	subi	r26, 0xFF	; 255
-    7d94:	be 4f       	sbci	r27, 0xFE	; 254
-    7d96:	4c 91       	ld	r20, X
-    7d98:	30 e0       	ldi	r19, 0x00	; 0
-    7d9a:	34 2b       	or	r19, r20
-    7d9c:	09 01       	movw	r0, r18
-    7d9e:	70 92 57 00 	sts	0x0057, r7
-    7da2:	e8 95       	spm
-    7da4:	11 24       	eor	r1, r1
-    7da6:	02 96       	adiw	r24, 0x02	; 2
-    7da8:	08 17       	cp	r16, r24
-    7daa:	19 07       	cpc	r17, r25
-    7dac:	59 f7       	brne	.-42     	; 0x7d84 <main+0x184>
-    7dae:	f1 01       	movw	r30, r2
-    7db0:	60 92 57 00 	sts	0x0057, r6
-    7db4:	e8 95       	spm
-    7db6:	07 b6       	in	r0, 0x37	; 55
-    7db8:	00 fc       	sbrc	r0, 0
-    7dba:	fd cf       	rjmp	.-6      	; 0x7db6 <main+0x1b6>
-    7dbc:	50 92 57 00 	sts	0x0057, r5
-    7dc0:	e8 95       	spm
-    7dc2:	3c c0       	rjmp	.+120    	; 0x7e3c <main+0x23c>
-    7dc4:	84 37       	cpi	r24, 0x74	; 116
-    7dc6:	31 f5       	brne	.+76     	; 0x7e14 <main+0x214>
-    7dc8:	43 d0       	rcall	.+134    	; 0x7e50 <get_ch>
-    7dca:	08 2f       	mov	r16, r24
-    7dcc:	10 e0       	ldi	r17, 0x00	; 0
-    7dce:	10 2f       	mov	r17, r16
-    7dd0:	00 27       	eor	r16, r16
-    7dd2:	3e d0       	rcall	.+124    	; 0x7e50 <get_ch>
-    7dd4:	08 2b       	or	r16, r24
-    7dd6:	3c d0       	rcall	.+120    	; 0x7e50 <get_ch>
-    7dd8:	89 83       	std	Y+1, r24	; 0x01
-    7dda:	4a d0       	rcall	.+148    	; 0x7e70 <verify_command_terminator>
-    7ddc:	89 81       	ldd	r24, Y+1	; 0x01
-    7dde:	85 34       	cpi	r24, 0x45	; 69
-    7de0:	69 f4       	brne	.+26     	; 0x7dfc <main+0x1fc>
-    7de2:	71 01       	movw	r14, r2
-    7de4:	c7 01       	movw	r24, r14
-    7de6:	68 d0       	rcall	.+208    	; 0x7eb8 <__eerd_byte_m328p>
-    7de8:	2c d0       	rcall	.+88     	; 0x7e42 <put_ch>
-    7dea:	01 50       	subi	r16, 0x01	; 1
-    7dec:	11 09       	sbc	r17, r1
-    7dee:	ff ef       	ldi	r31, 0xFF	; 255
-    7df0:	ef 1a       	sub	r14, r31
-    7df2:	ff 0a       	sbc	r15, r31
-    7df4:	01 15       	cp	r16, r1
-    7df6:	11 05       	cpc	r17, r1
-    7df8:	a9 f7       	brne	.-22     	; 0x7de4 <main+0x1e4>
-    7dfa:	20 c0       	rjmp	.+64     	; 0x7e3c <main+0x23c>
-    7dfc:	f1 01       	movw	r30, r2
-    7dfe:	7f 01       	movw	r14, r30
-    7e00:	8f ef       	ldi	r24, 0xFF	; 255
-    7e02:	e8 1a       	sub	r14, r24
-    7e04:	f8 0a       	sbc	r15, r24
-    7e06:	84 91       	lpm	r24, Z
-    7e08:	1c d0       	rcall	.+56     	; 0x7e42 <put_ch>
-    7e0a:	01 50       	subi	r16, 0x01	; 1
-    7e0c:	11 09       	sbc	r17, r1
-    7e0e:	f7 01       	movw	r30, r14
-    7e10:	b1 f7       	brne	.-20     	; 0x7dfe <main+0x1fe>
-    7e12:	14 c0       	rjmp	.+40     	; 0x7e3c <main+0x23c>
-    7e14:	85 37       	cpi	r24, 0x75	; 117
-    7e16:	39 f4       	brne	.+14     	; 0x7e26 <main+0x226>
-    7e18:	2b d0       	rcall	.+86     	; 0x7e70 <verify_command_terminator>
-    7e1a:	8e e1       	ldi	r24, 0x1E	; 30
-    7e1c:	12 d0       	rcall	.+36     	; 0x7e42 <put_ch>
-    7e1e:	85 e9       	ldi	r24, 0x95	; 149
-    7e20:	10 d0       	rcall	.+32     	; 0x7e42 <put_ch>
-    7e22:	8f e0       	ldi	r24, 0x0F	; 15
-    7e24:	5c cf       	rjmp	.-328    	; 0x7cde <main+0xde>
-    7e26:	81 35       	cpi	r24, 0x51	; 81
-    7e28:	41 f4       	brne	.+16     	; 0x7e3a <main+0x23a>
-    7e2a:	0f b6       	in	r0, 0x3f	; 63
-    7e2c:	f8 94       	cli
-    7e2e:	a8 95       	wdr
-    7e30:	a0 92 60 00 	sts	0x0060, r10
-    7e34:	0f be       	out	0x3f, r0	; 63
-    7e36:	90 92 60 00 	sts	0x0060, r9
-    7e3a:	1a d0       	rcall	.+52     	; 0x7e70 <verify_command_terminator>
-    7e3c:	80 e1       	ldi	r24, 0x10	; 16
-    7e3e:	01 d0       	rcall	.+2      	; 0x7e42 <put_ch>
-    7e40:	40 cf       	rjmp	.-384    	; 0x7cc2 <main+0xc2>
+    7ca8:	08 e1       	ldi	r16, 0x18	; 24
+    7caa:	10 e0       	ldi	r17, 0x00	; 0
+    7cac:	38 e0       	ldi	r19, 0x08	; 8
+    7cae:	f3 2e       	mov	r15, r19
+    7cb0:	43 e0       	ldi	r20, 0x03	; 3
+    7cb2:	e4 2e       	mov	r14, r20
+    7cb4:	dd 24       	eor	r13, r13
+    7cb6:	d3 94       	inc	r13
+    7cb8:	55 e0       	ldi	r21, 0x05	; 5
+    7cba:	c5 2e       	mov	r12, r21
+    7cbc:	61 e1       	ldi	r22, 0x11	; 17
+    7cbe:	96 2e       	mov	r9, r22
+    7cc0:	b8 d0       	rcall	.+368    	; 0x7e32 <get_ch>
+    7cc2:	81 34       	cpi	r24, 0x41	; 65
+    7cc4:	69 f4       	brne	.+26     	; 0x7ce0 <main+0xe0>
+    7cc6:	b5 d0       	rcall	.+362    	; 0x7e32 <get_ch>
+    7cc8:	89 83       	std	Y+1, r24	; 0x01
+    7cca:	c3 d0       	rcall	.+390    	; 0x7e52 <verify_command_terminator>
+    7ccc:	89 81       	ldd	r24, Y+1	; 0x01
+    7cce:	82 38       	cpi	r24, 0x82	; 130
+    7cd0:	f9 f0       	breq	.+62     	; 0x7d10 <main+0x110>
+    7cd2:	81 38       	cpi	r24, 0x81	; 129
+    7cd4:	11 f4       	brne	.+4      	; 0x7cda <main+0xda>
+    7cd6:	86 e0       	ldi	r24, 0x06	; 6
+    7cd8:	01 c0       	rjmp	.+2      	; 0x7cdc <main+0xdc>
+    7cda:	83 e0       	ldi	r24, 0x03	; 3
+    7cdc:	a3 d0       	rcall	.+326    	; 0x7e24 <put_ch>
+    7cde:	9f c0       	rjmp	.+318    	; 0x7e1e <main+0x21e>
+    7ce0:	82 34       	cpi	r24, 0x42	; 66
+    7ce2:	11 f4       	brne	.+4      	; 0x7ce8 <main+0xe8>
+    7ce4:	84 e1       	ldi	r24, 0x14	; 20
+    7ce6:	03 c0       	rjmp	.+6      	; 0x7cee <main+0xee>
+    7ce8:	85 34       	cpi	r24, 0x45	; 69
+    7cea:	19 f4       	brne	.+6      	; 0x7cf2 <main+0xf2>
+    7cec:	85 e0       	ldi	r24, 0x05	; 5
+    7cee:	c2 d0       	rcall	.+388    	; 0x7e74 <drop_ch>
+    7cf0:	96 c0       	rjmp	.+300    	; 0x7e1e <main+0x21e>
+    7cf2:	85 35       	cpi	r24, 0x55	; 85
+    7cf4:	49 f4       	brne	.+18     	; 0x7d08 <main+0x108>
+    7cf6:	9d d0       	rcall	.+314    	; 0x7e32 <get_ch>
+    7cf8:	b8 2e       	mov	r11, r24
+    7cfa:	9b d0       	rcall	.+310    	; 0x7e32 <get_ch>
+    7cfc:	2b 2c       	mov	r2, r11
+    7cfe:	31 2c       	mov	r3, r1
+    7d00:	38 2a       	or	r3, r24
+    7d02:	22 0c       	add	r2, r2
+    7d04:	33 1c       	adc	r3, r3
+    7d06:	8a c0       	rjmp	.+276    	; 0x7e1c <main+0x21c>
+    7d08:	86 35       	cpi	r24, 0x56	; 86
+    7d0a:	21 f4       	brne	.+8      	; 0x7d14 <main+0x114>
+    7d0c:	84 e0       	ldi	r24, 0x04	; 4
+    7d0e:	b2 d0       	rcall	.+356    	; 0x7e74 <drop_ch>
+    7d10:	80 e0       	ldi	r24, 0x00	; 0
+    7d12:	e4 cf       	rjmp	.-56     	; 0x7cdc <main+0xdc>
+    7d14:	84 36       	cpi	r24, 0x64	; 100
+    7d16:	09 f0       	breq	.+2      	; 0x7d1a <main+0x11a>
+    7d18:	4d c0       	rjmp	.+154    	; 0x7db4 <main+0x1b4>
+    7d1a:	8b d0       	rcall	.+278    	; 0x7e32 <get_ch>
+    7d1c:	8a d0       	rcall	.+276    	; 0x7e32 <get_ch>
+    7d1e:	88 2e       	mov	r8, r24
+    7d20:	a8 2e       	mov	r10, r24
+    7d22:	b1 2c       	mov	r11, r1
+    7d24:	86 d0       	rcall	.+268    	; 0x7e32 <get_ch>
+    7d26:	58 2e       	mov	r5, r24
+    7d28:	61 2c       	mov	r6, r1
+    7d2a:	77 24       	eor	r7, r7
+    7d2c:	73 94       	inc	r7
+    7d2e:	81 d0       	rcall	.+258    	; 0x7e32 <get_ch>
+    7d30:	f3 01       	movw	r30, r6
+    7d32:	81 93       	st	Z+, r24
+    7d34:	3f 01       	movw	r6, r30
+    7d36:	f1 e0       	ldi	r31, 0x01	; 1
+    7d38:	af 1a       	sub	r10, r31
+    7d3a:	b1 08       	sbc	r11, r1
+    7d3c:	c1 f7       	brne	.-16     	; 0x7d2e <main+0x12e>
+    7d3e:	89 d0       	rcall	.+274    	; 0x7e52 <verify_command_terminator>
+    7d40:	85 e4       	ldi	r24, 0x45	; 69
+    7d42:	58 12       	cpse	r5, r24
+    7d44:	10 c0       	rjmp	.+32     	; 0x7d66 <main+0x166>
+    7d46:	31 01       	movw	r6, r2
+    7d48:	a1 2c       	mov	r10, r1
+    7d4a:	bb 24       	eor	r11, r11
+    7d4c:	b3 94       	inc	r11
+    7d4e:	8a 14       	cp	r8, r10
+    7d50:	09 f4       	brne	.+2      	; 0x7d54 <main+0x154>
+    7d52:	65 c0       	rjmp	.+202    	; 0x7e1e <main+0x21e>
+    7d54:	f5 01       	movw	r30, r10
+    7d56:	61 91       	ld	r22, Z+
+    7d58:	5f 01       	movw	r10, r30
+    7d5a:	c3 01       	movw	r24, r6
+    7d5c:	a6 d0       	rcall	.+332    	; 0x7eaa <__eewr_byte_m328p>
+    7d5e:	ff ef       	ldi	r31, 0xFF	; 255
+    7d60:	6f 1a       	sub	r6, r31
+    7d62:	7f 0a       	sbc	r7, r31
+    7d64:	f4 cf       	rjmp	.-24     	; 0x7d4e <main+0x14e>
+    7d66:	f1 01       	movw	r30, r2
+    7d68:	e0 92 57 00 	sts	0x0057, r14
+    7d6c:	e8 95       	spm
+    7d6e:	07 b6       	in	r0, 0x37	; 55
+    7d70:	00 fc       	sbrc	r0, 0
+    7d72:	fd cf       	rjmp	.-6      	; 0x7d6e <main+0x16e>
+    7d74:	a1 01       	movw	r20, r2
+    7d76:	a0 e0       	ldi	r26, 0x00	; 0
+    7d78:	b1 e0       	ldi	r27, 0x01	; 1
+    7d7a:	2c 91       	ld	r18, X
+    7d7c:	12 96       	adiw	r26, 0x02	; 2
+    7d7e:	cd 01       	movw	r24, r26
+    7d80:	01 97       	sbiw	r24, 0x01	; 1
+    7d82:	fc 01       	movw	r30, r24
+    7d84:	80 81       	ld	r24, Z
+    7d86:	30 e0       	ldi	r19, 0x00	; 0
+    7d88:	38 2b       	or	r19, r24
+    7d8a:	fa 01       	movw	r30, r20
+    7d8c:	09 01       	movw	r0, r18
+    7d8e:	d0 92 57 00 	sts	0x0057, r13
+    7d92:	e8 95       	spm
+    7d94:	11 24       	eor	r1, r1
+    7d96:	4e 5f       	subi	r20, 0xFE	; 254
+    7d98:	5f 4f       	sbci	r21, 0xFF	; 255
+    7d9a:	8a 12       	cpse	r8, r26
+    7d9c:	ee cf       	rjmp	.-36     	; 0x7d7a <main+0x17a>
+    7d9e:	f1 01       	movw	r30, r2
+    7da0:	c0 92 57 00 	sts	0x0057, r12
+    7da4:	e8 95       	spm
+    7da6:	07 b6       	in	r0, 0x37	; 55
+    7da8:	00 fc       	sbrc	r0, 0
+    7daa:	fd cf       	rjmp	.-6      	; 0x7da6 <main+0x1a6>
+    7dac:	90 92 57 00 	sts	0x0057, r9
+    7db0:	e8 95       	spm
+    7db2:	35 c0       	rjmp	.+106    	; 0x7e1e <main+0x21e>
+    7db4:	84 37       	cpi	r24, 0x74	; 116
+    7db6:	f9 f4       	brne	.+62     	; 0x7df6 <main+0x1f6>
+    7db8:	3c d0       	rcall	.+120    	; 0x7e32 <get_ch>
+    7dba:	3b d0       	rcall	.+118    	; 0x7e32 <get_ch>
+    7dbc:	88 2e       	mov	r8, r24
+    7dbe:	39 d0       	rcall	.+114    	; 0x7e32 <get_ch>
+    7dc0:	89 83       	std	Y+1, r24	; 0x01
+    7dc2:	47 d0       	rcall	.+142    	; 0x7e52 <verify_command_terminator>
+    7dc4:	82 0c       	add	r8, r2
+    7dc6:	89 81       	ldd	r24, Y+1	; 0x01
+    7dc8:	85 34       	cpi	r24, 0x45	; 69
+    7dca:	51 f4       	brne	.+20     	; 0x7de0 <main+0x1e0>
+    7dcc:	51 01       	movw	r10, r2
+    7dce:	c5 01       	movw	r24, r10
+    7dd0:	64 d0       	rcall	.+200    	; 0x7e9a <__eerd_byte_m328p>
+    7dd2:	28 d0       	rcall	.+80     	; 0x7e24 <put_ch>
+    7dd4:	ff ef       	ldi	r31, 0xFF	; 255
+    7dd6:	af 1a       	sub	r10, r31
+    7dd8:	bf 0a       	sbc	r11, r31
+    7dda:	8a 10       	cpse	r8, r10
+    7ddc:	f8 cf       	rjmp	.-16     	; 0x7dce <main+0x1ce>
+    7dde:	1f c0       	rjmp	.+62     	; 0x7e1e <main+0x21e>
+    7de0:	f1 01       	movw	r30, r2
+    7de2:	5f 01       	movw	r10, r30
+    7de4:	8f ef       	ldi	r24, 0xFF	; 255
+    7de6:	a8 1a       	sub	r10, r24
+    7de8:	b8 0a       	sbc	r11, r24
+    7dea:	84 91       	lpm	r24, Z
+    7dec:	1b d0       	rcall	.+54     	; 0x7e24 <put_ch>
+    7dee:	f5 01       	movw	r30, r10
+    7df0:	8a 10       	cpse	r8, r10
+    7df2:	f7 cf       	rjmp	.-18     	; 0x7de2 <main+0x1e2>
+    7df4:	14 c0       	rjmp	.+40     	; 0x7e1e <main+0x21e>
+    7df6:	85 37       	cpi	r24, 0x75	; 117
+    7df8:	39 f4       	brne	.+14     	; 0x7e08 <main+0x208>
+    7dfa:	2b d0       	rcall	.+86     	; 0x7e52 <verify_command_terminator>
+    7dfc:	8e e1       	ldi	r24, 0x1E	; 30
+    7dfe:	12 d0       	rcall	.+36     	; 0x7e24 <put_ch>
+    7e00:	85 e9       	ldi	r24, 0x95	; 149
+    7e02:	10 d0       	rcall	.+32     	; 0x7e24 <put_ch>
+    7e04:	8f e0       	ldi	r24, 0x0F	; 15
+    7e06:	6a cf       	rjmp	.-300    	; 0x7cdc <main+0xdc>
+    7e08:	81 35       	cpi	r24, 0x51	; 81
+    7e0a:	41 f4       	brne	.+16     	; 0x7e1c <main+0x21c>
+    7e0c:	0f b6       	in	r0, 0x3f	; 63
+    7e0e:	f8 94       	cli
+    7e10:	a8 95       	wdr
+    7e12:	00 93 60 00 	sts	0x0060, r16
+    7e16:	0f be       	out	0x3f, r0	; 63
+    7e18:	f0 92 60 00 	sts	0x0060, r15
+    7e1c:	1a d0       	rcall	.+52     	; 0x7e52 <verify_command_terminator>
+    7e1e:	80 e1       	ldi	r24, 0x10	; 16
+    7e20:	01 d0       	rcall	.+2      	; 0x7e24 <put_ch>
+    7e22:	4e cf       	rjmp	.-356    	; 0x7cc0 <main+0xc0>
 
-00007e42 <put_ch>:
+00007e24 <put_ch>:
 }
 
 void put_ch(char ch)
 {
 
     while (!(UCSR0A & _BV(UDRE0)));
-    7e42:	90 91 c0 00 	lds	r25, 0x00C0
-    7e46:	95 ff       	sbrs	r25, 5
-    7e48:	fc cf       	rjmp	.-8      	; 0x7e42 <put_ch>
+    7e24:	90 91 c0 00 	lds	r25, 0x00C0
+    7e28:	95 ff       	sbrs	r25, 5
+    7e2a:	fc cf       	rjmp	.-8      	; 0x7e24 <put_ch>
     UDR0 = ch;
-    7e4a:	80 93 c6 00 	sts	0x00C6, r24
-    7e4e:	08 95       	ret
+    7e2c:	80 93 c6 00 	sts	0x00C6, r24
+    7e30:	08 95       	ret
 
-00007e50 <get_ch>:
+00007e32 <get_ch>:
 
     uint8_t ch;
 
     #ifdef LED_DATA_FLASH
 
         PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
-    7e50:	88 e6       	ldi	r24, 0x68	; 104
-    7e52:	89 b9       	out	0x09, r24	; 9
+    7e32:	88 e6       	ldi	r24, 0x68	; 104
+    7e34:	89 b9       	out	0x09, r24	; 9
 
     #endif
 
     while(!(UCSR0A & _BV(RXC0)));
-    7e54:	80 91 c0 00 	lds	r24, 0x00C0
-    7e58:	87 ff       	sbrs	r24, 7
-    7e5a:	fc cf       	rjmp	.-8      	; 0x7e54 <get_ch+0x4>
+    7e36:	80 91 c0 00 	lds	r24, 0x00C0
+    7e3a:	87 ff       	sbrs	r24, 7
+    7e3c:	fc cf       	rjmp	.-8      	; 0x7e36 <get_ch+0x4>
      * expects to be talking to the application, and DON'T reset the
      * watchdog.  This should cause the bootloader to abort and run
      * the application "soon", if it keeps happening.  (Note that we
      * don't care that an invalid char is returned...)
      */
     if (!(UCSR0A & _BV(FE0))) {
-    7e5c:	80 91 c0 00 	lds	r24, 0x00C0
-    7e60:	84 fd       	sbrc	r24, 4
-    7e62:	01 c0       	rjmp	.+2      	; 0x7e66 <get_ch+0x16>
+    7e3e:	80 91 c0 00 	lds	r24, 0x00C0
+    7e42:	84 fd       	sbrc	r24, 4
+    7e44:	01 c0       	rjmp	.+2      	; 0x7e48 <get_ch+0x16>
 
         wdt_reset();
-    7e64:	a8 95       	wdr
+    7e46:	a8 95       	wdr
 
     }
 
     ch = UDR0;
-    7e66:	80 91 c6 00 	lds	r24, 0x00C6
+    7e48:	80 91 c6 00 	lds	r24, 0x00C6
 
     #ifdef LED_DATA_FLASH
 
         PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
-    7e6a:	98 e6       	ldi	r25, 0x68	; 104
-    7e6c:	99 b9       	out	0x09, r25	; 9
+    7e4c:	98 e6       	ldi	r25, 0x68	; 104
+    7e4e:	99 b9       	out	0x09, r25	; 9
 
     #endif
 
     return ch;
 
 }
-    7e6e:	08 95       	ret
+    7e50:	08 95       	ret
 
-00007e70 <verify_command_terminator>:
+00007e52 <verify_command_terminator>:
 }
 
 void verify_command_terminator()
 {
 
     if (get_ch() == Sync_CRC_EOP){
-    7e70:	ef df       	rcall	.-34     	; 0x7e50 <get_ch>
-    7e72:	80 32       	cpi	r24, 0x20	; 32
-    7e74:	11 f4       	brne	.+4      	; 0x7e7a <verify_command_terminator+0xa>
-    7e76:	84 e1       	ldi	r24, 0x14	; 20
+    7e52:	ef df       	rcall	.-34     	; 0x7e32 <get_ch>
+    7e54:	80 32       	cpi	r24, 0x20	; 32
+    7e56:	11 f4       	brne	.+4      	; 0x7e5c <verify_command_terminator+0xa>
+    7e58:	84 e1       	ldi	r24, 0x14	; 20
 
         put_ch(Resp_STK_INSYNC);
-    7e78:	e4 cf       	rjmp	.-56     	; 0x7e42 <put_ch>
-    7e7a:	28 e0       	ldi	r18, 0x08	; 8
-    7e7c:	88 e1       	ldi	r24, 0x18	; 24
+    7e5a:	e4 cf       	rjmp	.-56     	; 0x7e24 <put_ch>
+    7e5c:	28 e0       	ldi	r18, 0x08	; 8
+    7e5e:	88 e1       	ldi	r24, 0x18	; 24
 
     } else {
 
         wdt_enable(WDTO_15MS);
-    7e7e:	90 e0       	ldi	r25, 0x00	; 0
-    7e80:	0f b6       	in	r0, 0x3f	; 63
-    7e82:	f8 94       	cli
-    7e84:	a8 95       	wdr
-    7e86:	80 93 60 00 	sts	0x0060, r24
-    7e8a:	0f be       	out	0x3f, r0	; 63
-    7e8c:	20 93 60 00 	sts	0x0060, r18
-    7e90:	ff cf       	rjmp	.-2      	; 0x7e90 <verify_command_terminator+0x20>
+    7e60:	90 e0       	ldi	r25, 0x00	; 0
+    7e62:	0f b6       	in	r0, 0x3f	; 63
+    7e64:	f8 94       	cli
+    7e66:	a8 95       	wdr
+    7e68:	80 93 60 00 	sts	0x0060, r24
+    7e6c:	0f be       	out	0x3f, r0	; 63
+    7e6e:	20 93 60 00 	sts	0x0060, r18
+    7e72:	ff cf       	rjmp	.-2      	; 0x7e72 <verify_command_terminator+0x20>
 
-00007e92 <drop_ch>:
+00007e74 <drop_ch>:
     return ch;
 
 }
 
 void drop_ch(uint8_t count)
 {
-    7e92:	cf 93       	push	r28
-    7e94:	c8 2f       	mov	r28, r24
+    7e74:	cf 93       	push	r28
+    7e76:	c8 2f       	mov	r28, r24
 
     do {
 
         get_ch();
-    7e96:	dc df       	rcall	.-72     	; 0x7e50 <get_ch>
-    7e98:	c1 50       	subi	r28, 0x01	; 1
+    7e78:	dc df       	rcall	.-72     	; 0x7e32 <get_ch>
+    7e7a:	c1 50       	subi	r28, 0x01	; 1
 
     } while (--count);
-    7e9a:	e9 f7       	brne	.-6      	; 0x7e96 <drop_ch+0x4>
-    7e9c:	cf 91       	pop	r28
+    7e7c:	e9 f7       	brne	.-6      	; 0x7e78 <drop_ch+0x4>
+    7e7e:	cf 91       	pop	r28
 
     verify_command_terminator();
 
 }
-    7e9e:	e8 cf       	rjmp	.-48     	; 0x7e70 <verify_command_terminator>
+    7e80:	e8 cf       	rjmp	.-48     	; 0x7e52 <verify_command_terminator>
 
-00007ea0 <start_application>:
+00007e82 <start_application>:
 {
 
     // Save the reset flags in the designated register
     // This can be accessed in a main program by putting code in .init0 (which
     // executes before normal C init code) to save R2 to a global variable.
     __asm__ __volatile__ ("mov r2, %0\n" :: "r" (reset_flags));
-    7ea0:	28 2e       	mov	r2, r24
+    7e82:	28 2e       	mov	r2, r24
 
     wdt_disable();
-    7ea2:	88 e1       	ldi	r24, 0x18	; 24
-    7ea4:	0f b6       	in	r0, 0x3f	; 63
-    7ea6:	f8 94       	cli
-    7ea8:	80 93 60 00 	sts	0x0060, r24
-    7eac:	10 92 60 00 	sts	0x0060, r1
-    7eb0:	0f be       	out	0x3f, r0	; 63
+    7e84:	88 e1       	ldi	r24, 0x18	; 24
+    7e86:	0f b6       	in	r0, 0x3f	; 63
+    7e88:	f8 94       	cli
+    7e8a:	80 93 60 00 	sts	0x0060, r24
+    7e8e:	10 92 60 00 	sts	0x0060, r1
+    7e92:	0f be       	out	0x3f, r0	; 63
 
     // Jump to reset vector
     ((void(*)(void)) 0x0000)();
-    7eb2:	e0 e0       	ldi	r30, 0x00	; 0
-    7eb4:	f0 e0       	ldi	r31, 0x00	; 0
-    7eb6:	09 95       	icall
+    7e94:	e0 e0       	ldi	r30, 0x00	; 0
+    7e96:	f0 e0       	ldi	r31, 0x00	; 0
+    7e98:	09 95       	icall
 
-00007eb8 <__eerd_byte_m328p>:
-    7eb8:	f9 99       	sbic	0x1f, 1	; 31
-    7eba:	fe cf       	rjmp	.-4      	; 0x7eb8 <__eerd_byte_m328p>
-    7ebc:	92 bd       	out	0x22, r25	; 34
-    7ebe:	81 bd       	out	0x21, r24	; 33
-    7ec0:	f8 9a       	sbi	0x1f, 0	; 31
-    7ec2:	99 27       	eor	r25, r25
-    7ec4:	80 b5       	in	r24, 0x20	; 32
-    7ec6:	08 95       	ret
+00007e9a <__eerd_byte_m328p>:
+    7e9a:	f9 99       	sbic	0x1f, 1	; 31
+    7e9c:	fe cf       	rjmp	.-4      	; 0x7e9a <__eerd_byte_m328p>
+    7e9e:	92 bd       	out	0x22, r25	; 34
+    7ea0:	81 bd       	out	0x21, r24	; 33
+    7ea2:	f8 9a       	sbi	0x1f, 0	; 31
+    7ea4:	99 27       	eor	r25, r25
+    7ea6:	80 b5       	in	r24, 0x20	; 32
+    7ea8:	08 95       	ret
 
-00007ec8 <__eewr_byte_m328p>:
-    7ec8:	26 2f       	mov	r18, r22
+00007eaa <__eewr_byte_m328p>:
+    7eaa:	26 2f       	mov	r18, r22
 
-00007eca <__eewr_r18_m328p>:
-    7eca:	f9 99       	sbic	0x1f, 1	; 31
-    7ecc:	fe cf       	rjmp	.-4      	; 0x7eca <__eewr_r18_m328p>
-    7ece:	1f ba       	out	0x1f, r1	; 31
-    7ed0:	92 bd       	out	0x22, r25	; 34
-    7ed2:	81 bd       	out	0x21, r24	; 33
-    7ed4:	20 bd       	out	0x20, r18	; 32
-    7ed6:	0f b6       	in	r0, 0x3f	; 63
-    7ed8:	f8 94       	cli
-    7eda:	fa 9a       	sbi	0x1f, 2	; 31
-    7edc:	f9 9a       	sbi	0x1f, 1	; 31
-    7ede:	0f be       	out	0x3f, r0	; 63
-    7ee0:	01 96       	adiw	r24, 0x01	; 1
-    7ee2:	08 95       	ret
+00007eac <__eewr_r18_m328p>:
+    7eac:	f9 99       	sbic	0x1f, 1	; 31
+    7eae:	fe cf       	rjmp	.-4      	; 0x7eac <__eewr_r18_m328p>
+    7eb0:	1f ba       	out	0x1f, r1	; 31
+    7eb2:	92 bd       	out	0x22, r25	; 34
+    7eb4:	81 bd       	out	0x21, r24	; 33
+    7eb6:	20 bd       	out	0x20, r18	; 32
+    7eb8:	0f b6       	in	r0, 0x3f	; 63
+    7eba:	f8 94       	cli
+    7ebc:	fa 9a       	sbi	0x1f, 2	; 31
+    7ebe:	f9 9a       	sbi	0x1f, 1	; 31
+    7ec0:	0f be       	out	0x3f, r0	; 63
+    7ec2:	01 96       	adiw	r24, 0x01	; 1
+    7ec4:	08 95       	ret
