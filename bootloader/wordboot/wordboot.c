@@ -93,15 +93,11 @@ int main(int argc, char* argv[])
     uint16_t address = 0;
     uint8_t length;
 
-    // Adaboot no-wait mod
     ch = MCUSR;
     MCUSR = 0;
+    wdt_disable();
 
-    if (ch & _BV(WDRF)) {
-
-        start_application(ch);
-
-    }
+    TCCR0B = _BV(CS02);
 
     #if (LED_START_FLASHES > 0)
 
@@ -121,15 +117,7 @@ int main(int argc, char* argv[])
     UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
     UBRR0 = UBRR_VALUE;
 
-    // Timeout after one second
-    wdt_enable(WDTO_1S);
-
     #if ((LED_START_FLASHES > 0) || defined(LED_DATA_FLASH))
-
-        // Disable PWM output
-        // TODO: Remove after bootloader is entered by watchdog reset
-        TCCR0A = 0;
-        TCCR2A = 0;
 
         // Enable minute LEDs
         DDRB = _BV(PB0);
@@ -170,7 +158,7 @@ int main(int argc, char* argv[])
 
     #endif
 
-    /* Forever loop: exits by causing WDT reset */
+    /* Forever loop: exits by timeout */
     while(1) {
 
         // Get character from UART
@@ -300,6 +288,9 @@ void put_ch(char ch)
 
 }
 
+#define BOOTLOADER_TIMEOUT_MS 1000
+#define BOOTLOADER_TIMEOUT_COMPARE_VALUE F_CPU / 256 / 256 * 1000 / BOOTLOADER_TIMEOUT_MS
+
 uint8_t get_ch()
 {
 
@@ -311,19 +302,32 @@ uint8_t get_ch()
 
     #endif
 
-    while(!(UCSR0A & _BV(RXC0)));
+    uint8_t counter = 0;
+
+    while(!(UCSR0A & _BV(RXC0))) {
+
+        if (TIFR0 & _BV(TOV0)) {
+
+            counter++;
+            TIFR0 = _BV(TOV0);
+
+        }
+
+        if (counter > BOOTLOADER_TIMEOUT_COMPARE_VALUE) {
+
+            start_application(0);
+
+        }
+
+    }
 
     /*
      * A Framing Error indicates (probably) that something is talking
-     * to us at the wrong bit rate.  Assume that this is because it
-     * expects to be talking to the application, and DON'T reset the
-     * watchdog.  This should cause the bootloader to abort and run
-     * the application "soon", if it keeps happening.  (Note that we
-     * don't care that an invalid char is returned...)
+     * to us at the wrong bit rate, so the microcontroller will be reset.
      */
-    if (!(UCSR0A & _BV(FE0))) {
+    if (UCSR0A & _BV(FE0)) {
 
-        wdt_reset();
+        wdt_enable(WDTO_15MS);
 
     }
 
@@ -382,8 +386,6 @@ void verify_command_terminator()
 
             PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 
-            wdt_reset();
-
         } while (--count);
 
     }
@@ -393,12 +395,38 @@ void verify_command_terminator()
 void start_application(uint8_t reset_flags)
 {
 
+    // Reset I/O registers
+    DDRB = 0;
+    PORTB = 0;
+
+    DDRC = 0;
+    PORTC = 0;
+
+    DDRD = 0;
+    PORTD = 0;
+    PIND = 0;
+
+    // Reset UART module
+    UCSR0A = 0;
+    UCSR0B = 0;
+    UCSR0C = 0;
+    UBRR0 = 0;
+
+    // Reset Timer0
+    TCCR0B = 0;
+    TCNT0 = 0;
+
+    // Reset Timer1
+    TCCR1B = 0;
+    TCNT1 = 0;
+
+    // Reset SPI module
+    SPCR = 0;
+
     // Save the reset flags in the designated register
     // This can be accessed in a main program by putting code in .init0 (which
     // executes before normal C init code) to save R2 to a global variable.
     __asm__ __volatile__ ("mov r2, %0\n" :: "r" (reset_flags));
-
-    wdt_disable();
 
     // Jump to reset vector
     ((void(*)(void)) 0x0000)();
