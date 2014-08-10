@@ -469,8 +469,6 @@ static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address,
 static inline void read_memory(char memtype, uint16_t address, uint16_t length)
 {
 
-    uint8_t ch;
-
     switch (memtype) {
 
         // EEPROM
@@ -489,9 +487,7 @@ static inline void read_memory(char memtype, uint16_t address, uint16_t length)
 
             do {
 
-                // read a Flash byte and increment the address
-                __asm__ ("lpm %0,Z+\n" : "=r" (ch), "=z" (address): "1" (address));
-                put_ch(ch);
+                put_ch(pgm_read_byte(address++));
 
             } while (--length);
 
