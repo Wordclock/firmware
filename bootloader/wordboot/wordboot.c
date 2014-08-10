@@ -90,14 +90,8 @@ int main(int argc, char* argv[])
 
     uint8_t ch;
 
-    /*
-    * Making these local and in registers prevents the need for initializing
-    * them, and also saves space because code no longer stores to memory.
-    * (initializing address keeps the compiler happy, but isn't really
-    *  necessary, and uses 4 bytes of flash.)
-    */
-    register uint16_t address = 0;
-    register uint16_t length;
+    uint16_t address = 0;
+    uint16_t length;
 
     // Adaboot no-wait mod
     ch = MCUSR;
