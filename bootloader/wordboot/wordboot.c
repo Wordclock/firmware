@@ -191,11 +191,13 @@ int main(int argc, char* argv[])
 
             // SET DEVICE is ignored
             drop_ch(20);
+            verify_command_terminator();
 
         } else if(ch == Cmnd_STK_SET_DEVICE_EXT) {
 
             // SET DEVICE EXT is ignored
             drop_ch(5);
+            verify_command_terminator();
 
         } else if(ch == Cmnd_STK_LOAD_ADDRESS) {
 
@@ -214,6 +216,7 @@ int main(int argc, char* argv[])
 
             // UNIVERSAL command is ignored
             drop_ch(4);
+            verify_command_terminator();
             put_ch(0x00);
 
         } else if(ch == Cmnd_STK_PROG_PAGE) {
@@ -222,7 +225,7 @@ int main(int argc, char* argv[])
             uint8_t *bufPtr;
             uint16_t savelength;
             // Drop high byte of length
-            (void)get_ch();
+            drop_ch(1);
             length = get_ch();
             savelength = length;
             desttype = get_ch();
@@ -244,7 +247,7 @@ int main(int argc, char* argv[])
 
             uint8_t desttype;
             // Drop high byte of length
-            (void)get_ch();
+            drop_ch(1);
             length = get_ch();
             desttype = get_ch();
 
@@ -351,8 +354,6 @@ void drop_ch(uint8_t count)
         get_ch();
 
     } while (--count);
-
-    verify_command_terminator();
 
 }
 
