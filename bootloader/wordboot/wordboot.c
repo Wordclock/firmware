@@ -69,9 +69,9 @@
 
 int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
 
-void __attribute__((noinline)) put_ch(char ch);
-uint8_t __attribute__((noinline)) get_ch();
-void __attribute__((noinline)) verify_command_terminator();
+void __attribute__ ((noinline)) put_ch(char ch);
+uint8_t __attribute__ ((noinline)) get_ch();
+void __attribute__ ((noinline)) verify_command_terminator();
 
 static inline void drop_ch(uint8_t count);
 static inline void flash_start_leds(uint8_t count);
