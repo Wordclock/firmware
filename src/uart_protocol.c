@@ -32,6 +32,7 @@
  */
 
 #include <avr/interrupt.h>
+#include <avr/wdt.h>
 
 #include <stdarg.h>
 #include <string.h>
@@ -373,9 +374,9 @@ static void _keepalive(uint8_t argc, char* argv[])
 /**
  * @brief Resets the microcontroller
  *
- * This performs a reset of the microcontroller by directly jumping to a
- * specific address location. To make sure that this whole procedure will not
- * be interrupted, the interrupt are disabled globally.
+ * This performs a reset of the microcontroller by enabling the watchdog and
+ * waiting for it to timeout. To make sure that that the watchdog is not
+ * reset, interrupts are disabled globally.
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_ok()
@@ -387,7 +388,8 @@ static void _reset(uint8_t argc, char* argv[])
     uart_flush_output();
     cli();
 
-    asm volatile("jmp 0x7c00");
+    wdt_enable(WDTO_15MS);
+    while (1);
 
 }
 
