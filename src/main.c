@@ -49,6 +49,19 @@
 #include "base.h"
 #include "wceeprom.h"
 
+/**
+* @brief Contains the MCU status register
+*
+* @note To prevent this variable from being cleared by any initialization
+* routines, it is put into the `.noinit` section.
+*
+* @note For now this variable is declared static as it is not used by any other
+* module.
+*
+* @see reset_mcusr()
+*/
+static uint8_t mcusr __attribute__ ((section(".noinit")));
+
 #if (ENABLE_UART_PROTOCOL == 1)
 
     #include "uart_protocol.h"
@@ -365,27 +378,36 @@ void main_ISR()
 
 }
 
-#if (ENABLE_UART_PROTOCOL == 1)
+void reset_mcusr() __attribute__((naked)) __attribute__((section(".init0")));
 
-    void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
+/**
+* @brief Saves the MCU status register in case wordboot is being used
+*
+* This saves the `MCUSR` register and puts it into {@link #mcusr}. In case of
+* wordboot being used, the register was already saved and its content was put
+* into `r2`, so it is read from there. Otherwise `MCUSR` is being read directly
+* and reset afterwards.
+*
+* Furthermore the watchdog is being disabled, to prevent infinite boot loops.
+*
+* @note This function is not actually called, but put into the `.init0` section
+* automatically.
+*
+* @see mcusr
+*/
+void reset_mcusr()
+{
 
-    /**
-    * @brief Turns off the watchdog after a reset has occurred
-    *
-    * This disables the watchdog upon each reset, which prevents the
-    * microcontroller from resetting itself indefinitely.
-    *
-    * [1]: http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html
-    *
-    * @note This function is not actually called, but included in the `init3`
-    * section automatically.
-    */
-    void wdt_init()
-    {
+    // Read r2 and put its content into mcusr
+    __asm__ __volatile__ ("mov %0, r2\n" : "=r" (mcusr));
 
-        MCUSR &= ~_BV(WDRF);
+    // Check for normal boot (without bootloader)
+    if (!mcusr) {
+
+        mcusr = MCUSR;
+        MCUSR = 0;
         wdt_disable();
 
     }
 
-#endif
+}
