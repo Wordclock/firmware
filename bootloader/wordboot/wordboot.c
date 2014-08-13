@@ -57,15 +57,11 @@
 
 #endif
 
+/**
+ * @brief Helper macro to define baud rate as expected by <util/setbaud.h>
+ */
 #define BAUD BAUD_RATE
 #include <util/setbaud.h>
-
-/* Function Prototypes
- * The main() function is in init9, which removes the interrupt vector table
- * we don't need. It is also 'OS_main', which means the compiler does not
- * generate any entry or exit code itself (but unlike 'naked', it doesn't
- * supress some compile-time options we want.)
- */
 
 int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
 
@@ -80,14 +76,38 @@ static inline void read_memory(char memtype, uint16_t address, uint8_t length);
 
 void start_application() __attribute__ ((naked));
 
+/**
+ * @brief Content of the MCU status register
+ *
+ * This variable is being used to save the content of `MCUSR` during start up.
+ * Afterwards `MCUSR` is reset, so the source of the next reset can be
+ * determined reliably.
+ *
+ * @see main()
+ */
 static uint8_t mcusr;
 
-/* C zero initialises all global variables. However, that requires */
-/* These definitions are NOT zero initialised, but that doesn't matter */
-/* This allows us to drop the zero init code, saving us memory */
+/**
+ * @brief Buffer for memory write operations
+ *
+ * This is the buffer used write operations to memory. It is defined as macro,
+ * which saves flash memory, because it is not initialized, which is not
+ * required in this case. The offset by one is owed to the mcusr variable,
+ * which is placed directly at RAMSTART.
+ *
+ * @see mcusr
+ * @see write_memory()
+ */
 #define buff ((uint8_t*)(RAMSTART+1))
 
-
+/**
+ * @brief Main entry point
+ *
+ * After some initialization the main loop is entered, which handles most of
+ * the STK500 protocol by evaluating the received characters.
+ *
+ * @see get_ch()
+ */
 int main(int argc, char* argv[])
 {
 
@@ -292,6 +312,9 @@ int main(int argc, char* argv[])
 
 }
 
+/**
+ * @brief Outputs the given character via UART
+ */
 void put_ch(char ch)
 {
 
@@ -303,9 +326,36 @@ void put_ch(char ch)
 
 }
 
+/**
+ * @brief Time after which bootloader is exited and application is started
+ *
+ * @see get_ch()
+ */
 #define BOOTLOADER_TIMEOUT_MS 1000
+
+/**
+ * @brief Compare value for timeout
+ *
+ * This is the actual value that the timeout counter is being compared against.
+ * It is made up of F_CPU, the bit width of the timer and the prescaler.
+ *
+ * @see BOOTLOADER_TIMEOUT_MS
+ * @see get_ch()
+ */
 #define BOOTLOADER_TIMEOUT_COMPARE_VALUE F_CPU / 256 / 256 * 1000 / BOOTLOADER_TIMEOUT_MS
 
+/**
+ * @brief Returns character received via UART
+ *
+ * This busy waits until a character has been received. Concurrently a counter
+ * is incremented and compared against BOOTLOADER_TIMEOUT_COMPARE_VALUE. Once
+ * the value is reached, the application will be started.
+ *
+ * @return Received character, void if start_application() is executed
+ *
+ * @see BOOTLOADER_TIMEOUT_COMPARE_VALUE
+ * @see start_application()
+ */
 uint8_t get_ch()
 {
 
@@ -358,6 +408,15 @@ uint8_t get_ch()
 
 }
 
+/**
+ * @brief Drops given amount of characters
+ *
+ * This retrieves count amount of characters from the UART hardware and simply
+ * drops them. It is useful whenever bytes are expected as part of a command,
+ * but don't actually need to be evaluated.
+ *
+ * @see get_ch()
+ */
 void drop_ch(uint8_t count)
 {
 
@@ -369,6 +428,16 @@ void drop_ch(uint8_t count)
 
 }
 
+/**
+ * @brief Verifies that a valid command terminator has been received
+ *
+ * This verifies that Sync_CRC_EOP has been received, which terminates each
+ * command and responds with Resp_STK_INSYNC. In case no valid command
+ * terminator has been received the watchdog is enabled to reset the MCU.
+ *
+ * @see Sync_CRC_EOP
+ * @see Resp_STK_INSYNC
+ */
 void verify_command_terminator()
 {
 
@@ -387,6 +456,15 @@ void verify_command_terminator()
 
 #if (LED_START_FLASHES > 0)
 
+    /**
+     * @brief Flashes the LEDs at startup
+     *
+     * This flashes the leds count times at the startup to indicate that the
+     * bootloader has been accessed. It is polling the overflow flag of Timer1,
+     * and toggling the LEDs by writing to the appropriate PIN register.
+     *
+     * @param count Number of flashes
+     */
     void flash_start_leds(uint8_t count)
     {
 
@@ -405,6 +483,15 @@ void verify_command_terminator()
 
 #endif
 
+/**
+ * @brief Resets the used hardware and jumps to the application
+ *
+ * This resets all of the used hardware by writing zero to the appropriate
+ * registers. Before jumping to the actual application the content of mcusr is
+ * put into `r2`, so it can be accessed by the application itself.
+ *
+ * @see mcusr
+ */
 void start_application()
 {
 
@@ -444,6 +531,22 @@ void start_application()
 
 }
 
+/**
+ * @brief Writes data from given buffer to the specified memory location
+ *
+ * This writes length bytes of data from the given buffer to the specified
+ * memory (EEPROM and/or Flash) location, starting at address. It uses
+ * eeprom_write_byte() for writing to the EEPROM and functions from
+ * <avr/boot.h> for the flash memory.
+ *
+ * @param memtype 'E' for EEPROM, 'F' (or anything else) for Flash
+ * @param address Address to start to write to
+ * @param length Number of bytes to write
+ *
+ * @see put_ch()
+ * @see eeprom_write_byte()
+ * @see <avr/boot.h>
+ */
 static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint8_t length)
 {
 
@@ -499,6 +602,20 @@ static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address,
 
 }
 
+/**
+ * @brief Read chunk of memory and put it out via UART
+ *
+ * This reads length locations of the specified memory (EEPROM and/or Flash)
+ * starting at address and puts them directly out via UART.
+ *
+ * @param memtype 'E' for EEPROM, 'F' (or anything else) for Flash
+ * @param address Address to start to read from
+ * @param length Number of address locations to read
+ *
+ * @see put_ch()
+ * @see eeprom_read_byte()
+ * @see pgm_read_byte()
+ */
 static inline void read_memory(char memtype, uint16_t address, uint8_t length)
 {
 
