@@ -79,12 +79,16 @@
 #define BAUD BAUD_RATE
 #include <util/setbaud.h>
 
-/**
- * @brief Time after which bootloader is exited and the application is started
- *
- * @see get_ch()
- */
-#define BOOTLOADER_TIMEOUT_MS 1000
+#ifndef BOOTLOADER_TIMEOUT_MS
+
+    /**
+     * @brief Time after which bootloader is exited and application is started
+     *
+     * @see get_ch()
+     */
+    #define BOOTLOADER_TIMEOUT_MS 1000
+
+#endif
 
 /**
  * @brief Compare value for timeout
