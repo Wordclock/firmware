@@ -63,12 +63,18 @@
 
 #ifndef LED_START_FLASHES
 
+    /**
+     * @brief Default number of LED flashes during startup
+     */
     #define LED_START_FLASHES 3
 
 #endif
 
 #ifndef BAUD_RATE
 
+    /**
+     * @brief Default baud rate used by the UART hardware module
+     */
     #define BAUD_RATE 9600L
 
 #endif
@@ -82,7 +88,7 @@
 #ifndef BOOTLOADER_TIMEOUT_MS
 
     /**
-     * @brief Time after which bootloader is exited and application is started
+     * @brief Default timeout (in ms) after which the application is started
      *
      * @see get_ch()
      */
