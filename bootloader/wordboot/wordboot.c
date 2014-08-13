@@ -99,20 +99,26 @@ int main(int argc, char* argv[])
     // Save MCU status register
     mcusr = MCUSR;
     MCUSR = 0;
+
+    // Disable watchdog to prevent indefinite boot loops
     wdt_disable();
 
+    // Set up Timer0
+    // Prescaler: 256
     TCCR0B = _BV(CS02);
 
     #if (LED_START_FLASHES > 0)
 
-        // Set up Timer 1 for timeout counter
-        TCCR1B = _BV(CS12) | _BV(CS10); // div 1024
+        // Set up Timer1
+        // Prescaler: 1024
+        TCCR1B = _BV(CS12) | _BV(CS10);
 
     #endif
 
     #if USE_2X
 
-        UCSR0A = _BV(U2X0); //Double speed mode USART0
+        // Double speed mode
+        UCSR0A = _BV(U2X0);
 
     #endif
 
@@ -269,9 +275,8 @@ int main(int argc, char* argv[])
 
         } else if (ch == Cmnd_STK_LEAVE_PROGMODE) {
 
-            // Adaboot no-wait mod
+            // Enable watchdog for faster reset
             wdt_enable(WDTO_15MS);
-
             verify_command_terminator();
 
         } else {
