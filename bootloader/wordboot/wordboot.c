@@ -91,11 +91,6 @@ static uint8_t mcusr;
 int main(int argc, char* argv[])
 {
 
-    uint8_t ch;
-
-    uint16_t address = 0;
-    uint8_t length;
-
     // Save MCU status register
     mcusr = MCUSR;
     MCUSR = 0;
@@ -168,11 +163,15 @@ int main(int argc, char* argv[])
 
     #endif
 
+    // Used in main loop for Cmnd_STK_LOAD_ADDRESS and Cmnd_STK_PROG_PAGE
+    uint16_t address = 0;
+    uint8_t length;
+
     /* Forever loop: exits by timeout */
     while(1) {
 
         // Get character from UART
-        ch = get_ch();
+        uint8_t ch = get_ch();
 
         if (ch == Cmnd_STK_GET_PARAMETER) {
 
