@@ -78,12 +78,14 @@ static inline void flash_start_leds(uint8_t count);
 static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint8_t length);
 static inline void read_memory(char memtype, uint16_t address, uint8_t length);
 
-void start_application(uint8_t reset_flags) __attribute__ ((naked));
+void start_application() __attribute__ ((naked));
+
+static uint8_t mcusr;
 
 /* C zero initialises all global variables. However, that requires */
 /* These definitions are NOT zero initialised, but that doesn't matter */
 /* This allows us to drop the zero init code, saving us memory */
-#define buff ((uint8_t*)(RAMSTART))
+#define buff ((uint8_t*)(RAMSTART+1))
 
 
 int main(int argc, char* argv[])
@@ -94,7 +96,8 @@ int main(int argc, char* argv[])
     uint16_t address = 0;
     uint8_t length;
 
-    ch = MCUSR;
+    // Save MCU status register
+    mcusr = MCUSR;
     MCUSR = 0;
     wdt_disable();
 
@@ -319,7 +322,7 @@ uint8_t get_ch()
 
         if (counter > BOOTLOADER_TIMEOUT_COMPARE_VALUE) {
 
-            start_application(0);
+            start_application();
 
         }
 
@@ -394,7 +397,7 @@ void verify_command_terminator()
 
 #endif
 
-void start_application(uint8_t reset_flags)
+void start_application()
 {
 
     // Reset I/O registers
@@ -428,7 +431,7 @@ void start_application(uint8_t reset_flags)
     // Save the reset flags in the designated register
     // This can be accessed in a main program by putting code in .init0 (which
     // executes before normal C init code) to save R2 to a global variable.
-    __asm__ __volatile__ ("mov r2, %0\n" :: "r" (reset_flags));
+    __asm__ __volatile__ ("mov r2, %0\n" :: "r" (mcusr));
 
     // Jump to reset vector
     ((void(*)(void)) 0x0000)();
