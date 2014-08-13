@@ -34,13 +34,14 @@
 #define WORDBOOT_MAJOR_VERSION 6
 #define WORDBOOT_MINOR_VERSION 0
 
-#include <inttypes.h>
+#include <avr/boot.h>
+#include <avr/eeprom.h>
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include <avr/eeprom.h>
-#include <avr/boot.h>
 #include <avr/wdt.h>
-#include <avr/interrupt.h>
+
+#include <inttypes.h>
 
 #include "stk500.h"
 
