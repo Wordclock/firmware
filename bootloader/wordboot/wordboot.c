@@ -20,19 +20,15 @@
 
 /**
  * @file wordboot.c
- * @brief Bootloader of the Wordclock project
+ * @brief Bootloader for the Wordclock project
  *
- * This file contains the officially supported bootloader of the Wordclock
+ * This file contains the officially supported bootloader for the Wordclock
  * project. It is based upon [optiboot][1], but was heavily modified. These
  * modifications not only include massive clean-ups and simplifications, but
- * also support to indicate the current status visually on the Wordclock
- * itself by making use of the minute LEDs.
+ * also add support to indicate the current status on the Wordclock frontpanel.
  *
  * [1]: https://code.google.com/p/optiboot/
  */
-
-#define WORDBOOT_MAJOR_VERSION 6
-#define WORDBOOT_MINOR_VERSION 0
 
 #include <avr/boot.h>
 #include <avr/eeprom.h>
@@ -44,6 +40,26 @@
 #include <inttypes.h>
 
 #include "stk500.h"
+
+/**
+ * @brief Major version of the bootloader
+ *
+ * This version number is being returned by the bootloader (along with
+ * WORDBOOT_MINOR_VERSION) and is evaluated by the programmer, e.g. avrdude.
+ *
+ * @see WORDBOOT_MINOR_VERSION
+ */
+#define WORDBOOT_MAJOR_VERSION 6
+
+/**
+ * @brief Minor version of the bootloader
+ *
+ * This version number is being returned by the bootloader (along with
+ * WORDBOOT_MAJOR_VERSION) and is evaluated by the programmer, e.g. avrdude.
+ *
+ * @see WORDBOOT_MAJOR_VERSION
+ */
+#define WORDBOOT_MINOR_VERSION 0
 
 #ifndef LED_START_FLASHES
 
@@ -58,10 +74,55 @@
 #endif
 
 /**
- * @brief Helper macro to define baud rate as expected by <util/setbaud.h>
+ * @brief Helper macro to define the baud rate as expected by <util/setbaud.h>
  */
 #define BAUD BAUD_RATE
 #include <util/setbaud.h>
+
+/**
+ * @brief Time after which bootloader is exited and the application is started
+ *
+ * @see get_ch()
+ */
+#define BOOTLOADER_TIMEOUT_MS 1000
+
+/**
+ * @brief Compare value for timeout
+ *
+ * This is the actual value that the timeout counter is being compared against
+ * to determine whether the bootloader should be exited.
+ *
+ * @see BOOTLOADER_TIMEOUT_MS
+ * @see get_ch()
+ */
+#define BOOTLOADER_TIMEOUT_COMPARE_VALUE F_CPU / 256 / 256 * 1000 / BOOTLOADER_TIMEOUT_MS
+
+/**
+ * @brief Content of the MCU status register
+ *
+ * This variable is being used to save the content of `MCUSR` during start up.
+ * `MCUSR` is reset immediately, so the source of the next reset can be
+ * determined reliably. This variable is passed to the main application using
+ * `r2` before jumping to the actual reset vector.
+ *
+ * @see main()
+ * @see start_application()
+ */
+static uint8_t mcusr;
+
+/**
+ * @brief Buffer for memory write operations
+ *
+ * This buffer is used for write operations to memory. It is defined as macro,
+ * which saves flash memory, because it is not initialized, which is not
+ * required in this case. The offset by one is owed to the mcusr, which is
+ * placed directly at RAMSTART.
+ *
+ * @see mcusr
+ * @see write_memory()
+ */
+#define buff ((uint8_t*)(RAMSTART+1))
+
 
 int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
 
@@ -76,36 +137,16 @@ static inline void read_memory(char memtype, uint16_t address, uint8_t length);
 
 void start_application() __attribute__ ((naked));
 
-/**
- * @brief Content of the MCU status register
- *
- * This variable is being used to save the content of `MCUSR` during start up.
- * Afterwards `MCUSR` is reset, so the source of the next reset can be
- * determined reliably.
- *
- * @see main()
- */
-static uint8_t mcusr;
-
-/**
- * @brief Buffer for memory write operations
- *
- * This is the buffer used write operations to memory. It is defined as macro,
- * which saves flash memory, because it is not initialized, which is not
- * required in this case. The offset by one is owed to the mcusr variable,
- * which is placed directly at RAMSTART.
- *
- * @see mcusr
- * @see write_memory()
- */
-#define buff ((uint8_t*)(RAMSTART+1))
 
 /**
  * @brief Main entry point
  *
- * After some initialization the main loop is entered, which handles most of
- * the STK500 protocol by evaluating the received characters.
+ * This initializes the needed hardware modules, saves the `MCUSR`, disables
+ * the watchdog to prevent infinite boot lopps, and enters the main loop, which
+ * handles most of the STK500 protocol by evaluating the received characters.
  *
+ * @see mcusr
+ * @see flash_start_leds()
  * @see get_ch()
  */
 int main(int argc, char* argv[])
@@ -313,7 +354,7 @@ int main(int argc, char* argv[])
 }
 
 /**
- * @brief Outputs the given character via UART
+ * @brief Outputs a single character via UART
  */
 void put_ch(char ch)
 {
@@ -327,29 +368,12 @@ void put_ch(char ch)
 }
 
 /**
- * @brief Time after which bootloader is exited and application is started
- *
- * @see get_ch()
- */
-#define BOOTLOADER_TIMEOUT_MS 1000
-
-/**
- * @brief Compare value for timeout
- *
- * This is the actual value that the timeout counter is being compared against.
- * It is made up of F_CPU, the bit width of the timer and the prescaler.
- *
- * @see BOOTLOADER_TIMEOUT_MS
- * @see get_ch()
- */
-#define BOOTLOADER_TIMEOUT_COMPARE_VALUE F_CPU / 256 / 256 * 1000 / BOOTLOADER_TIMEOUT_MS
-
-/**
  * @brief Returns character received via UART
  *
- * This busy waits until a character has been received. Concurrently a counter
- * is incremented and compared against BOOTLOADER_TIMEOUT_COMPARE_VALUE. Once
- * the value is reached, the application will be started.
+ * This function busy waits until a new character has been received.
+ * Concurrently a counter is incremented and compared against
+ * BOOTLOADER_TIMEOUT_COMPARE_VALUE. Once the value is reached, the actual
+ * application is started.
  *
  * @return Received character, void if start_application() is executed
  *
@@ -432,8 +456,8 @@ void drop_ch(uint8_t count)
  * @brief Verifies that a valid command terminator has been received
  *
  * This verifies that Sync_CRC_EOP has been received, which terminates each
- * command and responds with Resp_STK_INSYNC. In case no valid command
- * terminator has been received the watchdog is enabled to reset the MCU.
+ * command and in return responds with Resp_STK_INSYNC. In case no valid
+ * command terminator was received the watchdog is enabled to reset the MCU.
  *
  * @see Sync_CRC_EOP
  * @see Resp_STK_INSYNC
@@ -535,7 +559,7 @@ void start_application()
  * @brief Writes data from given buffer to the specified memory location
  *
  * This writes length bytes of data from the given buffer to the specified
- * memory (EEPROM and/or Flash) location, starting at address. It uses
+ * memory (EEPROM and/or flash) location, starting at address. It uses
  * eeprom_write_byte() for writing to the EEPROM and functions from
  * <avr/boot.h> for the flash memory.
  *
