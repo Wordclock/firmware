@@ -69,7 +69,7 @@
 
 #ifndef BAUD_RATE
 
-    #define BAUD_RATE 115200L
+    #define BAUD_RATE 9600L
 
 #endif
 

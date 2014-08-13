@@ -14,7 +14,7 @@ wordclock: TARGET = $@
 wordclock: MCU_TARGET = atmega328p
 wordclock: AVR_FREQ = 8000000L
 wordclock: LDSECTIONS = -Wl,--section-start=.text=0x7c00
-wordclock: CFLAGS += -DBAUD_RATE=115200
+wordclock: CFLAGS += -DBAUD_RATE=9600
 wordclock: CFLAGS += -DLED_START_FLASHES=3
 wordclock: CFLAGS += -DLED_DATA_FLASH=1
 wordclock: $(PROGRAM).hex
