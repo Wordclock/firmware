@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
     uint16_t address = 0;
     uint8_t length;
 
-    /* Forever loop: exits by timeout */
+    // Forever loop: exits by timeout within get_ch()
     while(1) {
 
         // Get character from UART
@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
             savelength = length;
             desttype = get_ch();
 
-            // read a page worth of contents
+            // Read a page worth of contents
             bufPtr = buff;
             do {
 
@@ -250,6 +250,7 @@ int main(int argc, char* argv[])
             // Read command terminator, start reply
             verify_command_terminator();
 
+            // Write to memory
             write_memory(desttype, buff, address, savelength);
 
         } else if(ch == Cmnd_STK_READ_PAGE) {
@@ -294,7 +295,10 @@ int main(int argc, char* argv[])
 void put_ch(char ch)
 {
 
+    // Wait for previous transmission to be completed
     while (!(UCSR0A & _BV(UDRE0)));
+
+    // Start new transmission
     UDR0 = ch;
 
 }
@@ -432,9 +436,7 @@ void start_application()
     // Reset SPI module
     SPCR = 0;
 
-    // Save the reset flags in the designated register
-    // This can be accessed in a main program by putting code in .init0 (which
-    // executes before normal C init code) to save R2 to a global variable.
+    // Save the reset flags in r2
     __asm__ __volatile__ ("mov r2, %0\n" :: "r" (mcusr));
 
     // Jump to reset vector
