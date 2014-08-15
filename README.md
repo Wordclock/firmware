@@ -111,13 +111,14 @@ reinitialized with useful default values.
 The original firmware was shipped with a bootloader, which in no way was FLOSS
 and hence was not taken over into this project. The suggested alternatives were
 platform dependent and did not implement any official standard. Therefore a new
-bootloader named *wordboot* was developed. It can be found within the
-`bootloader/wordboot` directory along with more information and some
-documentation about its usage.
+bootloader named *wordboot* was developed. It can be found within its own
+[repository][8] along with more information and some documentation about its
+usage.
 
 *wordboot* makes use of the Wordclock hardware to visually indicate its status
 on the frontpanel display. Furthermore it implements the STK500 protocol and is
-directly supported by [avrdude][7], so no proprietary tools are needed.
+directly supported by [avrdude][7], so no proprietary tools are needed to flash
+the firmware.
 
 In order to be able to use *wordboot* the following change is necessary to the
 fuse settings:
@@ -130,20 +131,20 @@ might no longer work as expected.
 ## CONTRIBUTIONS
 
 The source code itself is maintained using git. The project along with its
-[repositories][8] lives over at github.com. Contributions of any kind are
+[repositories][9] lives over at github.com. Contributions of any kind are
 highly welcome. The simplest and fastest way for these kind of things is to use
 the means provided by github.com itself, which allows for reporting bugs and/or
 requesting features. It is also the preferred way to submit patches in form of
 pull requests. If you are new to git and/or are not familiar with this process,
-refer to [this][9] for a detailed description on how to submit a pull request.
+refer to [this][10] for a detailed description on how to submit a pull request.
 
 In case you are looking for something to work on, you probably want to take a
 look at the `TODO` file within the projects root directory. More recently the
-github.com [issue tracker][10] is used to keep track of issues and coordinate
+github.com [issue tracker][11] is used to keep track of issues and coordinate
 the development of new features. There is enough work left to do, so feel free
 to start hacking away ;).
 
-There is also a [repository][11] over at gitorious.org, which currently is
+There is also a [repository][12] over at gitorious.org, which currently is
 being used only as a mirror.
 
 ## DONATIONS
@@ -179,7 +180,8 @@ Bitcoin: `1Dn6MEKgRAgdRS8Aeg88fug9XmdgTRpCDA`
 [5]: https://github.com/Wordclock/manual
 [6]: https://www.stack.nl/~dimitri/doxygen/
 [7]: http://www.nongnu.org/avrdude/
-[8]: https://github.com/Wordclock
-[9]: https://help.github.com/articles/using-pull-requests
-[10]: https://github.com/Wordclock/firmware/issues
-[11]: https://gitorious.org/Wordclock
+[8]: https://github.com/Wordclock/wordboot
+[9]: https://github.com/Wordclock
+[10]: https://help.github.com/articles/using-pull-requests
+[11]: https://github.com/Wordclock/firmware/issues
+[12]: https://gitorious.org/Wordclock
