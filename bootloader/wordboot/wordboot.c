@@ -41,8 +41,6 @@
 
 #include "stk500.h"
 
-#include "../../src/config.h"
-
 /**
  * @brief Major version of the bootloader
  *

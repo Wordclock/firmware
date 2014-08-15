@@ -17,6 +17,7 @@ wordclock: LDSECTIONS = -Wl,--section-start=.text=0x7c00
 wordclock: CFLAGS += -DBAUD_RATE=9600
 wordclock: CFLAGS += -DLED_START_FLASHES=3
 wordclock: CFLAGS += -DLED_DATA_FLASH=1
+wordclock: CFLAGS += -DENABLE_RGB_SUPPORT=1
 wordclock: CFLAGS += -DBOOTLOADER_TIMEOUT_MS=1000
 wordclock: $(PROGRAM).hex
 wordclock: $(PROGRAM).lst

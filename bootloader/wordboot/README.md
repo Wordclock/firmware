@@ -64,6 +64,11 @@ There are several options directly influencing the behaviour of the bootloader:
   the LEDs should flash when data is being received. Remove this define if
   you want to disable this feature.
 
+- **ENABLE_RGB_SUPPORT**: The default value is *1* (enabled). This defines
+  whether the bootloader should be built with RGB support, i.e. the minute
+  LEDs will appear in white as all channels (red, green, blue) will be enabled
+  simultaneously. Otherwise only the red channel will be used.
+
 - **BOOTLOADER_TIMEOUT_MS**: The default value is *1000* (1 second). This
   defines the time after which the bootloader is exited and the actual firmware
   itself is started.
