@@ -41,6 +41,8 @@
 
 #include "stk500.h"
 
+#include "../../src/config.h"
+
 /**
  * @brief Major version of the bootloader
  *
@@ -204,8 +206,17 @@ int main(int argc, char* argv[])
         DDRD = _BV(PD7);
         PORTD = _BV(PD7);
 
-        // Set PWM pins as output
-        DDRD |= _BV(PD6) | _BV(PD5) | _BV(PD3);
+        #if (ENABLE_RGB_SUPPORT == 1)
+
+            // Set PWM channels as output
+            DDRD |= _BV(PD6) | _BV(PD5) | _BV(PD3);
+
+        #else
+
+            // Set PWMR pins as output
+            DDRD |= _BV(PD6);
+
+        #endif
 
         // Clear matrix
         DDRB |= _BV(PB5) | _BV(PB3) | _BV(PB2);
@@ -528,7 +539,15 @@ void verify_command_terminator()
     void toggle_minute_leds()
     {
 
-        PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
+        #if (ENABLE_RGB_SUPPORT == 1)
+
+            PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
+
+        #else
+
+            PIND = _BV(PD6);
+
+        #endif
 
     }
 
