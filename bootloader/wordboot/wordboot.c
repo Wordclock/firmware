@@ -140,6 +140,7 @@ void __attribute__ ((noinline)) verify_command_terminator();
 
 static inline void drop_ch(uint8_t count);
 static inline void flash_start_leds(uint8_t count);
+static inline void toggle_minute_leds();
 static inline void write_memory(char memtype, uint8_t* buffer, uint16_t address, uint8_t length);
 static inline void read_memory(char memtype, uint16_t address, uint8_t length);
 
@@ -395,7 +396,7 @@ uint8_t get_ch()
 
     #ifdef LED_DATA_FLASH
 
-        PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
+        toggle_minute_leds();
 
     #endif
 
@@ -432,7 +433,7 @@ uint8_t get_ch()
 
     #ifdef LED_DATA_FLASH
 
-        PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
+        toggle_minute_leds();
 
     #endif
 
@@ -507,9 +508,27 @@ void verify_command_terminator()
 
             while(!(TIFR1 & _BV(TOV1)));
 
-            PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
+            toggle_minute_leds();
 
         } while (--count);
+
+    }
+
+#endif
+
+#if (LED_DATA_FLASH || LED_START_FLASHES)
+
+    /**
+     * @brief Toggles the minute LEDs
+     *
+     * This toggles the PWM channels by writing to the appropriate `PINx` register.
+     * As only the minute LEDs are enabled, this effectively will toggle the
+     * minute LEDs.
+     */
+    void toggle_minute_leds()
+    {
+
+        PIND = _BV(PD6) | _BV(PD5) | _BV(PD3);
 
     }
 
