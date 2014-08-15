@@ -129,7 +129,7 @@ static uint8_t mcusr;
  *
  * @see write_memory()
  */
-static uint8_t buff[256];
+static uint8_t page_buffer[256];
 
 
 int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
@@ -309,7 +309,7 @@ int main(int argc, char* argv[])
             desttype = get_ch();
 
             // Read a page worth of contents
-            bufPtr = buff;
+            bufPtr = page_buffer;
             do {
 
                 *bufPtr++ = get_ch();
@@ -320,7 +320,7 @@ int main(int argc, char* argv[])
             verify_command_terminator();
 
             // Write to memory
-            write_memory(desttype, buff, address, savelength);
+            write_memory(desttype, page_buffer, address, savelength);
 
         } else if(ch == Cmnd_STK_READ_PAGE) {
 
