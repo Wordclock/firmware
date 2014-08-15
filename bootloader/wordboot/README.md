@@ -1,93 +1,122 @@
-This directory contains the Optiboot small bootloader for AVR
-microcontrollers, somewhat modified specifically for the Arduino
-environment.
+# wordboot
 
-Optiboot is more fully described here: http://code.google.com/p/optiboot/
-and is the work of Peter Knight (aka Cathedrow), building on work of Jason P
-Kyle, Spiff, and Ladyada.  Arduino-specific modification are by Bill
-Westfield (aka WestfW)
+This directory contains a bootloader named *wordboot*. It was originally based
+upon the [optiboot][1] bootloader from the [Arduino][2] project. By being
+compatible with [avrdude][3] it offers platform independence. *wordboot* is
+customized to the Wordclock project and uses the frontpanel to visually
+indicate the current status.
 
-Arduino-specific issues are tracked as part of the Arduino project
-at http://code.google.com/p/arduino
+## FEATURES
 
+- [avrdude][3] compatibility: The bootloader implements the original STK500
+  protocol as described in [AVR061: STK500 Communication Protocol][4] and hence
+  is well supported by avrdude (and possibly other programming utilities).
 
-------------------------------------------------------------
-Building optiboot for Arduino.
+- EEPROM support: In addition to simple read and write operations to the
+  conventional flash memory, it is also possible to read from and write to the
+  EEPROM memory.
 
-Production builds of optiboot for Arduino are done on a Mac in "unix mode"
-using CrossPack-AVR-20100115.  CrossPack tracks WINAVR (for windows), which
-is just a package of avr-gcc and related utilities, so similar builds should
-work on Windows or Linux systems.
+- Smallish: The complete bootloader fits into only **512** words of program
+  memory.
 
-One of the Arduino-specific changes is modifications to the makefile to
-allow building optiboot using only the tools installed as part of the
-Arduino environment, or the Arduino source development tree.  All three
-build procedures should yield identical binaries (.hex files) (although
-this may change if compiler versions drift apart between CrossPack and
-the Arduino IDE.)
+- Visual indication: The current status (during boot-up and flashing) is being
+  signaled using the four available minute LEDs of the frontpanel.
 
+- Configurable: Several options are available that influence the behaviour of
+  the bootloader. They are described in more detail in the
+  [appropriate](#CONFIGURATION) section.
 
-Building Optiboot in the Arduino IDE Install.
+- Written in C: Unlike many other bootloaders, *wordboot* is written completely
+  in C, making it more easy to understand and maintain. It relies upon
+  functionality provided by [avr-libc][5], upstreaming a great deal of
+  complexity.
 
-Work in the .../hardware/arduino/bootloaders/optiboot/ and use the
-"omake <targets>" command, which just generates a command that uses
-the arduino-included "make" utility with a command like:
-    make OS=windows ENV=arduino <targets>
-or  make OS=macosx ENV=arduino <targets>
-On windows, this assumes you're using the windows command shell.  If
-you're using a cygwin or mingw shell, or have one of those in your
-path, the build will probably break due to slash vs backslash issues.
-On a Mac, if you have the developer tools installed, you can use the
-Apple-supplied version of make.
-The makefile uses relative paths ("../../../tools/" and such) to find
-the programs it needs, so you need to work in the existing optiboot
-directory (or something created at the same "level") for it to work.
+## REQUIREMENTS
 
+The code itself is tested and developed with avr-gcc 4.9.x, avr-binutils 2.24.x
+and avr-libc 1.8.x in mind. Other toolchains and/or versions might not work as
+expected, especially since there are some restrains to the size the bootloader
+is allowed to utilise.
 
-Building Optiboot in the Arduino Source Development Install.
+This bootloader requires the `BOOTRST` fuse to be programmed. The boot flash
+section size should be set to **512 words**, i.e. the boot start address is
+`0x3e00` word address (`0x7c00` byte address). This results in the following
+recommended fuse values:
 
-In this case, there is no special shell script, and you're assumed to
-have "make" installed somewhere in your path.
-Build the Arduino source ("ant build") to unpack the tools into the
-expected directory.
-Work in Arduino/hardware/arduino/bootloaders/optiboot and use
-    make OS=windows ENV=arduinodev <targets>
-or  make OS=macosx ENV=arduinodev <targets>
+- **lfuse**: `0xE2`
+- **hfuse**: `0xDC`
+- **efuse**: `0xFC`
 
+## CONFIGURATION
 
-Programming Chips Using the _isp Targets
+There are several options directly influencing the behaviour of the bootloader:
 
-The CPU targets have corresponding ISP targets that will actuall
-program the bootloader into a chip. "atmega328_isp" for the atmega328,
-for example.  These will set the fuses and lock bits as appropriate as
-well as uploading the bootloader code.
+- **BAUD_RATE**: The default value is *9600*. It was chosen as the actual
+  Wordclock firmware uses the same baud rate, so no change is needed in case a
+  Bluetooth module is used. Baud rates up to *115200* have been tested
+  successfully. Effectively this is only limited by the hardware. Keep in mind,
+  though, that the Wordclock project uses the internal RC oscillator.
 
-ISP Targets in Version 5.0 and later:
+- **LED_START_FLASHES**: The default value is *3*. This defines the number of
+  LED flashes when the bootloader is entered.
 
-The isp targets are now built using a separate "Makefile.isp" makefile,
-which should make modification easier and more obvious.  This also fixes
-the atmega8_isp target problem mentioned below.  The default
-configuration assumes an ArduinoISP setup, but you will probably need to
-update at least the serial port, since those are different for each
-Arduino board and/or system/
+- **LED_DATA_FLASH**: The default value is *1* (enabled). This defines whether
+  the LEDs should flash when data is being received. Remove this define if
+  you want to disable this feature.
 
+- **BOOTLOADER_TIMEOUT_MS**: The default value is *1000* (1 second). This
+  defines the time after which the bootloader is exited and the actual firmware
+  itself is started.
 
-ISP Targets in Version 4.6 and earlier:
+The options are expected to be changed within the Makefile (as additional
+CFLAGS), although it is also possible to change them directly within the source
+by defining appropriate macros.
 
-The older makefiles default to using a USB programmer, but you can use a
-serial programmer like ArduinoISP by changing the appropriate variables
-when you invoke make:
+## BUILDING
 
-   make ISPTOOL=stk500v1 ISPPORT=/dev/tty.usbserial-A20e1eAN  \
-        ISPSPEED=-b19200 atmega328_isp
+Building the bootloader requires the appropriate sections to be located
+correctly. A suitable Makefile is provided taking care of this, while also
+making sure that the result stays small by disabling unneeded options
+enabled by default.
 
-The "atmega8_isp" target does not currently work, because the mega8
-doesn't have the "extended" fuse that the generic ISP target wants to
-pass on to avrdude.  You'll need to run avrdude manually.
+To build the firmware simply run `make` for the `wordclock` target:
 
+    make wordclock
 
-Standard Targets
+This will generate a `wordboot.hex` file, which can be flashed to the
+microcontroller in the conventional way (i.e. ISP/HVPP). The `wordboot.lst`
+file contains the resulting assembler listing and can be useful for debugging
+purposes.
 
-I've reduced the pre-built and source-version-controlled targets
-(.hex and .lst files included in the git repository) to just the
-three basic 16MHz targets: atmega8, atmega16, atmega328.
+## USAGE
+
+If the bootloader has been flashed successfully to the MCU and the fuses are
+programmed correctly, the four minute LEDs should blink `LED_START_FLASHES`
+times whenever the bootloader is entered (i.e. when powering up the Wordclock
+or when restarting it using the appropriate UART command). The bootloader is
+now accessible for as long as defined in `BOOTLOADER_TIMEOUT_MS`.
+
+While the bootloader is accessible, an application can be flashed using the
+following command:
+
+    avrdude -p m328p -c arduino -b 9600 -P /dev/ttyUSB1 -U flash:w:Wordclock.hex
+
+Make sure that the baud rate (-b) matches the configured setting. After a
+successful flash the microcontroller performs a reset cycle and should start
+the actual application briefly afterwards.
+
+## UTILITIES
+
+The provided `reset_wordboot.sh` script can be used to restart the Wordclock
+programmatically. It sends the appropriate UART command to the given device.
+If no device was specified `/dev/ttyUSB0` is chosen. The baud rate can be
+specified as a second parameter and defaults to 9600.
+
+    ./reset_wordclock.sh /dev/ttyUSB1 9600
+
+[1]: https://code.google.com/p/optiboot/
+[2]: http://www.arduino.cc/
+[3]: http://www.nongnu.org/avrdude/
+[4]: http://www.atmel.com/Images/doc2525.pdf
+[5]: http://www.nongnu.org/avr-libc/
+
