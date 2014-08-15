@@ -123,15 +123,13 @@ static uint8_t mcusr;
 /**
  * @brief Buffer for memory write operations
  *
- * This buffer is used for write operations to memory. It is defined as macro,
- * which saves flash memory, because it is not initialized, which is not
- * required in this case. The offset by one is owed to the mcusr, which is
- * placed directly at RAMSTART.
+ * This buffer is used for write operations to memory. Before a write is
+ * initiated, a page worth of content is received and put into the buffer. The
+ * buffer is then passed on to {@link #write_memory()}.
  *
- * @see mcusr
  * @see write_memory()
  */
-#define buff ((uint8_t*)(RAMSTART+1))
+static uint8_t buff[256];
 
 
 int main(int argc, char* argv[]) __attribute__ ((OS_main)) __attribute__ ((section (".init9")));
