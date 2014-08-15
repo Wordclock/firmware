@@ -137,10 +137,12 @@ pull requests. If you are new to git and/or are not familiar with this process,
 refer to [this][9] for a detailed description on how to submit a pull request.
 
 In case you are looking for something to work on, you probably want to take a
-look at the `TODO` file within the projects root directory. It contains a list
-of things that still need to be done, so feel free to start hacking away ;).
+look at the `TODO` file within the projects root directory. More recently the
+github.com [issue tracker][10] is used to keep track of issues and coordinate
+the development of new features. There is enough work left to do, so feel free
+to start hacking away ;).
 
-There is also a [repository][10] over at gitorious.org, which currently is
+There is also a [repository][11] over at gitorious.org, which currently is
 being used only as a mirror.
 
 ## DONATIONS
@@ -178,4 +180,5 @@ Bitcoin: `1Dn6MEKgRAgdRS8Aeg88fug9XmdgTRpCDA`
 [7]: http://www.nongnu.org/avrdude/
 [8]: https://github.com/Wordclock
 [9]: https://help.github.com/articles/using-pull-requests
-[10]: https://gitorious.org/Wordclock
+[10]: https://github.com/Wordclock/firmware/issues
+[11]: https://gitorious.org/Wordclock
