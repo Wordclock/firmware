@@ -91,7 +91,7 @@ automatically and does not need to be compiled on its own.
 
 The Intel HEX file can be flashed using [avrdude][7], which can also be used to
 configure the Fuse values. In its default configuration the following values
-are expected (this is referring to the ATmega328P):
+are expected:
 
 - **lfuse**: `0xE2`
 - **hfuse**: `0xD9`
@@ -119,7 +119,7 @@ status on the frontpanel display. Furthermore it implements the STK500 protocol
 and is directly supported by [avrdude][7], so no proprietary tools are needed.
 
 In order to be able to use *wordboot* the following change is necessary to the
-fuse settings (once again, this is referring to the ATmega328P):
+fuse settings:
 
 - **hfuse**: `0xDC`
 
