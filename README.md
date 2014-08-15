@@ -35,9 +35,9 @@ original one and make it more attractive:
   couple of years now, it misses a lot of protocols that have been added to
   the mainline version in the meantime.
 
-- **wordboot:** A new bootloader was developed, which is more feature-rich and
-  better adopted to the Wordclock project, visually indicating its current
-  status on the frontpanel display.
+- **Bootloader:** A new bootloader was developed, which is more feature-rich
+  and better adopted to the Wordclock project and is officially supported from
+  here on out.
 
 Refer to the [commit logs][4] for a full list of changes.
 
@@ -110,21 +110,22 @@ reinitialized with useful default values.
 
 The original firmware was shipped with a bootloader, which in no way was FLOSS
 and hence was not taken over into this project. The suggested alternatives were
-platform dependent and did not implement any official standard. A new
+platform dependent and did not implement any official standard. Therefore a new
 bootloader named *wordboot* was developed. It can be found within the
-`bootloader/wordboot` directory along with documentation about its usage.
+`bootloader/wordboot` directory along with more information and some
+documentation about its usage.
 
-wordboot makes use of the Wordclock hardware to visually indicate its current
-status on the frontpanel display. Furthermore it implements the STK500 protocol
-and is directly supported by [avrdude][7], so no proprietary tools are needed.
+*wordboot* makes use of the Wordclock hardware to visually indicate its status
+on the frontpanel display. Furthermore it implements the STK500 protocol and is
+directly supported by [avrdude][7], so no proprietary tools are needed.
 
 In order to be able to use *wordboot* the following change is necessary to the
 fuse settings:
 
 - **hfuse**: `0xDC`
 
-Support for other bootloaders has been completely dropped in favour of
-wordboot, so they are probably no longer working as expected.
+Support for other bootloaders has been dropped in favour of *wordboot*, so they
+might no longer work as expected.
 
 ## CONTRIBUTIONS
 
