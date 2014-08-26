@@ -80,20 +80,20 @@ typedef uint16_t Hue_t;
  */
 typedef struct {
 
-        /**
-         * @brief The red portion of the color
-         */
-        uint8_t red;
+    /**
+     * @brief The red portion of the color
+     */
+    uint8_t red;
 
-        /**
-         * @brief The green portion of the color
-         */
-        uint8_t green;
+    /**
+     * @brief The green portion of the color
+     */
+    uint8_t green;
 
-        /**
-         * @brief The blue portion of the color
-         */
-        uint8_t blue;
+    /**
+     * @brief The blue portion of the color
+     */
+    uint8_t blue;
 
 } color_rgb_t;
 
