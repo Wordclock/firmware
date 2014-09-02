@@ -65,6 +65,30 @@ static const char* const log_module_names[] = {
 };
 
 /**
+ * @brief Names of available log levels
+ *
+ * These are the corresponding names for items enumerated within
+ * {@link #log_level_t}.
+ *
+ * @note Make sure that there is a string for each element
+ * {@link #log_level_t}.
+ *
+ * @todo Put strings into program space using PROGMEM attribute
+ *
+ * @see log_level_t
+ */
+const char* const log_level_names[] = {
+
+    "None",
+    "Error",
+    "Warn",
+    "Info",
+    "Debug",
+    "All",
+
+};
+
+/**
  * @brief Maximum length of log format strings
  */
 #define LOG_FORMAT_MAX_STRING_LENGTH 80
