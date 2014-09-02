@@ -57,7 +57,7 @@
  *
  * @see log_module_t
  */
-static const char* const log_module_names[] = {
+const char* const log_module_names[] = {
 
     "LOG",
     "LDR",
