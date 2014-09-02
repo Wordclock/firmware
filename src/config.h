@@ -265,14 +265,15 @@
 #define LOG_MAIN 0
 
 /**
- * @brief Defines whether changes in the brightness should be logged
+ * @brief Default log level of the brightness module
  *
- * This affects `main.c` and controls whether debug information about changes
- * in the brightness should be logged.
+ * This affects `brightness.c` and controls whether the current brightness
+ * value should be output.
  *
- * @see main.c
+ * @see log_level_t
+ * @see brightness.c
  */
-#define LOG_MAIN_BRIGHTNESS 0
+#define LOG_LEVEL_BRIGHTNESS_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level of the LDR module
