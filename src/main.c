@@ -35,6 +35,7 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 
+#include "brightness.h"
 #include "config.h"
 #include "dcf77.h"
 #include "display.h"
@@ -242,48 +243,6 @@ static void handle_datetime(datetime_t* datetime)
 }
 
 /**
- * @brief Handles changes to the brightness in response to ambient lightning
- *
- * This functions retrieves the brightness as measured by the LDR and sets a
- * new base brightness step for the PWM generation whenever there are changes
- * in comparison with the last taken measurement.
- *
- * @note Only the most upper five bits of `ldr_get_brightness()` are taken into
- * account, as only base brightness step values from 0 to 31 are valid.
- *
- * @see ldr_get_brightness()
- * @see LOG_MAIN_BRIGHTNESS
- * @see ldr.h
- */
-static void handle_brightness()
-{
-
-    static uint8_t last_ldr_brightness = 0xff;
-
-    uint8_t ldr_brightness = ldr_get_brightness() >> 3;
-
-    if (last_ldr_brightness != ldr_brightness) {
-
-        #if (LOG_MAIN_BRIGHTNESS == 1)
-
-            char buff[5];
-
-            uint8ToStrLessOneHundred(ldr_brightness, buff);
-            uart_puts_P("brightness: ");
-            uart_puts(buff);
-            uart_putc('\n');
-
-        #endif
-
-        pwm_set_base_brightness(ldr_brightness);
-
-        last_ldr_brightness = ldr_brightness;
-
-    }
-
-}
-
-/**
  * @brief Entry point to start execution at
  *
  * This is the main entry point where execution will start. It initializes the
@@ -342,7 +301,7 @@ __attribute__((OS_main)) int main()
 
     while (1) {
 
-        handle_brightness();
+        brightness_handle();
         handle_datetime(&datetime);
         handle_ir_code();
         uart_protocol_handle();
