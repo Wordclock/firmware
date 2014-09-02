@@ -27,9 +27,9 @@
  * @see main.c
  */
 
-#ifndef _WC_MAIN_H
-#define _WC_MAIN_H
+#ifndef _WC_MAIN_H_
+#define _WC_MAIN_H_
 
 extern void main_ISR();
 
-#endif /* _WC_MAIN_H */
+#endif /* _WC_MAIN_H_ */
