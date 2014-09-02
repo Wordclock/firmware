@@ -951,6 +951,20 @@ static void _log_disable(uint8_t argc, char* argv[])
 }
 
 /**
+ * @brief Outputs whether logging is currently enabled globally
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_is_enabled()
+ * @see
+ */
+static void _log_is_enabled(uint8_t argc, char* argv[])
+{
+
+    uart_protocol_output_args_hex(1, (uint8_t)log_is_enabled());
+
+}
+
+/**
  * @brief Sets the logging level for a specific module
  *
  * Both, the module and the level are expected to be passed in as hex
@@ -992,6 +1006,64 @@ static void _log_set_level(uint8_t argc, char* argv[])
 
     log_set_level(module, level);
     uart_protocol_ok();
+
+}
+
+/**
+ * @brief Outputs all available log modules
+ *
+ * This iterates over {@link log_module_names} and outputs the name of each
+ * module on a line by line basis.
+ *
+ * @note The numerical value associated with each element (as defined by
+ * {@link log_module_t} is not explicitly mentioned, but can be inferred by the
+ * order of the output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see LOG_MODULE_COUNT
+ * @see log_module_t
+ * @see log_module_names
+ * @see uart_protocol_output()
+ */
+static void _log_modules(uint8_t argc, char* argv[])
+{
+
+    for (uint8_t i = 0; i < LOG_MODULE_COUNT; i++) {
+
+        extern const char* const log_module_names[];
+
+        uart_protocol_output(log_module_names[i]);
+
+    }
+
+}
+
+/**
+ * @brief Outputs all available log levels
+ *
+ * This iterates over {@link log_level_names} and outputs the name of each
+ * level on a line by line basis.
+ *
+ * @note The numerical value associated with each element (as defined by
+ * {@link log_level_t} is not explicitly mentioned, but can be inferred by the
+ * order of the output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see LOG_LEVEL_COUNT
+ * @see log_level_tt
+ * @see log_level_names
+ * @see uart_protocol_output()
+ */
+static void _log_levels(uint8_t argc, char* argv[])
+{
+
+    for (uint8_t i = 0; i < LOG_LEVEL_COUNT; i++) {
+
+        extern const char* const log_level_names[];
+
+        uart_protocol_output(log_level_names[i]);
+
+    }
 
 }
 
@@ -1076,9 +1148,13 @@ static uart_protocol_command_t uart_protocol_commands[] = {
     {"dg", 0, _date_get},
     {"ds", 4, _date_set},
 
+    // Logging
     {"le", 0, _log_enable},
     {"ld", 0, _log_disable},
+    {"li", 0, _log_is_enabled},
     {"ls", 2, _log_set_level},
+    {"lm", 0, _log_modules},
+    {"ll", 0, _log_levels},
 
 };
 
