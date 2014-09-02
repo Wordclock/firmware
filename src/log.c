@@ -133,8 +133,11 @@ void log_set_level(log_module_t module, log_level_t level)
  * - %H: Same as %h
  * - %%: Escape sequence for `%`
  *
- * Invalid specifiers are simply ignored. After the message has been output,
- * {@link #LOG_OUTPUT_EOL} is appended, representing the end of each message.
+ * Invalid specifiers are simply ignored.
+ *
+ * The messages is prefixed with {@link #LOG_OUTPUT_PREFIX}. After the message
+ * has been output, {@link #LOG_OUTPUT_EOL} is appended, representing the end
+ * of each message.
  *
  * @see log_enabled
  * @see log_level
@@ -153,6 +156,9 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
         return;
 
     }
+
+    // Output prefix
+    uart_puts_P(LOG_OUTPUT_PREFIX);
 
     // Keeps track of length of format string
     uint8_t length = 0;
