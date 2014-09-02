@@ -42,6 +42,8 @@
 
 #include <avr/pgmspace.h>
 
+#include <stdbool.h>
+
 /**
  * @brief Enumeration of modules able to output logging information
  *
@@ -103,6 +105,7 @@ typedef enum {
 
 void log_enable();
 void log_disable();
+bool log_is_enabled();
 
 void log_set_level(log_module_t module, log_level_t level);
 

@@ -123,6 +123,20 @@ void log_disable()
 }
 
 /**
+ * @brief Returns whether logging is currently enabled on a global basis
+ *
+ * @return True if logging is enabled globally, false otherwise
+ *
+ * @see log_enabled
+ */
+bool log_is_enabled()
+{
+
+    return log_enabled;
+
+}
+
+/**
  * @brief Sets log level for a particular module
  *
  * @see log_level
