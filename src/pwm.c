@@ -119,7 +119,7 @@
  * @see pwm_on()
  * @see pwm_off()
  */
-static bool pwm_is_on;
+bool pwm_is_on;
 
 /**
  * @brief Current base brightness
@@ -876,9 +876,6 @@ static void modifyLdrBrightness2pwmStep(uint8_t ind, uint8_t val)
  * After the data has been altered, `pwm_accommodate_brightness()` is invoked to
  * actually change the brightness in accordance to the newly calculated values.
  *
- * The user is informed about this change by disabling the PWM for 500 ms and
- * reenabling it afterwards.
- *
  * @see base_pwm_idx
  * @see offset_pwm_idx
  * @see modifyLdrBrightness2pwmStep()
@@ -901,20 +898,6 @@ void pwm_modifyLdrBrightness2pwmStep()
         base_pwm_idx = val;
         offset_pwm_idx = 0;
         pwm_accommodate_brightness();
-
-        /*
-         * Indicate that the settings have been applied successfully
-         * TODO Move this out of here as this is used to inform user
-         */
-        if (pwm_is_on) {
-
-            pwm_off();
-
-            _delay_ms(500);
-
-            pwm_on();
-
-        }
 
     }
 
