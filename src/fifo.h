@@ -31,8 +31,8 @@
  * @see fifo.c
  */
 
-#ifndef WC_FIFO_H
-#define WC_FIFO_H
+#ifndef _WC_FIFO_H_
+#define _WC_FIFO_H_
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -88,4 +88,4 @@ extern uint8_t fifo_get_wait(fifo_t* fifo);
 
 extern bool fifo_get_nowait(fifo_t* fifo, uint8_t* data);
 
-#endif /* WC_FIFO_H */
+#endif /* _WC_FIFO_H_ */

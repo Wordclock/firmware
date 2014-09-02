@@ -31,8 +31,8 @@
  * @see uart.c
  */
 
-#ifndef WC_UART_H
-#define WC_UART_H
+#ifndef _WC_UART_H_
+#define _WC_UART_H_
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
@@ -106,4 +106,4 @@ inline void uart_flush_output()
 
 }
 
-#endif /* WC_UART_H */
+#endif /* _WC_UART_H_ */
