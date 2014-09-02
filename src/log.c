@@ -44,6 +44,27 @@
 #include "uart.h"
 
 /**
+ * @brief Names of modules able to output logging information
+ *
+ * These are the corresponding names for items enumerated within
+ * {@link #log_module_t}. It is used as a prefix to messages of any given
+ * {@link #log_module_t module}.
+ *
+ * @note Make sure that there is a string for each element
+ * {@link #log_module_t}.
+ *
+ * @todo Put strings into program space using PROGMEM attribute
+ *
+ * @see log_module_t
+ */
+static const char* const log_module_names[] = {
+
+    "LOG",
+    "LDR",
+
+};
+
+/**
  * @brief Maximum length of log format strings
  */
 #define LOG_FORMAT_MAX_STRING_LENGTH 80
@@ -157,8 +178,10 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
     }
 
-    // Output prefix
+    // Output prefix, including module name and separator
     uart_puts_P(LOG_OUTPUT_PREFIX);
+    uart_puts(log_module_names[module]);
+    uart_puts_P(LOG_OUTPUT_SEPARATOR);
 
     // Keeps track of length of format string
     uint8_t length = 0;
