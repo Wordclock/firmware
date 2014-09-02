@@ -45,6 +45,7 @@
 #include "config.h"
 #include "uart.h"
 #include "ldr.h"
+#include "log.h"
 #include "base.h"
 
 /**
@@ -90,11 +91,7 @@ static volatile uint16_t curr_sum;
  * the internal state, it activates the ADC interrupt, which will handle the
  * measurements from then on.
  *
- * If the logging for this module is activated (`LOG_LDR`), it will also
- * output the value of the first measurement.
- *
  * @see curr_sum
- * @see LOG_LDR
  * @see ISR(ADC_vect)
  */
 void ldr_init()
@@ -133,16 +130,8 @@ void ldr_init()
     curr_sum = result;
     curr_sum *= MEASUREMENTS_ARRAY_SIZE;
 
-    #if (LOG_LDR == 1)
-
-        char buff[5];
-
-        uint8ToStr(result, buff);
-        uart_puts_P("LDR init: ");
-        uart_puts(buff);
-        uart_putc('\n');
-
-    #endif
+    log_set_level(LOG_MODULE_LDR, LOG_LEVEL_LDR_DEFAULT);
+    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "LDR init: %U", result);
 
     /*
      * ADIE: ADC interrupt enable
@@ -179,13 +168,9 @@ uint8_t ldr_get_brightness()
  * cycle and put it into `measurements`. It will then also recalculate the new
  * value for `curr_sum`.
  *
- * If logging is enabled (`LOG_LDR`) it will also output the value of the ADC
- * measurement.
- *
  * @see ldr_ADC()
  * @see measurements
  * @see curr_sum
- * @see LOG_LDR
  * @see MEASUREMENTS_ARRAY_SIZE
  */
 ISR(ADC_vect)
@@ -195,16 +180,7 @@ ISR(ADC_vect)
 
     uint8_t measurement = ADCH;
 
-    #if (LOG_LDR == 1)
-
-        char buff[5];
-
-        uint8ToStr(measurement, buff);
-        uart_puts_P("LDR: ");
-        uart_puts(buff);
-        uart_putc('\n');
-
-    #endif
+    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "LDR: %U", measurement);
 
     curr_sum -= measurements[curr_index];
     measurements[curr_index] = measurement;

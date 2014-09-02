@@ -147,7 +147,7 @@ void log_set_level(log_module_t module, log_level_t level)
 static void log_output_va(log_module_t module, log_level_t level, const char* fmt, va_list ap)
 {
 
-    // Check log level (globally and for specific module)
+    // Check whether output is enabled (globally and for specific module)
     if (!log_enabled || level > log_level[module]) {
 
         return;

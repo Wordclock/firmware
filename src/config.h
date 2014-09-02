@@ -275,14 +275,14 @@
 #define LOG_MAIN_BRIGHTNESS 0
 
 /**
- * @brief Defines whether the measured LDR values should be logged
+ * @brief Default log level of the LDR module
  *
- * This affects `ldr.c` and controls whether debug information about measured
- * values from the LDR should be output.
+ * This affects whether LDR values as measured by the ADC should be output.
  *
+ * @see log_level_t
  * @see ldr.c
  */
-#define LOG_LDR 0
+#define LOG_LEVEL_LDR_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Defines whether changes of the PWM signal should be logged
