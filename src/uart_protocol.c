@@ -426,7 +426,7 @@ static void _factory_reset(uint8_t argc, char* argv[])
  * @see ldr_get_brightness()
  * @see uart_protocol_output_args_hex()
  */
-static void _ldr_brightness(uint8_t argc, char* argv[])
+static void _brightness_get(uint8_t argc, char* argv[])
 {
 
     uart_protocol_output_args_hex(1, ldr_get_brightness());
@@ -980,7 +980,7 @@ static uart_protocol_command_t uart_protocol_commands[] = {
     {"r", 0, _reset},
     {"f", 0, _factory_reset},
 
-    {"lb", 0, _ldr_brightness},
+    {"bg", 0, _brightness_get},
 
     #if (ENABLE_RGB_SUPPORT == 1)
 
