@@ -119,7 +119,7 @@
  * @see pwm_on()
  * @see pwm_off()
  */
-bool pwm_is_on;
+static bool pwm_is_on;
 
 /**
  * @brief Current base brightness
@@ -380,6 +380,20 @@ void pwm_off()
     #endif
 
     pwm_is_on = false;
+
+}
+
+/**
+ * @brief Returns whether the PWM output is currently enabled
+ *
+ * @return True if PWM output is currently enabled, false otherwise
+ *
+ * @see pwm_is_on
+ */
+bool pwm_is_enabled()
+{
+
+    return pwm_is_on;
 
 }
 

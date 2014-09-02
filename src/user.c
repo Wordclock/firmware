@@ -815,10 +815,8 @@ void handle_user_command(user_command_t user_command)
 
                 pwm_modifyLdrBrightness2pwmStep();
 
-                extern bool pwm_is_on;
-
                 // Indicate the change to user
-                if (pwm_is_on) {
+                if (pwm_is_enabled()) {
 
                     pwm_off();
                     _delay_ms(500);
