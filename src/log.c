@@ -268,7 +268,7 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
                     {
 
-                        // Retrieve character and output it
+                        // Retrieve string and output it
                         const char* s = va_arg(ap, const char*);
                         uart_puts(s);
 
