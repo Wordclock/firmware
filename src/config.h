@@ -389,13 +389,14 @@
 #define LOG_DCF77 0
 
 /**
- * @brief Defines whether information about the UART protocol should be logged
+ * @brief Default log level of the UART protocol module
  *
- * This affects `uart_protocol.c` and controls whether various debug
- * information about the current state should be output.
+ * This affects `uart_protocol.c` and controls whether information about its
+ * current state should be output.
  *
+ * @see log_level_t
  * @see uart_protocol.c
  */
-#define LOG_UART_PROTOCOL 0
+#define LOG_LEVEL_UART_PROTOCOL_DEFAULT LOG_LEVEL_NONE
 
 #endif /* _WC_CONFIG_H_ */

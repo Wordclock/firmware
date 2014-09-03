@@ -1226,6 +1226,22 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
 }
 
 /**
+ * @brief Initializes the UART protocol module
+ *
+ * This initializes this module. For now it only sets the default logging
+ * level as defined by LOG_LEVEL_UART_PROTOCOL_DEFAULT.
+ *
+ * @see LOG_LEVEL_UART_PROTOCOL_DEFAULT
+ */
+void uart_protocol_init()
+{
+
+    log_set_level(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_UART_PROTOCOL_DEFAULT);
+
+}
+
+
+/**
  * @brief Processes the UART protocol
  *
  * This retrieves the input received by the UART hardware and puts it into the
@@ -1236,9 +1252,6 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
  * If the command could not be detected successfully an error message will be
  * output.
  *
- * If logging is enabled (#LOG_UART_PROTOCOL) some debugging information will
- * be output, too.
- *
  * @warning This function should be called on a regular basis. It is not time
  * critical at all, but once the incoming buffer is full, data might be lost.
  *
@@ -1246,7 +1259,6 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
  * @see uart_protocol_tokenize_command_buffer()
  * @see uart_protocol_commands
  * @see uart_protocol_error()
- * @see LOG_UART_PROTOCOL
  */
 void uart_protocol_handle()
 {
@@ -1264,13 +1276,7 @@ void uart_protocol_handle()
             uart_protocol_command_buffer[buffer_index] = '\0';
             buffer_index = 0;
 
-            #if (LOG_UART_PROTOCOL == 1)
-
-                uart_puts_P("Command: ");
-                uart_puts(uart_protocol_command_buffer);
-                uart_putc('\n');
-
-            #endif
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Command: %s", uart_protocol_command_buffer);
 
             char* argv[UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS];
             uint8_t argc;
@@ -1309,21 +1315,7 @@ void uart_protocol_handle()
         // Check whether there is enough space in buffer to put character in
         if (buffer_index < UART_PROTOCOL_COMMAND_BUFFER_SIZE - 1) {
 
-            #if (LOG_UART_PROTOCOL == 1)
-
-                char str[3];
-
-                uint8ToStrLessOneHundred(buffer_index, str);
-
-                uart_puts_P("Buffer index: ");
-                uart_puts(str);
-                uart_putc('\n');
-
-                uart_puts_P("Character: ");
-                uart_putc(c);
-                uart_putc('\n');
-
-            #endif
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Index: %u, character: %c", buffer_index, c);
 
             // Put character into buffer
             uart_protocol_command_buffer[buffer_index++] = c;
