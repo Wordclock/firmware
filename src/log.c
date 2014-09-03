@@ -201,6 +201,7 @@ log_level_t log_get_level(log_module_t module)
  *
  * Currently the following specifiers are supported:
  *
+ * - %c: Character
  * - %s: String
  * - %u: uint8_t with values below 100 -> {@link uint8ToStrLessOneHundred()}
  * - %U: uint8_t with the full range of values -> {@link uint8ToStr()}
@@ -248,6 +249,19 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
             // Analyze specifier
             switch(*++fmt) {
+
+                // Character
+                case 'c':
+
+                    {
+
+                        // Retrieve character and output it
+                        char c = (char)va_arg(ap, int);
+                        uart_putc(c);
+
+                    }
+
+                    break;
 
                 // String
                 case 's':
