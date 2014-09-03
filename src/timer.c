@@ -83,7 +83,7 @@
 /**
  * @brief List of functions that should be called once a second
  */
-#define INTERRUPT_1HZ { main_ISR(); ldr_ADC(); user_isr1Hz(); }
+#define INTERRUPT_1HZ { datetime_ISR(); ldr_ADC(); user_isr1Hz(); }
 
 /**
  * @brief List of functions that should be called once a minute
