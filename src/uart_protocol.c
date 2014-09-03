@@ -40,7 +40,6 @@
 #include "config.h"
 #include "base.h"
 #include "datetime.h"
-#include "i2c_rtc.h"
 #include "ldr.h"
 #include "log.h"
 #include "uart.h"
@@ -714,49 +713,33 @@ static void _preset_write(uint8_t argc, char* argv[])
  * @brief Puts out the currently used time
  *
  * This puts out the hex presentation of the currently used time (hour,
- * minutes, seconds). The time itself is retrieved directly from the RTC.
- * If there is an error while trying to communicate with the RTC, an error
- * message will be output.
+ * minutes, seconds). The time is retrieved from the
+ * {@link datetime.h datetime} module.
  *
  * @see uart_protocol_command_callback_t
- * @see datetime_t
- * @see i2c_rtc_read()
+ * @see datetime_get()
  * @see uart_protocol_output_args_hex()
- * @see uart_protocol_error()
  */
 static void _time_get(uint8_t argc, char* argv[])
 {
 
-    datetime_t datetime;
-
-    if (i2c_rtc_read(&datetime)) {
-
-        uart_protocol_output_args_hex(3, datetime.hh, datetime.mm, datetime.ss);
-
-        return;
-
-    }
-
-    uart_protocol_error();
+    datetime_t* datetime = datetime_get();
+    uart_protocol_output_args_hex(3, datetime->hh, datetime->mm, datetime->ss);
 
 }
 
 /**
  * @brief Sets the currently used time
  *
- * This sets the currently used time (hour, minutes, seconds). It writes the
- * given arguments directly to the RTC. In order for the date to stay the same,
- * it reads the date first and overwrites only the actual time values. Any
- * error while interacting with the RTC will result in an error message,
- * otherwise a success message will be output. Once the time was successfully
- * written to the RTC, the time is also passed over to the user module making
- * sure it will be applied immediately to the display itself.
+ * This sets the currently used time (hour, minutes, seconds). The time is
+ * written to the {@link datetime.h datetime} module. It retrieves the current
+ * datetime and manipulates the time only, while carrying over the date
+ * information. In case the new datetime cannot be applied, i.e. when it is
+ * invalid, an error will be output.
  *
  * @see uart_protocol_command_callback_t
- * @see datetime_t
- * @see i2c_rtc_read()
- * @see i2c_rtc_write()
- * @see user_setNewTime()
+ * @see datetime_get()
+ * @see datetime_set()
  * @see uart_protocol_ok()
  * @see uart_protocol_error()
  */
@@ -788,56 +771,15 @@ static void _time_set(uint8_t argc, char* argv[])
 
     }
 
-    datetime_t datetime;
-
-    if (!i2c_rtc_read(&datetime)) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
+    datetime_t datetime = *datetime_get();
 
     datetime.hh = time[0];
     datetime.mm = time[1];
     datetime.ss = time[2];
 
-    if (!i2c_rtc_write(&datetime)) {
+    if (datetime_set(&datetime)) {
 
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    user_setNewTime(&datetime);
-    uart_protocol_ok();
-
-}
-
-/**
- * @brief Puts out the currently used date
- *
- * This puts out the hex presentation of the currently used date (day, month
- * year, weekday). The date itself is retrieved directly from the RTC. If there
- * is an error while trying to communicate with the RTC, an error message will
- * be output.
- *
- * @see uart_protocol_command_callback_t
- * @see datetime_t
- * @see i2c_rtc_read()
- * @see uart_protocol_output_args_hex()
- * @see uart_protocol_error()
- */
-static void _date_get(uint8_t argc, char* argv[])
-{
-
-    datetime_t datetime;
-
-    if (i2c_rtc_read(&datetime)) {
-
-        uart_protocol_output_args_hex(4, datetime.DD, datetime.MM, datetime.YY,
-            datetime.WD);
+        uart_protocol_ok();
 
         return;
 
@@ -848,22 +790,38 @@ static void _date_get(uint8_t argc, char* argv[])
 }
 
 /**
- * @brief Sets the currently used date
+ * @brief Puts out the currently used date
  *
- * This sets the currently used date (day, month, year, weekday). It writes the
- * given arguments directly to the RTC. In order for the time to stay the same,
- * it reads the time first and overwrites only the actual date values. Any
- * error while interacting with the RTC will result in an error message,
- * otherwise a success message will be output.
+ * This puts out the hex presentation of the currently used date (day, month
+ * year, weekday). The date is retrieved from the {@link datetime.h datetime}
+ * module.
  *
  * @see uart_protocol_command_callback_t
- * @see datetime_t
- * @see i2c_rtc_read()
- * @see i2c_rtc_write()
+ * @see datetime_get()
+ * @see uart_protocol_output_args_hex()
+ */
+static void _date_get(uint8_t argc, char* argv[])
+{
+
+    datetime_t* datetime = datetime_get();
+    uart_protocol_output_args_hex(4, datetime->DD, datetime->MM, datetime->YY, datetime->WD);
+
+}
+
+/**
+ * @brief Sets the currently used date
+ *
+ * This sets the currently used date (day, month, year, weekday). The date is
+ * written to the {@link datetime.h datetime} module. It retrieves the current
+ * datetime and manipulates the date only, while carrying over the time
+ * information. In case the new datetime cannot be applied, i.e. when it is
+ * invalid, an error will be output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see datetime_get()
+ * @see datetime_set()
  * @see uart_protocol_ok()
  * @see uart_protocol_error()
- *
- * @todo Check whether user_setNewTime() is necessary or would even make sense
  */
 static void _date_set(uint8_t argc, char* argv[])
 {
@@ -893,30 +851,23 @@ static void _date_set(uint8_t argc, char* argv[])
 
     }
 
-    datetime_t datetime;
-
-    if (!i2c_rtc_read(&datetime)) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
+    datetime_t datetime = *datetime_get();
 
     datetime.DD = date[0];
     datetime.MM = date[1];
     datetime.YY = date[2];
     datetime.WD = date[3];
 
-    if (!i2c_rtc_write(&datetime)) {
+    if (datetime_set(&datetime)) {
 
-        uart_protocol_error();
+        uart_protocol_ok();
 
         return;
 
     }
 
-    uart_protocol_ok();
+    uart_protocol_error();
+
 
 }
 

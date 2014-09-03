@@ -1298,14 +1298,14 @@ static bool EnterTimeState_handleUserCommand(user_command_t command)
  * @see SetSystemTimeState
  * @see addSubState()
  * @see menu_state_t::MS_enterTime
- * @see g_dateTime
+ * @see datetime_get()
  */
 static void SetSystemTimeState_enter(const void* param)
 {
 
     log_state("SST\n");
 
-    addSubState(MS_setSystemTime, MS_enterTime, &g_dateTime);
+    addSubState(MS_setSystemTime, MS_enterTime, datetime_get());
     mode_setSystemTimeState.prohibitLeave = true;
 
 }
@@ -1317,16 +1317,16 @@ static void SetSystemTimeState_enter(const void* param)
  * (menu_state_t::MS_setSystemTime) mode has finished its job. For now the
  * only substate is actually the "enter time" (menu_state_t::MS_enterTime)
  * mode. Once the "enter time" mode has finished, this will make sure the set
- * time will be written to the RTC, makes the set time available to other
- * functions, allows the user to leave the mode and quits itself.
+ * time is taken over internally by the {@link datetime.h datetime} module,
+ * allows the user to leave the mode and quits itself.
  *
  * @param result Pointer to the result of the substate (set time)
  *
  * @see SetSystemTimeState_enter()
  * @see mode_setSystemTimeState
  * @see SetSystemTimeState
- * @see i2c_rtc_write()
- * @see g_dateTime
+ * @see datetime_t
+ * @see datetime_set()
  * @see quitMyself()
  */
 static void SetSystemTimeState_substateFinished(menu_state_t finishedState, const void* result)
@@ -1334,10 +1334,9 @@ static void SetSystemTimeState_substateFinished(menu_state_t finishedState, cons
 
     if (finishedState == MS_enterTime) {
 
-        const datetime_t* time = result;
+        datetime_t* time = (datetime_t*)result;
 
-        i2c_rtc_write(time);
-        g_dateTime = *time;
+        datetime_set(time);
         mode_setSystemTimeState.prohibitLeave = false;
         quitMyself(MS_setSystemTime, NULL);
 
