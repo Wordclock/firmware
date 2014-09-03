@@ -31,9 +31,27 @@
 #include <inttypes.h>
 
 #include "brightness.h"
+#include "config.h"
 #include "ldr.h"
 #include "log.h"
 #include "pwm.h"
+
+/**
+ * @brief Initializes the brightness module
+ *
+ * This initializes the brightness module and is expected to be called once
+ * during startup. For now it only sets the default logging level.
+ *
+ * @see log_set_level()
+ * @see LOG_LEVEL_BRIGHTNESS_DEFAULT
+ */
+void brightness_init()
+{
+
+    // Set default log level
+    log_set_level(LOG_MODULE_BRIGHTNESS, LOG_LEVEL_BRIGHTNESS_DEFAULT);
+
+}
 
 /**
  * @brief Accommodates the brightness in response to changes ambient lightning
