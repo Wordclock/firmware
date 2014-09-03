@@ -53,6 +53,8 @@
  * @note Make sure that there is a string for each element
  * {@link #log_module_t}.
  *
+ * @note Try to keep this strings short but unique.
+ *
  * @todo Put strings into program space using PROGMEM attribute
  *
  * @see log_module_t
