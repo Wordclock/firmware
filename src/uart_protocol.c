@@ -1266,7 +1266,7 @@ void uart_protocol_handle()
         // Check whether there is enough space in buffer to put character in
         if (buffer_index < UART_PROTOCOL_COMMAND_BUFFER_SIZE - 1) {
 
-            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Index: %u, character: %c", buffer_index, c);
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Index: %u, char: %c", buffer_index, c);
 
             // Put character into buffer
             uart_protocol_command_buffer[buffer_index++] = c;
