@@ -289,6 +289,7 @@ __attribute__((OS_main)) int main()
 
     ldr_init();
     pwm_init();
+    brightness_init();
     irmp_init();
     timer_init();
     user_init();
