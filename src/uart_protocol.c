@@ -1010,6 +1010,40 @@ static void _log_set_level(uint8_t argc, char* argv[])
 }
 
 /**
+ * @brief Gets the logging level for a specific module
+ *
+ * The log module is expected as first and only argument in a hex
+ * representation. In case the argument is invalid, uart_protocol_error() is
+ * invoked, otherwise the appropriate {@link log_level_t log level} is output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_module_t
+ * @see log_level_t
+ * @see hexStrToUint8()
+ * @see log_get_level()
+ * @see uart_protocl_error()
+ * @see uart_protocol_ok()
+ */
+static void _log_get_level(uint8_t argc, char* argv[])
+{
+
+    bool status;
+
+    log_module_t module = hexStrToUint8(argv[1], &status);
+
+    if (!status || module >= LOG_MODULE_COUNT) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    uart_protocol_output_args_hex(1, log_get_level(module));
+
+}
+
+/**
  * @brief Outputs all available log modules
  *
  * This iterates over {@link log_module_names} and outputs the name of each
@@ -1153,6 +1187,7 @@ static uart_protocol_command_t uart_protocol_commands[] = {
     {"ld", 0, _log_disable},
     {"li", 0, _log_is_enabled},
     {"ls", 2, _log_set_level},
+    {"lg", 1, _log_get_level},
     {"lm", 0, _log_modules},
     {"ll", 0, _log_levels},
 
