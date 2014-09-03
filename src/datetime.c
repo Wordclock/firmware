@@ -297,8 +297,7 @@ void datetime_handle()
 
                     #if (ENABLE_DCF_SUPPORT == 1)
 
-                        // TODO Enable DCF77 decoding
-                        //dcf77_enable();
+                        dcf77_enable();
 
                     #endif
 

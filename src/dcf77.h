@@ -50,6 +50,7 @@
 
 #include <stdbool.h>
 
+#include "config.h"
 #include "datetime.h"
 
 #if (ENABLE_DCF_SUPPORT == 1)
