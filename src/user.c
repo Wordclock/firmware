@@ -815,6 +815,15 @@ void handle_user_command(user_command_t user_command)
 
                 pwm_modifyLdrBrightness2pwmStep();
 
+                // Indicate the change to user
+                if (pwm_is_enabled()) {
+
+                    pwm_off();
+                    _delay_ms(500);
+                    pwm_on();
+
+                }
+
             } else if (UC_PULSE_MODE == user_command) {
 
                 menu_state_t curTop = user_get_current_menu_state();

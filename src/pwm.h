@@ -36,6 +36,8 @@
 #ifndef _WC_PWM_H_
 #define _WC_PWM_H_
 
+#include <stdbool.h>
+
 #include "color.h"
 
 /**
@@ -125,6 +127,8 @@ extern void pwm_init();
 extern void pwm_on();
 
 extern void pwm_off();
+
+extern bool pwm_is_enabled();
 
 #if (ENABLE_RGB_SUPPORT == 1)
 
