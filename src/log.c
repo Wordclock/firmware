@@ -176,6 +176,20 @@ void log_set_level(log_module_t module, log_level_t level)
 }
 
 /**
+ * @brief Gets log level for a particular module
+ *
+ * @see log_level
+ * @see log_module_t
+ * @see log_level_t
+ */
+log_level_t log_get_level(log_module_t module)
+{
+
+    return log_level[module];
+
+}
+
+/**
  * @brief Outputs a log message as specified by the format string
  *
  * First of all this function makes sure that only messages are being output

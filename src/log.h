@@ -109,6 +109,7 @@ void log_disable();
 bool log_is_enabled();
 
 void log_set_level(log_module_t module, log_level_t level);
+log_level_t log_get_level(log_module_t module);
 
 void log_output(log_module_t module, log_level_t level, const char* fmt, ...);
 void log_output_p(log_module_t module, log_level_t level, const char* fmt, ...);
