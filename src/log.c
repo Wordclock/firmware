@@ -43,6 +43,13 @@
 #include "log.h"
 #include "uart.h"
 
+const char const log_module_name_0[] PROGMEM = "LOG";
+const char const log_module_name_1[] PROGMEM = "LDR";
+const char const log_module_name_2[] PROGMEM = "BRT";
+const char const log_module_name_3[] PROGMEM = "MAIN";
+const char const log_module_name_4[] PROGMEM = "UARTP";
+const char const log_module_name_5[] PROGMEM = "DATE";
+
 /**
  * @brief Names of modules able to output logging information
  *
@@ -55,20 +62,25 @@
  *
  * @note Try to keep this strings short but unique.
  *
- * @todo Put strings into program space using PROGMEM attribute
- *
  * @see log_module_t
  */
-const char* const log_module_names[] = {
+PGM_P const log_module_names[] PROGMEM = {
 
-    "LOG",
-    "LDR",
-    "BRT",
-    "MAIN",
-    "UARTP",
-    "DATE",
+    log_module_name_0,
+    log_module_name_1,
+    log_module_name_2,
+    log_module_name_3,
+    log_module_name_4,
+    log_module_name_5,
 
 };
+
+const char const log_level_name_0[] PROGMEM = "None";
+const char const log_level_name_1[] PROGMEM = "Error";
+const char const log_level_name_2[] PROGMEM = "Warn";
+const char const log_level_name_3[] PROGMEM = "Info";
+const char const log_level_name_4[] PROGMEM = "Debug";
+const char const log_level_name_5[] PROGMEM = "All";
 
 /**
  * @brief Names of available log levels
@@ -79,18 +91,16 @@ const char* const log_module_names[] = {
  * @note Make sure that there is a string for each element
  * {@link #log_level_t}.
  *
- * @todo Put strings into program space using PROGMEM attribute
- *
  * @see log_level_t
  */
-const char* const log_level_names[] = {
+PGM_P const log_level_names[] PROGMEM = {
 
-    "None",
-    "Error",
-    "Warn",
-    "Info",
-    "Debug",
-    "All",
+    log_level_name_0,
+    log_level_name_1,
+    log_level_name_2,
+    log_level_name_3,
+    log_level_name_4,
+    log_level_name_5,
 
 };
 
@@ -221,6 +231,8 @@ log_level_t log_get_level(log_module_t module)
  *
  * @see log_enabled
  * @see log_level
+ * @see uart_puts_p()
+ * @see uart_puts_P()
  * @see uart_putc()
  * @see uart_puts()
  * @see uint8ToStrLessOneHundred()
@@ -239,7 +251,7 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
     // Output prefix, including module name and separator
     uart_puts_P(LOG_OUTPUT_PREFIX);
-    uart_puts(log_module_names[module]);
+    uart_puts_p((PGM_P)pgm_read_word(&(log_module_names[module])));
     uart_puts_P(LOG_OUTPUT_SEPARATOR);
 
     // Keeps track of length of format string
