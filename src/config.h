@@ -399,4 +399,12 @@
  */
 #define LOG_LEVEL_UART_PROTOCOL_DEFAULT LOG_LEVEL_NONE
 
+/**
+ * @brief Default log level of the datetime module
+ *
+ * @see log_level_t
+ * @see datetime.c
+ */
+#define LOG_LEVEL_DATETIME_DEFAULT LOG_LEVEL_NONE
+
 #endif /* _WC_CONFIG_H_ */
