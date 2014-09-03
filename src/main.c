@@ -244,6 +244,12 @@ __attribute__((OS_main)) int main()
 
     uart_init();
 
+    #if (LOG_ENABLE_DEFAULT == 1)
+
+        log_enable();
+
+    #endif
+
     // Set default log level for this module
     log_set_level(LOG_MODULE_MAIN, LOG_LEVEL_MAIN_DEFAULT);
     log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init started");

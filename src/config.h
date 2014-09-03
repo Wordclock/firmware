@@ -253,6 +253,18 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
+ * @brief Default state of logging module
+ *
+ * This controls the default state (enabled, disabled) of the logging module.
+ * If enabled (= 1) the logging is enabled globally by default, otherwise it
+ * is disabled and has to be enabled during runtime in order to generate any
+ * output at all.
+ *
+ * @see log_enable()
+ */
+#define LOG_ENABLE_DEFAULT 0
+
+/**
  * @brief Default log level of main module
  *
  * This affects `main.c` and controls whether information and errors during the
