@@ -333,7 +333,6 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
                     // This makes sure that the invalid specifier is output
                     continue;
-                    break;
 
             }
 
