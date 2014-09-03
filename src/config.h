@@ -253,16 +253,14 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
- * @brief Defines whether the main module should output logging information
+ * @brief Default log level of main module
  *
- * This affects `main.c` and controls whether functions within this file
- * should output debugging information. This includes information about the
- * initialization process as well as some rudimentary information during
- * runtime.
+ * This affects `main.c` and controls whether information and errors during the
+ * initialization should be output.
  *
  * @see main.c
  */
-#define LOG_MAIN 0
+#define LOG_LEVEL_MAIN_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level of the brightness module

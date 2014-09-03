@@ -42,6 +42,7 @@
 #include "i2c_master.h"
 #include "i2c_rtc.h"
 #include "ldr.h"
+#include "log.h"
 #include "pwm.h"
 #include "IRMP/irmp.h"
 #include "timer.h"
@@ -100,26 +101,6 @@ static uint8_t mcusr __attribute__ ((section(".noinit")));
  * @see READ_DATETIME_INTERVAL
  */
 static volatile uint8_t soft_seconds;
-
-#if (LOG_MAIN == 1)
-
-    /**
-     * @brief Used to output logging information of this module
-     *
-     * @see LOG_MAIN
-     */
-    #define log_main(x) uart_puts_P(x)
-
-#else
-
-    /**
-     * @brief Dummy in case LOG_MAIN is disabled
-     *
-     * @see LOG_MAIN
-     */
-    #define log_main(x)
-
-#endif
 
 /**
  * @brief Handles the synchronization between the RTC and the software clock
@@ -234,7 +215,7 @@ static void handle_datetime(datetime_t* datetime)
 
         } else {
 
-            log_main("RTC error\n");
+            log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_ERROR, "RTC error");
 
         }
 
@@ -263,7 +244,9 @@ __attribute__((OS_main)) int main()
 
     uart_init();
 
-    log_main("Init...\n");
+    // Set default log level for this module
+    log_set_level(LOG_MODULE_MAIN, LOG_LEVEL_MAIN_DEFAULT);
+    log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init started");
 
     wcEeprom_init();
 
@@ -281,7 +264,7 @@ __attribute__((OS_main)) int main()
 
         if (!i2c_rtc_init(&i2c_rtc_error)) {
 
-            log_main("RTC init failed\n");
+            log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_ERROR, "RTC init failed");
 
         }
 
@@ -298,7 +281,7 @@ __attribute__((OS_main)) int main()
 
     pwm_on();
 
-    log_main("Init finished\n");
+    log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init finished");
 
     while (1) {
 

@@ -62,6 +62,7 @@ const char* const log_module_names[] = {
     "LOG",
     "LDR",
     "BRT",
+    "MAIN",
 
 };
 
