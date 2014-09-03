@@ -316,18 +316,6 @@ static uint8_t g_eepromSaveDelay;
 static uint8_t g_checkIfAutoOffDelay;
 
 /**
- * @brief Datetime used and made available to functions within this module
- *
- * This can be set using user_setNewTime(). It will then be output to the
- * display. Furthermore functions within this module can make use of it,
- * e.g. curTimeIsBetween().
- *
- * @see user_setNewTime()
- * @see curTimeIsBetween()
- */
-static datetime_t g_dateTime;
-
-/**
  * @brief Allowing access to global instance of userParams backed by EEPROM
  *
  * @see UserEepromParams
@@ -689,7 +677,7 @@ void quitMyself(menu_state_t state, const void* result)
 
     }
 
-    dispInternalTime(&g_dateTime, 0);
+    dispInternalTime(datetime_get(), 0);
     UserState_SubstateFinished(g_stateStack[currentIdx - 1], state, result);
 
     log_state("quit self finished\n");
@@ -1106,8 +1094,6 @@ void user_setNewTime(const datetime_t* i_time)
 
         log_time("saved Time ");
 
-        g_dateTime = *i_time;
-
         if ((g_checkIfAutoOffDelay >= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S)) {
 
             if (checkActivation()) {
@@ -1161,8 +1147,8 @@ void user_setNewTime(const datetime_t* i_time)
 
         log_time("disp Time ");
 
-        putTime(&g_dateTime);
-        display_fadeNewTime(&g_dateTime);
+        putTime(datetime_get());
+        display_fadeNewTime(datetime_get());
 
         log_time("\n");
 
@@ -1310,13 +1296,15 @@ void user_isr1Hz()
  *
  * @return True if current time lies in between the given range, else false
  *
- * @see g_dateTime
+ * @see datetime_get()
  */
 static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 {
 
-    uint8_t h = g_dateTime.hh;
-    uint8_t m = g_dateTime.mm;
+    datetime_t* datetime = datetime_get();
+
+    uint8_t h = datetime->hh;
+    uint8_t m = datetime->mm;
 
     uint8_t largert1 = (h > h1) || ((h == h1) && (m >= m1));
     uint8_t lesst2 = (h < h2) || ((h == h2) && (m < m2));
