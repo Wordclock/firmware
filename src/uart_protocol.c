@@ -32,6 +32,7 @@
  */
 
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 #include <avr/wdt.h>
 
 #include <stdarg.h>
@@ -69,26 +70,56 @@ static void uart_protocol_output(const char* message)
 }
 
 /**
+ * @brief Outputs a message from program space in the correct format
+ *
+ * This outputs the given message from program space in the correct format
+ * (enclosed by #UART_PROTOCOL_OUTPUT_PREFIX and #UART_PROTOCOL_OUTPUT_EOL).
+ *
+ * @see UART_PROTOCOL_OUTPUT_PREFIX
+ * @see UART_PROTOCOL_OUTPUT_EOL
+ * @see uart_protocol_output_P()
+ */
+static void uart_protocol_output_p(const char* message)
+{
+
+    uart_puts_P(UART_PROTOCOL_OUTPUT_PREFIX);
+    uart_puts_p(message);
+    uart_puts_P(UART_PROTOCOL_OUTPUT_EOL);
+
+}
+
+/**
+ * @brief Outputs a message
+ *
+ * This is essentially a wrapper for {@link uart_protocol_p()}, which puts the
+ * string into program space automatically.
+ *
+ * @see uart_protocol_output_p()
+ */
+#define uart_protocol_output_P(s) uart_protocol_output_p(PSTR(s))
+
+
+/**
  * @brief Outputs a success message
  *
- * @see uart_protocol_output()
+ * @see uart_protocol_output_P()
  */
 static void uart_protocol_ok()
 {
 
-    uart_protocol_output("OK");
+    uart_protocol_output_P("OK");
 
 }
 
 /**
  * @brief Outputs an error message
  *
- * @see uart_protocol_output()
+ * @see uart_protocol_output_P()
  */
 static void uart_protocol_error()
 {
 
-    uart_protocol_output("ERROR");
+    uart_protocol_output_P("ERROR");
 
 }
 
