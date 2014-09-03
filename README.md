@@ -39,6 +39,12 @@ original one and make it more attractive:
   and better adopted to the Wordclock project and is officially supported from
   here on out.
 
+- **Logging:** A new logging facility was added. It is possible to enable the
+  logging of modules during runtime, making it easier to get information about
+  an issue without the requirement to recompile the firmware. This is also
+  tightly integrated into the *UART protocol* and hence is a powerful approach
+  for any debugging purposes.
+
 Refer to the [commit logs][4] for a full list of changes.
 
 ## HARDWARE REQUIREMENTS
