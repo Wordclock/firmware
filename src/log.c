@@ -220,7 +220,7 @@ log_level_t log_get_level(log_module_t module)
  * - %u: uint8_t with values below 100 -> {@link uint8ToStrLessOneHundred()}
  * - %U: uint8_t with the full range of values -> {@link uint8ToStr()}
  * - %h: uint8_t in its hex representation -> {@link uint8ToHexStr()}
- * - %H: Same as %h
+ * - %H: uint16_t in its hex representation -> {@link uint16ToHexStr()}
  * - %%: Escape sequence for `%`
  *
  * Invalid specifiers are simply ignored.
@@ -324,7 +324,6 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
                 // uint8_t as hex
                 case 'h':
-                case 'H':
 
                     {
 
@@ -332,6 +331,21 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
                         char buffer[3];
                         uint8_t u = (uint8_t)va_arg(ap, int);
                         uint8ToHexStr(u, buffer);
+                        uart_puts(buffer);
+
+                    }
+
+                    break;
+
+                // uint16_t as hex
+                case 'H':
+
+                    {
+
+                        // Convert into hex string and output it
+                        char buffer[5];
+                        uint16_t u = va_arg(ap, uint16_t);
+                        uint16ToHexStr(u, buffer);
                         uart_puts(buffer);
 
                     }
