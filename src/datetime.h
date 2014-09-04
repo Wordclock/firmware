@@ -19,11 +19,14 @@
 
 /**
  * @file datetime.h
- * @brief Contains the datetime_t type definition
+ * @brief Implements functionality dealing with date and time
  *
- * The datetime_t type is used throughout the whole project whenever a date
- * and/or time has to be represented. It also provides means to validate a
- * given datetime.
+ * This module implements all of the functionality that is needed to deal with
+ * date and time information. It also implements a software based clock, which
+ * is synchronized with the {@link #i2c_rtc.h RTC} on a regular basis.
+ *
+ * To deal with date and time information the type {@link #datetime_t} is
+ * used through the project and is also defined in this file.
  */
 
 #ifndef _WC_DATETIME_H_
@@ -92,6 +95,15 @@ typedef struct
 
 } datetime_t;
 
+extern void datetime_init();
+
 extern bool datetime_validate(const datetime_t* datetime);
+
+extern void datetime_handle();
+
+extern bool datetime_set(datetime_t* dt);
+extern datetime_t* datetime_get();
+
+extern void datetime_ISR();
 
 #endif /* _WC_DATETIME_H_ */
