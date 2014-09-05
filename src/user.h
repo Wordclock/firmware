@@ -216,7 +216,7 @@ typedef enum
  * should be made to the user. After this time has passed, the display will be
  * enabled again.
  */
-#define USER_VISUAL_INDICATION_TOGGLE_MS 500
+#define USER_VISUAL_INDICATION_TOGGLE_MS 200
 
 /**
  * @brief Default address of the IR remote control
