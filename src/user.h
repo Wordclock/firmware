@@ -210,6 +210,15 @@ typedef enum
 #define USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S 10
 
 /**
+ * @brief Toggle time of display for visual indications to the user
+ *
+ * This defines the time the display is disabled for when a visual indication
+ * should be made to the user. After this time has passed, the display will be
+ * enabled again.
+ */
+#define USER_VISUAL_INDICATION_TOGGLE_MS 500
+
+/**
  * @brief Default address of the IR remote control
  *
  * This is the default address of the IR remote control, which the Wordclock

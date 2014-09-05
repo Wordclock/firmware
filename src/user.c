@@ -807,7 +807,7 @@ void handle_user_command(user_command_t user_command)
                 if (pwm_is_enabled()) {
 
                     pwm_off();
-                    _delay_ms(500);
+                    _delay_ms(USER_VISUAL_INDICATION_TOGGLE_MS);
                     pwm_on();
 
                 }
