@@ -50,6 +50,8 @@ const char const log_module_name_3[] PROGMEM = "MAIN";
 const char const log_module_name_4[] PROGMEM = "UARTP";
 const char const log_module_name_5[] PROGMEM = "DATE";
 const char const log_module_name_6[] PROGMEM = "IR";
+const char const log_module_name_7[] PROGMEM = "DCF77";
+const char const log_module_name_8[] PROGMEM = "DCF77D";
 
 /**
  * @brief Names of modules able to output logging information
@@ -74,6 +76,8 @@ PGM_P const log_module_names[] PROGMEM = {
     log_module_name_4,
     log_module_name_5,
     log_module_name_6,
+    log_module_name_7,
+    log_module_name_8,
 
 };
 

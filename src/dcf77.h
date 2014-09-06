@@ -20,27 +20,20 @@
 
 /**
  * @file dcf77.h
- * @brief Header file for access to the DCF77 time signal
+ * @brief Header file of module decoding the DCF77 time signal
  *
- * DCF77 is used to receive the current date and time automatically. This contains
- * the header declaration that provide access to the date and time information.
+ * DCF77 is used to receive the current date and time automatically. This
+ * module is responsible for decoding the signal already demodulated by
+ * an appropriate DCF77 receiver. At least following receivers should be
+ * supported:
  *
- * In order for this module to work a DCF77 receiver is needed, which looks
- * something like [this][1].
+ * - [DCF-Empfangsmodul DCF1][1] from pollin.de
+ * - [C-Control DCF-Empfängerplatine][2] from conrad.de
+ * - [DCF 77 Empfängermodul][3] from reichelt.de
  *
- * This module is reported to work with the following receivers:
- *
- * * [DCF-Empfangsmodul DCF1][2] from pollin.de
- * * [C-Control DCF-Empfängerplatine][3] from conrad.de
- * * [DCF 77 Empfängermodul][4] from reichelt.de
- *
- * All these receivers output the demodulated signal digitally. It then needs
- * to be decoded, which is done within this module.
- *
- * [1]: https://en.wikipedia.org/wiki/File:Low_cost_DCF77_receiver.jpg
- * [2]: http://www.pollin.de/shop/dt/NTQ5OTgxOTk-/Bausaetze_Module/Module/DCF_Empfangsmodul_DCF1.html
- * [3]: http://www.conrad.de/ce/de/product/641138/C-Control-DCF-Empfaengerplatine
- * [4]: https://secure.reichelt.de/DCF77-MODUL/3/index.html?ACTION=3&GROUPID=3636&ARTICLE=57772
+ * [1]: http://www.pollin.de/shop/dt/NTQ5OTgxOTk-/Bausaetze_Module/Module/DCF_Empfangsmodul_DCF1.html
+ * [2]: http://www.conrad.de/ce/de/product/641138/C-Control-DCF-Empfaengerplatine
+ * [3]: https://secure.reichelt.de/DCF77-MODUL/3/index.html?ACTION=3&GROUPID=3636&ARTICLE=57772
  *
  * @see dcf77.c
  */
@@ -50,10 +43,53 @@
 
 #include <stdbool.h>
 
-#include "config.h"
 #include "datetime.h"
+#include "log.h"
 
-#if (ENABLE_DCF_SUPPORT == 1)
+#define DCF_LOG_LEVEL               LOG_LEVEL_ALL
+
+#define DCF_TIME_BASE               (10)
+
+// Rename
+#define DCF_FLT_LIMIT_HI            (60)
+
+#define DCF_LIM_LO_BIT_LOWER        (60 / DCF_TIME_BASE)
+#define DCF_LIM_LO_BIT_UPPER        (140 / DCF_TIME_BASE)
+
+#define DCF_LIM_HI_BIT_LOWER        (150 / DCF_TIME_BASE)
+#define DCF_LIM_HI_BIT_UPPER        (300 / DCF_TIME_BASE)
+
+#define DCF_LIM_PAUSE_LOWER         (700 / DCF_TIME_BASE)
+#define DCF_LIM_PAUSE_UPPER         (1000 / DCF_TIME_BASE)
+
+#define DCF_LIM_SYNC_LOWER          (1700 / DCF_TIME_BASE)
+#define DCF_LIM_SYNC_UPPER          (2000 / DCF_TIME_BASE)
+
+#define DCF_LIM_TIMER_COUNTER       (2200 / DCF_TIME_BASE)
+
+/**
+ * @brief Pin the DCF77 receiver is connected to
+ *
+ * @see ports.h
+ */
+#define DCF77_INPUT PORTB, 0
+
+/**
+ * @brief Pin the DCF77 signal is being output
+ *
+ * This is primarily meant for a LED, which would provide an indication of the
+ * received DCF77 time signal. With some exercise you can distinguish between
+ * 100 ms pulses and 200 ms pulses. Furthermore it is possible to get an idea
+ * of the quality of the signal. If there is a lot of noise in the proximity of
+ * the receiver the LED will blink too fast and/or too often.
+ *
+ * @see ports.h
+ */
+#define DCF77_OUTPUT PORTD, 4
+
+// Macro for inverted logic?
+
+bool dcf77_signal_filter_input();
 
 extern void dcf77_init();
 
@@ -64,20 +100,5 @@ extern void dcf77_disable();
 extern void dcf77_ISR();
 
 extern bool dcf77_getDateTime(datetime_t* DateTime_p);
-
-#else
-
-/**
- * @brief Empty macro in case DCF77 functionality is disabled
- *
- * When the DCF77 functionality is disabled during the compilation this empty
- * macro makes sure that the ISR won't be included.
- *
- * @see ENABLE_DCF_SUPPORT
- * @see INTERRUPT_100HZ
- */
-#define dcf77_ISR()
-
-#endif /* (ENABLE_DCF_SUPPORT == 1) */
 
 #endif /* _WC_DCF77_H_ */
