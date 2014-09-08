@@ -77,7 +77,7 @@ extern bool uart_getc_nowait(char* character);
 
 extern void uart_puts(const char*);
 
-extern void uart_puts_p(const char*);
+extern void uart_puts_p(PGM_P);
 
 /**
  * @brief Macro used to automatically put a string constant into program memory

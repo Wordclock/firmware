@@ -301,7 +301,7 @@ void uart_puts(const char* s)
  * @see uart_putc()
  * @see pgm_read_byte()
  */
-void uart_puts_p(const char* s)
+void uart_puts_p(PGM_P s)
 {
 
     char c;
