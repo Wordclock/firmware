@@ -970,18 +970,18 @@ static uart_protocol_command_t uart_protocol_commands[] = {
 static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
 {
 
-    uint8_t arg = 0;
+    uint8_t argc = 0;
     char *token = strtok(uart_protocol_command_buffer, " ");
 
-    while (token != NULL && arg < UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS) {
+    while (token != NULL && argc < UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS) {
 
-        argv[arg++] = token;
+        argv[argc++] = token;
 
         token = strtok(NULL, " ");
 
     }
 
-    return arg;
+    return argc;
 
 }
 
