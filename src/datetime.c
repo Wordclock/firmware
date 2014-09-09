@@ -50,7 +50,7 @@
  * `datetime_handle()`. It is synchronized with the RTC when an interval of
  * at most `READ_DATETIME_INTERVAL` has passed.
  *
- * @see main_ISR()
+ * @see datetime_ISR()
  * @see READ_DATETIME_INTERVAL
  */
 static volatile uint8_t soft_seconds;
