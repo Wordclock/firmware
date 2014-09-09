@@ -98,6 +98,9 @@ extern void uart_puts_p(PGM_P);
  * no data is being lost.
  *
  * @see ISR(USART_UDRE_vect)
+ *
+ * @todo Think about returning immediately in case interrupts are disabled to
+ * prevent deadlock situations?
  */
 inline void uart_flush_output()
 {
