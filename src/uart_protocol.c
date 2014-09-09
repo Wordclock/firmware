@@ -976,7 +976,6 @@ static uint8_t uart_protocol_tokenize_command_buffer(char* argv[])
     while (token != NULL && argc < UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS) {
 
         argv[argc++] = token;
-
         token = strtok(NULL, " ");
 
     }
