@@ -43,7 +43,6 @@
 #include <avr/interrupt.h>
 
 #include "config.h"
-#include "main.h"
 #include "timer.h"
 #include "dcf77.h"
 #include "IRMP/irmp.h"
