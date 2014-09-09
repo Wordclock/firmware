@@ -102,7 +102,7 @@
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see g_curDispState
  */
-static DisplayState g_oldDispState;
+static display_state_t g_oldDispState;
 
 /**
  * @brief Global variable containing the current display state
@@ -117,7 +117,7 @@ static DisplayState g_oldDispState;
  * @see g_blinkState
  * @see g_oldDispState
  */
-static DisplayState g_curDispState;
+static display_state_t g_curDispState;
 
 /**
  * @brief Global variable containing words that should be blinking
@@ -130,7 +130,7 @@ static DisplayState g_curDispState;
  * @see display_blinkStep()
  * @see g_curDispState
  */
-static DisplayState g_blinkState;
+static display_state_t g_blinkState;
 
 /**
  * @brief Global variable keeping track of the status within a single fade step
@@ -205,7 +205,7 @@ static uint16_t g_curFadeStepTimer;
  * @see display_blinkStep()
  * @see DISPLAY_TIMER_ENABLE_INT()
  */
-void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates)
+void display_setDisplayState(display_state_t i_showStates, display_state_t i_blinkstates)
 {
 
     g_blinkState = i_blinkstates & i_showStates;
@@ -231,7 +231,7 @@ void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstat
  * @see ISR(DISPLAY_TIMER_OVF_vect)
  * @see DISPLAY_TIMER_ENABLE_INT()
  */
-void display_fadeDisplayState(DisplayState i_showStates)
+void display_fadeDisplayState(display_state_t i_showStates)
 {
 
     g_blinkState = 0;

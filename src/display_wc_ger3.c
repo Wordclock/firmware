@@ -168,7 +168,7 @@
      * @see s_hourInc2nd
      * @see display_getTimeState()
      */
-    static const DisplayState s_hourInc1st = BIN32(00001111, 11011111, 11110101, 11010000);
+    static const display_state_t s_hourInc1st = BIN32(00001111, 11011111, 11110101, 11010000);
 
     /**
      * @brief Defining when an increment by two to the current hour is needed
@@ -187,7 +187,7 @@
      * @see s_hourInc1st
      * @see display_getTimeState()
      */
-    static const DisplayState s_hourInc2nd = BIN32(00000000, 10000000, 00000000, 00000000);
+    static const display_state_t s_hourInc2nd = BIN32(00000000, 10000000, 00000000, 00000000);
 
     /**
      * @brief Defines the start indexes for each "block" within s_minData
@@ -492,9 +492,9 @@
      *
      * @see s_numbers
      * @see e_displayWordPos
-     * @see DisplayState
+     * @see display_state_t
      */
-    #define _DISP_SETBIT(x) ((DisplayState)1 << x)
+    #define _DISP_SETBIT(x) ((display_state_t)1 << x)
 
     /**
      * @brief Definition of a display state for each number from one to twelve
@@ -603,7 +603,7 @@
     /**
      * @see display.h
      */
-    DisplayState display_getTimeState(const datetime_t* i_newDateTime)
+    display_state_t display_getTimeState(const datetime_t* i_newDateTime)
     {
 
         uint8_t hour = i_newDateTime->hh;
@@ -611,7 +611,7 @@
         const uint8_t minuteLeds = i_newDateTime->mm % 5;
         uint8_t minuteLedSubState = 0;
         bool jesterMode;
-        DisplayState leds;
+        display_state_t leds;
         uint8_t langMode = g_displayParams->mode;
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
@@ -621,13 +621,13 @@
 
             if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
-                leds |= ((DisplayState)1 << DWP_itis);
+                leds |= ((display_state_t)1 << DWP_itis);
 
             }
 
         #else
 
-            leds = ((DisplayState)1 << DWP_itis);
+            leds = ((display_state_t)1 << DWP_itis);
 
         #endif
 
@@ -635,13 +635,13 @@
 
         if (minutes == 0) {
 
-            leds |= ((DisplayState)1 << DWP_clock);
+            leds |= ((display_state_t)1 << DWP_clock);
 
         }
 
         uint8_t subInd;
         uint8_t ind;
-        DisplayState hincTestBit;
+        display_state_t hincTestBit;
 
         if (jesterMode) {
 
@@ -659,9 +659,9 @@
 
         ind = s_minStartInd[minutes] + subInd;
 
-        leds |= ((DisplayState)(s_minData[ind])) << DWP_MIN_FIRST;
+        leds |= ((display_state_t)(s_minData[ind])) << DWP_MIN_FIRST;
 
-        hincTestBit = ((DisplayState)1) << ind;
+        hincTestBit = ((display_state_t)1) << ind;
 
         if (hincTestBit & s_hourInc1st) {
 
@@ -733,13 +733,13 @@
 
         }
 
-        leds |= ((DisplayState)minuteLedSubState) << DWP_MIN_LEDS_BEGIN;
+        leds |= ((display_state_t)minuteLedSubState) << DWP_MIN_LEDS_BEGIN;
 
         leds |= display_getNumberDisplayState(hour);
 
         if ((hour == 1 || hour == 13) && (minutes == 0)) {
 
-            leds &= ~((DisplayState)1 << DWP_s);
+            leds &= ~((display_state_t)1 << DWP_s);
 
         }
 

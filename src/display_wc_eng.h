@@ -327,58 +327,58 @@ enum e_displayWordPos
 /**
  * @see display.h
  */
-static inline DisplayState display_getMinuteMask()
+static inline display_state_t display_getMinuteMask()
 {
 
-    return ((DisplayState)1 << DWP_fiveMin)
-        | ((DisplayState)1 << DWP_tenMin)
-        | ((DisplayState)1 << DWP_quarter)
-        | ((DisplayState)1 << DWP_twenty)
-        | ((DisplayState)1 << DWP_half)
-        | ((DisplayState)1 << DWP_to)
-        | ((DisplayState)1 << DWP_past)
-        | ((DisplayState)1 << DWP_min1)
-        | ((DisplayState)1 << DWP_min2)
-        | ((DisplayState)1 << DWP_min3)
-        | ((DisplayState)1 << DWP_min4);
+    return ((display_state_t)1 << DWP_fiveMin)
+        | ((display_state_t)1 << DWP_tenMin)
+        | ((display_state_t)1 << DWP_quarter)
+        | ((display_state_t)1 << DWP_twenty)
+        | ((display_state_t)1 << DWP_half)
+        | ((display_state_t)1 << DWP_to)
+        | ((display_state_t)1 << DWP_past)
+        | ((display_state_t)1 << DWP_min1)
+        | ((display_state_t)1 << DWP_min2)
+        | ((display_state_t)1 << DWP_min3)
+        | ((display_state_t)1 << DWP_min4);
 
 }
 
 /**
  * @see display.h
  */
-static inline DisplayState display_getHoursMask()
+static inline display_state_t display_getHoursMask()
 {
 
-    return ((DisplayState)1 << DWP_one)
-        | ((DisplayState)1 << DWP_two)
-        | ((DisplayState)1 << DWP_three)
-        | ((DisplayState)1 << DWP_four)
-        | ((DisplayState)1 << DWP_five)
-        | ((DisplayState)1 << DWP_six)
-        | ((DisplayState)1 << DWP_seven)
-        | ((DisplayState)1 << DWP_eight)
-        | ((DisplayState)1 << DWP_nine)
-        | ((DisplayState)1 << DWP_ten)
-        | ((DisplayState)1 << DWP_eleven)
-        | ((DisplayState)1 << DWP_twelve);
+    return ((display_state_t)1 << DWP_one)
+        | ((display_state_t)1 << DWP_two)
+        | ((display_state_t)1 << DWP_three)
+        | ((display_state_t)1 << DWP_four)
+        | ((display_state_t)1 << DWP_five)
+        | ((display_state_t)1 << DWP_six)
+        | ((display_state_t)1 << DWP_seven)
+        | ((display_state_t)1 << DWP_eight)
+        | ((display_state_t)1 << DWP_nine)
+        | ((display_state_t)1 << DWP_ten)
+        | ((display_state_t)1 << DWP_eleven)
+        | ((display_state_t)1 << DWP_twelve);
 
 }
 
 /**
  * @see display.h
  */
-static inline DisplayState display_getTimeSetIndicatorMask()
+static inline display_state_t display_getTimeSetIndicatorMask()
 {
 
-    return ((DisplayState)1 << DWP_clock);
+    return ((display_state_t)1 << DWP_clock);
 
 }
 
 /**
  * @see display.h
  */
-static inline DisplayState display_getNumberDisplayState(uint8_t number)
+static inline display_state_t display_getNumberDisplayState(uint8_t number)
 {
 
     number = number % 12;
@@ -389,7 +389,7 @@ static inline DisplayState display_getNumberDisplayState(uint8_t number)
 
     }
 
-    return ((DisplayState)1 << (number + DWP_HOUR_BEGIN - 1));
+    return ((display_state_t)1 << (number + DWP_HOUR_BEGIN - 1));
 
 }
 

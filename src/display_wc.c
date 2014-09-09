@@ -85,12 +85,12 @@ void display_init()
  * @note The display module should be enabled before this function can be
  * used.
  */
-void display_outputData(DisplayState state)
+void display_outputData(display_state_t state)
 {
 
     shift24_output(state);
 
-    if (state & ((DisplayState)1 << DWP_min1)) {
+    if (state & ((display_state_t)1 << DWP_min1)) {
 
         PORT(DISPLAY_MIN1) |= _BV(BIT(DISPLAY_MIN1));
 
@@ -100,7 +100,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if (state & ((DisplayState)1 << DWP_min2)) {
+    if (state & ((display_state_t)1 << DWP_min2)) {
 
         PORT(DISPLAY_MIN2) |= _BV(BIT(DISPLAY_MIN2));
 
@@ -110,7 +110,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if (state & ((DisplayState)1 << DWP_min3)) {
+    if (state & ((display_state_t)1 << DWP_min3)) {
 
         PORT(DISPLAY_MIN3) |= _BV(BIT(DISPLAY_MIN3));
 
@@ -120,7 +120,7 @@ void display_outputData(DisplayState state)
 
     }
 
-    if (state & ((DisplayState)1 << DWP_min4)) {
+    if (state & ((display_state_t)1 << DWP_min4)) {
 
         PORT(DISPLAY_MIN4) |= _BV(BIT(DISPLAY_MIN4));
 
@@ -175,7 +175,7 @@ void display_autoOffAnimStep1Hz(bool animPreview)
 
     if (s_state & 1) {
 
-        DisplayState state = ((DisplayState)1) << ((s_state >> 1) + DWP_MIN_LEDS_BEGIN);
+        display_state_t state = ((display_state_t)1) << ((s_state >> 1) + DWP_MIN_LEDS_BEGIN);
 
         if (animPreview) {
 

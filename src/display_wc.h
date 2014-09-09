@@ -105,13 +105,13 @@ typedef enum e_displayWordPos e_displayWordPos;
 /**
  * @see display.h
  */
-static inline DisplayState display_getIndicatorMask()
+static inline display_state_t display_getIndicatorMask()
 {
 
-    return ((DisplayState)1 << DWP_min1)
-        | ((DisplayState)1 << DWP_min2)
-        | ((DisplayState)1 << DWP_min3)
-        | ((DisplayState)1 << DWP_min4);
+    return ((display_state_t)1 << DWP_min1)
+        | ((display_state_t)1 << DWP_min2)
+        | ((display_state_t)1 << DWP_min3)
+        | ((display_state_t)1 << DWP_min4);
 
 }
 

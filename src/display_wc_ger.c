@@ -63,9 +63,9 @@
      * @see minData
      * @see DWP_MIN_FIRST
      * @see e_displayWordPos
-     * @see DisplayState
+     * @see display_state_t
      */
-    #define _DISP_SETBIT(x) ((DisplayState)1 << ((x) - DWP_MIN_FIRST))
+    #define _DISP_SETBIT(x) ((display_state_t)1 << ((x) - DWP_MIN_FIRST))
 
     /**
      * @brief Containing the display states for the minute blocks
@@ -82,7 +82,7 @@
      *
      * @see _DISP_SETBIT()
      * @see e_displayWordPos
-     * @see DisplayState
+     * @see display_state_t
      * @see minWessiViertel
      * @see minWessidreiViertel
      */
@@ -110,7 +110,7 @@
      *
      * @see _DISP_SETBIT()
      * @see e_displayWordPos
-     * @see DisplayState
+     * @see display_state_t
      * @see minDataOssi
      * @see minWessidreiViertel
      */
@@ -124,7 +124,7 @@
      *
      * @see _DISP_SETBIT()
      * @see e_displayWordPos
-     * @see DisplayState
+     * @see display_state_t
      * @see minDataOssi
      * @see minWessiViertel
      */
@@ -138,7 +138,7 @@
     /**
      * @see display.h
      */
-    DisplayState display_getTimeState(const datetime_t* i_newDateTime)
+    display_state_t display_getTimeState(const datetime_t* i_newDateTime)
     {
 
         /*
@@ -161,7 +161,7 @@
         /*
          * The variable which will be returned later on
          */
-        DisplayState leds;
+        display_state_t leds;
 
         /*
          * Get the chosen language mode
@@ -193,7 +193,7 @@
              */
             if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
-                leds |= ((DisplayState)1 << DWP_itis);
+                leds |= ((display_state_t)1 << DWP_itis);
 
             }
 
@@ -206,7 +206,7 @@
             /*
              * Enable the phrase "Es ist" (it is)
              */
-            leds = ((DisplayState)1 << DWP_itis);
+            leds = ((display_state_t)1 << DWP_itis);
 
         #endif
 
@@ -297,7 +297,7 @@
             /*
              * Add minState to the result to be returned
              */
-            leds |= ((DisplayState)minState) << DWP_MIN_FIRST;
+            leds |= ((display_state_t)minState) << DWP_MIN_FIRST;
 
         /*
          * The hour is "full" and no "five-minute" block needs to be
@@ -308,7 +308,7 @@
             /*
              * Activate the phrase "Uhr" (clock)
              */
-            leds |= ((DisplayState)1 << DWP_clock);
+            leds |= ((display_state_t)1 << DWP_clock);
 
         }
 
@@ -317,7 +317,7 @@
          */
         for (; minuteLeds; minuteLeds--) {
 
-            leds |= ((DisplayState)1 << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
+            leds |= ((display_state_t)1 << (minuteLeds - 1 + DWP_MIN_LEDS_BEGIN));
 
         }
 
@@ -340,14 +340,14 @@
          */
         if (hour == 1 && minutes >= 1) {
 
-            leds |= ((DisplayState)1 << DWP_s);
+            leds |= ((display_state_t)1 << DWP_s);
 
         }
 
         /*
          * Enable the LED group corresponding to the hour
          */
-        leds |= ((DisplayState)1 << (DWP_HOUR_BEGIN - 1 + hour));
+        leds |= ((display_state_t)1 << (DWP_HOUR_BEGIN - 1 + hour));
 
         return leds;
 

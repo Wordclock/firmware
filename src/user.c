@@ -322,7 +322,7 @@ static uint8_t g_checkIfAutoOffDelay;
  */
 #define g_params (&(wcEeprom_getData()->userParams))
 
-static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask);
+static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask);
 
 static bool checkActivation();
 
@@ -1062,7 +1062,7 @@ void user_init()
  * @see display_setDisplayState()
  * @see display_getTimeState()
  */
-static void dispInternalTime(const datetime_t* i_time, DisplayState blinkmask)
+static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask)
 {
 
     putTime(i_time);

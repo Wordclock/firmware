@@ -298,7 +298,7 @@ typedef struct DemoState {
      * driver is enabled. This is responsible for the multiplexing, which
      * makes all LEDs appear to be enabled.
      *
-     * @see DisplayState
+     * @see display_state_t
      * @see DemoState_1000Hz()
      * @see DemoState_10Hz()
      */
@@ -539,7 +539,7 @@ static void UserState_enter(menu_state_t state, const void* param);
 static void TrainIrState_enter(const void* param)
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     log_state("enter train\n");
 
@@ -606,7 +606,7 @@ static void TrainIrState_1Hz()
 static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     if (mode_trainIrState.curKey > 0) {
 
@@ -706,7 +706,7 @@ static void ShowNumberState_10Hz()
 static void ShowNumberState_enter(const void* param)
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     log_state("enter showNumber\n");
 
@@ -1021,7 +1021,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
 static void DemoState_1000Hz()
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     if (!mode_demoState.fastMode) {
 
@@ -1030,7 +1030,7 @@ static void DemoState_1000Hz()
     }
 
     pwm_lock_brightness_val(255);
-    disp = (DisplayState)0x01010101 << mode_demoState.demoStep;
+    disp = (display_state_t)0x01010101 << mode_demoState.demoStep;
     display_setDisplayState(disp, 0);
     ++mode_demoState.demoStep;
     mode_demoState.demoStep %= 8;
@@ -1056,7 +1056,7 @@ static void DemoState_1000Hz()
 static void DemoState_10Hz()
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     if (mode_demoState.fastMode) {
 
@@ -1068,7 +1068,7 @@ static void DemoState_10Hz()
 
     if (mode_demoState.delay100ms >= USER_DEMO_CHANGE_INT_100MS) {
 
-        disp = (DisplayState)1 << mode_demoState.demoStep;
+        disp = (display_state_t)1 << mode_demoState.demoStep;
         display_setDisplayState(disp, 0);
         ++mode_demoState.demoStep;
         mode_demoState.demoStep %= 32;
@@ -1153,7 +1153,7 @@ static void DemoState_leave()
 static void EnterTimeState_enter(const void* param)
 {
 
-    DisplayState disp;
+    display_state_t disp;
 
     log_time("TH\n");
 
@@ -1414,7 +1414,7 @@ static void SetOnOffTimeState_substateFinished(menu_state_t finishedState, const
 
         if (UI_ONOFFTIMES_COUNT == mode_setOnOffTimeState.currentTimeToSet) {
 
-            DisplayState disp;
+            display_state_t disp;
             uint8_t autoOnOff = (uint8_t)g_params->useAutoOffAnimation + 1;
             disp = display_getNumberDisplayState(autoOnOff);
             display_setDisplayState(disp, disp);
@@ -1461,7 +1461,7 @@ static bool SetOnOffTimeState_handleUserCommand(user_command_t command)
 
         if ((command == UC_DOWN) || (command == UC_UP)) {
 
-            DisplayState disp;
+            display_state_t disp;
             g_params->useAutoOffAnimation = !g_params->useAutoOffAnimation;
             uint8_t autoOnOff = g_params->useAutoOffAnimation ? 2 : 1;
             disp = display_getNumberDisplayState(autoOnOff);

@@ -378,66 +378,66 @@ struct DisplayEepromParams {
 /**
  * @see display.h
  */
-static inline DisplayState display_getMinuteMask()
+static inline display_state_t display_getMinuteMask()
 {
 
-    return ((DisplayState)1 << DWP_fuenfMin)
-        | ((DisplayState)1 << DWP_zehnMin)
-        | ((DisplayState)1 << DWP_zwanzigMin)
-        | ((DisplayState)1 << DWP_dreiMin)
-        | ((DisplayState)1 << DWP_viertel)
-        | ((DisplayState)1 << DWP_nach)
-        | ((DisplayState)1 << DWP_vor)
-        | ((DisplayState)1 << DWP_halb)
-        | ((DisplayState)1 << DWP_min1)
-        | ((DisplayState)1 << DWP_min2)
-        | ((DisplayState)1 << DWP_min3)
-        | ((DisplayState)1 << DWP_min4);
+    return ((display_state_t)1 << DWP_fuenfMin)
+        | ((display_state_t)1 << DWP_zehnMin)
+        | ((display_state_t)1 << DWP_zwanzigMin)
+        | ((display_state_t)1 << DWP_dreiMin)
+        | ((display_state_t)1 << DWP_viertel)
+        | ((display_state_t)1 << DWP_nach)
+        | ((display_state_t)1 << DWP_vor)
+        | ((display_state_t)1 << DWP_halb)
+        | ((display_state_t)1 << DWP_min1)
+        | ((display_state_t)1 << DWP_min2)
+        | ((display_state_t)1 << DWP_min3)
+        | ((display_state_t)1 << DWP_min4);
 }
 
 /**
  * @see display.h
  */
-static inline DisplayState display_getHoursMask()
+static inline display_state_t display_getHoursMask()
 {
 
-    return ((DisplayState)1 << DWP_zw)
-        | ((DisplayState)1 << DWP_ei)
-        | ((DisplayState)1 << DWP_n)
-        | ((DisplayState)1 << DWP_s)
-        | ((DisplayState)1 << DWP_ieben)
-        | ((DisplayState)1 << DWP_drei)
-        | ((DisplayState)1 << DWP_vier)
-        | ((DisplayState)1 << DWP_fuenf)
-        | ((DisplayState)1 << DWP_sechs)
-        | ((DisplayState)1 << DWP_acht)
-        | ((DisplayState)1 << DWP_neun)
-        | ((DisplayState)1 << DWP_zehn)
-        | ((DisplayState)1 << DWP_elf)
-        | ((DisplayState)1 << DWP_zwoelf);
-
-}
-
-/**
- * @see display.h
- */
-static inline DisplayState display_getTimeSetIndicatorMask()
-{
-
-    return ((DisplayState)1 << DWP_clock);
+    return ((display_state_t)1 << DWP_zw)
+        | ((display_state_t)1 << DWP_ei)
+        | ((display_state_t)1 << DWP_n)
+        | ((display_state_t)1 << DWP_s)
+        | ((display_state_t)1 << DWP_ieben)
+        | ((display_state_t)1 << DWP_drei)
+        | ((display_state_t)1 << DWP_vier)
+        | ((display_state_t)1 << DWP_fuenf)
+        | ((display_state_t)1 << DWP_sechs)
+        | ((display_state_t)1 << DWP_acht)
+        | ((display_state_t)1 << DWP_neun)
+        | ((display_state_t)1 << DWP_zehn)
+        | ((display_state_t)1 << DWP_elf)
+        | ((display_state_t)1 << DWP_zwoelf);
 
 }
 
 /**
  * @see display.h
  */
-static inline DisplayState display_getNumberDisplayState(uint8_t number)
+static inline display_state_t display_getTimeSetIndicatorMask()
+{
+
+    return ((display_state_t)1 << DWP_clock);
+
+}
+
+/**
+ * @see display.h
+ */
+static inline display_state_t display_getNumberDisplayState(uint8_t number)
 {
 
     extern const uint16_t s_numbers[12];
     number = number % 12;
 
-    return ((DisplayState)(s_numbers[number])) << DWP_HOUR_BEGIN;
+    return ((display_state_t)(s_numbers[number])) << DWP_HOUR_BEGIN;
 
 }
 

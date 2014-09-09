@@ -204,7 +204,7 @@
  *
  * @see e_displayWordPos
  */
-typedef uint32_t DisplayState;
+typedef uint32_t display_state_t;
 
 /**
  * @brief Data of the display module that should be stored persistently in EEPROM
@@ -222,7 +222,7 @@ typedef struct DisplayEepromParams DisplayEepromParams;
 
 extern void display_init();
 
-extern void display_outputData(DisplayState state);
+extern void display_outputData(display_state_t state);
 
 /**
  * @brief Returns a display state for the given datetime
@@ -236,13 +236,13 @@ extern void display_outputData(DisplayState state);
  * @return The display state for the given datetime
  *
  * @see datetime_t
- * @see DisplayState
+ * @see display_state_t
  */
-extern DisplayState display_getTimeState(const datetime_t* i_newDateTime);
+extern display_state_t display_getTimeState(const datetime_t* i_newDateTime);
 
-extern void display_setDisplayState(DisplayState i_showStates, DisplayState i_blinkstates);
+extern void display_setDisplayState(display_state_t i_showStates, display_state_t i_blinkstates);
 
-extern void display_fadeDisplayState(DisplayState i_showStates);
+extern void display_fadeDisplayState(display_state_t i_showStates);
 
 extern void display_blinkStep();
 
@@ -257,7 +257,7 @@ extern void display_autoOffAnimStep1Hz(bool animPreview);
  *
  * @return A display state with activated indicators
  */
-static inline DisplayState display_getIndicatorMask();
+static inline display_state_t display_getIndicatorMask();
 
 /**
  * @brief Returns a display state indicating the the time is being set
@@ -272,7 +272,7 @@ static inline DisplayState display_getIndicatorMask();
  *
  * @return A display state with activated indicators
  */
-static inline DisplayState display_getTimeSetIndicatorMask();
+static inline display_state_t display_getTimeSetIndicatorMask();
 
 /**
  * @brief Returns a display state with all bits representing minutes enabled
@@ -286,10 +286,10 @@ static inline DisplayState display_getTimeSetIndicatorMask();
  *
  * @return Display state with all bits representing minutes enabled
  *
- * @see DisplayState
+ * @see display_state_t
  * @see e_displayWordPos
  */
-static inline DisplayState display_getMinuteMask();
+static inline display_state_t display_getMinuteMask();
 
 /**
  * @brief Returns a display state with all bits representing an hour enabled
@@ -303,10 +303,10 @@ static inline DisplayState display_getMinuteMask();
  *
  * @return Display state with all bits representing hours enabled
  *
- * @see DisplayState
+ * @see display_state_t
  * @see e_displayWordPos
  */
-static inline DisplayState display_getHoursMask();
+static inline display_state_t display_getHoursMask();
 
 /**
  * @brief Returns a display state with a representation for the given number
@@ -323,9 +323,9 @@ static inline DisplayState display_getHoursMask();
  *
  * @return Display state with a representation of the given number
  *
- * @see DisplayState
+ * @see display_state_t
  */
-static inline DisplayState display_getNumberDisplayState(uint8_t number);
+static inline display_state_t display_getNumberDisplayState(uint8_t number);
 
 /**
  * @brief Sets a new time to be shown on the display
