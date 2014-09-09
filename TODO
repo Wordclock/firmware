@@ -64,10 +64,6 @@
   into wcEeprom_writeback(), which would save some space and make things
   not look more complicated than they actually are.
 
-- pwm.c: pwm_modifyLdrBrightness2pwmStep(): The indication for applying the
-  settings successfully should not be part of the function itself, but moved
-  to user.c.
-
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
   needed or if it would make more sense to not include it in the first place
   when dealing with monochromatic clocks.
@@ -207,9 +203,6 @@
 - Implement EEPROM writeback after delay for UART protocol, too.
 
 - uart_protocol: Make advanced mode optional during compilation
-
-- main: The whole soft second implementation should be moved into own module
-  making main_ISR() useless.
 
 - When in normal mode and the color is changed "pa" will still return the
   "active" preset, although it is no longer active anymore. This could be
