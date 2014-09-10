@@ -35,6 +35,8 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 
+#include <IRMP/irmp.h>
+
 #include "brightness.h"
 #include "config.h"
 #include "datetime.h"
@@ -42,7 +44,6 @@
 #include "display.h"
 #include "ldr.h"
 #include "pwm.h"
-#include "IRMP/irmp.h"
 #include "timer.h"
 #include "user.h"
 #include "uart.h"
