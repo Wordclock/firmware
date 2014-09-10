@@ -142,6 +142,9 @@ void uart_init()
  * This ISR processes all of the data coming in via UART. It simply puts the
  * received data into the appropriate buffer (uart_fifo_in).
  *
+ * @note As the return value of {@link fifo_put()} is ignored, data might
+ * be lost once the appropriate FIFO is full.
+ *
  * @see fifo_put()
  * @see uart_fifo_in
  */
