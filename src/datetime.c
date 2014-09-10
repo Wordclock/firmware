@@ -144,7 +144,7 @@ static uint8_t get_number_of_days_in_month(uint8_t month, uint8_t year)
  * @brief Initializes the datetime module
  *
  * This initializes the datetime module by setting up the
- * {@link #i2c_rtc.h RTC} module to be able to read the datetime from the RTC
+ * {@link i2c_rtc.h RTC} module to be able to read the datetime from the RTC
  * later on.
  *
  * @see i2c_rtc_init()
@@ -361,7 +361,7 @@ void datetime_handle()
  * performed successfully, it will return true, otherwise false is an
  * indication for an failure.
  *
- * @param datetime Pointer to datetime structure, which should be set
+ * @param dt Pointer to datetime structure, which should be set
  *
  * @return True if datetime was set successfully, false otherwise
  *
@@ -424,7 +424,8 @@ datetime_t* datetime_get()
  *
  * This is expected to be executed once a second and simply increments
  * {@link #soft_seconds} by one. The date and time information itself is
- * then updated by {@link #datetime_handl()} asynchronically in the background.
+ * then updated by {@link #datetime_handle()} asynchronically in the
+ * background.
  *
  * @see datetime_handle()
  */
