@@ -287,6 +287,7 @@ void datetime_handle()
              */
             if (last_minute != datetime.mm) {
 
+                // TODO: Set time directly without using user module
                 user_setNewTime(&datetime);
                 last_minute = datetime.mm;
 
