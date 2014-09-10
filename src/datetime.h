@@ -23,7 +23,7 @@
  *
  * This module implements all of the functionality that is needed to deal with
  * date and time information. It also implements a software based clock, which
- * is synchronized with the {@link #i2c_rtc.h RTC} on a regular basis.
+ * is synchronized with the {@link i2c_rtc.h RTC} on a regular basis.
  *
  * To deal with date and time information the type {@link #datetime_t} is
  * used through the project and is also defined in this file.

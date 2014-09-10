@@ -405,7 +405,7 @@ bool datetime_set(datetime_t* dt)
 /**
  * @brief Returns a reference to the date and time information used internally
  *
- * @return datetime_t Reference to {@link #datetime}
+ * @return Reference to {@link #datetime}
  *
  * @note Make sure to NOT modify the content of {@link #datetime}.
  *
