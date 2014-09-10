@@ -36,7 +36,6 @@
 #include "user.h"
 #include "IRMP/irmp.h"
 #include "pwm.h"
-#include "i2c_rtc.h"
 #include "display.h"
 #include "dcf77.h"
 #include "base.h"
