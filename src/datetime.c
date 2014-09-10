@@ -37,6 +37,7 @@
  * @see datetime.h
  */
 
+#include "config.h"
 #include "datetime.h"
 #include "dcf77.h"
 #include "i2c_rtc.h"
@@ -298,8 +299,7 @@ void datetime_handle()
 
                     #if (ENABLE_DCF_SUPPORT == 1)
 
-                        // TODO Enable DCF77 decoding
-                        //dcf77_enable();
+                        dcf77_enable();
 
                     #endif
 
