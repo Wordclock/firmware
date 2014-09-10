@@ -70,20 +70,20 @@
  *
  * [1]: https://en.wikipedia.org/wiki/File:HueScale.svg
  */
-static uint8_t color_hue_waveform(Hue_t x)
+static uint8_t color_hue_waveform(Hue_t hue)
 {
 
-    if (x < (COLOR_HUE_MAX / 6)) {
+    if (hue < (COLOR_HUE_MAX / 6)) {
 
-        return x * ((COLOR_HUE_STEPS * 6) / COLOR_HUE_MAX);
+        return hue * ((COLOR_HUE_STEPS * 6) / COLOR_HUE_MAX);
 
-    } else if (x < ((COLOR_HUE_MAX * 3) / 6)) {
+    } else if (hue < ((COLOR_HUE_MAX * 3) / 6)) {
 
         return COLOR_HUE_STEPS - 1;
 
-    } else if (x < ((COLOR_HUE_MAX * 4) / 6)) {
+    } else if (hue < ((COLOR_HUE_MAX * 4) / 6)) {
 
-        return (((COLOR_HUE_MAX * 4) / 6) - 1 - x)
+        return (((COLOR_HUE_MAX * 4) / 6) - 1 - hue)
                     * ((COLOR_HUE_STEPS * 6) / COLOR_HUE_MAX);
 
     } else {
