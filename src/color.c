@@ -60,7 +60,7 @@
  * This function will return a value from 0 up to 255, where 0 means there is
  * no green portion, and 255 represents completely green.
  *
- * @see Hue_t The given hue
+ * @param hue The given hue
  *
  * @return The green portion of the given hue, ranges from 0 up to 255
  *
