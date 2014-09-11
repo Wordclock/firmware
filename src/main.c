@@ -43,6 +43,7 @@
 #include "dcf77.h"
 #include "display.h"
 #include "ldr.h"
+#include "log.h"
 #include "pwm.h"
 #include "timer.h"
 #include "user.h"
@@ -78,26 +79,6 @@ static uint8_t mcusr __attribute__ ((section(".noinit")));
 
 #endif
 
-#if (LOG_MAIN == 1)
-
-    /**
-     * @brief Used to output logging information of this module
-     *
-     * @see LOG_MAIN
-     */
-    #define log_main(x) uart_puts_P(x)
-
-#else
-
-    /**
-     * @brief Dummy in case LOG_MAIN is disabled
-     *
-     * @see LOG_MAIN
-     */
-    #define log_main(x)
-
-#endif
-
 /**
  * @brief Entry point to start execution at
  *
@@ -117,7 +98,15 @@ __attribute__((OS_main)) int main()
 
     uart_init();
 
-    log_main("Init...\n");
+    #if (LOG_ENABLE_DEFAULT == 1)
+
+        log_enable();
+
+    #endif
+
+    // Set default log level for this module
+    log_set_level(LOG_MODULE_MAIN, LOG_LEVEL_MAIN_DEFAULT);
+    log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init started");
 
     wcEeprom_init();
 
@@ -140,7 +129,7 @@ __attribute__((OS_main)) int main()
 
     pwm_on();
 
-    log_main("Init finished\n");
+    log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init finished");
 
     while (1) {
 

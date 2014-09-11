@@ -253,26 +253,27 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
- * @brief Defines whether the main module should output logging information
+ * @brief Default state of logging module
  *
- * This affects `main.c` and controls whether functions within this file
- * should output debugging information. This includes information about the
- * initialization process as well as some rudimentary information during
- * runtime.
+ * This controls the default state (enabled, disabled) of the logging module.
+ * If enabled (= 1) the logging is enabled globally by default, otherwise it
+ * is disabled and has to be enabled during runtime in order to generate any
+ * output at all.
  *
- * @see main.c
+ * @see log_enable()
  */
-#define LOG_MAIN 0
+#define LOG_ENABLE_DEFAULT 0
 
 /**
- * @brief Defines whether changes in the brightness should be logged
+ * @brief Default log level of main module
  *
- * This affects `main.c` and controls whether debug information about changes
- * in the brightness should be logged.
+ * This affects `main.c` and controls whether information and errors during the
+ * initialization should be output.
  *
+ * @see log_level_t
  * @see main.c
  */
-#define LOG_MAIN_BRIGHTNESS 0
+#define LOG_LEVEL_MAIN_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level of the brightness module
