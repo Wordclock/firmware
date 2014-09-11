@@ -498,32 +498,6 @@ static void UserState_SubstateFinished(menu_state_t state, menu_state_t finished
 
 static void UserState_enter(menu_state_t state, const void* param);
 
-#if (LOG_USER_IR_TRAIN == 1)
-
-    /**
-     * @brief Used to output debug information when in IR training mode
-     *
-     * When the logging for this module is enabled (LOG_USER_IR_TRAIN == 1),
-     * this macro can be used to output information for debugging purposes.
-     *
-     * @see LOG_USER_IR_TRAIN
-     */
-    #define log_irTrain(x) uart_puts_P(x)
-
-#else
-
-    /**
-     * @brief Dummy used to output debug information when in IR training mode
-     *
-     * This makes sure that nothing is being output when the logging for this
-     * module is deactivated (LOG_USER_IR_TRAIN == 0).
-     *
-     * @see LOG_USER_IR_TRAIN
-     */
-    #define log_irTrain(x)
-
-#endif
-
 /**
  * @brief Routine executed when entering the "training" mode
  *
@@ -539,9 +513,9 @@ static void UserState_enter(menu_state_t state, const void* param);
 static void TrainIrState_enter(const void* param)
 {
 
-    display_state_t disp;
+    log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Entering training state");
 
-    log_state("enter train\n");
+    display_state_t disp;
 
     disp = display_getIndicatorMask();
     display_setDisplayState(disp, disp);
@@ -569,7 +543,7 @@ static void TrainIrState_1Hz()
 
         if (mode_trainIrState.seconds == USER_STARTUP_WAIT_IR_TRAIN_S) {
 
-            log_irTrain("leave IR-wait4train\n");
+            log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "No longer waiting for training state");
 
             quitMyself(MS_irTrain, NULL);
 
@@ -612,7 +586,8 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
         if (g_params->irAddress != i_irCode->address) {
 
-            log_irTrain("invalid ir-address\n");
+            log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Invalid IR address");
+
 
         } else {
 
@@ -620,7 +595,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
             if (mode_trainIrState.curKey == UC_COMMAND_COUNT) {
 
-                log_irTrain("Ir train finished\n");
+                log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "IR training finished");
 
                 wcEeprom_writeback(g_params, sizeof(*g_params));
 
@@ -640,20 +615,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
     }
 
-    #if (LOG_USER_IR_TRAIN)
-
-    {
-
-        char buff[5];
-
-        uart_puts_P("Ir train. Enter cmd #");
-        uint8ToStrLessOneHundred(mode_trainIrState.curKey, buff);
-        uart_puts(buff);
-        uart_putc('\n');
-
-    }
-
-    #endif
+    log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Training command #%u", mode_trainIrState.curKey);
 
     disp = display_getNumberDisplayState(mode_trainIrState.curKey);
     disp |= display_getIndicatorMask();

@@ -43,6 +43,7 @@
 #include "uart.h"
 #include "color.h"
 #include "ports.h"
+#include "log.h"
 
 /**
  * @brief Port and pin definition of the line in control of the Ambilight
@@ -942,24 +943,7 @@ void handle_ir_code()
 
         }
 
-        #if (LOG_USER_IR_CMD == 1)
-
-        {
-
-            char text[20];
-
-            uart_puts_P("IR-cmd: ");
-            uint16ToHexStr(ir_data.protocol, text);
-            uart_puts(text);
-            uint16ToHexStr(ir_data.address, text);
-            uart_puts(text);
-            uint16ToHexStr(ir_data.command, text);
-            uart_puts(text);
-            uart_putc('\n');
-
-        }
-
-        #endif
+        log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Protocol: %H, address: %H, command: %H", ir_data.protocol, ir_data.address, ir_data.command);
 
         g_keyDelay = USER_KEY_PRESS_DELAY_100MS;
 
@@ -1014,6 +998,9 @@ void handle_ir_code()
  */
 void user_init()
 {
+
+    // Set default logging level for IR
+    log_set_level(LOG_MODULE_USER_IR, LOG_LEVEL_USER_IR_DEFAULT);
 
     UserState_init();
     addState(g_params->mode & 0x7f, 0);

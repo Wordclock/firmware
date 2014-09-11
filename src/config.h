@@ -318,15 +318,15 @@
 #define LOG_DISPLAY_STATE 0
 
 /**
- * @brief Defines whether received IR codes should be logged
+ * @brief Default log level for IR commands within user module
  *
- * This affects `user.c` and controls whether debug information about any
- * received IR codes should be output. This includes the protocol, address and
- * the actual command of the received IR frame.
+ * This affects the {@link user.h user} module and controls whether debug
+ * information about the received IR frames and the training state should be
+ * output.
  *
- * @see user.c
+ * @see log_level_t
  */
-#define LOG_USER_IR_CMD 0
+#define LOG_LEVEL_USER_IR_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Defines whether information about the user state should be logged
@@ -347,16 +347,6 @@
  * @see user.c
  */
 #define LOG_USER_TIME 0
-
-/**
- * @brief Defines whether information during IR training should be logged
- *
- * This affects `usermodes.c` and controls whether debug information about the
- * IR training process should be output.
- *
- * @see usermodes.c
- */
-#define LOG_USER_IR_TRAIN 0
 
 /**
  *
