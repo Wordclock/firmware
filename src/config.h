@@ -392,12 +392,20 @@
 /**
  * @brief Default log level of the UART protocol module
  *
- * This affects `uart_protocol.c` and controls whether various debug
- * information about the current state should be output.
+ * This affects `uart_protocol.c` and controls whether information about its
+ * current state should be output.
  *
  * @see log_level_t
  * @see uart_protocol.c
  */
 #define LOG_LEVEL_UART_PROTOCOL_DEFAULT LOG_LEVEL_NONE
+
+/**
+ * @brief Default log level of the datetime module
+ *
+ * @see log_level_t
+ * @see datetime.c
+ */
+#define LOG_LEVEL_DATETIME_DEFAULT LOG_LEVEL_NONE
 
 #endif /* _WC_CONFIG_H_ */

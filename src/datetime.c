@@ -153,12 +153,14 @@ static uint8_t get_number_of_days_in_month(uint8_t month, uint8_t year)
 void datetime_init()
 {
 
+    // Set default log level
+    log_set_level(LOG_MODULE_DATETIME, LOG_LEVEL_DATETIME_DEFAULT);
+
     i2c_master_error_t i2c_rtc_error;
 
     if (!i2c_rtc_init(&i2c_rtc_error)) {
 
-        // TODO Log
-        //log_main("RTC init failed\n");
+        log_output_P(LOG_MODULE_DATETIME, LOG_LEVEL_ERROR, "RTC init failed");
 
     }
 
@@ -343,8 +345,7 @@ void datetime_handle()
 
         } else {
 
-            // TODO Log
-            //log_main("RTC error\n");
+            log_output_P(LOG_MODULE_DATETIME, LOG_LEVEL_ERROR, "RTC error");
 
         }
 
@@ -384,21 +385,23 @@ bool datetime_set(datetime_t* dt)
             soft_seconds = dt->ss;
             user_setNewTime(dt);
 
+            // TODO: Add date and time into format string
+            log_output_P(LOG_MODULE_DATETIME, LOG_LEVEL_INFO, "New datetime set");
+
             return true;
 
         } else {
 
-            // TODO Log unable to write to RTC
+            log_output_P(LOG_MODULE_DATETIME, LOG_LEVEL_ERROR, "RTC write error");
 
         }
 
     } else {
 
-        // TODO Log invalid datetime
+        log_output_P(LOG_MODULE_DATETIME, LOG_LEVEL_ERROR, "Invalid datetime");
 
     }
 
-    // TODO Log
     return false;
 
 }
