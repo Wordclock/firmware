@@ -56,6 +56,7 @@ typedef enum {
 
     LOG_MODULE_LOG = 0,
     LOG_MODULE_LDR,
+    LOG_MODULE_BRIGHTNESS,
 
     LOG_MODULE_COUNT
 

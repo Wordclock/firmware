@@ -275,6 +275,17 @@
 #define LOG_MAIN_BRIGHTNESS 0
 
 /**
+ * @brief Default log level of the brightness module
+ *
+ * This affects `brightness.c` and controls whether the current brightness
+ * value should be output.
+ *
+ * @see log_level_t
+ * @see brightness.c
+ */
+#define LOG_LEVEL_BRIGHTNESS_DEFAULT LOG_LEVEL_NONE
+
+/**
  * @brief Default log level of the LDR module
  *
  * This affects whether LDR values as measured by the ADC should be output.

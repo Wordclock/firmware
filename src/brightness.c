@@ -31,8 +31,27 @@
 #include <inttypes.h>
 
 #include "brightness.h"
+#include "config.h"
 #include "ldr.h"
+#include "log.h"
 #include "pwm.h"
+
+/**
+ * @brief Initializes the brightness module
+ *
+ * This initializes the brightness module and is expected to be called once
+ * during startup. For now it only sets the default logging level.
+ *
+ * @see log_set_level()
+ * @see LOG_LEVEL_BRIGHTNESS_DEFAULT
+ */
+void brightness_init()
+{
+
+    // Set default log level
+    log_set_level(LOG_MODULE_BRIGHTNESS, LOG_LEVEL_BRIGHTNESS_DEFAULT);
+
+}
 
 /**
  * @brief Accommodates the brightness in response to changes ambient lightning
@@ -52,7 +71,6 @@
  *
  * @see ldr_get_brightness()
  * @see pwm_set_brightness()
- * @see LOG_MAIN_BRIGHTNESS
  * @see ldr.h
  */
 void brightness_handle()
@@ -64,16 +82,7 @@ void brightness_handle()
 
     if (last_ldr_brightness != ldr_brightness) {
 
-        #if (LOG_MAIN_BRIGHTNESS == 1)
-
-            char buff[5];
-
-            uint8ToStrLessOneHundred(ldr_brightness, buff);
-            uart_puts_P("brightness: ");
-            uart_puts(buff);
-            uart_putc('\n');
-
-        #endif
+        log_output_P(LOG_MODULE_BRIGHTNESS, LOG_LEVEL_INFO, "Changed to: %u", ldr_brightness);
 
         pwm_set_base_brightness(ldr_brightness);
 

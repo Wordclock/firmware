@@ -45,6 +45,7 @@
 
 const char const log_module_name_0[] PROGMEM = "LOG";
 const char const log_module_name_1[] PROGMEM = "LDR";
+const char const log_module_name_2[] PROGMEM = "BRT";
 
 /**
  * @brief Names of modules able to output logging information
@@ -64,6 +65,7 @@ PGM_P const log_module_names[] PROGMEM = {
 
     log_module_name_0,
     log_module_name_1,
+    log_module_name_2,
 
 };
 

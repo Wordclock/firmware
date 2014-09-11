@@ -33,6 +33,7 @@
 #ifndef _WC_BRIGHTNESS_H_
 #define _WC_BRIGHTNESS_H_
 
+extern void brightness_init();
 extern void brightness_handle();
 
 #endif /* _WC_BRIGHTNESS_H_ */

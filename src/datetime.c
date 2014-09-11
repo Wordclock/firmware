@@ -41,6 +41,7 @@
 #include "datetime.h"
 #include "dcf77.h"
 #include "i2c_rtc.h"
+#include "log.h"
 #include "user.h"
 
 /**
