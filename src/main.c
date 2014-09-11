@@ -124,6 +124,7 @@ __attribute__((OS_main)) int main()
     irmp_init();
     timer_init();
     user_init();
+    uart_protocol_init();
 
     sei();
 

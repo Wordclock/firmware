@@ -62,6 +62,7 @@
  */
 #define UART_PROTOCOL_INPUT_EOL '\r'
 
+extern void uart_protocol_init();
 extern void uart_protocol_handle();
 
 #endif /* _WC_UART_PROTOCOL_H_ */
