@@ -62,6 +62,8 @@
 static void uart_protocol_output(const char* message)
 {
 
+    uart_flush_output();
+
     uart_puts_P(UART_PROTOCOL_OUTPUT_PREFIX);
     uart_puts(message);
     uart_puts_P(UART_PROTOCOL_OUTPUT_EOL);
@@ -80,6 +82,8 @@ static void uart_protocol_output(const char* message)
  */
 static void uart_protocol_output_p(PGM_P message)
 {
+
+    uart_flush_output();
 
     uart_puts_P(UART_PROTOCOL_OUTPUT_PREFIX);
     uart_puts_p(message);
