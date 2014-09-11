@@ -259,6 +259,64 @@ W: [0-9a-f]{2} **Weekday**
 **Response (error writing date to RTC):** ERROR
 
 
+### Enable logging globally
+
+**Command**: le  
+**Description:** Enables the logging globally  
+**Response:** OK
+
+
+### Disable logging globally
+
+**Command**: ld  
+**Description:** Disables the logging globally  
+**Response:** OK
+
+
+### Check global logging status
+
+**Command**: li  
+**Description:** Checks whether logging is enabled globally  
+**Response (enabled globally):** 01  
+**Response (disabled globally):** 00  
+
+
+### Get list of modules
+
+**Command**: lm  
+**Description:** Outputs a list of available modules  
+**Response (for each module):** N  
+N: [0-9a-zA-Z]* **Name of module**
+
+
+### Get list of log levels
+
+**Command**: ll  
+**Description:** Outputs a list of available log levels  
+**Response (for each log level):** N  
+N: [0-9a-zA-Z]* **Name of log level**
+
+
+### Set log level for particular module
+
+**Command**: ls M L  
+M: [0-9a-f]{2} **Module**  
+L: [0-9a-f]{2} **Log level**  
+**Description:** Sets the log level for a particular module  
+**Response (values valid):** OK  
+**Response (values invalid):** ERROR  
+
+
+### Get log level for particular module
+
+**Command**: ls M  
+M: [0-9a-f]{2} **Module**  
+**Description:** Get the log level for a particular module  
+**Response (values valid):** L  
+L: [0-9a-f]{2} **Log level**  
+**Response (values invalid):** ERROR  
+
+
 ## RESPONSES
 
 Whenever an EOL as described by `UART_PROTOCOL_COMMAND_INPUT_EOL` within
