@@ -1132,6 +1132,8 @@ typedef struct
  * @note Keep in mind that this table is accessed iteratively, so it might make
  * sense to order the entries appropriately.
  *
+ * @todo Consider putting this table into program space to save RAM
+ *
  * @see uart_protocol_command_t
  * @see uart_protocol_handle()
  */
