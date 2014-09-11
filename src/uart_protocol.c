@@ -42,6 +42,7 @@
 #include "base.h"
 #include "datetime.h"
 #include "ldr.h"
+#include "log.h"
 #include "uart.h"
 #include "uart_protocol.h"
 #include "user.h"
@@ -906,6 +907,185 @@ static void _date_set(uint8_t argc, char* argv[])
 }
 
 /**
+ * @brief Enables the logging globally
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_enable()
+ * @see uart_protocol_ok()
+ */
+static void _log_enable(uint8_t argc, char* argv[])
+{
+
+    log_enable();
+    uart_protocol_ok();
+
+}
+
+/**
+ * @brief Disables the logging globally
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_disable()
+ * @see uart_protocol_ok()
+ */
+static void _log_disable(uint8_t argc, char* argv[])
+{
+
+    log_disable();
+    uart_protocol_ok();
+
+}
+
+/**
+ * @brief Outputs whether logging is currently enabled globally
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_is_enabled()
+ * @see
+ */
+static void _log_is_enabled(uint8_t argc, char* argv[])
+{
+
+    uart_protocol_output_args_hex(1, (uint8_t)log_is_enabled());
+
+}
+
+/**
+ * @brief Sets the logging level for a specific module
+ *
+ * Both, the module and the level are expected to be passed in as hex
+ * arguments. In case the arguments are invalid, uart_protocol_error() is
+ * invoked, otherwise uart_protocol_ok() indicates success.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_module_t
+ * @see log_level_t
+ * @see hexStrToUint8()
+ * @see log_set_level()
+ * @see uart_protocl_error()
+ * @see uart_protocol_ok()
+ */
+static void _log_set_level(uint8_t argc, char* argv[])
+{
+
+    bool status;
+
+    log_module_t module = hexStrToUint8(argv[1], &status);
+
+    if (!status || module >= LOG_MODULE_COUNT) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    log_level_t level = hexStrToUint8(argv[2], &status);
+
+    if (!status || level >= LOG_LEVEL_COUNT) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    log_set_level(module, level);
+    uart_protocol_ok();
+
+}
+
+/**
+ * @brief Gets the logging level for a specific module
+ *
+ * The log module is expected as first and only argument in a hex
+ * representation. In case the argument is invalid, uart_protocol_error() is
+ * invoked, otherwise the appropriate {@link log_level_t log level} is output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see log_module_t
+ * @see log_level_t
+ * @see hexStrToUint8()
+ * @see log_get_level()
+ * @see uart_protocl_error()
+ * @see uart_protocol_ok()
+ */
+static void _log_get_level(uint8_t argc, char* argv[])
+{
+
+    bool status;
+
+    log_module_t module = hexStrToUint8(argv[1], &status);
+
+    if (!status || module >= LOG_MODULE_COUNT) {
+
+        uart_protocol_error();
+
+        return;
+
+    }
+
+    uart_protocol_output_args_hex(1, log_get_level(module));
+
+}
+
+/**
+ * @brief Outputs all available log modules
+ *
+ * This iterates over {@link log_module_names} and outputs the name of each
+ * module on a line by line basis.
+ *
+ * @note The numerical value associated with each element (as defined by
+ * {@link log_module_t} is not explicitly mentioned, but can be inferred by the
+ * order of the output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see LOG_MODULE_COUNT
+ * @see log_module_t
+ * @see log_module_names
+ * @see uart_protocol_output_p()
+ */
+static void _log_modules(uint8_t argc, char* argv[])
+{
+
+    for (uint8_t i = 0; i < LOG_MODULE_COUNT; i++) {
+
+        extern PGM_P const log_module_names[];
+        uart_protocol_output_p((PGM_P)pgm_read_word(&(log_module_names[i])));
+
+    }
+
+}
+
+/**
+ * @brief Outputs all available log levels
+ *
+ * This iterates over {@link log_level_names} and outputs the name of each
+ * level on a line by line basis.
+ *
+ * @note The numerical value associated with each element (as defined by
+ * {@link log_level_t} is not explicitly mentioned, but can be inferred by the
+ * order of the output.
+ *
+ * @see uart_protocol_command_callback_t
+ * @see LOG_LEVEL_COUNT
+ * @see log_level_tt
+ * @see log_level_names
+ * @see uart_protocol_output_p()
+ */
+static void _log_levels(uint8_t argc, char* argv[])
+{
+
+    for (uint8_t i = 0; i < LOG_LEVEL_COUNT; i++) {
+
+        extern PGM_P const log_level_names[];
+        uart_protocol_output_p((PGM_P)pgm_read_word(&(log_level_names[i])));
+
+    }
+
+}
+
+/**
  * @brief Defines the type of each entry within #uart_protocol_commands
  *
  * @see uart_protocol_commands
@@ -985,6 +1165,15 @@ static uart_protocol_command_t uart_protocol_commands[] = {
     {"ts", 3, _time_set},
     {"dg", 0, _date_get},
     {"ds", 4, _date_set},
+
+    // Logging
+    {"le", 0, _log_enable},
+    {"ld", 0, _log_disable},
+    {"li", 0, _log_is_enabled},
+    {"ls", 2, _log_set_level},
+    {"lg", 1, _log_get_level},
+    {"lm", 0, _log_modules},
+    {"ll", 0, _log_levels},
 
 };
 
