@@ -135,9 +135,9 @@ MINOR: [0-9a-f]{2}
 **Response:** OK
 
 
-### LDR brightness
+### Get brightness from LDR
 
-**Command**: lb  
+**Command**: bg  
 **Description:** Returns the brightness as measured by the LDR  
 **Response:** B  
 B: [0-9a-f]{2} **Measured brightness**
