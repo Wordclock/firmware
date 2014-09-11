@@ -65,7 +65,7 @@
  *
  * @see uart_buffer_out
  */
-#define UART_BUFFER_SIZE_OUT 64
+#define UART_BUFFER_SIZE_OUT 128
 
 extern void uart_init();
 
