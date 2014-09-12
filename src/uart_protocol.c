@@ -955,7 +955,7 @@ typedef struct
  * @see uart_protocol_command_t
  * @see uart_protocol_handle()
  */
-static uart_protocol_command_t uart_protocol_commands[] = {
+static const uart_protocol_command_t uart_protocol_commands[] PROGMEM = {
 
     {"i", 1, _ir_user_command},
 
@@ -1078,13 +1078,13 @@ void uart_protocol_handle()
 
                 for (uint8_t i = 0; i < j; i++) {
 
-                    bool compare = strncmp(uart_protocol_commands[i].command,
-                        argv[0], UART_PROTOCOL_COMMAND_BUFFER_SIZE);
+                    bool compare = strncmp_P(argv[0], uart_protocol_commands[i].command, UART_PROTOCOL_COMMAND_BUFFER_SIZE);
 
                     if (compare == 0
-                        && (argc - 1) == uart_protocol_commands[i].arguments) {
+                        && (argc - 1) == (uint8_t)pgm_read_byte(&(uart_protocol_commands[i].arguments))) {
 
-                        uart_protocol_commands[i].callback(argc, argv);
+                        uart_protocol_command_callback_t callback = pgm_read_word(&(uart_protocol_commands[i].callback));
+                        callback(argc, argv);
 
                         return;
 
