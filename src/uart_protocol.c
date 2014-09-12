@@ -1271,14 +1271,13 @@ void uart_protocol_handle()
             // Check whether at least a single command was detected
             if (argc != 0) {
 
-                uint8_t j= sizeof(uart_protocol_commands) / sizeof(uart_protocol_command_t);
+                uint8_t j = sizeof(uart_protocol_commands) / sizeof(uart_protocol_command_t);
 
                 for (uint8_t i = 0; i < j; i++) {
 
                     bool compare = strncmp_P(argv[0], uart_protocol_commands[i].command, UART_PROTOCOL_COMMAND_BUFFER_SIZE);
 
-                    if (compare == 0
-                        && (argc - 1) == (uint8_t)pgm_read_byte(&(uart_protocol_commands[i].arguments))) {
+                    if (compare == 0 && (argc - 1) == (uint8_t)pgm_read_byte(&(uart_protocol_commands[i].arguments))) {
 
                         uart_protocol_command_callback_t callback = pgm_read_word(&(uart_protocol_commands[i].callback));
                         callback(argc, argv);
