@@ -278,6 +278,7 @@ static void log_output_eol()
  * @see uint8ToStrLessOneHundred()
  * @see uint8ToStr()
  * @see uint8ToHexStr()
+ * @see uint16ToHexStr()
  */
 static void log_outputf(const char* fmt, va_list ap)
 {
