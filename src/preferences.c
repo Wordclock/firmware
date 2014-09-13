@@ -38,8 +38,6 @@
 
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-#include <stdbool.h>
 
 #include "preferences.h"
 #include "uart.h"
