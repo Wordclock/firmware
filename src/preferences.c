@@ -85,14 +85,14 @@ static const prefs_t PROGMEM prefs_default = {
  *
  * @see prefs_t
  */
-static prefs_t g_epromWorking;
+static prefs_t prefs;
 
 /**
  * @brief Initializes this module
  *
  * This has to be called **before** any other functions of this module can be
- * used. It reads in the contents of EEPROM into {@link #g_epromWorking} and
- * performs a basic integrity check consisting of:
+ * used. It reads in the contents of EEPROM into {@link #prefs} and performs a
+ * basic integrity check consisting of:
  *
  * - Comparison of software version stored in EEPROM against VERSION
  * - Comparison of struct size stored in EEPROM against prefs_t::prefs_size
@@ -107,10 +107,10 @@ static prefs_t g_epromWorking;
 void preferences_init()
 {
 
-    eeprom_read_block(&g_epromWorking, &prefs_eeprom, sizeof(prefs_eeprom));
+    eeprom_read_block(&prefs, &prefs_eeprom, sizeof(prefs_eeprom));
 
-    if ((g_epromWorking.version != VERSION)
-        || (g_epromWorking.prefs_size != sizeof(g_epromWorking))) {
+    if ((prefs.version != VERSION)
+        || (prefs.prefs_size != sizeof(prefs))) {
 
         #if (LOG_EEPROM_INIT == 1)
 
@@ -118,7 +118,7 @@ void preferences_init()
 
         #endif
 
-        memcpy_P(&g_epromWorking, &prefs_default, sizeof(prefs_t));
+        memcpy_P(&prefs, &prefs_default, sizeof(prefs_t));
 
     }
 
@@ -126,7 +126,7 @@ void preferences_init()
 
         uart_puts_P("EEPROM: ");
 
-        uint8_t* ptr = (uint8_t*)(&g_epromWorking);
+        uint8_t* ptr = (uint8_t*)(&prefs);
 
         for (uint8_t i = 0; i < sizeof(prefs_eeprom); i++) {
 
@@ -145,21 +145,21 @@ void preferences_init()
 /**
  * @brief Returns pointer to copy of the preferences hold in SRAM
  *
- * This returns a pointer to the {@link #g_epromWorking workign copy} of the
+ * This returns a pointer to the {@link #prefs workign copy} of the
  * {@link #prefs_t preferences} hold in SRAM. It can be used to access and
  * manipulate the preferences. Once data has been changed,
  * {@link preferences_save()} needs to be invoked in order to write the changes
  * to the persistent storage backend.
  *
- * @return Reference to g_epromWorking
+ * @return Reference to prefs
  *
- * @see g_epromWorking
+ * @see prefs
  * @see preferences_save()
  */
 prefs_t* preferences_get()
 {
 
-    return &g_epromWorking;
+    return &prefs;
 
 }
 
@@ -186,7 +186,7 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
     uint8_t* eepromAdress = ((uint8_t*)&prefs_eeprom) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
-    sramByte = *(((uint8_t*)&g_epromWorking) + index);
+    sramByte = *(((uint8_t*)&prefs) + index);
 
     if (eepromByte != sramByte) {
 
@@ -221,13 +221,13 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @brief Saves manipulated data by writing it back to the storage backend
  *
  * This initiates the writeback to the persistend storage backend. It iterates
- * over {@link g_epromWorking all} preferences and invokes
+ * over {@link prefs all} preferences and invokes
  * {@link wcEeprom_writeIfChanged()} for each byte.
  *
  * @return True if preferences were saved successfully, false otherwise
  *
  * @see wcEeprom_writeIfChanged()
- * @see g_epromWorking
+ * @see prefs
  */
 bool preferences_save()
 {
