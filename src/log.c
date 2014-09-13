@@ -468,7 +468,7 @@ void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
  *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
- * @param fmt Format string describing logging output
+ * @param fmt Format string (from program space) describing logging output
  * @param ... Arguments for specifiers within format string
  *
  * @see log_outputf()
