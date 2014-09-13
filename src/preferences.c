@@ -52,7 +52,7 @@
  *
  * @see prefs_t
  */
-static prefs_t EEMEM eepromParams;
+static prefs_t EEMEM prefs_eeprom;
 
 /**
  * @brief Default settings for preferences
@@ -107,7 +107,7 @@ static prefs_t g_epromWorking;
 void preferences_init()
 {
 
-    eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
+    eeprom_read_block(&g_epromWorking, &prefs_eeprom, sizeof(prefs_eeprom));
 
     if ((g_epromWorking.version != VERSION)
         || (g_epromWorking.prefs_size != sizeof(g_epromWorking))) {
@@ -128,7 +128,7 @@ void preferences_init()
 
         uint8_t* ptr = (uint8_t*)(&g_epromWorking);
 
-        for (uint8_t i = 0; i < sizeof(eepromParams); i++) {
+        for (uint8_t i = 0; i < sizeof(prefs_eeprom); i++) {
 
             char buf[3];
 
@@ -183,7 +183,7 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
     uint8_t eepromByte;
     uint8_t sramByte;
 
-    uint8_t* eepromAdress = ((uint8_t*)&eepromParams) + index;
+    uint8_t* eepromAdress = ((uint8_t*)&prefs_eeprom) + index;
 
     eepromByte = eeprom_read_byte(eepromAdress);
     sramByte = *(((uint8_t*)&g_epromWorking) + index);
