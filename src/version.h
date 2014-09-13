@@ -75,4 +75,14 @@
  */
 #define VERSION VERSION_BUILD(VERSION_MAJOR, VERSION_MINOR)
 
+/**
+ * @brief Type definition when dealing with the software version
+ *
+ * This type can hold the actual {@link #VERSION version} and should be used
+ * whenever dealing with versions in software.
+ *
+ * @see VERSION_BUILD()
+ */
+typedef uint16_t version_t;
+
 #endif /* _WC_VERSION_H_ */
