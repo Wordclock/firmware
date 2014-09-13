@@ -84,7 +84,7 @@ typedef struct {
      * integrity check during the initialization of this module by
      * `wcEeprom_init()`.
      *
-     * @see BUILD_VERSION()
+     * @see VERSION_BUILD()
      */
     uint16_t swVersion;
 
