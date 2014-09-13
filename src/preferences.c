@@ -52,7 +52,7 @@
  *
  * @see prefs_t
  */
-static prefs_t EEMEM prefs_eeprom;
+static prefs_t prefs_eeprom EEMEM;
 
 /**
  * @brief Default settings for preferences
@@ -64,7 +64,7 @@ static prefs_t EEMEM prefs_eeprom;
  * @see prefs_t
  * @see preferences_init()
  */
-static const prefs_t PROGMEM prefs_default = {
+static const prefs_t prefs_default PROGMEM = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
