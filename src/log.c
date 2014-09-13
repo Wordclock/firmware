@@ -508,6 +508,9 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * strings are output automatically, but everything in between is up to the
  * callback function itself.
  *
+ * @note Callback functions are expected to use the log_output_put* function
+ * family to output content.
+ *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
@@ -524,11 +527,82 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
 
     }
 
-    // Wait for UART output buffer to be empty
-    uart_flush_output();
-
     log_output_prefix(module, level);
     callback();
     log_output_eol();
+
+}
+
+/**
+ * @brief Outputs a character as part of a log message
+ *
+ * This is a simple wrapper for {@link uart_putc()}.
+ *
+ * @note This function is meant to be used from within the context of
+ * {@link #log_output_callback_t callback} functions to output content. It is
+ * not meant to be used on its own.
+ *
+ * @see log_output_callback_t
+ * @see uart_putc()
+ */
+void log_output_putc(char c)
+{
+
+    uart_putc(c);
+
+}
+
+/**
+ * @brief Outputs a string as part of a log message
+ *
+ * This is a simple wrapper for {@link uart_outputf()}.
+ *
+ * @note This function is meant to be used from within the context of
+ * {@link #log_output_callback_t callback} functions to output content. It is
+ * not meant to be used on its own.
+ *
+ * @param fmt Format string describing logging output
+ * @param ... List with arguments for specifiers within format string
+ *
+ * @see log_output_callback_t
+ * @see log_outputf()
+ */
+void log_output_puts(const char* fmt, ...)
+{
+
+    va_list va;
+    va_start(va, fmt);
+    log_outputf(fmt, va);
+    va_end(va);
+
+}
+
+/**
+ * @brief Outputs a string as part of a log message from program space
+ *
+ * This is a simple wrapper for {@link uart_outputf()}. It retrieves the format
+ * string from program space, copies it into a buffer, and passes it to
+ * {@link #log_outputf()} for processing.
+ *
+ * @note This function is meant to be used from within the context of
+ * {@link #log_output_callback_t callback} functions to output content. It is
+ * not meant to be used on its own.
+ *
+ * @param fmt Format string (from program space) describing logging output
+ * @param ... List with arguments for specifiers within format string
+ *
+ * @see log_output_callback_t
+ * @see log_outputf()
+ */
+void log_output_puts_p(PGM_P fmt, ...)
+{
+
+    char buffer[LOG_FORMAT_MAX_STRING_LENGTH];
+    strncpy_P(buffer, fmt, LOG_FORMAT_MAX_STRING_LENGTH);
+
+    va_list va;
+    va_start(va, fmt);
+    log_outputf(buffer, va);
+    va_end(va);
 
 }

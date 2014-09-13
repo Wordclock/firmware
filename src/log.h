@@ -129,6 +129,26 @@ void log_output(log_module_t module, log_level_t level, const char* fmt, ...);
 void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...);
 void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback);
 
+void log_output_putc(char c);
+void log_output_puts(const char* fmt, ...);
+void log_output_puts_p(PGM_P fmt, ...);
+
+/**
+ * @brief Outputs a string as part of a log message from program space
+ *
+ * This is helper macro for {@link #log_output_puts_p()}, which puts the string
+ * into program space automatically.
+ *
+ * @note This function is meant to be used from within the context of
+ * {@link #log_output_callback_t callback} functions to output content. It is
+ * not meant to be used on its own.
+ *
+ * @see log_output_callback_t
+ * @see log_output_puts_p()
+ */
+#define log_output_puts_P(fmt, ...) log_output_puts_p(PSTR(fmt), ##__VA_ARGS__)
+
+
 /**
  * @brief Helper macro to put format string into program space automatically
  *
