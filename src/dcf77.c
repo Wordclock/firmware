@@ -1140,14 +1140,13 @@ void dcf77_ISR()
  * return false and do nothing to the buffer at all. This method has to be
  * called at least once every second in order to analyze the dcf data properly.
  *
- * @param DateTime_p Pointer to buffer where the resulting date & time should
- *           be stored
+ * @param dt Pointer to buffer where the resulting date & time should be stored
  *
  * @return True if date & time has been put into buffer, false otherwise
  *
  * @see FLAGS_e
  */
-bool dcf77_getDateTime(datetime_t * DateTime_p)
+bool dcf77_get_datetime(datetime_t * dt)
 {
 
     /*
@@ -1164,13 +1163,13 @@ bool dcf77_getDateTime(datetime_t * DateTime_p)
             /*
              * Take over the time just broadcasted over DCF77
              */
-            DateTime_p->ss = 0;
-            DateTime_p->mm = DCF.NewTime[0];
-            DateTime_p->hh = DCF.NewTime[1];
-            DateTime_p->DD = DCF.NewTime[2];
-            DateTime_p->WD = DCF.NewTime[3];
-            DateTime_p->MM = DCF.NewTime[4];
-            DateTime_p->YY = DCF.NewTime[5];
+            dt->ss = 0;
+            dt->mm = DCF.NewTime[0];
+            dt->hh = DCF.NewTime[1];
+            dt->DD = DCF.NewTime[2];
+            dt->WD = DCF.NewTime[3];
+            dt->MM = DCF.NewTime[4];
+            dt->YY = DCF.NewTime[5];
 
             /*
              * Reset this module
