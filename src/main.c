@@ -96,6 +96,7 @@ static uint8_t mcusr __attribute__ ((section(".noinit")));
 __attribute__((OS_main)) int main()
 {
 
+    sei();
     uart_init();
     log_init();
 
@@ -120,8 +121,6 @@ __attribute__((OS_main)) int main()
     timer_init();
     user_init();
     uart_protocol_init();
-
-    sei();
 
     pwm_on();
 
