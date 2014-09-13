@@ -178,6 +178,8 @@ prefs_t* preferences_get()
  * EEPROM. This improves the performance as well as the expected lifespan of
  * the EEPROM itself as the amount of erase/write cycles is limited.
  *
+ * @return True if byte at given was written to EEPROM, false otherwise
+ *
  * @see preferences_save()
  */
 static bool wcEeprom_writeIfChanged(uint8_t index)
