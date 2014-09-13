@@ -36,6 +36,7 @@
 #include "user.h"
 #include "display.h"
 #include "pwm.h"
+#include "version.h"
 
 /**
  * @brief Defines the type of data stored persistently in the EEPROM
@@ -84,9 +85,9 @@ typedef struct {
      * integrity check during the initialization of this module by
      * `preferences_init()`.
      *
-     * @see BUILD_VERSION()
+     * @see VERSION_BUILD()
      */
-    uint16_t swVersion;
+    version_t swVersion;
 
     /**
      * @brief Size of this struct

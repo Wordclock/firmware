@@ -31,51 +31,6 @@
 #define _WC_CONFIG_H_
 
 /**
- * @brief Macro building the actual version number
- *
- * This macro will build the actual version number by combining `MAJOR_VERSION`
- * and `MINOR_VERSION` and shifting it appropriately.
- *
- * @see MAJOR_VERSION
- * @see MINOR_VERSION
- */
-#define BUILD_VERSION(x, y) ((uint16_t)((x << 8) | (y)))
-
-/**
- * @brief Major version number
- *
- * @note This is effectively a byte wide and can hold values between 0 and 255.
- *
- * @see BUILD_VERSION()
- * @see MINOR_VERSION
- * @see SW_VERSION
- */
-#define MAJOR_VERSION 1
-
-/**
- * @brief Minor version number
- *
- * @note This is effectively a byte wide and can hold values between 0 and 255.
- *
- * @see BUILD_VERSION()
- * @see MINOR_VERSION
- * @see SW_VERSION
- */
-#define MINOR_VERSION 0
-
-/**
- * @brief Actual version number
- *
- * The actual version number consists of both the major and the minor version
- * number. It is build by the the macro `BUILD_VERSION()`.
- *
- * @see MINOR_VERSION
- * @see MAJOR_VERSION
- * @see BUILD_VERSION()
- */
-#define SW_VERSION BUILD_VERSION(MAJOR_VERSION, MINOR_VERSION)
-
-/**
  * @brief Classic German frontpanel layout
  *
  * If set to 1, the software will be compiled with support for the classic

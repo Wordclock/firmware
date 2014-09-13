@@ -44,6 +44,7 @@
 #include "preferences.h"
 #include "uart.h"
 #include "base.h"
+#include "version.h"
 
 /**
  * @brief Represents the data stored persistently within EEPROM
@@ -64,14 +65,14 @@ static prefs_t EEMEM eepromParams;
  * @see USEREEPROMPARAMS_DEFAULT
  * @see DISPLAYEEPROMPARAMS_DEFAULT
  * @see PWMEEPROMPARAMS_DEFAULT
- * @see SW_VERSION
+ * @see VERSION
  */
 static const prefs_t PROGMEM eepromDefaultParams_P = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
     PWMEEPROMPARAMS_DEFAULT,
-    SW_VERSION,
+    VERSION,
     (uint8_t)sizeof(prefs_t),
 
 };
@@ -101,7 +102,7 @@ static prefs_t g_epromWorking;
  * It reads in the contents of EEPROM into `g_epromWorking` and performs some
  * basic integrity checks. These include:
  *
- * - Compare software version stored in EEPROM against SW_VERSION
+ * - Compare software version stored in EEPROM against VERSION
  * - Compare struct size stored in EEPROM against prefs_t::structSize
  *
  * When this check fails, the default values (`eepromDefaultParams_P`) will be
@@ -109,7 +110,7 @@ static prefs_t g_epromWorking;
  * up being used.
  *
  * @see prefs_t::swVersion
- * @see SW_VERSION
+ * @see VERSION
  * @see g_epromWorking
  * @see eepromParams
  */
@@ -118,7 +119,7 @@ void preferences_init()
 
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
 
-    if ((g_epromWorking.swVersion != SW_VERSION)
+    if ((g_epromWorking.swVersion != VERSION)
         || (g_epromWorking.structSize != sizeof(g_epromWorking))) {
 
         #if (LOG_EEPROM_INIT == 1)
