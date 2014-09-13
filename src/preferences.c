@@ -70,7 +70,7 @@ static const prefs_t prefs_default PROGMEM = {
     DISPLAYEEPROMPARAMS_DEFAULT,
     PWMEEPROMPARAMS_DEFAULT,
     VERSION,
-    (uint8_t)sizeof(prefs_t),
+    sizeof(prefs_t),
 
 };
 
@@ -127,7 +127,7 @@ void preferences_init()
 
         uint8_t* ptr = (uint8_t*)(&prefs);
 
-        for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
+        for (uint16_t i = 0; i < sizeof(prefs_t); i++) {
 
             char buf[3];
 
@@ -176,7 +176,7 @@ prefs_t* preferences_get()
  *
  * @see preferences_save()
  */
-static bool wcEeprom_writeIfChanged(uint8_t index)
+static bool wcEeprom_writeIfChanged(uint16_t index)
 {
 
     uint8_t byte_eeprom;
@@ -237,7 +237,7 @@ bool preferences_save()
 
     #endif
 
-    for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
+    for (uint16_t i = 0; i < sizeof(prefs_t); i++) {
 
         wcEeprom_writeIfChanged(i);
 

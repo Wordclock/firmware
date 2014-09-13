@@ -36,6 +36,7 @@
 #define _WC_PREFERENCES_H_
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "user.h"
 #include "display.h"
@@ -51,11 +52,7 @@
  * it into this structure. The default values are defined within
  * {@link prefs_default}.
  *
- * @warning This shouldn't become larger than 254 bytes for now, as the code
- * right now uses a lot of 8 bit counters.
- *
- * @warning This shouldn't become bigger than the size of the EEPROM itself,
- * which is 512 bytes for the ATmega168/ATmega328.
+ * @warning This must not become bigger than the size of the EEPROM itself.
  *
  * @see prefs_default
  */
@@ -93,11 +90,8 @@ typedef struct {
      * This holds the size of this structure and is used along with
      * {@link prefs_t::version} as a basic integrity check during the
      * {@link #preferences_init() initialization} of this module.
-     *
-     * @warning This is a 8 bit value, so the size of the struct shouldn't
-     * exceed 256 bytes.
      */
-    uint8_t prefs_size;
+    size_t prefs_size;
 
 } prefs_t;
 

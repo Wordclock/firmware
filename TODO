@@ -54,8 +54,6 @@
   now it is quite possible that interrupts will be missed as writing to 
   EEPROM takes quite some time.
 
-- wceeprom: Make it possible to let prefs_t get bigger than 254 byte.
-
 - Specify some coding styles for contributers, which will be based upon the
   K&R indent style
 
