@@ -102,10 +102,9 @@ typedef struct {
 
 } prefs_t;
 
-extern void preferences_init();
+void preferences_init();
 
-extern prefs_t* preferences_get();
-
-extern void preferences_save(const void* start, uint8_t length);
+prefs_t* preferences_get();
+void preferences_save(const void* start, uint8_t length);
 
 #endif /* _WC_PREFERENCES_H_ */
