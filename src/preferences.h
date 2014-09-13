@@ -49,7 +49,7 @@
  * can be accessed globally throughout the project. Modules that want to
  * take advantage of this facility should define their own type and include
  * it into this structure. The default values are defined within
- * {@link eepromDefaultParams_P}.
+ * {@link prefs_default}.
  *
  * @warning This shouldn't become larger than 254 bytes for now, as the code
  * right now uses a lot of 8 bit counters.
@@ -57,7 +57,7 @@
  * @warning This shouldn't become bigger than the size of the EEPROM itself,
  * which is 512 bytes for the ATmega168/ATmega328.
  *
- * @see eepromDefaultParams_P
+ * @see prefs_default
  */
 typedef struct {
 

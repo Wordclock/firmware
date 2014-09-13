@@ -64,7 +64,7 @@ static prefs_t EEMEM prefs_eeprom;
  * @see prefs_t
  * @see preferences_init()
  */
-static const prefs_t PROGMEM eepromDefaultParams_P = {
+static const prefs_t PROGMEM prefs_default = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
@@ -97,9 +97,9 @@ static prefs_t g_epromWorking;
  * - Comparison of software version stored in EEPROM against VERSION
  * - Comparison of struct size stored in EEPROM against prefs_t::prefs_size
  *
- * When this check fails, the {@link #eepromDefaultParams_P default values} are
- * used. Otherwise the data from the EEPROM is considered to be valid and will
- * end up being used.
+ * When this check fails, the {@link #prefs_default default values} are used.
+ * Otherwise the data from the EEPROM is considered to be valid and will end
+ * up being used.
  *
  * @see prefs_t::version
  * @see prefs_t::prefs_size
@@ -118,7 +118,7 @@ void preferences_init()
 
         #endif
 
-        memcpy_P(&g_epromWorking, &eepromDefaultParams_P, sizeof(prefs_t));
+        memcpy_P(&g_epromWorking, &prefs_default, sizeof(prefs_t));
 
     }
 
