@@ -59,7 +59,7 @@
 - Specify some coding styles for contributers, which will be based upon the
   K&R indent style
 
-- Refactor/Rewrite wceeprom.c: The function wcEeprom_writeIfChanged() in its
+- Refactor/Rewrite preferences.c: The function wcEeprom_writeIfChanged() in its
   current form doesn't make too much sense. This could easily be included
   into wcEeprom_writeback(), which would save some space and make things
   not look more complicated than they actually are.

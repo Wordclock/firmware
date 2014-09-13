@@ -44,7 +44,7 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <stdbool.h>
-#include "wceeprom.h"
+#include "preferences.h"
 
 #include "uart.h"
 #include "base.h"

@@ -47,7 +47,7 @@
 #include "user.h"
 #include "user_command.h"
 #include "pwm.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 
 /**

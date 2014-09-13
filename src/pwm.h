@@ -113,7 +113,7 @@ typedef struct PwmEepromParams {
  * microcontroller, so make sure that the defaults are actually useful.
  *
  * @see PwmEepromParams
- * @see wceeprom.h
+ * @see preferences.h
  */
 #define PWMEEPROMPARAMS_DEFAULT { \
     0, \

@@ -350,20 +350,20 @@
  *
  * @brief Defines whether information about EEPROM init should be logged
  *
- * This affects `wceeprom.c` and controls whether debug information about the
+ * This affects `preferences.c` and controls whether debug information about the
  * initialization process of the EEPROM module should be output.
  *
- * @see wceeprom.c
+ * @see preferences.c
  */
 #define LOG_EEPROM_INIT 0
 
 /**
  * @brief Defines whether information about EEPROM writeback should be logged
  *
- * This affects `wceeprom.c` and controls whether debug information about
+ * This affects `preferences.c` and controls whether debug information about
  * writebacks to the EEPROM should be output.
  *
- * @see wceeprom.c
+ * @see preferences.c
  */
 #define LOG_EEPROM_WRITEBACK 0
 

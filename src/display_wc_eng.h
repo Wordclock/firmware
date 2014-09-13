@@ -195,7 +195,7 @@ enum e_displayWordPos
     * @brief Containing the parameters of this module to be stored persistently
     *
     * @see DISPLAYEEPROMPARAMS_DEFAULT
-    * @see wceeprom.h
+    * @see preferences.h
     * @see e_WcEngModes
     */
     struct DisplayEepromParams {
@@ -221,7 +221,7 @@ enum e_displayWordPos
      * the microcontroller, so make sure that the defaults are actually useful.
      *
      * @see DisplayEepromParams
-     * @see wceeprom.h
+     * @see preferences.h
      */
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
     \
@@ -276,7 +276,7 @@ enum e_displayWordPos
     * @brief Default settings of this module for the dummy parameter
     *
     * @see DisplayEepromParams
-    * @see wceeprom.h
+    * @see preferences.h
     */
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
     \

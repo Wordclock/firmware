@@ -39,7 +39,7 @@
 #include "display.h"
 #include "dcf77.h"
 #include "base.h"
-#include "wceeprom.h"
+#include "preferences.h"
 #include "uart.h"
 #include "color.h"
 #include "ports.h"
@@ -293,7 +293,7 @@ static bool g_animPreview = false;
  * @see handle_user_command()
  * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
  * @see user_isr1Hz()
- * @see wceeprom.h
+ * @see preferences.h
  */
 static uint8_t g_eepromSaveDelay;
 

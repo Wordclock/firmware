@@ -48,7 +48,7 @@
 #include "user.h"
 #include "uart.h"
 #include "base.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 /**
 * @brief Contains the MCU status register

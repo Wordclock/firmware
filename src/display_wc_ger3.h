@@ -290,7 +290,7 @@ typedef enum e_WcGerModes {
  * @brief Containing the parameters of this module to be stored persistently
  *
  * @see DISPLAYEEPROMPARAMS_DEFAULT
- * @see wceeprom.h
+ * @see preferences.h
  * @see e_WcGerModes
  */
 struct DisplayEepromParams {
@@ -309,7 +309,7 @@ struct DisplayEepromParams {
  * microcontroller, so make sure that the defaults are actually useful.
  *
  * @see DisplayEepromParams
- * @see wceeprom.h
+ * @see preferences.h
  */
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \

@@ -45,7 +45,7 @@
 #include "config.h"
 #include "display.h"
 #include "shift.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 #if (WC_DISP_GER == 1)
 

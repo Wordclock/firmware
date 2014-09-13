@@ -19,7 +19,7 @@
  */
 
 /**
- * @file wceeprom.h
+ * @file preferences.h
  * @brief Header providing access to persistent storage backed by EEPROM
  *
  * The EEPROM provided by the microcontroller is used to store various settings
@@ -27,11 +27,11 @@
  * provides means to access the data and write it back, once it has been
  * changed.
  *
- * @see wceeprom.c
+ * @see preferences.c
  */
 
-#ifndef _WC_EEPROM_H_
-#define _WC_EEPROM_H_
+#ifndef _WC_PREFERENCES_H_
+#define _WC_PREFERENCES_H_
 
 #include "user.h"
 #include "display.h"
@@ -108,4 +108,4 @@ extern WcEepromData* wcEeprom_getData();
 
 extern void wcEeprom_writeback(const void* start, uint8_t length);
 
-#endif /* _WC_EEPROM_H_ */
+#endif /* _WC_PREFERENCES_H_ */

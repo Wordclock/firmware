@@ -1153,7 +1153,7 @@ extern void user_init();
  * microcontroller, so make sure that the defaults are actually useful.
  *
  * @see UserEepromParams
- * @see wceeprom.h
+ * @see preferences.h
  */
 #define USEREEPROMPARAMS_DEFAULT { \
 \

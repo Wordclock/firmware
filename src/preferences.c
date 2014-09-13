@@ -19,8 +19,8 @@
  */
 
 /**
- * @file wceeprom.c
- * @brief Implementation of the header declared in wceeprom.h
+ * @file preferences.c
+ * @brief Implementation of the header declared in preferences.h
  *
  * During initialization this modules copies over the content of the EEPROM
  * into the SRAM and makes it available to other modules. Once the data has
@@ -33,7 +33,7 @@
  * [1]: http://www.atmel.com/images/doc2545.pdf
  * [2]: http://www.nongnu.org/avr-libc/user-manual/group__avr__eeprom.html
  *
- * @see wceeprom.h
+ * @see preferences.h
  */
 
 #include <avr/eeprom.h>
@@ -41,7 +41,7 @@
 #include <avr/interrupt.h>
 #include <stdbool.h>
 
-#include "wceeprom.h"
+#include "preferences.h"
 #include "uart.h"
 #include "base.h"
 
