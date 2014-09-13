@@ -63,7 +63,7 @@ extern void dcf77_disable();
 
 extern void dcf77_ISR();
 
-extern bool dcf77_getDateTime(datetime_t* DateTime_p);
+extern bool dcf77_get_datetime(datetime_t* dt);
 
 #else
 

@@ -144,7 +144,7 @@ __attribute__((OS_main)) int main()
             datetime_t dt;
 
             // TODO: Make sure dcf77_getDateTime() validates its result
-            if (dcf77_getDateTime(&dt)) {
+            if (dcf77_get_datetime(&dt)) {
 
                 datetime_set(&dt);
 
