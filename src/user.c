@@ -315,11 +315,11 @@ static uint8_t g_eepromSaveDelay;
 static uint8_t g_checkIfAutoOffDelay;
 
 /**
- * @brief Allowing access to global instance of userParams backed by EEPROM
+ * @brief Allowing access to global instance of user_prefs backed by EEPROM
  *
  * @see user_prefs_t
  */
-#define g_params (&(preferences_get()->userParams))
+#define g_params (&(preferences_get()->user_prefs))
 
 static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask);
 

@@ -582,7 +582,7 @@ static void _preset_number(uint8_t argc, char* argv[])
 static void _preset_active(uint8_t argc, char* argv[])
 {
 
-    uint8_t preset = (&(preferences_get()->userParams))->curColorProfile;
+    uint8_t preset = (&(preferences_get()->user_prefs))->curColorProfile;
     uart_protocol_output_args_hex(1, preset);
 
 }
@@ -608,10 +608,10 @@ static void _preset_set(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        (&(preferences_get()->userParams))->curColorProfile = preset;
+        (&(preferences_get()->user_prefs))->curColorProfile = preset;
 
-        preferences_save(&preferences_get()->userParams.curColorProfile,
-            sizeof(preferences_get()->userParams.curColorProfile));
+        preferences_save(&preferences_get()->user_prefs.curColorProfile,
+            sizeof(preferences_get()->user_prefs.curColorProfile));
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -649,7 +649,7 @@ static void _preset_read(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        color_rgb_t color = (&(preferences_get()->userParams))->colorPresets[preset];
+        color_rgb_t color = (&(preferences_get()->user_prefs))->colorPresets[preset];
 
         uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
@@ -722,12 +722,12 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     }
 
-    (&(preferences_get()->userParams))->colorPresets[preset] = color;
+    (&(preferences_get()->user_prefs))->colorPresets[preset] = color;
 
-    preferences_save(&preferences_get()->userParams.colorPresets[preset],
-        sizeof(preferences_get()->userParams.colorPresets[preset]));
+    preferences_save(&preferences_get()->user_prefs.colorPresets[preset],
+        sizeof(preferences_get()->user_prefs.colorPresets[preset]));
 
-    if (preset == (&(preferences_get()->userParams))->curColorProfile) {
+    if (preset == (&(preferences_get()->user_prefs))->curColorProfile) {
 
         if (user_get_current_menu_state() == MS_normalMode) {
 

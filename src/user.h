@@ -648,7 +648,7 @@ typedef struct UiTime {
  * The default values are defined in USEREEPROMPARAMS_DEFAULT.
  *
  * @see USEREEPROMPARAMS_DEFAULT
- * @see prefs_t::userParams
+ * @see prefs_t::user_prefs
  */
 typedef struct user_prefs_t {
 
