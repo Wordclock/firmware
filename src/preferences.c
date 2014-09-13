@@ -109,8 +109,7 @@ void preferences_init()
 
     eeprom_read_block(&prefs, &prefs_eeprom, sizeof(prefs_eeprom));
 
-    if ((prefs.version != VERSION)
-        || (prefs.prefs_size != sizeof(prefs))) {
+    if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs))) {
 
         #if (LOG_EEPROM_INIT == 1)
 
