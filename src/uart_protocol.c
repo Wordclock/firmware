@@ -430,13 +430,13 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by invalidating WcEepromData#swVersion and
+ * This performs a factory reset by invalidating prefs_t#swVersion and
  * resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
  *
  * @see uart_protocol_command_callback_t
- * @see WcEepromData::swVersion
+ * @see prefs_t::swVersion
  * @see _reset()
  */
 static void _factory_reset(uint8_t argc, char* argv[])

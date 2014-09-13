@@ -80,7 +80,7 @@ typedef struct {
     /**
      * @brief Version number
      *
-     * This along with `WcEepromData::structSize` is mainly used as a basic
+     * This along with `prefs_t::structSize` is mainly used as a basic
      * integrity check during the initialization of this module by
      * `wcEeprom_init()`.
      *
@@ -92,7 +92,7 @@ typedef struct {
      * @brief Size of this struct
      *
      * Describes the size of this struct and is used along with
-     * `WcEepromData::swVersion` as a basic integrity check during the
+     * `prefs_t::swVersion` as a basic integrity check during the
      * initialization of this module by `wcEeprom_init()`.
      *
      * @warning This is a 8 bit value, so the size of the struct shouldn't
@@ -100,11 +100,11 @@ typedef struct {
      */
     uint8_t structSize;
 
-} WcEepromData;
+} prefs_t;
 
 extern void wcEeprom_init();
 
-extern WcEepromData* wcEeprom_getData();
+extern prefs_t* wcEeprom_getData();
 
 extern void wcEeprom_writeback(const void* start, uint8_t length);
 

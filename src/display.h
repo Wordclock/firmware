@@ -216,7 +216,7 @@ typedef uint32_t display_state_t;
  * The default values are defined in DISPLAYEEPROMPARAMS_DEFAULT.
  *
  * @see DISPLAYEEPROMPARAMS_DEFAULT
- * @see WcEepromData::displayParams
+ * @see prefs_t::displayParams
  */
 typedef struct DisplayEepromParams DisplayEepromParams;
 

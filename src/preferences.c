@@ -48,49 +48,49 @@
 /**
  * @brief Represents the data stored persistently within EEPROM
  *
- * @see WcEepromData
+ * @see prefs_t
  */
-WcEepromData EEMEM eepromParams;
+prefs_t EEMEM eepromParams;
 
 /**
- * @brief Default settings for WcEepromData stored within program space
+ * @brief Default settings for prefs_t stored within program space
  *
- * These are the default settings for `WcEepromData`, which are stored within
+ * These are the default settings for `prefs_t`, which are stored within
  * program space and will get used whenever the data in the EEPROM is
  * considered to be invalid.
  *
- * @see WcEepromData
+ * @see prefs_t
  * @see wcEeprom_init()
  * @see USEREEPROMPARAMS_DEFAULT
  * @see DISPLAYEEPROMPARAMS_DEFAULT
  * @see PWMEEPROMPARAMS_DEFAULT
  * @see SW_VERSION
  */
-const WcEepromData PROGMEM eepromDefaultParams_P = {
+const prefs_t PROGMEM eepromDefaultParams_P = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
     PWMEEPROMPARAMS_DEFAULT,
     SW_VERSION,
-    (uint8_t)sizeof(WcEepromData),
+    (uint8_t)sizeof(prefs_t),
 
 };
 
 /**
  * @brief Copy of data hold in SRAM backed by the content of EEPROM
  *
- * This is holding all of the data defined by `WcEepromData` in SRAM. It will
+ * This is holding all of the data defined by `prefs_t` in SRAM. It will
  * be filled with the appropriate content from EEPROM during initialization and
  * can be accessed by other modules using `wcEeprom_getData()`. Once changes
  * to it are made, `wcEeprom_writeback()` needs to be invoked in order for the
  * changes to be written back.
  *
- * @see WcEepromData
+ * @see prefs_t
  * @see wcEeprom_init()
  * @see wcEeprom_getData()
  * @see wcEeprom_writeback()
  */
-WcEepromData g_epromWorking;
+prefs_t g_epromWorking;
 
 /**
  * @brief Initializes this module by copying over the content of the EEPROM
@@ -102,13 +102,13 @@ WcEepromData g_epromWorking;
  * basic integrity checks. These include:
  *
  * - Compare software version stored in EEPROM against SW_VERSION
- * - Compare struct size stored in EEPROM against WcEepromData::structSize
+ * - Compare struct size stored in EEPROM against prefs_t::structSize
  *
  * When this check fails, the default values (`eepromDefaultParams_P`) will be
  * used. Otherwise the data from EEPROM is considered to be valid and will end
  * up being used.
  *
- * @see WcEepromData::swVersion
+ * @see prefs_t::swVersion
  * @see SW_VERSION
  * @see g_epromWorking
  * @see eepromParams
@@ -127,7 +127,7 @@ void wcEeprom_init()
 
         #endif
 
-        memcpy_P(&g_epromWorking, &eepromDefaultParams_P, sizeof(WcEepromData));
+        memcpy_P(&g_epromWorking, &eepromDefaultParams_P, sizeof(prefs_t));
 
     }
 
@@ -152,7 +152,7 @@ void wcEeprom_init()
 }
 
 /**
- * @brief Returns pointer to working copy WcEepromData
+ * @brief Returns pointer to working copy prefs_t
  *
  * This returns a pointer to `g_epromWorking` and can be used to access the
  * data for reading and/or writing. Once data has been changed,
@@ -162,7 +162,7 @@ void wcEeprom_init()
  * @see g_epromWorking
  * @see wcEeprom_writeback()
  */
-WcEepromData* wcEeprom_getData()
+prefs_t* wcEeprom_getData()
 {
 
     return &g_epromWorking;

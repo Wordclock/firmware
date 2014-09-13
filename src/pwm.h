@@ -80,7 +80,7 @@
  * The default values are defined in PWMEEPROMPARAMS_DEFAULT.
  *
  * @see PWMEEPROMPARAMS_DEFAULT
- * @see WcEepromData::pwmParams
+ * @see prefs_t::pwmParams
  */
 typedef struct PwmEepromParams {
 
