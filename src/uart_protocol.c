@@ -442,9 +442,9 @@ static void _reset(uint8_t argc, char* argv[])
 static void _factory_reset(uint8_t argc, char* argv[])
 {
 
-    wcEeprom_getData()->swVersion = 0;
-    wcEeprom_writeback(&wcEeprom_getData()->swVersion,
-        sizeof(wcEeprom_getData()->swVersion));
+    preferences_get()->swVersion = 0;
+    wcEeprom_writeback(&preferences_get()->swVersion,
+        sizeof(preferences_get()->swVersion));
 
     _reset(0, NULL);
 
@@ -582,7 +582,7 @@ static void _preset_number(uint8_t argc, char* argv[])
 static void _preset_active(uint8_t argc, char* argv[])
 {
 
-    uint8_t preset = (&(wcEeprom_getData()->userParams))->curColorProfile;
+    uint8_t preset = (&(preferences_get()->userParams))->curColorProfile;
     uart_protocol_output_args_hex(1, preset);
 
 }
@@ -608,10 +608,10 @@ static void _preset_set(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        (&(wcEeprom_getData()->userParams))->curColorProfile = preset;
+        (&(preferences_get()->userParams))->curColorProfile = preset;
 
-        wcEeprom_writeback(&wcEeprom_getData()->userParams.curColorProfile,
-            sizeof(wcEeprom_getData()->userParams.curColorProfile));
+        wcEeprom_writeback(&preferences_get()->userParams.curColorProfile,
+            sizeof(preferences_get()->userParams.curColorProfile));
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -649,7 +649,7 @@ static void _preset_read(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        color_rgb_t color = (&(wcEeprom_getData()->userParams))->colorPresets[preset];
+        color_rgb_t color = (&(preferences_get()->userParams))->colorPresets[preset];
 
         uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
@@ -722,12 +722,12 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     }
 
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset] = color;
+    (&(preferences_get()->userParams))->colorPresets[preset] = color;
 
-    wcEeprom_writeback(&wcEeprom_getData()->userParams.colorPresets[preset],
-        sizeof(wcEeprom_getData()->userParams.colorPresets[preset]));
+    wcEeprom_writeback(&preferences_get()->userParams.colorPresets[preset],
+        sizeof(preferences_get()->userParams.colorPresets[preset]));
 
-    if (preset == (&(wcEeprom_getData()->userParams))->curColorProfile) {
+    if (preset == (&(preferences_get()->userParams))->curColorProfile) {
 
         if (user_get_current_menu_state() == MS_normalMode) {
 

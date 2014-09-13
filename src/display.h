@@ -192,7 +192,7 @@
  *
  * @see PwmEepromParams::displayParams
  */
-#define g_displayParams (&(wcEeprom_getData()->displayParams))
+#define g_displayParams (&(preferences_get()->displayParams))
 
 /**
  * @brief Type definition for storing a display state

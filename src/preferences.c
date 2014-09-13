@@ -81,13 +81,13 @@ const prefs_t PROGMEM eepromDefaultParams_P = {
  *
  * This is holding all of the data defined by `prefs_t` in SRAM. It will
  * be filled with the appropriate content from EEPROM during initialization and
- * can be accessed by other modules using `wcEeprom_getData()`. Once changes
+ * can be accessed by other modules using `preferences_get()`. Once changes
  * to it are made, `wcEeprom_writeback()` needs to be invoked in order for the
  * changes to be written back.
  *
  * @see prefs_t
  * @see preferences_init()
- * @see wcEeprom_getData()
+ * @see preferences_get()
  * @see wcEeprom_writeback()
  */
 prefs_t g_epromWorking;
@@ -162,7 +162,7 @@ void preferences_init()
  * @see g_epromWorking
  * @see wcEeprom_writeback()
  */
-prefs_t* wcEeprom_getData()
+prefs_t* preferences_get()
 {
 
     return &g_epromWorking;

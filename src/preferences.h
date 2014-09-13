@@ -104,7 +104,7 @@ typedef struct {
 
 extern void preferences_init();
 
-extern prefs_t* wcEeprom_getData();
+extern prefs_t* preferences_get();
 
 extern void wcEeprom_writeback(const void* start, uint8_t length);
 

@@ -319,7 +319,7 @@ static uint8_t g_checkIfAutoOffDelay;
  *
  * @see UserEepromParams
  */
-#define g_params (&(wcEeprom_getData()->userParams))
+#define g_params (&(preferences_get()->userParams))
 
 static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask);
 
@@ -745,7 +745,7 @@ void handle_user_command(user_command_t user_command)
 
         }
 
-        wcEeprom_writeback(wcEeprom_getData(), sizeof(prefs_t));
+        wcEeprom_writeback(preferences_get(), sizeof(prefs_t));
 
     } else {
 
@@ -1258,7 +1258,7 @@ void user_isr1Hz()
 
         if (g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_S) {
 
-            wcEeprom_writeback(wcEeprom_getData(), sizeof(prefs_t));
+            wcEeprom_writeback(preferences_get(), sizeof(prefs_t));
 
         }
 

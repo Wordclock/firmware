@@ -165,26 +165,26 @@ static bool brightness_lock;
  * @brief Macro for easy access to PwmEepromParams::brightnessOffset
  *
  * @see PwmEepromParams::brightnessOffset
- * @see wcEeprom_getData()
+ * @see preferences_get()
  */
-#define offset_pwm_idx (wcEeprom_getData()->pwmParams.brightnessOffset)
+#define offset_pwm_idx (preferences_get()->pwmParams.brightnessOffset)
 
 /**
  * @brief Macro for easy access to PwmEepromParams::occupancy
  *
  * @see PwmEepromParams::occupancy
- * @see wcEeprom_getData()
+ * @see preferences_get()
  */
-#define g_occupancy (wcEeprom_getData()->pwmParams.occupancy)
+#define g_occupancy (preferences_get()->pwmParams.occupancy)
 
 /**
  * @brief Macro for easy access to PwmEepromParams::brightness2pwmStep
  *
  * @see PwmEepromParams::brightness2pwmStep
- * @see wcEeprom_getData()
+ * @see preferences_get()
  */
 #define g_ldrBrightness2pwmStep \
-    (wcEeprom_getData()->pwmParams.brightness2pwmStep)
+    (preferences_get()->pwmParams.brightness2pwmStep)
 
 /**
  * @brief Current base LDR index
