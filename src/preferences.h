@@ -44,7 +44,7 @@
 #include "version.h"
 
 /**
- * @brief Preferences that should be stored and can be accessed globally
+ * @brief Preferences to be stored persistently and globally accessible
  *
  * This structure describes the preferences that are stored persistently and
  * can be accessed globally throughout the project. Modules that want to
@@ -80,6 +80,7 @@ typedef struct {
      * check during the {@link #preferences_init() initialization} of this
      * module.
      *
+     * @see preferences_init()
      * @see versiont_t
      */
     version_t version;
@@ -90,6 +91,8 @@ typedef struct {
      * This holds the size of this structure and is used along with
      * {@link prefs_t::version} as a basic integrity check during the
      * {@link #preferences_init() initialization} of this module.
+     *
+     * @see preferences_init()
      */
     size_t prefs_size;
 
