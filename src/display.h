@@ -218,7 +218,7 @@ typedef uint32_t display_state_t;
  * @see DISPLAYEEPROMPARAMS_DEFAULT
  * @see prefs_t::displayParams
  */
-typedef struct DisplayEepromParams DisplayEepromParams;
+typedef struct display_prefs_t display_prefs_t;
 
 extern void display_init();
 

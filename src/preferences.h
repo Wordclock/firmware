@@ -66,9 +66,9 @@ typedef struct {
     /**
      * @brief Data of the display module to be stored persistently in EEPROM
      *
-     * @see DisplayEepromParams
+     * @see display_prefs_t
      */
-    DisplayEepromParams displayParams;
+    display_prefs_t displayParams;
 
     /**
      * @brief Data of the display module to be stored persistently in EEPROM

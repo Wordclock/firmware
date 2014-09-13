@@ -261,13 +261,13 @@ enum e_displayWordPos
  * There are various modes of operation, which are explained in more detail
  * in the header of this file. This enumerations contains constants to
  * work with these modes internally. The chosen setting can be stored
- * persistently within the EEPROM, see DisplayEepromParams.
+ * persistently within the EEPROM, see display_prefs_t.
  *
  * If enabled (DISPLAY_ADD_JESTER_MODE) the "Jester mode" will be added along
  * with the others.
  *
  * @see DISPLAY_ADD_JESTER_MODE
- * @see DisplayEepromParams
+ * @see display_prefs_t
  */
 typedef enum e_WcGerModes {
 
@@ -293,7 +293,7 @@ typedef enum e_WcGerModes {
  * @see preferences.h
  * @see e_WcGerModes
  */
-struct DisplayEepromParams {
+struct display_prefs_t {
 
     e_WcGerModes mode;
 
@@ -303,12 +303,12 @@ struct DisplayEepromParams {
  * @brief Default values of this module that should be stored persistently
  *
  * This defines the default values for this module. Refer to
- * DisplayEepromParams for a detailed description of each member.
+ * display_prefs_t for a detailed description of each member.
  *
  * @note This will also be the values used after flashing the firmware to the
  * microcontroller, so make sure that the defaults are actually useful.
  *
- * @see DisplayEepromParams
+ * @see display_prefs_t
  * @see preferences.h
  */
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
