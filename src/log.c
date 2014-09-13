@@ -133,7 +133,7 @@ static bool log_enabled = false;
  * @see log_module_t
  * @see log_set_level()
  */
-static log_level_t log_level[LOG_LEVEL_COUNT];
+static log_level_t log_level[LOG_MODULE_COUNT];
 
 /**
  * @brief Initializes the logging module
