@@ -140,7 +140,7 @@
              * displayed. This is the case when either the mode is even or
              * when the hour is "full".
              */
-            if (((g_displayParams->mode & 1) == 0) || (minutes == 0)) {
+            if (((g_display_prefs->mode & 1) == 0) || (minutes == 0)) {
 
                 leds |= ((display_state_t)1 << DWP_itis);
 

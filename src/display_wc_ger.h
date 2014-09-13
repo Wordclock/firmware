@@ -316,9 +316,9 @@ struct display_prefs_t {
  * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
 */
 #define _DISP_TOGGLE_DISPMODE_CODE \
-    ++g_displayParams->mode; \
-    g_displayParams->mode %= (TM_COUNT*(DISPLAY_DEACTIVATABLE_ITIS + 1)); \
-    addState( MS_showNumber, (void*)(g_displayParams->mode + 1)); \
+    ++g_display_prefs->mode; \
+    g_display_prefs->mode %= (TM_COUNT*(DISPLAY_DEACTIVATABLE_ITIS + 1)); \
+    addState( MS_showNumber, (void*)(g_display_prefs->mode + 1)); \
     log_state("WO\n");
 
 /**

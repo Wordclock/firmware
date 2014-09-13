@@ -245,9 +245,9 @@ enum e_displayWordPos
      * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
      */
     #define _DISP_TOGGLE_DISPMODE_CODE \
-        ++g_displayParams->mode; \
-        g_displayParams->mode %= TM_COUNT; \
-        addState(MS_showNumber, (void*)(g_displayParams->mode + 1)); \
+        ++g_display_prefs->mode; \
+        g_display_prefs->mode %= TM_COUNT; \
+        addState(MS_showNumber, (void*)(g_display_prefs->mode + 1)); \
         log_state("DM\n");
 
     /**

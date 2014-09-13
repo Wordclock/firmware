@@ -188,11 +188,11 @@
 #define DISPLAY_TIMER_FREQUENCY 3906
 
 /**
- * @brief Allowing access to global instance of displayParams backed by EEPROM
+ * @brief Allowing access to global instance of display_prefs backed by EEPROM
  *
- * @see pwm_prefs_t::displayParams
+ * @see pwm_prefs_t::display_prefs
  */
-#define g_displayParams (&(preferences_get()->displayParams))
+#define g_display_prefs (&(preferences_get()->display_prefs))
 
 /**
  * @brief Type definition for storing a display state
@@ -216,7 +216,7 @@ typedef uint32_t display_state_t;
  * The default values are defined in DISPLAYEEPROMPARAMS_DEFAULT.
  *
  * @see DISPLAYEEPROMPARAMS_DEFAULT
- * @see prefs_t::displayParams
+ * @see prefs_t::display_prefs
  */
 typedef struct display_prefs_t display_prefs_t;
 

@@ -76,7 +76,7 @@
 
 - display.h: DisplayState: Move type declaration to specific clock definitions
 
-- display.h: displayParams: Consider creating access functions
+- display.h: display_prefs: Consider creating access functions
 
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
