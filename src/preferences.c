@@ -50,7 +50,7 @@
  *
  * @see prefs_t
  */
-prefs_t EEMEM eepromParams;
+static prefs_t EEMEM eepromParams;
 
 /**
  * @brief Default settings for prefs_t stored within program space
@@ -66,7 +66,7 @@ prefs_t EEMEM eepromParams;
  * @see PWMEEPROMPARAMS_DEFAULT
  * @see SW_VERSION
  */
-const prefs_t PROGMEM eepromDefaultParams_P = {
+static const prefs_t PROGMEM eepromDefaultParams_P = {
 
     USEREEPROMPARAMS_DEFAULT,
     DISPLAYEEPROMPARAMS_DEFAULT,
@@ -90,7 +90,7 @@ const prefs_t PROGMEM eepromDefaultParams_P = {
  * @see preferences_get()
  * @see preferences_save()
  */
-prefs_t g_epromWorking;
+static prefs_t g_epromWorking;
 
 /**
  * @brief Initializes this module by copying over the content of the EEPROM
