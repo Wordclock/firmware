@@ -431,21 +431,21 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by invalidating prefs_t#swVersion and
+ * This performs a factory reset by invalidating prefs_t#version and
  * resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
  *
  * @see uart_protocol_command_callback_t
- * @see prefs_t::swVersion
+ * @see prefs_t::version
  * @see _reset()
  */
 static void _factory_reset(uint8_t argc, char* argv[])
 {
 
-    preferences_get()->swVersion = 0;
-    preferences_save(&preferences_get()->swVersion,
-        sizeof(preferences_get()->swVersion));
+    preferences_get()->version = 0;
+    preferences_save(&preferences_get()->version,
+        sizeof(preferences_get()->version));
 
     _reset(0, NULL);
 

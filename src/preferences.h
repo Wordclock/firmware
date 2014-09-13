@@ -87,13 +87,13 @@ typedef struct {
      *
      * @see VERSION_BUILD()
      */
-    version_t swVersion;
+    version_t version;
 
     /**
      * @brief Size of this struct
      *
      * Describes the size of this struct and is used along with
-     * `prefs_t::swVersion` as a basic integrity check during the
+     * `prefs_t::version` as a basic integrity check during the
      * initialization of this module by `preferences_init()`.
      *
      * @warning This is a 8 bit value, so the size of the struct shouldn't

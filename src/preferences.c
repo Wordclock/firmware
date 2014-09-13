@@ -109,7 +109,7 @@ static prefs_t g_epromWorking;
  * used. Otherwise the data from EEPROM is considered to be valid and will end
  * up being used.
  *
- * @see prefs_t::swVersion
+ * @see prefs_t::version
  * @see VERSION
  * @see g_epromWorking
  * @see eepromParams
@@ -119,7 +119,7 @@ void preferences_init()
 
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
 
-    if ((g_epromWorking.swVersion != VERSION)
+    if ((g_epromWorking.version != VERSION)
         || (g_epromWorking.structSize != sizeof(g_epromWorking))) {
 
         #if (LOG_EEPROM_INIT == 1)
