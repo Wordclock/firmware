@@ -118,6 +118,8 @@ typedef enum {
  */
 typedef void (*log_output_callback_t)();
 
+void log_init();
+
 void log_enable();
 void log_disable();
 bool log_is_enabled();

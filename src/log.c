@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 #include "base.h"
+#include "config.h"
 #include "log.h"
 #include "uart.h"
 
@@ -133,6 +134,26 @@ static bool log_enabled = false;
  * @see log_set_level()
  */
 static log_level_t log_level[LOG_LEVEL_COUNT];
+
+/**
+ * @brief Initializes the logging module
+ *
+ * This will enable the logging globally if the configuration is set up
+ * appropriately.
+ *
+ * @see log_enable()
+ * @see LOG_ENABLE_DEFAULT
+ */
+void log_init()
+{
+
+    #if (LOG_ENABLE_DEFAULT == 1)
+
+        log_enable();
+
+    #endif
+
+}
 
 /**
  * @brief Enables the logging functionality globally
