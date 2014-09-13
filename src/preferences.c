@@ -224,45 +224,31 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @brief Initiates the writeback to EEPROM
  *
  * This initiates the writeback to the EEPROM in order for data to be stored
- * persistently. This function will iterate over the range described by the
- * parameters `start` and `length` and invokes `wcEeprom_writeIfChanged()` for
- * each of them.
+ * persistently. This function will iterates over {@link g_epromWorking all}
+ * preferences and writes changes back to the EEPROM.
  *
- * @param start Pointer to the start of the data that has to be written back
- * @param length The length of the data that has to be written back
- *
- * @todo Remove arguments as this is a detail that should be handled within
- * the function
- *
- * @todo Change return type to bool to indicate success
+ * @return True if preferences were saved successfully, false otherwise
  *
  * @see wcEeprom_writeIfChanged()
  * @see g_epromWorking
  */
-void preferences_save(const void* start, uint8_t length)
+bool preferences_save()
 {
-
-    uint8_t eepromIndex = (((uint8_t*)start) - ((uint8_t*)&g_epromWorking));
-    uint8_t eepromIndexEnd = eepromIndex + length - 1;
 
     #if (LOG_EEPROM_WRITEBACK == 1)
 
-        char buf[3];
-
-        uart_puts_P("EEPROM write: Index: ");
-        uint8ToHexStr(eepromIndex, buf);
-        uart_puts(buf);
-        uart_puts_P(", Length: ");
-        uint8ToHexStr(length, buf);
-        uart_puts(buf);
-        uart_putc('\n');
+        uart_puts_P("Initiating writeback\n");
 
     #endif
 
-    while (eepromIndex <= eepromIndexEnd) {
+    for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
 
-        wcEeprom_writeIfChanged(eepromIndex++);
+        wcEeprom_writeIfChanged(i);
+
 
     }
+
+    // TODO: Check whether data was actually written successfully
+    return true;
 
 }

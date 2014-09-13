@@ -622,7 +622,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
                 log_irTrain("Ir train finished\n");
 
-                preferences_save(g_params, sizeof(*g_params));
+                preferences_save();
 
                 quitMyself(MS_irTrain, NULL);
 

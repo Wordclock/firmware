@@ -33,6 +33,8 @@
 #ifndef _WC_PREFERENCES_H_
 #define _WC_PREFERENCES_H_
 
+#include <stdbool.h>
+
 #include "user.h"
 #include "display.h"
 #include "pwm.h"
@@ -106,6 +108,6 @@ typedef struct {
 void preferences_init();
 
 prefs_t* preferences_get();
-void preferences_save(const void* start, uint8_t length);
+bool preferences_save();
 
 #endif /* _WC_PREFERENCES_H_ */

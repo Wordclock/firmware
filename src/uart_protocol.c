@@ -444,8 +444,7 @@ static void _factory_reset(uint8_t argc, char* argv[])
 {
 
     preferences_get()->version = 0;
-    preferences_save(&preferences_get()->version,
-        sizeof(preferences_get()->version));
+    preferences_save();
 
     _reset(0, NULL);
 
@@ -610,9 +609,7 @@ static void _preset_set(uint8_t argc, char* argv[])
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
         (&(preferences_get()->user_prefs))->curColorProfile = preset;
-
-        preferences_save(&preferences_get()->user_prefs.curColorProfile,
-            sizeof(preferences_get()->user_prefs.curColorProfile));
+        preferences_save();
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -724,9 +721,7 @@ static void _preset_write(uint8_t argc, char* argv[])
     }
 
     (&(preferences_get()->user_prefs))->colorPresets[preset] = color;
-
-    preferences_save(&preferences_get()->user_prefs.colorPresets[preset],
-        sizeof(preferences_get()->user_prefs.colorPresets[preset]));
+    preferences_save();
 
     if (preset == (&(preferences_get()->user_prefs))->curColorProfile) {
 
