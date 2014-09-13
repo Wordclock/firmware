@@ -20,12 +20,14 @@
 
 /**
  * @file preferences.h
- * @brief Header providing access to persistent storage backed by EEPROM
+ * @brief Header providing access to preferences that can be accessed globally
  *
- * The EEPROM provided by the microcontroller is used to store various settings
- * persistently. This header defines the type of data that is being stored and
- * provides means to access the data and write it back, once it has been
- * changed.
+ * This module allows for preferences that are customizable by the user to be
+ * accessed globally throughout the project. The preferences are backed by a
+ * persistent storage and will be restored during initialization. This module
+ * was deliberately created to decouple the persistent storage from the access
+ * to the actual data, so in other storage backends could be used in different
+ * circumstances.
  *
  * @see preferences.c
  */
@@ -41,11 +43,13 @@
 #include "version.h"
 
 /**
- * @brief Defines the type of data stored persistently in the EEPROM
+ * @brief Preferences that should be stored and can be accessed globally
  *
- * This struct describes the data that is stored persistently in the EEPROM.
- * Some members are type definitions itself and are defined in the appropriate
- * modules along with their appropriate default values.
+ * This structure describes the preferences that are stored persistently and
+ * can be accessed globally throughout the project. Modules that want to
+ * take advantage of this facility should define their own type and include
+ * it into this structure. The default values are defined within
+ * {@link eepromDefaultParams_P}.
  *
  * @warning This shouldn't become larger than 254 bytes for now, as the code
  * right now uses a lot of 8 bit counters.
@@ -53,29 +57,21 @@
  * @warning This shouldn't become bigger than the size of the EEPROM itself,
  * which is 512 bytes for the ATmega168/ATmega328.
  *
- * @see eepromParams
  * @see eepromDefaultParams_P
- * @see g_epromWorking
  */
 typedef struct {
 
     /**
-     * @brief Data of the user module to be stored persistently in EEPROM
-     *
      * @see user_prefs_t
      */
     user_prefs_t user_prefs;
 
     /**
-     * @brief Data of the display module to be stored persistently in EEPROM
-     *
      * @see display_prefs_t
      */
     display_prefs_t display_prefs;
 
     /**
-     * @brief Data of the display module to be stored persistently in EEPROM
-     *
      * @see pwm_prefs_t
      */
     pwm_prefs_t pwm_prefs;
@@ -83,20 +79,20 @@ typedef struct {
     /**
      * @brief Version number
      *
-     * This along with `prefs_t::prefs_size` is mainly used as a basic
-     * integrity check during the initialization of this module by
-     * `preferences_init()`.
+     * This is used along with {@link prefs_t::prefs_size} as a basic integrity
+     * check during the {@link #preferences_init() initialization} of this
+     * module.
      *
-     * @see VERSION_BUILD()
+     * @see versiont_t
      */
     version_t version;
 
     /**
-     * @brief Size of this struct
+     * @brief Byte size of this structure
      *
-     * Describes the size of this struct and is used along with
-     * `prefs_t::version` as a basic integrity check during the
-     * initialization of this module by `preferences_init()`.
+     * This holds the size of this structure and is used along with
+     * {@link prefs_t::version} as a basic integrity check during the
+     * {@link #preferences_init() initialization} of this module.
      *
      * @warning This is a 8 bit value, so the size of the struct shouldn't
      * exceed 256 bytes.
