@@ -190,7 +190,7 @@
 /**
  * @brief Allowing access to global instance of displayParams backed by EEPROM
  *
- * @see PwmEepromParams::displayParams
+ * @see pwm_prefs_t::displayParams
  */
 #define g_displayParams (&(preferences_get()->displayParams))
 

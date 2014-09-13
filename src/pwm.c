@@ -162,25 +162,25 @@ static uint8_t brightness_pwm_val;
 static bool brightness_lock;
 
 /**
- * @brief Macro for easy access to PwmEepromParams::brightnessOffset
+ * @brief Macro for easy access to pwm_prefs_t::brightnessOffset
  *
- * @see PwmEepromParams::brightnessOffset
+ * @see pwm_prefs_t::brightnessOffset
  * @see preferences_get()
  */
 #define offset_pwm_idx (preferences_get()->pwmParams.brightnessOffset)
 
 /**
- * @brief Macro for easy access to PwmEepromParams::occupancy
+ * @brief Macro for easy access to pwm_prefs_t::occupancy
  *
- * @see PwmEepromParams::occupancy
+ * @see pwm_prefs_t::occupancy
  * @see preferences_get()
  */
 #define g_occupancy (preferences_get()->pwmParams.occupancy)
 
 /**
- * @brief Macro for easy access to PwmEepromParams::brightness2pwmStep
+ * @brief Macro for easy access to pwm_prefs_t::brightness2pwmStep
  *
- * @see PwmEepromParams::brightness2pwmStep
+ * @see pwm_prefs_t::brightness2pwmStep
  * @see preferences_get()
  */
 #define g_ldrBrightness2pwmStep \

@@ -73,9 +73,9 @@ typedef struct {
     /**
      * @brief Data of the display module to be stored persistently in EEPROM
      *
-     * @see PwmEepromParams
+     * @see pwm_prefs_t
      */
-    PwmEepromParams pwmParams;
+    pwm_prefs_t pwmParams;
 
     /**
      * @brief Version number

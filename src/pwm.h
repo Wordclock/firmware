@@ -82,7 +82,7 @@
  * @see PWMEEPROMPARAMS_DEFAULT
  * @see prefs_t::pwmParams
  */
-typedef struct PwmEepromParams {
+typedef struct pwm_prefs_t {
 
     /**
      * @brief User defined offset to the brightness control
@@ -101,18 +101,18 @@ typedef struct PwmEepromParams {
      */
     LDR2PWM_OCC_TYPE occupancy;
 
-} PwmEepromParams;
+} pwm_prefs_t;
 
 /**
  * @brief Default values of this module that should be stored persistently
  *
- * This defines the default values for this module. Refer to PwmEepromParams
+ * This defines the default values for this module. Refer to pwm_prefs_t
  * for a detailed description of each member.
  *
  * @note This will also be the values used after flashing the firmware to the
  * microcontroller, so make sure that the defaults are actually useful.
  *
- * @see PwmEepromParams
+ * @see pwm_prefs_t
  * @see preferences.h
  */
 #define PWMEEPROMPARAMS_DEFAULT { \
