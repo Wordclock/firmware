@@ -22,10 +22,13 @@
  * @file preferences.c
  * @brief Implementation of the header declared in preferences.h
  *
- * During initialization this modules copies over the content of the EEPROM
- * into the SRAM and makes it available to other modules. Once the data has
- * been changed, a writeback needs to be initiated in order for the data to
- * be written back to the EEPROM.
+ * This implements the functionality declared in {@link preferences.h}. A copy
+ * of the {@link prefs_t preferences} is always hold in SRAM. A reference to
+ * this copy can be {@link #preferences_get() retrieved} and manipulated. Note,
+ * however, that a {@link preferences_save() save} operation needs to be
+ * invoked in order for the data to be written to the persistent storage
+ * backend. For now the EEPROM coming along with the microcontroller is used to
+ * store the data persistently.
  *
  * For details about how the EEPROM works in detail and how to access it from
  * within the program, refer to [1] and/or [2].
@@ -45,25 +48,21 @@
 #include "version.h"
 
 /**
- * @brief Represents the data stored persistently within EEPROM
+ * @brief Represents the preferences stored persistently within EEPROM
  *
  * @see prefs_t
  */
 static prefs_t EEMEM eepromParams;
 
 /**
- * @brief Default settings for prefs_t stored within program space
+ * @brief Default settings for preferences
  *
- * These are the default settings for `prefs_t`, which are stored within
- * program space and will get used whenever the data in the EEPROM is
- * considered to be invalid.
+ * These are the default settings for the {@link #prefs_t preferences}. They
+ * are stored within program space and will get used whenever the data in the
+ * EEPROM is considered to be invalid.
  *
  * @see prefs_t
  * @see preferences_init()
- * @see USEREEPROMPARAMS_DEFAULT
- * @see DISPLAYEEPROMPARAMS_DEFAULT
- * @see PWMEEPROMPARAMS_DEFAULT
- * @see VERSION
  */
 static const prefs_t PROGMEM eepromDefaultParams_P = {
 
@@ -76,41 +75,34 @@ static const prefs_t PROGMEM eepromDefaultParams_P = {
 };
 
 /**
- * @brief Copy of data hold in SRAM backed by the content of EEPROM
+ * @brief Copy of preferences hold in SRAM
  *
- * This is holding all of the data defined by `prefs_t` in SRAM. It will
- * be filled with the appropriate content from EEPROM during initialization and
- * can be accessed by other modules using `preferences_get()`. Once changes
- * to it are made, `preferences_save()` needs to be invoked in order for the
- * changes to be written back.
+ * This is holding all of the {@link #prefs_t preferences} in SRAM. It is
+ * backed by the content of the EEPROM and can be accessed globally using
+ * {@link #preferences_get()}. Once changes to it are made,
+ * {@link preferences_save()} needs to be invoked in order for the changes to
+ * be written back to the persistent storage backend.
  *
  * @see prefs_t
- * @see preferences_init()
- * @see preferences_get()
- * @see preferences_save()
  */
 static prefs_t g_epromWorking;
 
 /**
- * @brief Initializes this module by copying over the content of the EEPROM
+ * @brief Initializes this module
  *
  * This has to be called **before** any other functions of this module can be
- * used.
+ * used. It reads in the contents of EEPROM into {@link #g_epromWorking} and
+ * performs a basic integrity check consisting of:
  *
- * It reads in the contents of EEPROM into `g_epromWorking` and performs some
- * basic integrity checks. These include:
+ * - Comparison of software version stored in EEPROM against VERSION
+ * - Comparison of struct size stored in EEPROM against prefs_t::prefs_size
  *
- * - Compare software version stored in EEPROM against VERSION
- * - Compare struct size stored in EEPROM against prefs_t::prefs_size
- *
- * When this check fails, the default values (`eepromDefaultParams_P`) will be
- * used. Otherwise the data from EEPROM is considered to be valid and will end
- * up being used.
+ * When this check fails, the {@link #eepromDefaultParams_P default values} are
+ * used. Otherwise the data from the EEPROM is considered to be valid and will
+ * end up being used.
  *
  * @see prefs_t::version
- * @see VERSION
- * @see g_epromWorking
- * @see eepromParams
+ * @see prefs_t::prefs_size
  */
 void preferences_init()
 {
@@ -151,12 +143,15 @@ void preferences_init()
 }
 
 /**
- * @brief Returns pointer to working copy prefs_t
+ * @brief Returns pointer to copy of the preferences hold in SRAM
  *
- * This returns a pointer to `g_epromWorking` and can be used to access the
- * data for reading and/or writing. Once data has been changed,
- * `preferences_save()` needs to be invoked in order to write it back to the
- * EEPROM.
+ * This returns a pointer to the {@link #g_epromWorking workign copy} of the
+ * {@link #prefs_t preferences} hold in SRAM. It can be used to access and
+ * manipulate the preferences. Once data has been changed,
+ * {@link preferences_save()} needs to be invoked in order to write the changes
+ * to the persistent storage backend.
+ *
+ * @return Reference to g_epromWorking
  *
  * @see g_epromWorking
  * @see preferences_save()
@@ -173,8 +168,10 @@ prefs_t* preferences_get()
  *
  * This writes the byte at the given index into EEPROM. Only bytes that have
  * changed compared to their EEPROM counterpart, will actually be written to
- * EEPROM. This improves the performance as well as the expected lifespan of
- * the EEPROM itself as the amount of erase/write cycles is limited.
+ * the EEPROM. This improves the performance as well as the expected lifespan
+ * of the EEPROM itself as the amount of erase/write cycles is limited.
+ *
+ * @param index Index of byte to be written, 0 - sizeof(prefs_t)
  *
  * @return True if byte at given was written to EEPROM, false otherwise
  *
@@ -221,11 +218,11 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
 }
 
 /**
- * @brief Initiates the writeback to EEPROM
+ * @brief Saves manipulated data by writing it back to the storage backend
  *
- * This initiates the writeback to the EEPROM in order for data to be stored
- * persistently. This function will iterates over {@link g_epromWorking all}
- * preferences and writes changes back to the EEPROM.
+ * This initiates the writeback to the persistend storage backend. It iterates
+ * over {@link g_epromWorking all} preferences and invokes
+ * {@link wcEeprom_writeIfChanged()} for each byte.
  *
  * @return True if preferences were saved successfully, false otherwise
  *
