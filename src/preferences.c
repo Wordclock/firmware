@@ -230,6 +230,11 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @param start Pointer to the start of the data that has to be written back
  * @param length The length of the data that has to be written back
  *
+ * @todo Remove arguments as this is a detail that should be handled within
+ * the function
+ *
+ * @todo Change return type to bool to indicate success
+ *
  * @see wcEeprom_writeIfChanged()
  * @see g_epromWorking
  */
