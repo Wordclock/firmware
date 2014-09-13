@@ -82,7 +82,7 @@ typedef struct {
      *
      * This along with `prefs_t::structSize` is mainly used as a basic
      * integrity check during the initialization of this module by
-     * `wcEeprom_init()`.
+     * `preferences_init()`.
      *
      * @see BUILD_VERSION()
      */
@@ -93,7 +93,7 @@ typedef struct {
      *
      * Describes the size of this struct and is used along with
      * `prefs_t::swVersion` as a basic integrity check during the
-     * initialization of this module by `wcEeprom_init()`.
+     * initialization of this module by `preferences_init()`.
      *
      * @warning This is a 8 bit value, so the size of the struct shouldn't
      * exceed 256 bytes.
@@ -102,7 +102,7 @@ typedef struct {
 
 } prefs_t;
 
-extern void wcEeprom_init();
+extern void preferences_init();
 
 extern prefs_t* wcEeprom_getData();
 

@@ -1002,7 +1002,7 @@ void handle_ir_code()
  * also sets up the data direction registers of the lines in control of the
  * Ambilight, Bluetooth and/or auxiliary GPO lines.
  *
- * @note This has to be executed after the EEPROM module (wcEeprom_init()) has
+ * @note This has to be executed after the EEPROM module (preferences_init()) has
  * been initialized, as it accesses data provided by the EEPROM module.
  *
  * @see UserState_init()

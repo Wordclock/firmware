@@ -60,7 +60,7 @@ prefs_t EEMEM eepromParams;
  * considered to be invalid.
  *
  * @see prefs_t
- * @see wcEeprom_init()
+ * @see preferences_init()
  * @see USEREEPROMPARAMS_DEFAULT
  * @see DISPLAYEEPROMPARAMS_DEFAULT
  * @see PWMEEPROMPARAMS_DEFAULT
@@ -86,7 +86,7 @@ const prefs_t PROGMEM eepromDefaultParams_P = {
  * changes to be written back.
  *
  * @see prefs_t
- * @see wcEeprom_init()
+ * @see preferences_init()
  * @see wcEeprom_getData()
  * @see wcEeprom_writeback()
  */
@@ -113,7 +113,7 @@ prefs_t g_epromWorking;
  * @see g_epromWorking
  * @see eepromParams
  */
-void wcEeprom_init()
+void preferences_init()
 {
 
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));

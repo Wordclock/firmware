@@ -119,7 +119,7 @@ __attribute__((OS_main)) int main()
 
     log_main("Init...\n");
 
-    wcEeprom_init();
+    preferences_init();
 
     #if (ENABLE_DCF_SUPPORT == 1)
 
