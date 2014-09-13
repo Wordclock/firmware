@@ -39,9 +39,9 @@
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
 
+#include "base.h"
 #include "preferences.h"
 #include "uart.h"
-#include "base.h"
 #include "version.h"
 
 /**
