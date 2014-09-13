@@ -75,7 +75,7 @@ typedef struct {
      *
      * @see pwm_prefs_t
      */
-    pwm_prefs_t pwmParams;
+    pwm_prefs_t pwm_prefs;
 
     /**
      * @brief Version number

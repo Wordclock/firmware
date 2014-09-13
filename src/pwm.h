@@ -80,7 +80,7 @@
  * The default values are defined in PWMEEPROMPARAMS_DEFAULT.
  *
  * @see PWMEEPROMPARAMS_DEFAULT
- * @see prefs_t::pwmParams
+ * @see prefs_t::pwm_prefs
  */
 typedef struct pwm_prefs_t {
 

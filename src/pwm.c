@@ -167,7 +167,7 @@ static bool brightness_lock;
  * @see pwm_prefs_t::brightnessOffset
  * @see preferences_get()
  */
-#define offset_pwm_idx (preferences_get()->pwmParams.brightnessOffset)
+#define offset_pwm_idx (preferences_get()->pwm_prefs.brightnessOffset)
 
 /**
  * @brief Macro for easy access to pwm_prefs_t::occupancy
@@ -175,7 +175,7 @@ static bool brightness_lock;
  * @see pwm_prefs_t::occupancy
  * @see preferences_get()
  */
-#define g_occupancy (preferences_get()->pwmParams.occupancy)
+#define g_occupancy (preferences_get()->pwm_prefs.occupancy)
 
 /**
  * @brief Macro for easy access to pwm_prefs_t::brightness2pwmStep
@@ -184,7 +184,7 @@ static bool brightness_lock;
  * @see preferences_get()
  */
 #define g_ldrBrightness2pwmStep \
-    (preferences_get()->pwmParams.brightness2pwmStep)
+    (preferences_get()->pwm_prefs.brightness2pwmStep)
 
 /**
  * @brief Current base LDR index
