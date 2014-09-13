@@ -250,13 +250,11 @@ static void log_output_eol()
 }
 
 /**
- * @brief Outputs a log message as specified by the format string
+ * @brief Outputs a message as specified by the format string
  *
- * First of all this function makes sure that only messages are being output
- * that are lower or equal to the log level specified for the given module. It
- * then iterates over the format string on a character basis and examines it
- * for specifiers. It replaces those specifiers with the arguments provided by
- * <code>ap</code>.
+ * This function iterates over over the format string on a character basis and
+ * examines it for specifiers. It replaces those specifiers with the arguments
+ * provided by <code>ap</code>.
  *
  * Currently the following specifiers are supported:
  *
@@ -270,17 +268,9 @@ static void log_output_eol()
  *
  * Invalid specifiers are simply ignored.
  *
- * The messages is prefixed with {@link #log_output_prefix()}. After the
- * message has been output, {@link #log_output_eol()} is appended, representing
- * the end of each message.
- *
- * @param module Module to generate logging output for
- * @param level Log level to generate output with
  * @param fmt Format string describing logging output
  * @param va List with arguments for specifiers within format string
  *
- * @see log_enabled
- * @see log_level
  * @see uart_puts_p()
  * @see uart_puts_P()
  * @see uart_putc()
@@ -289,21 +279,11 @@ static void log_output_eol()
  * @see uint8ToStr()
  * @see uint8ToHexStr()
  */
-static void log_output_va(log_module_t module, log_level_t level, const char* fmt, va_list ap)
+static void log_outputf(const char* fmt, va_list ap)
 {
-
-    // Check whether output is enabled (globally and for specific module)
-    if (!log_enabled || level > log_level[module]) {
-
-        return;
-
-    }
 
     // Wait for UART output buffer to be empty
     uart_flush_output();
-
-    // Output prefix, including module name and separator
-    log_output_prefix(module, level);
 
     // Keeps track of length of format string
     uint8_t length = 0;
@@ -430,61 +410,92 @@ static void log_output_va(log_module_t module, log_level_t level, const char* fm
 
     }
 
+}
+
+/**
+ * @brief Outputs a log message
+ *
+ * This is essentially a wrapper around {@link #log_outputf()}. It uses
+ * functionality from `<stdarg.h>` to retrieve a `va_list` and passes
+ * everything over to generate the actual output.
+ *
+ * It makes also sure that the output is generated in the correct format,
+ * {@link #log_output_prefix()} it and putting {@link #log_output_eol()} at
+ * the end.
+ *
+ * @param module Module to generate logging output for
+ * @param level Log level to generate output with
+ * @param fmt Format string describing logging output
+ * @param ... Arguments for specifiers within format string
+ *
+ * @see log_outputf()
+ */
+void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
+{
+
+    // Check whether output is enabled (globally and for specific module)
+    if (!log_enabled || level > log_level[module]) {
+
+        return;
+
+    }
+
+    // Output prefix, including module name and separator
+    log_output_prefix(module, level);
+
+    va_list va;
+    va_start(va, fmt);
+    log_outputf(fmt, va);
+    va_end(va);
+
     // Output EOL
     log_output_eol();
 
 }
 
 /**
- * @brief Outputs a log message
- *
- * This is essentially a wrapper around {@link #log_output_va()}. It uses
- * functionality from `<stdarg.h>` to retrieve a `va_list` and passes
- * everything over to generate the actual output.
- *
- * @param module Module to generate logging output for
- * @param level Log level to generate output with
- * @param fmt Format string describing logging output
- * @param ... Arguments for specifiers within format string
- *
- * @see log_output_va()
- */
-void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
-{
-
-    va_list va;
-    va_start(va, fmt);
-    log_output_va(module, level, fmt, va);
-    va_end(va);
-
-}
-
-/**
  * @brief Outputs a log message stored in program space
  *
- * This is essentially a wrapper around {@link #log_output_va()} for format
+ * This is essentially a wrapper around {@link #log_outputf()} for format
  * strings stored in program space. After copying over the log format string
  * from program space into a buffer, is uses functionality from `<stdarg.h>` to
  * retrieve a `va_list` and passes everything over to generate the actual
  * output.
  *
+ * It makes also sure that the output is generated in the correct format,
+ * {@link #log_output_prefix()} it and putting {@link #log_output_eol()} at
+ * the end.
+ *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param fmt Format string describing logging output
  * @param ... Arguments for specifiers within format string
  *
- * @see log_output_va()
+ * @see log_outputf()
  */
 void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
 {
+
+    // Check whether output is enabled (globally and for specific module)
+    if (!log_enabled || level > log_level[module]) {
+
+        return;
+
+    }
+
+    // Output prefix, including module name and separator
+    log_output_prefix(module, level);
 
     char buffer[LOG_FORMAT_MAX_STRING_LENGTH];
     strncpy_P(buffer, fmt, LOG_FORMAT_MAX_STRING_LENGTH);
 
     va_list va;
     va_start(va, fmt);
-    log_output_va(module, level, buffer, va);
+    log_outputf(buffer, va);
     va_end(va);
+
+    // Output EOL
+    log_output_eol();
 
 }
 
@@ -492,7 +503,7 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * @brief Outputs a log message by invoking a callback function
  *
  * This can be used in cases when a formatted string is not powerful enough and
- * a completely custom message needs to be output. The
+ * a completely custom message and/or action needs to be generated/taken. The
  * {@link #log_output_prefix() prefix} and {@link #log_output_eol() EOL}
  * strings are output automatically, but everything in between is up to the
  * callback function itself.
