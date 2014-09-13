@@ -103,7 +103,7 @@ static prefs_t g_epromWorking;
  * basic integrity checks. These include:
  *
  * - Compare software version stored in EEPROM against VERSION
- * - Compare struct size stored in EEPROM against prefs_t::structSize
+ * - Compare struct size stored in EEPROM against prefs_t::prefs_size
  *
  * When this check fails, the default values (`eepromDefaultParams_P`) will be
  * used. Otherwise the data from EEPROM is considered to be valid and will end
@@ -120,7 +120,7 @@ void preferences_init()
     eeprom_read_block(&g_epromWorking, &eepromParams, sizeof(eepromParams));
 
     if ((g_epromWorking.version != VERSION)
-        || (g_epromWorking.structSize != sizeof(g_epromWorking))) {
+        || (g_epromWorking.prefs_size != sizeof(g_epromWorking))) {
 
         #if (LOG_EEPROM_INIT == 1)
 

@@ -81,7 +81,7 @@ typedef struct {
     /**
      * @brief Version number
      *
-     * This along with `prefs_t::structSize` is mainly used as a basic
+     * This along with `prefs_t::prefs_size` is mainly used as a basic
      * integrity check during the initialization of this module by
      * `preferences_init()`.
      *
@@ -99,7 +99,7 @@ typedef struct {
      * @warning This is a 8 bit value, so the size of the struct shouldn't
      * exceed 256 bytes.
      */
-    uint8_t structSize;
+    uint8_t prefs_size;
 
 } prefs_t;
 
