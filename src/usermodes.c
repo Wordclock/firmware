@@ -598,7 +598,7 @@ static void TrainIrState_1Hz()
  * @see TrainIrState::curKey
  * @see UserEepromParams::irAddress
  * @see UserEepromParams::irCommandCodes
- * @see wcEeprom_writeback()
+ * @see preferences_save()
  * @see quitMyself()
  * @see display_getNumberDisplayState()
  * @see display_setDisplayState()
@@ -622,7 +622,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
                 log_irTrain("Ir train finished\n");
 
-                wcEeprom_writeback(g_params, sizeof(*g_params));
+                preferences_save(g_params, sizeof(*g_params));
 
                 quitMyself(MS_irTrain, NULL);
 

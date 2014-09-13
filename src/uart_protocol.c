@@ -443,7 +443,7 @@ static void _factory_reset(uint8_t argc, char* argv[])
 {
 
     preferences_get()->swVersion = 0;
-    wcEeprom_writeback(&preferences_get()->swVersion,
+    preferences_save(&preferences_get()->swVersion,
         sizeof(preferences_get()->swVersion));
 
     _reset(0, NULL);
@@ -610,7 +610,7 @@ static void _preset_set(uint8_t argc, char* argv[])
 
         (&(preferences_get()->userParams))->curColorProfile = preset;
 
-        wcEeprom_writeback(&preferences_get()->userParams.curColorProfile,
+        preferences_save(&preferences_get()->userParams.curColorProfile,
             sizeof(preferences_get()->userParams.curColorProfile));
 
         if (user_get_current_menu_state() == MS_normalMode) {
@@ -724,7 +724,7 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     (&(preferences_get()->userParams))->colorPresets[preset] = color;
 
-    wcEeprom_writeback(&preferences_get()->userParams.colorPresets[preset],
+    preferences_save(&preferences_get()->userParams.colorPresets[preset],
         sizeof(preferences_get()->userParams.colorPresets[preset]));
 
     if (preset == (&(preferences_get()->userParams))->curColorProfile) {

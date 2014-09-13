@@ -106,6 +106,6 @@ extern void preferences_init();
 
 extern prefs_t* preferences_get();
 
-extern void wcEeprom_writeback(const void* start, uint8_t length);
+extern void preferences_save(const void* start, uint8_t length);
 
 #endif /* _WC_PREFERENCES_H_ */

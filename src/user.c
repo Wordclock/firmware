@@ -745,7 +745,7 @@ void handle_user_command(user_command_t user_command)
 
         }
 
-        wcEeprom_writeback(preferences_get(), sizeof(prefs_t));
+        preferences_save(preferences_get(), sizeof(prefs_t));
 
     } else {
 
@@ -1258,7 +1258,7 @@ void user_isr1Hz()
 
         if (g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_S) {
 
-            wcEeprom_writeback(preferences_get(), sizeof(prefs_t));
+            preferences_save(preferences_get(), sizeof(prefs_t));
 
         }
 

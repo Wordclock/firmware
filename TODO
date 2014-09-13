@@ -61,7 +61,7 @@
 
 - Refactor/Rewrite preferences.c: The function wcEeprom_writeIfChanged() in its
   current form doesn't make too much sense. This could easily be included
-  into wcEeprom_writeback(), which would save some space and make things
+  into preferences_save(), which would save some space and make things
   not look more complicated than they actually are.
 
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really

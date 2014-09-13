@@ -82,13 +82,13 @@ const prefs_t PROGMEM eepromDefaultParams_P = {
  * This is holding all of the data defined by `prefs_t` in SRAM. It will
  * be filled with the appropriate content from EEPROM during initialization and
  * can be accessed by other modules using `preferences_get()`. Once changes
- * to it are made, `wcEeprom_writeback()` needs to be invoked in order for the
+ * to it are made, `preferences_save()` needs to be invoked in order for the
  * changes to be written back.
  *
  * @see prefs_t
  * @see preferences_init()
  * @see preferences_get()
- * @see wcEeprom_writeback()
+ * @see preferences_save()
  */
 prefs_t g_epromWorking;
 
@@ -156,11 +156,11 @@ void preferences_init()
  *
  * This returns a pointer to `g_epromWorking` and can be used to access the
  * data for reading and/or writing. Once data has been changed,
- * `wcEeprom_writeback()` needs to be invoked in order to write it back to the
+ * `preferences_save()` needs to be invoked in order to write it back to the
  * EEPROM.
  *
  * @see g_epromWorking
- * @see wcEeprom_writeback()
+ * @see preferences_save()
  */
 prefs_t* preferences_get()
 {
@@ -177,7 +177,7 @@ prefs_t* preferences_get()
  * EEPROM. This improves the performance as well as the expected lifespan of
  * the EEPROM itself as the amount of erase/write cycles is limited.
  *
- * @see wcEeprom_writeback()
+ * @see preferences_save()
  */
 static bool wcEeprom_writeIfChanged(uint8_t index)
 {
@@ -233,7 +233,7 @@ static bool wcEeprom_writeIfChanged(uint8_t index)
  * @see wcEeprom_writeIfChanged()
  * @see g_epromWorking
  */
-void wcEeprom_writeback(const void* start, uint8_t length)
+void preferences_save(const void* start, uint8_t length)
 {
 
     uint8_t eepromIndex = (((uint8_t*)start) - ((uint8_t*)&g_epromWorking));
