@@ -47,6 +47,7 @@
 #include "user.h"
 #include "user_command.h"
 #include "pwm.h"
+#include "version.h"
 #include "wceeprom.h"
 
 
@@ -376,15 +377,15 @@ static void _ir_user_command(uint8_t argc, char* argv[])
  * This puts out the hex representation of the version number (major & minor)
  * of the firmware.
  *
- * @see MAJOR_VERSION
- * @see MINOR_VERSION
+ * @see VERSION_MAJOR
+ * @see VERSION_MINOR
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
  */
 static void _version(uint8_t argc, char* argv[])
 {
 
-    uart_protocol_output_args_hex(2, MAJOR_VERSION, MINOR_VERSION);
+    uart_protocol_output_args_hex(2, VERSION_MAJOR, VERSION_MINOR);
 
 }
 
