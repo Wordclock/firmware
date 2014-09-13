@@ -179,34 +179,34 @@ prefs_t* preferences_get()
 static bool wcEeprom_writeIfChanged(uint8_t index)
 {
 
-    uint8_t eepromByte;
-    uint8_t sramByte;
+    uint8_t byte_eeprom;
+    uint8_t byte_sram;
 
-    uint8_t* eepromAdress = ((uint8_t*)&prefs_eeprom) + index;
+    uint8_t* address_eeprom = ((uint8_t*)&prefs_eeprom) + index;
 
-    eepromByte = eeprom_read_byte(eepromAdress);
-    sramByte = *(((uint8_t*)&prefs) + index);
+    byte_eeprom = eeprom_read_byte(address_eeprom);
+    byte_sram = *(((uint8_t*)&prefs) + index);
 
-    if (eepromByte != sramByte) {
+    if (byte_eeprom != byte_sram) {
 
         #if (LOG_EEPROM_WRITEBACK == 1)
 
             char buf[5];
 
             uart_puts_P("EEPROM byte ");
-            uint16ToHexStr((uint16_t)eepromAdress, buf);
+            uint16ToHexStr((uint16_t)address_eeprom, buf);
             uart_puts(buf);
             uart_puts_P(", EEPROM: ");
-            uint8ToHexStr(eepromByte, buf);
+            uint8ToHexStr(byte_eeprom, buf);
             uart_puts(buf);
             uart_puts_P(", SRAM: ");
-            uint8ToHexStr(eepromByte, buf);
+            uint8ToHexStr(byte_eeprom, buf);
             uart_puts(buf);
             uart_putc('\n');
 
         #endif
 
-        eeprom_write_byte(eepromAdress, sramByte);
+        eeprom_write_byte(address_eeprom, byte_sram);
 
         return true;
 
