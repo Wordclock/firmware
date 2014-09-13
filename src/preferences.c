@@ -107,9 +107,9 @@ static prefs_t prefs;
 void preferences_init()
 {
 
-    eeprom_read_block(&prefs, &prefs_eeprom, sizeof(prefs_eeprom));
+    eeprom_read_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
 
-    if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs))) {
+    if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs_t))) {
 
         #if (LOG_EEPROM_INIT == 1)
 
@@ -127,7 +127,7 @@ void preferences_init()
 
         uint8_t* ptr = (uint8_t*)(&prefs);
 
-        for (uint8_t i = 0; i < sizeof(prefs_eeprom); i++) {
+        for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
 
             char buf[3];
 
