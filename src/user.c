@@ -317,7 +317,7 @@ static uint8_t g_checkIfAutoOffDelay;
 /**
  * @brief Allowing access to global instance of userParams backed by EEPROM
  *
- * @see UserEepromParams
+ * @see user_prefs_t
  */
 #define g_params (&(preferences_get()->userParams))
 
@@ -1328,7 +1328,7 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
  *
  * @return True if current time lies outside any on/off time ranges, else false
  *
- * @see UserEepromParams::onOffTimes
+ * @see user_prefs_t::onOffTimes
  * @see curTimeIsBetween()
  * @see user_setNewTime()
  */

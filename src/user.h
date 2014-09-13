@@ -514,7 +514,7 @@ typedef enum
  * (e.g. autoOff) as this times refer to a daily basis so other entities such
  * as the date is not needed.
  *
- * @see UserEepromParams::onOffTimes
+ * @see user_prefs_t::onOffTimes
  */
 typedef struct UiTime {
 
@@ -547,7 +547,7 @@ typedef struct UiTime {
  * @note If changing this number you probably want also to change the
  * default values, see USER_ON_OFF_TIME_DEFAULTS.
  *
- * @see UserEepromParams::onOffTimes
+ * @see user_prefs_t::onOffTimes
  * @see UI_ONOFFTIMES_COUNT
  * @see USER_ON_OFF_TIME_DEFAULTS
  */
@@ -557,14 +557,14 @@ typedef struct UiTime {
  * @brief Amount of needed elements to store the on/off (autoOff) times
  *
  * This defines the needed amount of elements within
- * UserEepromParams::onOffTimes to store the configured amount of on/off
+ * user_prefs_t::onOffTimes to store the configured amount of on/off
  * (autoOff) times (UI_MAX_ONOFF_TIMES).
  *
  * Each on/off (autoOff) time consists of two parts: The "on" time as well as
  * the "off" time. Therefore the value for this macro is simply calculated by
  * multiplying UI_MAX_ONOFF_TIMES by two.
  *
- * @see UserEepromParams::onOffTimes
+ * @see user_prefs_t::onOffTimes
  * @see UI_MAX_ONOFF_TIMES
  */
 #define UI_ONOFFTIMES_COUNT (UI_MAX_ONOFF_TIMES * 2)
@@ -650,7 +650,7 @@ typedef struct UiTime {
  * @see USEREEPROMPARAMS_DEFAULT
  * @see prefs_t::userParams
  */
-typedef struct UserEepromParams {
+typedef struct user_prefs_t {
 
     /**
      * @brief The address of the trained IR remote control
@@ -756,7 +756,7 @@ typedef struct UserEepromParams {
      */
     uint8_t mode;
 
-} UserEepromParams;
+} user_prefs_t;
 
 extern bool useAutoOffAnimation;
 
@@ -782,7 +782,7 @@ extern bool useAutoOffAnimation;
  * USER_HUE_CHANGE_INT_100MS_MIN and USER_HUE_CHANGE_INT_100MS_MAX).
  *
  * @see menu_state_t::MS_hueMode
- * @see UserEepromParams::hueChangeInterval
+ * @see user_prefs_t::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS_MIN
  * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
@@ -798,7 +798,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see menu_state_t::MS_hueMode
- * @see UserEepromParams::hueChangeInterval
+ * @see user_prefs_t::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MAX
  */
@@ -814,7 +814,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see menu_state_t::MS_hueMode
- * @see UserEepromParams::hueChangeInterval
+ * @see user_prefs_t::hueChangeInterval
  * @see USER_HUE_CHANGE_INT_100MS
  * @see USER_HUE_CHANGE_INT_100MS_MIN
  */
@@ -854,7 +854,7 @@ extern bool useAutoOffAnimation;
  * USER_PULSE_CHANGE_INT_10MS_MIN and USER_PULSE_CHANGE_INT_10MS_MAX).
  *
  * @see menu_state_t::MS_pulse
- * @see UserEepromParams::pulseUpdateInterval
+ * @see user_prefs_t::pulseUpdateInterval
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
  */
@@ -869,7 +869,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see menu_state_t::MS_pulse
- * @see UserEepromParams::hueChangeInterval
+ * @see user_prefs_t::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
  */
@@ -884,7 +884,7 @@ extern bool useAutoOffAnimation;
  * the value defined here.
  *
  * @see menu_state_t::MS_pulse
- * @see UserEepromParams::hueChangeInterval
+ * @see user_prefs_t::hueChangeInterval
  * @see USER_PULSE_CHANGE_INT_10MS
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
  */
@@ -1146,13 +1146,13 @@ extern void user_init();
 /**
  * @brief Default values of this module that should be stored persistently
  *
- * This defines the default values for this module. Refer to UserEepromParams
+ * This defines the default values for this module. Refer to user_prefs_t
  * for a detailed description of each member.
  *
  * @note This will also be the values used after flashing the firmware to the
  * microcontroller, so make sure that the defaults are actually useful.
  *
- * @see UserEepromParams
+ * @see user_prefs_t
  * @see preferences.h
  */
 #define USEREEPROMPARAMS_DEFAULT { \

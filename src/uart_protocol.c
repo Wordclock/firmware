@@ -575,7 +575,7 @@ static void _preset_number(uint8_t argc, char* argv[])
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  *
  * @todo Return error when currently not in normal mode?
  */
@@ -597,7 +597,7 @@ static void _preset_active(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  * @see pwm_set_color()
  */
 static void _preset_set(uint8_t argc, char* argv[])
@@ -638,7 +638,7 @@ static void _preset_set(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_output_args_hex()
  */
 static void _preset_read(uint8_t argc, char* argv[])
@@ -672,7 +672,7 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_ok()
  */
 static void _preset_write(uint8_t argc, char* argv[])
