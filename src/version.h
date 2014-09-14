@@ -29,6 +29,16 @@
 #define _WC_VERSION_H_
 
 /**
+ * @brief Type definition when dealing with the software version
+ *
+ * This type can hold the actual {@link #VERSION version} and should be used
+ * whenever dealing with versions in software.
+ *
+ * @see VERSION_BUILD()
+ */
+typedef uint16_t version_t;
+
+/**
  * @brief Macro building the actual version number
  *
  * This macro will build the actual version number by combining
@@ -38,7 +48,7 @@
  * @see VERSION_MAJOR
  * @see VERSION_MINOR
  */
-#define VERSION_BUILD(x, y) ((uint16_t)((x << 8) | (y)))
+#define VERSION_BUILD(x, y) ((version_t)((x << 8) | (y)))
 
 /**
  * @brief Major version number
@@ -74,15 +84,5 @@
  * @see VERSION_BUILD()
  */
 #define VERSION VERSION_BUILD(VERSION_MAJOR, VERSION_MINOR)
-
-/**
- * @brief Type definition when dealing with the software version
- *
- * This type can hold the actual {@link #VERSION version} and should be used
- * whenever dealing with versions in software.
- *
- * @see VERSION_BUILD()
- */
-typedef uint16_t version_t;
 
 #endif /* _WC_VERSION_H_ */
