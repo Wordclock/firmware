@@ -49,6 +49,7 @@
 #include "uart.h"
 #include "base.h"
 #include "preferences.h"
+#include "uart_protocol.h"
 
 /**
 * @brief Contains the MCU status register
@@ -62,12 +63,6 @@
 * @see reset_mcusr()
 */
 static uint8_t mcusr __attribute__ ((section(".noinit")));
-
-#if (ENABLE_UART_PROTOCOL == 1)
-
-    #include "uart_protocol.h"
-
-#endif
 
 /*
  * Make sure F_CPU is set
@@ -146,7 +141,12 @@ __attribute__((OS_main)) int main()
         brightness_handle();
         datetime_handle();
         handle_ir_code();
-        uart_protocol_handle();
+
+        #if (ENABLE_UART_PROTOCOL == 1)
+
+            uart_protocol_handle();
+
+        #endif /* (ENABLE_UART_PROTOCOL == 1) */
 
         #if (ENABLE_DCF_SUPPORT == 1)
 

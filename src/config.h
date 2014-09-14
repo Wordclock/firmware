@@ -199,10 +199,6 @@
  *
  * The protocol itself is documented in the `doc/UART_PROTOCOL.md`.
  *
- * @todo Implement this in a way that is actually saves some amount of program
- * space rather than just disabling the functionality but still compiling it
- * in.
- *
  * @see uart_protocol.h
  */
 #define ENABLE_UART_PROTOCOL 1
