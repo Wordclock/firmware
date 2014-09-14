@@ -178,10 +178,6 @@
   the commands itself could probably be also triggered by other sources, e.g.
   I2C.
 
-- Not all of the functions within the "base" module are actually needed, when
-  certain components are disabled. Surround the not needed functions with some
-  conditionals to compile them in only when needed.
-
 - Synchronize various use cases of uart_puts(). As the uart module now works
   asynchronously, debug output of various modules are not working correctly,
   as the messages are too long.
