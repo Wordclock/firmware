@@ -71,10 +71,10 @@ extern unsigned char __heap_start;
  *
  * @see MEMCHECK_MASK
  */
-unsigned short memcheck_get_unused(void)
+size_t memcheck_get_unused(void)
 {
 
-   unsigned short unused = 0;
+   size_t unused = 0;
    unsigned char *p = &__heap_start;
 
    do {
@@ -102,10 +102,10 @@ unsigned short memcheck_get_unused(void)
  *
  * @return Number of currently unused SRAM bytes
  */
-unsigned short memcheck_get_current(void)
+size_t memcheck_get_current(void)
 {
 
-    return SP - (uint16_t)&__heap_start;
+    return SP - (size_t)&__heap_start;
 
 }
 

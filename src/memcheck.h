@@ -30,7 +30,9 @@
 #ifndef _WC_MEMCHECK_H_
 #define _WC_MEMCHECK_H_
 
-extern unsigned short memcheck_get_unused(void);
-extern unsigned short memcheck_get_current(void);
+#include <stdlib.h>
+
+extern size_t memcheck_get_unused(void);
+extern size_t memcheck_get_current(void);
 
 #endif  /* _WC_MEMCHECK_H_ */
