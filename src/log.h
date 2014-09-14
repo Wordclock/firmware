@@ -118,6 +118,9 @@ typedef enum {
  */
 typedef void (*log_output_callback_t)();
 
+extern PGM_P const log_level_names[] PROGMEM;
+extern PGM_P const log_module_names[] PROGMEM;
+
 void log_init();
 
 void log_enable();

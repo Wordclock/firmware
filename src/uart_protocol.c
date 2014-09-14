@@ -1050,7 +1050,6 @@ static void _log_modules(uint8_t argc, char* argv[])
 
     for (uint8_t i = 0; i < LOG_MODULE_COUNT; i++) {
 
-        extern PGM_P const log_module_names[];
         uart_protocol_output_p((PGM_P)pgm_read_word(&(log_module_names[i])));
 
     }
@@ -1078,7 +1077,6 @@ static void _log_levels(uint8_t argc, char* argv[])
 
     for (uint8_t i = 0; i < LOG_LEVEL_COUNT; i++) {
 
-        extern PGM_P const log_level_names[];
         uart_protocol_output_p((PGM_P)pgm_read_word(&(log_level_names[i])));
 
     }
