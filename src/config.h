@@ -204,11 +204,11 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
- * @brief Defines whether support for DCF77 should be included
+ * @brief Defines whether support for memory debugging should be included
  *
- * If set to 1, the firmware will be built with support for decoding the
- * DCF77 time signal in order to be able to get the current date and time
- * automatically.
+ * If set to 1, the firmware will be built with support for dynamic memory
+ * debugging. This makes it possible to determine the current and the maximum
+ * memory consumption.
  *
  * @see memcheck.h
  */
