@@ -147,9 +147,8 @@
 
 - usermodes.c: NormalState::curHue: Calc current hue from RGB
 
-- usermodes.c: Think about implementing and/or using dynamic memory managment,
-  to save some RAM as a couple of variables are actually not used constantly,
-  but only when entering a specific mode.
+- usermodes.c: Use unions to share memory between different states to reduce
+  static memory usage.
 
 - base.c: incDecRangeOverflow(): Check whether it makes sense to overflow
   on both ends, not only on the bottom, but also on the top.
