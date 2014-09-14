@@ -19,7 +19,7 @@
  */
 
 /**
- * @file preferences.c
+ * @file preferences_eeprom.c
  * @brief Implementation of preference module with EEPROM as backend
  *
  * This implements the functionality declared in {@link preferences.h}. A copy
