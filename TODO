@@ -57,11 +57,6 @@
 - Specify some coding styles for contributers, which will be based upon the
   K&R indent style
 
-- Refactor/Rewrite preferences.c: The function wcEeprom_writeIfChanged() in its
-  current form doesn't make too much sense. This could easily be included
-  into preferences_save(), which would save some space and make things
-  not look more complicated than they actually are.
-
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
   needed or if it would make more sense to not include it in the first place
   when dealing with monochromatic clocks.
@@ -142,9 +137,6 @@
 - Fix artifacts on display when switching from fast demo mode into normal one.
 
 - Come up with a suitable Makefile
-
-- wceeprom: Use update* functions provided by <avr/eeprom.h> instead of using
-  own ones.
 
 - Make use of git branches!
 

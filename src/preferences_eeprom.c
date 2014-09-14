@@ -29,12 +29,9 @@
  * invoked in order for the data to be written to the EEPROM coming along with
  * the microcontroller in use.
  *
- * For details about how the EEPROM works in detail and how to access it from
- * within the program, refer to [1] and/or [2].
+ * The EEPROM is accessed by the functionality provided by {@link eeprom.h}.
  *
- * [1]: http://www.atmel.com/images/doc2545.pdf
- * [2]: http://www.nongnu.org/avr-libc/user-manual/group__avr__eeprom.html
- *
+ * @see eeprom.h
  * @see preferences.h
  */
 
@@ -42,6 +39,7 @@
 #include <avr/pgmspace.h>
 
 #include "base.h"
+#include "eeprom.h"
 #include "preferences.h"
 #include "uart.h"
 #include "version.h"
@@ -106,7 +104,7 @@ static prefs_t prefs;
 void preferences_init()
 {
 
-    eeprom_read_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
+    eeprom_get_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
 
     if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs_t))) {
 
@@ -162,69 +160,13 @@ prefs_t* preferences_get()
 }
 
 /**
- * @brief Writes byte at given index back to EEPROM - if it has been changed
- *
- * This writes the byte at the given index into EEPROM. Only bytes that have
- * changed compared to their EEPROM counterpart, will actually be written to
- * the EEPROM. This improves the performance as well as the expected lifespan
- * of the EEPROM itself as the amount of erase/write cycles is limited.
- *
- * @param index Index of byte to be written, 0 - sizeof(prefs_t)
- *
- * @return True if byte at given was written to EEPROM, false otherwise
- *
- * @see preferences_save()
- */
-static bool wcEeprom_writeIfChanged(uint16_t index)
-{
-
-    uint8_t byte_eeprom;
-    uint8_t byte_sram;
-
-    uint8_t* address_eeprom = ((uint8_t*)&prefs_eeprom) + index;
-
-    byte_eeprom = eeprom_read_byte(address_eeprom);
-    byte_sram = *(((uint8_t*)&prefs) + index);
-
-    if (byte_eeprom != byte_sram) {
-
-        #if (LOG_EEPROM_WRITEBACK == 1)
-
-            char buf[5];
-
-            uart_puts_P("EEPROM byte ");
-            uint16ToHexStr((uint16_t)address_eeprom, buf);
-            uart_puts(buf);
-            uart_puts_P(", EEPROM: ");
-            uint8ToHexStr(byte_eeprom, buf);
-            uart_puts(buf);
-            uart_puts_P(", SRAM: ");
-            uint8ToHexStr(byte_eeprom, buf);
-            uart_puts(buf);
-            uart_putc('\n');
-
-        #endif
-
-        eeprom_write_byte(address_eeprom, byte_sram);
-
-        return true;
-
-    }
-
-    return false;
-
-}
-
-/**
  * @brief Saves manipulated preferences by writing it back to the EEPROM
  *
- * This initiates the writeback to the EEPROM. It iterates over
- * {@link prefs all} preferences and invokes {@link wcEeprom_writeIfChanged()}
- * for each byte individually.
+ * This initiates the writeback to the EEPROM. Essentially it is only a wrapper
+ * around {@link eeprom_put_block()}.
  *
  * @return True if preferences were saved successfully, false otherwise
  *
- * @see wcEeprom_writeIfChanged()
  * @see prefs
  */
 bool preferences_save()
@@ -236,12 +178,7 @@ bool preferences_save()
 
     #endif
 
-    for (uint16_t i = 0; i < sizeof(prefs_t); i++) {
-
-        wcEeprom_writeIfChanged(i);
-
-
-    }
+    eeprom_put_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
 
     // TODO: Check whether data was actually written successfully
     return true;
