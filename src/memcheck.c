@@ -116,35 +116,23 @@ void __attribute__ ((naked, used, section(".init3"))) memcheck_init(void);
  * @brief Initializes the SRAM with specific bit pattern
  *
  * This applies a {@link MEMCHECK_MASK specific} bit pattern to the SRAM -
- * starting from the start of the heap to the end.
+ * starting from the start of the heap up to right before the stack pointer.
  *
- * @note This is implemented as inline assembler to make sure that it will not
- * be optimized out by the compiler. Furthermore this makes sure that no
- * function calls are involved.
+ * @warning This function is expected to be executed in the context of the
+ * initialization (`.init3`) and must not be called during runtime.
  *
- * @warning This writes the bit pattern to the end of the RAM. In case the
- * stack pointer is not at RAMEND it will overwrite the content of the stack,
- * corrupting any data therein (i.e. return addresses). Therefore it is
- * absolutely essential that this function is *not* called from any other
- * function, but executed in the context of the initialization.
+ * @warning To prevent stack corruption this function must not manipulate the
+ * stack.
  *
  * @see MEMCHECK_MASK
  */
 void memcheck_init(void)
 {
 
-   __asm volatile (
-      "ldi r30, lo8 (__heap_start)"  "\n\t"
-      "ldi r31, hi8 (__heap_start)"  "\n\t"
-      "ldi r24, %0"                  "\n\t"
-      "ldi r25, hi8 (%1)"            "\n"
-      "0:"                           "\n\t"
-      "st  Z+,  r24"                 "\n\t"
-      "cpi r30, lo8 (%1)"            "\n\t"
-      "cpc r31, r25"                 "\n\t"
-      "brlo 0b"
-         :
-         : "i" (MEMCHECK_MASK), "i" (RAMEND + 1)
-   );
+    for (uint8_t *p = &__heap_start; p < (uint8_t*)SP; p++) {
+
+        *p = MEMCHECK_MASK;
+
+    }
 
 }
