@@ -48,7 +48,7 @@
 #include "user.h"
 #include "uart.h"
 #include "base.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 /**
 * @brief Contains the MCU status register
@@ -119,7 +119,7 @@ __attribute__((OS_main)) int main()
 
     log_main("Init...\n");
 
-    wcEeprom_init();
+    preferences_init();
 
     #if (ENABLE_DCF_SUPPORT == 1)
 

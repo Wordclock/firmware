@@ -261,13 +261,13 @@ enum e_displayWordPos
  * There are various modes of operation, which are explained in more detail
  * in the header of this file. This enumerations contains constants to
  * work with these modes internally. The chosen setting can be stored
- * persistently within the EEPROM, see DisplayEepromParams.
+ * persistently within the EEPROM, see display_prefs_t.
  *
  * If enabled (DISPLAY_ADD_JESTER_MODE) the "Jester mode" will be added along
  * with the others.
  *
  * @see DISPLAY_ADD_JESTER_MODE
- * @see DisplayEepromParams
+ * @see display_prefs_t
  */
 typedef enum e_WcGerModes {
 
@@ -290,10 +290,10 @@ typedef enum e_WcGerModes {
  * @brief Containing the parameters of this module to be stored persistently
  *
  * @see DISPLAYEEPROMPARAMS_DEFAULT
- * @see wceeprom.h
+ * @see preferences.h
  * @see e_WcGerModes
  */
-struct DisplayEepromParams {
+struct display_prefs_t {
 
     e_WcGerModes mode;
 
@@ -303,13 +303,13 @@ struct DisplayEepromParams {
  * @brief Default values of this module that should be stored persistently
  *
  * This defines the default values for this module. Refer to
- * DisplayEepromParams for a detailed description of each member.
+ * display_prefs_t for a detailed description of each member.
  *
  * @note This will also be the values used after flashing the firmware to the
  * microcontroller, so make sure that the defaults are actually useful.
  *
- * @see DisplayEepromParams
- * @see wceeprom.h
+ * @see display_prefs_t
+ * @see preferences.h
  */
 #define DISPLAYEEPROMPARAMS_DEFAULT { \
 \
@@ -356,9 +356,9 @@ struct DisplayEepromParams {
  * @see DISPLAY_SPECIAL_USER_COMMANDS_CODES
 */
 #define _DISP_TOGGLE_DISPMODE_CODE \
-    ++g_displayParams->mode; \
-    g_displayParams->mode %= (TM_COUNT * (DISPLAY_DEACTIVATABLE_ITIS + 1)); \
-    addState(MS_showNumber, (void*)(g_displayParams->mode + 1)); \
+    ++g_display_prefs->mode; \
+    g_display_prefs->mode %= (TM_COUNT * (DISPLAY_DEACTIVATABLE_ITIS + 1)); \
+    addState(MS_showNumber, (void*)(g_display_prefs->mode + 1)); \
     log_state("WRO\n");
 
 /**

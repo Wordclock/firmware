@@ -47,8 +47,8 @@
 #include "user.h"
 #include "user_command.h"
 #include "pwm.h"
+#include "preferences.h"
 #include "version.h"
-#include "wceeprom.h"
 
 
 /**
@@ -431,21 +431,20 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by invalidating WcEepromData#swVersion and
+ * This performs a factory reset by invalidating prefs_t#version and
  * resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
  *
  * @see uart_protocol_command_callback_t
- * @see WcEepromData::swVersion
+ * @see prefs_t::version
  * @see _reset()
  */
 static void _factory_reset(uint8_t argc, char* argv[])
 {
 
-    wcEeprom_getData()->swVersion = 0;
-    wcEeprom_writeback(&wcEeprom_getData()->swVersion,
-        sizeof(wcEeprom_getData()->swVersion));
+    preferences_get()->version = 0;
+    preferences_save();
 
     _reset(0, NULL);
 
@@ -576,14 +575,14 @@ static void _preset_number(uint8_t argc, char* argv[])
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  *
  * @todo Return error when currently not in normal mode?
  */
 static void _preset_active(uint8_t argc, char* argv[])
 {
 
-    uint8_t preset = (&(wcEeprom_getData()->userParams))->curColorProfile;
+    uint8_t preset = (&(preferences_get()->user_prefs))->curColorProfile;
     uart_protocol_output_args_hex(1, preset);
 
 }
@@ -598,7 +597,7 @@ static void _preset_active(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  * @see pwm_set_color()
  */
 static void _preset_set(uint8_t argc, char* argv[])
@@ -609,10 +608,8 @@ static void _preset_set(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        (&(wcEeprom_getData()->userParams))->curColorProfile = preset;
-
-        wcEeprom_writeback(&wcEeprom_getData()->userParams.curColorProfile,
-            sizeof(wcEeprom_getData()->userParams.curColorProfile));
+        (&(preferences_get()->user_prefs))->curColorProfile = preset;
+        preferences_save();
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -639,7 +636,7 @@ static void _preset_set(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_output_args_hex()
  */
 static void _preset_read(uint8_t argc, char* argv[])
@@ -650,7 +647,7 @@ static void _preset_read(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        color_rgb_t color = (&(wcEeprom_getData()->userParams))->colorPresets[preset];
+        color_rgb_t color = (&(preferences_get()->user_prefs))->colorPresets[preset];
 
         uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
@@ -673,7 +670,7 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_ok()
  */
 static void _preset_write(uint8_t argc, char* argv[])
@@ -723,12 +720,10 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     }
 
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset] = color;
+    (&(preferences_get()->user_prefs))->colorPresets[preset] = color;
+    preferences_save();
 
-    wcEeprom_writeback(&wcEeprom_getData()->userParams.colorPresets[preset],
-        sizeof(wcEeprom_getData()->userParams.colorPresets[preset]));
-
-    if (preset == (&(wcEeprom_getData()->userParams))->curColorProfile) {
+    if (preset == (&(preferences_get()->user_prefs))->curColorProfile) {
 
         if (user_get_current_menu_state() == MS_normalMode) {
 

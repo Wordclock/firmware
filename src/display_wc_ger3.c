@@ -45,7 +45,7 @@
 #include "base.h"
 #include "display.h"
 #include "shift.h"
-#include "wceeprom.h"
+#include "preferences.h"
 #include "prng.h"
 
 #if (WC_DISP_GER3 == 1)
@@ -612,14 +612,14 @@
         uint8_t minuteLedSubState = 0;
         bool jesterMode;
         display_state_t leds;
-        uint8_t langMode = g_displayParams->mode;
+        uint8_t langMode = g_display_prefs->mode;
 
         #if (DISPLAY_DEACTIVATABLE_ITIS == 1)
 
             leds = 0;
             langMode /= 2;
 
-            if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
+            if (((g_display_prefs->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
                 leds |= ((display_state_t)1 << DWP_itis);
 

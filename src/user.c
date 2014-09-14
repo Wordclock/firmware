@@ -39,7 +39,7 @@
 #include "display.h"
 #include "dcf77.h"
 #include "base.h"
-#include "wceeprom.h"
+#include "preferences.h"
 #include "uart.h"
 #include "color.h"
 #include "ports.h"
@@ -293,7 +293,7 @@ static bool g_animPreview = false;
  * @see handle_user_command()
  * @see USER_DELAY_BEFORE_SAVE_EEPROM_S
  * @see user_isr1Hz()
- * @see wceeprom.h
+ * @see preferences.h
  */
 static uint8_t g_eepromSaveDelay;
 
@@ -315,11 +315,11 @@ static uint8_t g_eepromSaveDelay;
 static uint8_t g_checkIfAutoOffDelay;
 
 /**
- * @brief Allowing access to global instance of userParams backed by EEPROM
+ * @brief Allowing access to global instance of user_prefs backed by EEPROM
  *
- * @see UserEepromParams
+ * @see user_prefs_t
  */
-#define g_params (&(wcEeprom_getData()->userParams))
+#define g_params (&(preferences_get()->user_prefs))
 
 static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask);
 
@@ -745,7 +745,7 @@ void handle_user_command(user_command_t user_command)
 
         }
 
-        wcEeprom_writeback(wcEeprom_getData(), sizeof(WcEepromData));
+        preferences_save();
 
     } else {
 
@@ -1002,7 +1002,7 @@ void handle_ir_code()
  * also sets up the data direction registers of the lines in control of the
  * Ambilight, Bluetooth and/or auxiliary GPO lines.
  *
- * @note This has to be executed after the EEPROM module (wcEeprom_init()) has
+ * @note This has to be executed after the EEPROM module (preferences_init()) has
  * been initialized, as it accesses data provided by the EEPROM module.
  *
  * @see UserState_init()
@@ -1258,7 +1258,7 @@ void user_isr1Hz()
 
         if (g_eepromSaveDelay == USER_DELAY_BEFORE_SAVE_EEPROM_S) {
 
-            wcEeprom_writeback(wcEeprom_getData(), sizeof(WcEepromData));
+            preferences_save();
 
         }
 
@@ -1328,7 +1328,7 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
  *
  * @return True if current time lies outside any on/off time ranges, else false
  *
- * @see UserEepromParams::onOffTimes
+ * @see user_prefs_t::onOffTimes
  * @see curTimeIsBetween()
  * @see user_setNewTime()
  */

@@ -54,15 +54,8 @@
   now it is quite possible that interrupts will be missed as writing to 
   EEPROM takes quite some time.
 
-- wceeprom: Make it possible to let WcEepromData get bigger than 254 byte.
-
 - Specify some coding styles for contributers, which will be based upon the
   K&R indent style
-
-- Refactor/Rewrite wceeprom.c: The function wcEeprom_writeIfChanged() in its
-  current form doesn't make too much sense. This could easily be included
-  into wcEeprom_writeback(), which would save some space and make things
-  not look more complicated than they actually are.
 
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
   needed or if it would make more sense to not include it in the first place
@@ -76,7 +69,7 @@
 
 - display.h: DisplayState: Move type declaration to specific clock definitions
 
-- display.h: displayParams: Consider creating access functions
+- display.h: display_prefs: Consider creating access functions
 
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
@@ -144,9 +137,6 @@
 - Fix artifacts on display when switching from fast demo mode into normal one.
 
 - Come up with a suitable Makefile
-
-- wceeprom: Use update* functions provided by <avr/eeprom.h> instead of using
-  own ones.
 
 - Make use of git branches!
 
