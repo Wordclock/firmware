@@ -39,6 +39,19 @@
 
 #include "eeprom.h"
 
+/**
+ * @brief Reads in a block with given length from EEPROM
+ *
+ * This reads in a block of data pointed to by src from the EEPROM and puts it
+ * into the SRAM location pointed to by dst. The length of the block is
+ * described by length.
+ *
+ * @param dst Destination where to put data to (within SRAM)
+ * @param src Source where to read data from (within EEPROM)
+ * @param length Length of data
+ *
+ * @see eeprom_read_block()
+ */
 void eeprom_get_block(void* dst, const void* src, size_t length)
 {
 
@@ -46,6 +59,19 @@ void eeprom_get_block(void* dst, const void* src, size_t length)
 
 }
 
+/**
+ * @brief Puts a block of data with given length to EEPROM
+ *
+ * This writes a block of data from the SRAM location pointed to by src and
+ * puts it into the EEPROM location pointed to by dst. The length of the block
+ * is described by length.
+ *
+ * @param src Source where to read data from (within SRAM)
+ * @param dst Destination where to put data to (within EEPROM)
+ * @param length Length of data
+ *
+ * @see eeprom_read_block()
+ */
 void eeprom_put_block(const void* src, void* dst, size_t length)
 {
 
