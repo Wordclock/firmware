@@ -40,6 +40,7 @@
 
 #include "base.h"
 #include "eeprom.h"
+#include "log.h"
 #include "preferences.h"
 #include "uart.h"
 #include "version.h"
@@ -85,6 +86,32 @@ static const prefs_t prefs_default PROGMEM = {
 static prefs_t prefs;
 
 /**
+ * @brief Outputs the content of the preferences byte by byte
+ *
+ * This iterates over the the copy of the preferences hold in SRAM and outputs
+ * the content on a byte by byte basis. The length of the content is determined
+ * by {@link #prefs_t}.
+ *
+ * @see g_epromWorking
+ * @see eepromParams
+ * @see log_output_callback_t
+ */
+static void preferences_output()
+{
+
+    log_output_puts_P("Content: ");
+
+    uint8_t* ptr = (uint8_t*)(&prefs);
+
+    for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
+
+        log_output_puts_P("%h", *ptr++);
+
+    }
+
+}
+
+/**
  * @brief Initializes this module
  *
  * This has to be called **before** any other functions of this module can be
@@ -104,38 +131,20 @@ static prefs_t prefs;
 void preferences_init()
 {
 
+    // Set default log level
+    log_set_level(LOG_MODULE_PREFERENCES, LOG_LEVEL_PREFERENCES_DEFAULT);
+
     eeprom_get_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
 
     if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs_t))) {
 
-        #if (LOG_PREFERENCES_INIT == 1)
-
-            uart_puts_P("Using default settings\n");
-
-        #endif
+        log_output_P(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, "Using default settings");
 
         memcpy_P(&prefs, &prefs_default, sizeof(prefs_t));
 
     }
 
-    #if (LOG_PREFERENCES_INIT == 1)
-
-        uart_puts_P("EEPROM: ");
-
-        uint8_t* ptr = (uint8_t*)(&prefs);
-
-        for (uint16_t i = 0; i < sizeof(prefs_t); i++) {
-
-            char buf[3];
-
-            uint8ToHexStr(*ptr++, buf);
-            uart_puts(buf);
-
-        }
-
-        uart_putc('\n');
-
-     #endif
+    log_output_callback(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, preferences_output);
 }
 
 /**
@@ -172,11 +181,7 @@ prefs_t* preferences_get()
 bool preferences_save()
 {
 
-    #if (LOG_PREFERENCES_SAVE == 1)
-
-        uart_puts_P("Initiating writeback\n");
-
-    #endif
+    log_output_P(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, "Initiated saving");
 
     eeprom_put_block(&prefs, &prefs_eeprom, sizeof(prefs_t));
 

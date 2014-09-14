@@ -311,25 +311,16 @@
 #define LOG_USER_TIME 0
 
 /**
+ * @brief Default log level of the preferences module
  *
- * @brief Defines whether information about preferences init should be logged
+ * This affects the {@link preferences.h preferences} module and controls
+ * whether debug information about the initialization and save operations
+ * should be ouput.
  *
- * This affects `preferences.c` and controls whether debug information about
- * the the initialization process of the preferences module should be output.
- *
- * @see preferences.c
+ * @see log_level_t
+ * @see preferences.h
  */
-#define LOG_PREFERENCES_INIT 0
-
-/**
- * @brief Defines whether information about preferences saves should be logged
- *
- * This affects `preferences.c` and controls whether debug information about
- * saves of the preferences should be output.
- *
- * @see preferences.c
- */
-#define LOG_PREFERENCES_SAVE 0
+#define LOG_LEVEL_PREFERENCES_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Defines whether information about the DCF77 decoding should be logged
