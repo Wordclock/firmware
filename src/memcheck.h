@@ -31,5 +31,6 @@
 #define _WC_MEMCHECK_H_
 
 extern unsigned short memcheck_get_unused(void);
+extern unsigned short memcheck_get_current(void);
 
 #endif  /* _WC_MEMCHECK_H_ */

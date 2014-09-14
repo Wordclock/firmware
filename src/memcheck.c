@@ -93,6 +93,23 @@ unsigned short memcheck_get_unused(void)
 
 }
 
+/**
+ * @brief Returns amount of currently unused bytes of SRAM
+ *
+ * This retrieves the currently unused bytes of SRAM by subtracting the
+ * stack pointer address from the address of the heap start. Anything in
+ * between is unused right now.
+ *
+ * @return Number of currently unused SRAM bytes
+ */
+unsigned short memcheck_get_current(void)
+{
+
+    return SP - (uint16_t)&__heap_start;
+
+}
+
+
 void __attribute__ ((naked, used, section(".init3"))) memcheck_init(void);
 
 /**

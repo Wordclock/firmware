@@ -924,6 +924,26 @@ static void _date_set(uint8_t argc, char* argv[])
 
     }
 
+    /**
+     * @brief Outputs the currently unused memory
+     *
+     * This retrieves the currently unused amount of memory as reported by
+     * memcheck_get_current(), converts it to hex, and puts it out.
+     *
+     * @see uart_protocol_command_callback_t
+     * @see memcheck_get_current()
+     * @see uart_protocol_output()
+     */
+    static void _memory_current(uint8_t argc, char* argv[])
+    {
+
+        unsigned short unused = memcheck_get_current();
+        char buffer[5];
+        uint16ToHexStr(unused, buffer);
+        uart_protocol_output(buffer);
+
+    }
+
 #endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
 
 /**
@@ -1010,6 +1030,7 @@ static const uart_protocol_command_t uart_protocol_commands[] PROGMEM = {
     #if (ENABLE_DEBUG_MEMCHECK == 1)
 
         {"mu", 0, _memory_unused},
+        {"mc", 0, _memory_current},
 
     #endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
 
