@@ -171,7 +171,7 @@ static ShowNumberState mode_showNumberState;
          * @see NormalState_handleUserCommand()
          * @see UC_CHANGE_HUE
          */
-        Hue_t curHue;
+        color_hue_t curHue;
 
     } NormalState;
 
@@ -249,7 +249,7 @@ static PulseState mode_pulseState;
          * @see color_hue2rgb()
          * @see AutoHueState_10Hz()
          */
-        Hue_t curHue;
+        color_hue_t curHue;
 
         /**
          * @brief Counter to keep track of the length of the current hue fading

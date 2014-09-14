@@ -69,7 +69,7 @@
  *
  * @see COLOR_HUE_MAX
  */
-typedef uint16_t Hue_t;
+typedef uint16_t color_hue_t;
 
 /**
  * @brief Type definition for a RGB color
@@ -97,7 +97,7 @@ typedef struct {
 
 } color_rgb_t;
 
-extern void color_hue2rgb(Hue_t h, color_rgb_t* color);
+extern void color_hue2rgb(color_hue_t h, color_rgb_t* color);
 
 extern uint8_t color_pulse_waveform(uint8_t step);
 

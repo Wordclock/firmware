@@ -70,7 +70,7 @@
  *
  * [1]: https://en.wikipedia.org/wiki/File:HueScale.svg
  */
-static uint8_t color_hue_waveform(Hue_t hue)
+static uint8_t color_hue_waveform(color_hue_t hue)
 {
 
     if (hue < (COLOR_HUE_MAX / 6)) {
@@ -97,19 +97,19 @@ static uint8_t color_hue_waveform(Hue_t hue)
 /**
  * @brief Converts a hue into its RGB values
  *
- * The hue is interpreted as Hue_t and ranges from 0 up to COLOR_HUE_MAX. This
- * calculations will always consider the brightness and saturation to be 1.
- * Internally it makes heavily use of color_hue_waveform().
+ * The hue is interpreted as color_hue_t and ranges from 0 up to COLOR_HUE_MAX.
+ * This calculations will always consider the brightness and saturation to be
+ * 1. Internally it makes heavily use of color_hue_waveform().
  *
  * @param h The hue value to convert, ranges from 0 up to COLOR_HUE_MAX
  * @param color Pointer to color struct where converted values will be put
  *
- * @see Hue_t
+ * @see color_hue_t
  * @see color_rgb_t
  * @see COLOR_HUE_MAX
  * @see color_hue_waveform()
  */
-void color_hue2rgb(Hue_t h, color_rgb_t* color)
+void color_hue2rgb(color_hue_t h, color_rgb_t* color)
 {
 
     uint16_t barg = (((uint16_t)h) + 2 * COLOR_HUE_MAX / 3);
@@ -128,8 +128,8 @@ void color_hue2rgb(Hue_t h, color_rgb_t* color)
     }
 
     color->green = color_hue_waveform(h);
-    color->blue = color_hue_waveform((Hue_t)barg);
-    color->red = color_hue_waveform((Hue_t)rarg);
+    color->blue = color_hue_waveform((color_hue_t)barg);
+    color->red = color_hue_waveform((color_hue_t)rarg);
 
 }
 
