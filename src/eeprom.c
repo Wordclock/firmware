@@ -70,7 +70,7 @@ void eeprom_get_block(void* dst, const void* src, size_t length)
  * @param dst Destination where to put data to (within EEPROM)
  * @param length Length of data
  *
- * @see eeprom_read_block()
+ * @see eeprom_update_block()
  */
 void eeprom_put_block(const void* src, void* dst, size_t length)
 {
