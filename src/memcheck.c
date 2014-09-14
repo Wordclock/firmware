@@ -56,11 +56,11 @@
 extern unsigned char __heap_start;
 
 /**
- * @brief Returns number of bits that are unused
+ * @brief Returns number of bytes that are unused at maximum stack depth
  *
  * This scans over the SRAM and looks for a {@link MEMCHECK_MASK specific} bit
  * pattern. It returns the number of bytes that are currently set to this bit
- * pattern.
+ * pattern, which are all of the bytes that were not yet modified by the stack.
  *
  * @note The number returned here is the amount of memory that was unused so
  * far. It is not necessarily equal to the unused memory, since there might be
