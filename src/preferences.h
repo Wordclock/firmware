@@ -24,12 +24,12 @@
  *
  * This module allows for preferences that are customizable by the user to be
  * accessed globally throughout the project. The preferences are backed by a
- * persistent storage and will be restored during initialization. This module
- * was deliberately created to decouple the persistent storage from the access
- * to the actual data, so in other storage backends could be used in different
- * circumstances.
+ * persistent storage backend and will be restored during initialization. This
+ * module was deliberately created to decouple the persistent storage from the
+ * access to the actual data, so in other storage backends could be used in
+ * different circumstances.
  *
- * @see preferences.c
+ * @see preferences_eeprom.c
  */
 
 #ifndef _WC_PREFERENCES_H_
@@ -52,7 +52,8 @@
  * it into this structure. The default values are defined within
  * {@link prefs_default}.
  *
- * @warning This must not become bigger than the size of the EEPROM itself.
+ * @warning This must not become bigger than the size of the persistent storage
+ * itself.
  *
  * @see prefs_default
  */
@@ -76,9 +77,9 @@ typedef struct {
     /**
      * @brief Version number
      *
-     * This is used along with {@link prefs_t::prefs_size} as a basic integrity
-     * check during the {@link #preferences_init() initialization} of this
-     * module.
+     * This can be used along with {@link prefs_t::prefs_size} as a basic
+     * integrity check during the {@link #preferences_init() initialization}
+     * of this module.
      *
      * @see preferences_init()
      * @see versiont_t
@@ -88,7 +89,7 @@ typedef struct {
     /**
      * @brief Byte size of this structure
      *
-     * This holds the size of this structure and is used along with
+     * This holds the size of this structure and can be used along with
      * {@link prefs_t::version} as a basic integrity check during the
      * {@link #preferences_init() initialization} of this module.
      *
