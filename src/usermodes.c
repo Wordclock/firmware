@@ -171,7 +171,7 @@ static ShowNumberState mode_showNumberState;
          * @see NormalState_handleUserCommand()
          * @see UC_CHANGE_HUE
          */
-        Hue_t curHue;
+        color_hue_t curHue;
 
     } NormalState;
 
@@ -211,9 +211,9 @@ typedef struct PulseState {
      * This is used as counter to keep track of the duration the output is
      * already being displayed with the current brightness. Once the brightness
      * hasn't changed for the amount of time defined by the user in
-     * UserEepromParams::pulseUpdateInterval it will be updated.
+     * user_prefs_t::pulseUpdateInterval it will be updated.
      *
-     * @see UserEepromParams::pulseUpdateInterval
+     * @see user_prefs_t::pulseUpdateInterval
      * @see PulseState_100Hz()
      */
     uint8_t delay10ms;
@@ -249,7 +249,7 @@ static PulseState mode_pulseState;
          * @see color_hue2rgb()
          * @see AutoHueState_10Hz()
          */
-        Hue_t curHue;
+        color_hue_t curHue;
 
         /**
          * @brief Counter to keep track of the length of the current hue fading
@@ -257,11 +257,11 @@ static PulseState mode_pulseState;
          * This is used as counter to keep track of the duration the output
          * has been displayed with the current hue (AutoHueState::curHue).
          * Once the user defined time interval
-         * (UserEepromParams::hueChangeInterval) has been reached, it will
+         * (user_prefs_t::hueChangeInterval) has been reached, it will
          * update and apply the new hue.
          *
          * @see AutoHueState_10Hz()
-         * @see UserEepromParams::hueChangeInterval
+         * @see user_prefs_t::hueChangeInterval
          * @see USER_NORMAL_SHOW_NUMBER_DELAY_100MS
          */
         uint8_t delay100ms;
@@ -570,9 +570,9 @@ static void TrainIrState_1Hz()
  *
  * @see mode_trainIrState
  * @see TrainIrState::curKey
- * @see UserEepromParams::irAddress
- * @see UserEepromParams::irCommandCodes
- * @see wcEeprom_writeback()
+ * @see user_prefs_t::irAddress
+ * @see user_prefs_t::irCommandCodes
+ * @see preferences_save()
  * @see quitMyself()
  * @see display_getNumberDisplayState()
  * @see display_setDisplayState()
@@ -597,7 +597,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
                 log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "IR training finished");
 
-                wcEeprom_writeback(g_params, sizeof(*g_params));
+                preferences_save();
 
                 quitMyself(MS_irTrain, NULL);
 
@@ -697,8 +697,8 @@ static void ShowNumberState_enter(const void* param)
  *
  * @see ENABLE_RGB_SUPPORT
  * @see pwm_set_color()
- * @see UserEepromParams::curColorProfile
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::curColorProfile
+ * @see user_prefs_t::colorPresets
  * @see addSubState()
  * @see menu_state_t::MS_showNumber
  * @see dispInternalTime()
@@ -874,12 +874,12 @@ static bool NormalState_handleUserCommand(user_command_t command)
      * This "ISR" gets executed with a frequency of 10 Hz whenever the
      * "hue fading" (menu_state_t::MS_hueMode) mode is currently active. It
      * checks the appropriate time interval set by the user
-     * (UserEepromParams::hueChangeInterval) has passed and updates the hue
+     * (user_prefs_t::hueChangeInterval) has passed and updates the hue
      * if necessary.
      *
      * @see AutoHueState::delay100ms
      * @see mode_autoHueState
-     * @see UserEepromParams::hueChangeInterval
+     * @see user_prefs_t::hueChangeInterval
      * @see color_hue2rgb()
      * @see pwm_set_color()
      */
@@ -927,14 +927,14 @@ static bool NormalState_handleUserCommand(user_command_t command)
      * This function handles the received user commands for the "hue fading"
      * mode (menu_state_t::MS_hueMode). It checks whether an "up" and/or "down"
      * command was received and increments and/or decrements the interval
-     * (UserEepromParams::hueChangeInterval) appropriately.
+     * (user_prefs_t::hueChangeInterval) appropriately.
      *
      * @param command The received user command
      *
      * @see user_command_t::UC_UP
      * @see user_command_t::UC_DOWN
      * @see incDecRange()
-     * @see UserEepromParams::hueChangeInterval
+     * @see user_prefs_t::hueChangeInterval
      * @see USER_HUE_CHANGE_INT_100MS_MIN
      * @see USER_HUE_CHANGE_INT_100MS_MAX
      */
@@ -1357,8 +1357,8 @@ static void SetOnOffTimeState_enter(const void* param)
  * @see SetOnOffTimeState_enter()
  * @see mode_setOnOffTimeState
  * @see SetOnOffTimeState
- * @see UserEepromParams::onOffTimes
- * @see UserEepromParams::useAutoOffAnimation
+ * @see user_prefs_t::onOffTimes
+ * @see user_prefs_t::useAutoOffAnimation
  * @see UI_ONOFFTIMES_COUNT
  * @see addSubState()
  */
@@ -1410,7 +1410,7 @@ static void SetOnOffTimeState_substateFinished(menu_state_t finishedState, const
  *
  * @see mode_setOnOffTimeState
  * @see SetOnOffTimeState
- * @see UserEepromParams::useAutoOffAnimation
+ * @see user_prefs_t::useAutoOffAnimation
  * @see user_command_t::UC_DOWN
  * @see user_command_t::UC_UP
  * @see user_command_t::UC_SET_ONOFF_TIMES
@@ -1458,7 +1458,7 @@ static bool SetOnOffTimeState_handleUserCommand(user_command_t command)
  *
  * @see user_command_t::UC_UP
  * @see user_command_t::UC_DOWN
- * @see UserEepromParams::pulseUpdateInterval
+ * @see user_prefs_t::pulseUpdateInterval
  * @see incDecRange()
  * @see USER_PULSE_CHANGE_INT_10MS_MIN
  * @see USER_PULSE_CHANGE_INT_10MS_MAX
@@ -1496,13 +1496,13 @@ static bool PulseState_handleUserCommand(user_command_t command)
  *
  * This "ISR" gets executed with a frequency of 100 Hz whenever the "pulse"
  * (menu_state_t::MS_pulse) mode is currently active. It checks whether enough
- * time has already passed (UserEepromParams::pulseUpdateInterval) for
+ * time has already passed (user_prefs_t::pulseUpdateInterval) for
  * a new brightness to be calculated and applied to the display and does so if
  * necessary.
  *
  * @see mode_pulseState
  * @see PulseState::delay10ms
- * @see UserEepromParams::pulseUpdateInterval
+ * @see user_prefs_t::pulseUpdateInterval
  * @see pwm_lock_brightness()
  * @see color_pulse_wafeform
  * @see mode_pulseState.curBrightness

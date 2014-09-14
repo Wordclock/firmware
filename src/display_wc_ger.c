@@ -45,7 +45,7 @@
 #include "config.h"
 #include "display.h"
 #include "shift.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 #if (WC_DISP_GER == 1)
 
@@ -166,7 +166,7 @@
         /*
          * Get the chosen language mode
          */
-        uint8_t langMode = g_displayParams->mode;
+        uint8_t langMode = g_display_prefs->mode;
 
         /*
          * Check whether code for deactivating the phrase "Es ist" (it is)
@@ -191,7 +191,7 @@
              * displayed. This is the case when either the mode is even or
              * when the hour is "full" and/or half full.
              */
-            if (((g_displayParams->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
+            if (((g_display_prefs->mode & 1) == 0) || (0 == minutes) || (6 == minutes)) {
 
                 leds |= ((display_state_t)1 << DWP_itis);
 

@@ -31,51 +31,6 @@
 #define _WC_CONFIG_H_
 
 /**
- * @brief Macro building the actual version number
- *
- * This macro will build the actual version number by combining `MAJOR_VERSION`
- * and `MINOR_VERSION` and shifting it appropriately.
- *
- * @see MAJOR_VERSION
- * @see MINOR_VERSION
- */
-#define BUILD_VERSION(x, y) ((uint16_t)((x << 8) | (y)))
-
-/**
- * @brief Major version number
- *
- * @note This is effectively a byte wide and can hold values between 0 and 255.
- *
- * @see BUILD_VERSION()
- * @see MINOR_VERSION
- * @see SW_VERSION
- */
-#define MAJOR_VERSION 1
-
-/**
- * @brief Minor version number
- *
- * @note This is effectively a byte wide and can hold values between 0 and 255.
- *
- * @see BUILD_VERSION()
- * @see MINOR_VERSION
- * @see SW_VERSION
- */
-#define MINOR_VERSION 0
-
-/**
- * @brief Actual version number
- *
- * The actual version number consists of both the major and the minor version
- * number. It is build by the the macro `BUILD_VERSION()`.
- *
- * @see MINOR_VERSION
- * @see MAJOR_VERSION
- * @see BUILD_VERSION()
- */
-#define SW_VERSION BUILD_VERSION(MAJOR_VERSION, MINOR_VERSION)
-
-/**
  * @brief Classic German frontpanel layout
  *
  * If set to 1, the software will be compiled with support for the classic
@@ -244,13 +199,20 @@
  *
  * The protocol itself is documented in the `doc/UART_PROTOCOL.md`.
  *
- * @todo Implement this in a way that is actually saves some amount of program
- * space rather than just disabling the functionality but still compiling it
- * in.
- *
  * @see uart_protocol.h
  */
 #define ENABLE_UART_PROTOCOL 1
+
+/**
+ * @brief Defines whether support for DCF77 should be included
+ *
+ * If set to 1, the firmware will be built with support for decoding the
+ * DCF77 time signal in order to be able to get the current date and time
+ * automatically.
+ *
+ * @see memcheck.h
+ */
+#define ENABLE_DEBUG_MEMCHECK 0
 
 /**
  * @brief Default state of logging module
@@ -350,24 +312,24 @@
 
 /**
  *
- * @brief Defines whether information about EEPROM init should be logged
+ * @brief Defines whether information about preferences init should be logged
  *
- * This affects `wceeprom.c` and controls whether debug information about the
- * initialization process of the EEPROM module should be output.
+ * This affects `preferences.c` and controls whether debug information about
+ * the the initialization process of the preferences module should be output.
  *
- * @see wceeprom.c
+ * @see preferences.c
  */
-#define LOG_EEPROM_INIT 0
+#define LOG_PREFERENCES_INIT 0
 
 /**
- * @brief Defines whether information about EEPROM writeback should be logged
+ * @brief Defines whether information about preferences saves should be logged
  *
- * This affects `wceeprom.c` and controls whether debug information about
- * writebacks to the EEPROM should be output.
+ * This affects `preferences.c` and controls whether debug information about
+ * saves of the preferences should be output.
  *
- * @see wceeprom.c
+ * @see preferences.c
  */
-#define LOG_EEPROM_WRITEBACK 0
+#define LOG_PREFERENCES_SAVE 0
 
 /**
  * @brief Defines whether information about the DCF77 decoding should be logged

@@ -49,7 +49,8 @@
 #include "user.h"
 #include "uart.h"
 #include "base.h"
-#include "wceeprom.h"
+#include "preferences.h"
+#include "uart_protocol.h"
 
 /**
 * @brief Contains the MCU status register
@@ -63,12 +64,6 @@
 * @see reset_mcusr()
 */
 static uint8_t mcusr __attribute__ ((section(".noinit")));
-
-#if (ENABLE_UART_PROTOCOL == 1)
-
-    #include "uart_protocol.h"
-
-#endif
 
 /*
  * Make sure F_CPU is set
@@ -104,7 +99,7 @@ __attribute__((OS_main)) int main()
     log_set_level(LOG_MODULE_MAIN, LOG_LEVEL_MAIN_DEFAULT);
     log_output_P(LOG_MODULE_MAIN, LOG_LEVEL_INFO, "Init started");
 
-    wcEeprom_init();
+    preferences_init();
 
     #if (ENABLE_DCF_SUPPORT == 1)
 
@@ -131,7 +126,12 @@ __attribute__((OS_main)) int main()
         brightness_handle();
         datetime_handle();
         handle_ir_code();
-        uart_protocol_handle();
+
+        #if (ENABLE_UART_PROTOCOL == 1)
+
+            uart_protocol_handle();
+
+        #endif /* (ENABLE_UART_PROTOCOL == 1) */
 
         #if (ENABLE_DCF_SUPPORT == 1)
 

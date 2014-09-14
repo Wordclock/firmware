@@ -50,7 +50,7 @@
 #include "user.h"
 #include "display.h"
 #include "uart.h"
-#include "wceeprom.h"
+#include "preferences.h"
 
 /**
  * @brief Defines how often the timer ISR itself is executed

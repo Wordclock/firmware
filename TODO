@@ -54,15 +54,8 @@
   now it is quite possible that interrupts will be missed as writing to 
   EEPROM takes quite some time.
 
-- wceeprom: Make it possible to let WcEepromData get bigger than 254 byte.
-
 - Specify some coding styles for contributers, which will be based upon the
   K&R indent style
-
-- Refactor/Rewrite wceeprom.c: The function wcEeprom_writeIfChanged() in its
-  current form doesn't make too much sense. This could easily be included
-  into wcEeprom_writeback(), which would save some space and make things
-  not look more complicated than they actually are.
 
 - color: Check whether the conditional compilation (MONO_COLOR_CLOCK) is really
   needed or if it would make more sense to not include it in the first place
@@ -76,7 +69,7 @@
 
 - display.h: DisplayState: Move type declaration to specific clock definitions
 
-- display.h: displayParams: Consider creating access functions
+- display.h: display_prefs: Consider creating access functions
 
 - Combine display.* and display_wc.* files, as there is only a single
   display type (wc), due to the fact that the display type "tix" has
@@ -145,9 +138,6 @@
 
 - Come up with a suitable Makefile
 
-- wceeprom: Use update* functions provided by <avr/eeprom.h> instead of using
-  own ones.
-
 - Make use of git branches!
 
 - pwm.c: Check whether it would make sense to adapt pwm_on() and pwm_off() to
@@ -157,9 +147,8 @@
 
 - usermodes.c: NormalState::curHue: Calc current hue from RGB
 
-- usermodes.c: Think about implementing and/or using dynamic memory managment,
-  to save some RAM as a couple of variables are actually not used constantly,
-  but only when entering a specific mode.
+- usermodes.c: Use unions to share memory between different states to reduce
+  static memory usage.
 
 - base.c: incDecRangeOverflow(): Check whether it makes sense to overflow
   on both ends, not only on the bottom, but also on the top.
@@ -188,10 +177,6 @@
   Move advanced commands into this module, too, as it makes more sense and
   the commands itself could probably be also triggered by other sources, e.g.
   I2C.
-
-- Not all of the functions within the "base" module are actually needed, when
-  certain components are disabled. Surround the not needed functions with some
-  conditionals to compile them in only when needed.
 
 - Synchronize various use cases of uart_puts(). As the uart module now works
   asynchronously, debug output of various modules are not working correctly,

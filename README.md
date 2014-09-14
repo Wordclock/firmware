@@ -21,11 +21,11 @@ original one and make it more attractive:
 - **Sources:** Completely reorganized, fully documented and mostly cleaned up,
   making it more easy to understand and/or extend.
 
-- **Restructuring:** Some rework of a few interrupt routines was performed,
-  leading to a significant disburdening of the microcontroller. Quite a few
-  datatypes that previously were reimplemented by different modules have been
-  unified, too, which not only saves program space, but also integrates the
-  modules in a more consequent way.
+- **Restructuring:** The source code was completely restructued and optimized.
+  The microcontroller is disburdened due to optimized interrupt routines.
+  Datatypes that are shared between different modules have been unified. All of
+  this saves not only program space, but also integrates the modules in a more
+  consequent way, making the source code more readable.
 
 - **UART protocol:** There is support for controlling the Wordclock via a
   serial connection, making the IR remote control completely obsolete and

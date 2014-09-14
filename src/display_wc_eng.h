@@ -177,10 +177,10 @@ enum e_displayWordPos
     * (DISPLAY_DEACTIVATABLE_ITIS) there are two modes: The first one will
     * have this phrase enabled, the second one disabled. The user might
     * choose on of these modes. The setting can be stored persistently
-    * within the EEPROM, see DisplayEepromParams.
+    * within the EEPROM, see display_prefs_t.
     *
     * @see DISPLAY_DEACTIVATABLE_ITIS
-    * @see DisplayEepromParams
+    * @see display_prefs_t
     */
     typedef enum e_WcEngModes {
 
@@ -195,10 +195,10 @@ enum e_displayWordPos
     * @brief Containing the parameters of this module to be stored persistently
     *
     * @see DISPLAYEEPROMPARAMS_DEFAULT
-    * @see wceeprom.h
+    * @see preferences.h
     * @see e_WcEngModes
     */
-    struct DisplayEepromParams {
+    struct display_prefs_t {
 
         /**
          * @brief Chosen mode
@@ -215,13 +215,13 @@ enum e_displayWordPos
      * @brief Default values of this module that should be stored persistently
      *
      * This defines the default values for this module. Refer to
-     * DisplayEepromParams for a detailed description of each member.
+     * display_prefs_t for a detailed description of each member.
      *
      * @note This will also be the values used after flashing the firmware to
      * the microcontroller, so make sure that the defaults are actually useful.
      *
-     * @see DisplayEepromParams
-     * @see wceeprom.h
+     * @see display_prefs_t
+     * @see preferences.h
      */
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
     \
@@ -245,9 +245,9 @@ enum e_displayWordPos
      * @see DISPLAY_SPECIAL_USER_COMMANDS_HANDLER
      */
     #define _DISP_TOGGLE_DISPMODE_CODE \
-        ++g_displayParams->mode; \
-        g_displayParams->mode %= TM_COUNT; \
-        addState(MS_showNumber, (void*)(g_displayParams->mode + 1)); \
+        ++g_display_prefs->mode; \
+        g_display_prefs->mode %= TM_COUNT; \
+        addState(MS_showNumber, (void*)(g_display_prefs->mode + 1)); \
         log_state("DM\n");
 
     /**
@@ -266,7 +266,7 @@ enum e_displayWordPos
     *
     * @see DISPLAY_DEACTIVATABLE_ITIS
     */
-    struct DisplayEepromParams {
+    struct display_prefs_t {
 
         uint8_t dummy;
 
@@ -275,8 +275,8 @@ enum e_displayWordPos
     /**
     * @brief Default settings of this module for the dummy parameter
     *
-    * @see DisplayEepromParams
-    * @see wceeprom.h
+    * @see display_prefs_t
+    * @see preferences.h
     */
     #define DISPLAYEEPROMPARAMS_DEFAULT { \
     \

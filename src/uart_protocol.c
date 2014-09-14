@@ -43,12 +43,14 @@
 #include "datetime.h"
 #include "ldr.h"
 #include "log.h"
+#include "memcheck.h"
 #include "uart.h"
 #include "uart_protocol.h"
 #include "user.h"
 #include "user_command.h"
 #include "pwm.h"
-#include "wceeprom.h"
+#include "preferences.h"
+#include "version.h"
 
 
 /**
@@ -377,15 +379,15 @@ static void _ir_user_command(uint8_t argc, char* argv[])
  * This puts out the hex representation of the version number (major & minor)
  * of the firmware.
  *
- * @see MAJOR_VERSION
- * @see MINOR_VERSION
+ * @see VERSION_MAJOR
+ * @see VERSION_MINOR
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
  */
 static void _version(uint8_t argc, char* argv[])
 {
 
-    uart_protocol_output_args_hex(2, MAJOR_VERSION, MINOR_VERSION);
+    uart_protocol_output_args_hex(2, VERSION_MAJOR, VERSION_MINOR);
 
 }
 
@@ -431,21 +433,20 @@ static void _reset(uint8_t argc, char* argv[])
 /**
  * @brief Resets the firmware to its factory state
  *
- * This performs a factory reset by invalidating WcEepromData#swVersion and
+ * This performs a factory reset by invalidating prefs_t#version and
  * resetting the microcontroller afterwards. The built-in integrity check
  * of the EEPROM module will make sure that the default values will be used
  * during the next reset.
  *
  * @see uart_protocol_command_callback_t
- * @see WcEepromData::swVersion
+ * @see prefs_t::version
  * @see _reset()
  */
 static void _factory_reset(uint8_t argc, char* argv[])
 {
 
-    wcEeprom_getData()->swVersion = 0;
-    wcEeprom_writeback(&wcEeprom_getData()->swVersion,
-        sizeof(wcEeprom_getData()->swVersion));
+    preferences_get()->version = 0;
+    preferences_save();
 
     _reset(0, NULL);
 
@@ -576,14 +577,14 @@ static void _preset_number(uint8_t argc, char* argv[])
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  *
  * @todo Return error when currently not in normal mode?
  */
 static void _preset_active(uint8_t argc, char* argv[])
 {
 
-    uint8_t preset = (&(wcEeprom_getData()->userParams))->curColorProfile;
+    uint8_t preset = (&(preferences_get()->user_prefs))->curColorProfile;
     uart_protocol_output_args_hex(1, preset);
 
 }
@@ -598,7 +599,7 @@ static void _preset_active(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::curColorProfile
+ * @see user_prefs_t::curColorProfile
  * @see pwm_set_color()
  */
 static void _preset_set(uint8_t argc, char* argv[])
@@ -609,10 +610,8 @@ static void _preset_set(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        (&(wcEeprom_getData()->userParams))->curColorProfile = preset;
-
-        wcEeprom_writeback(&wcEeprom_getData()->userParams.curColorProfile,
-            sizeof(wcEeprom_getData()->userParams.curColorProfile));
+        (&(preferences_get()->user_prefs))->curColorProfile = preset;
+        preferences_save();
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -639,7 +638,7 @@ static void _preset_set(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_output_args_hex()
  */
 static void _preset_read(uint8_t argc, char* argv[])
@@ -650,7 +649,7 @@ static void _preset_read(uint8_t argc, char* argv[])
 
     if (status && preset < UI_COLOR_PRESET_COUNT) {
 
-        color_rgb_t color = (&(wcEeprom_getData()->userParams))->colorPresets[preset];
+        color_rgb_t color = (&(preferences_get()->user_prefs))->colorPresets[preset];
 
         uart_protocol_output_args_hex(3, color.red, color.green, color.blue);
 
@@ -673,7 +672,7 @@ static void _preset_read(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
  * @see hexStrToUint8()
- * @see UserEepromParams::colorPresets
+ * @see user_prefs_t::colorPresets
  * @see uart_protocol_ok()
  */
 static void _preset_write(uint8_t argc, char* argv[])
@@ -723,12 +722,10 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     }
 
-    (&(wcEeprom_getData()->userParams))->colorPresets[preset] = color;
+    (&(preferences_get()->user_prefs))->colorPresets[preset] = color;
+    preferences_save();
 
-    wcEeprom_writeback(&wcEeprom_getData()->userParams.colorPresets[preset],
-        sizeof(wcEeprom_getData()->userParams.colorPresets[preset]));
-
-    if (preset == (&(wcEeprom_getData()->userParams))->curColorProfile) {
+    if (preset == (&(preferences_get()->user_prefs))->curColorProfile) {
 
         if (user_get_current_menu_state() == MS_normalMode) {
 
@@ -905,6 +902,50 @@ static void _date_set(uint8_t argc, char* argv[])
 
 
 }
+
+#if (ENABLE_DEBUG_MEMCHECK == 1)
+
+    /**
+     * @brief Outputs the unused memory
+     *
+     * This retrieves the unused amount of memory as reported by
+     * memcheck_get_unused(), converts it to hex, and puts it out.
+     *
+     * @see uart_protocol_command_callback_t
+     * @see memcheck_get_unused()
+     * @see uart_protocol_output()
+     */
+    static void _memory_unused(uint8_t argc, char* argv[])
+    {
+
+        unsigned short unused = memcheck_get_unused();
+        char buffer[5];
+        uint16ToHexStr(unused, buffer);
+        uart_protocol_output(buffer);
+
+    }
+
+    /**
+     * @brief Outputs the currently unused memory
+     *
+     * This retrieves the currently unused amount of memory as reported by
+     * memcheck_get_current(), converts it to hex, and puts it out.
+     *
+     * @see uart_protocol_command_callback_t
+     * @see memcheck_get_current()
+     * @see uart_protocol_output()
+     */
+    static void _memory_current(uint8_t argc, char* argv[])
+    {
+
+        unsigned short unused = memcheck_get_current();
+        char buffer[5];
+        uint16ToHexStr(unused, buffer);
+        uart_protocol_output(buffer);
+
+    }
+
+#endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
 
 /**
  * @brief Enables the logging globally
@@ -1174,6 +1215,13 @@ static const uart_protocol_command_t uart_protocol_commands[] PROGMEM = {
     {"lg", 1, _log_get_level},
     {"lm", 0, _log_modules},
     {"ll", 0, _log_levels},
+
+    #if (ENABLE_DEBUG_MEMCHECK == 1)
+
+        {"mu", 0, _memory_unused},
+        {"mc", 0, _memory_current},
+
+    #endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
 
 };
 

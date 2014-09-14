@@ -44,7 +44,7 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <stdbool.h>
-#include "wceeprom.h"
+#include "preferences.h"
 
 #include "uart.h"
 #include "base.h"
@@ -162,29 +162,29 @@ static uint8_t brightness_pwm_val;
 static bool brightness_lock;
 
 /**
- * @brief Macro for easy access to PwmEepromParams::brightnessOffset
+ * @brief Macro for easy access to pwm_prefs_t::brightnessOffset
  *
- * @see PwmEepromParams::brightnessOffset
- * @see wcEeprom_getData()
+ * @see pwm_prefs_t::brightnessOffset
+ * @see preferences_get()
  */
-#define offset_pwm_idx (wcEeprom_getData()->pwmParams.brightnessOffset)
+#define offset_pwm_idx (preferences_get()->pwm_prefs.brightnessOffset)
 
 /**
- * @brief Macro for easy access to PwmEepromParams::occupancy
+ * @brief Macro for easy access to pwm_prefs_t::occupancy
  *
- * @see PwmEepromParams::occupancy
- * @see wcEeprom_getData()
+ * @see pwm_prefs_t::occupancy
+ * @see preferences_get()
  */
-#define g_occupancy (wcEeprom_getData()->pwmParams.occupancy)
+#define g_occupancy (preferences_get()->pwm_prefs.occupancy)
 
 /**
- * @brief Macro for easy access to PwmEepromParams::brightness2pwmStep
+ * @brief Macro for easy access to pwm_prefs_t::brightness2pwmStep
  *
- * @see PwmEepromParams::brightness2pwmStep
- * @see wcEeprom_getData()
+ * @see pwm_prefs_t::brightness2pwmStep
+ * @see preferences_get()
  */
 #define g_ldrBrightness2pwmStep \
-    (wcEeprom_getData()->pwmParams.brightness2pwmStep)
+    (preferences_get()->pwm_prefs.brightness2pwmStep)
 
 /**
  * @brief Current base LDR index
