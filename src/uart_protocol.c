@@ -42,6 +42,7 @@
 #include "base.h"
 #include "datetime.h"
 #include "ldr.h"
+#include "memcheck.h"
 #include "uart.h"
 #include "uart_protocol.h"
 #include "user.h"
@@ -901,6 +902,30 @@ static void _date_set(uint8_t argc, char* argv[])
 
 }
 
+#if (ENABLE_DEBUG_MEMCHECK == 1)
+
+    /**
+     * @brief Outputs the unused memory
+     *
+     * This retrieves the unused amount of memory as reported by
+     * memcheck_get_unused(), converts it to hex, and puts it out.
+     *
+     * @see uart_protocol_command_callback_t
+     * @see memcheck_get_unused()
+     * @see uart_protocol_output()
+     */
+    static void _memory_unused(uint8_t argc, char* argv[])
+    {
+
+        unsigned short unused = memcheck_get_unused();
+        char buffer[5];
+        uint16ToHexStr(unused, buffer);
+        uart_protocol_output(buffer);
+
+    }
+
+#endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
+
 /**
  * @brief Defines the type of each entry within #uart_protocol_commands
  *
@@ -981,6 +1006,12 @@ static const uart_protocol_command_t uart_protocol_commands[] PROGMEM = {
     {"ts", 3, _time_set},
     {"dg", 0, _date_get},
     {"ds", 4, _date_set},
+
+    #if (ENABLE_DEBUG_MEMCHECK == 1)
+
+        {"mu", 0, _memory_unused},
+
+    #endif /* (ENABLE_DEBUG_MEMCHECK == 1) */
 
 };
 

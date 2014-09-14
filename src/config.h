@@ -204,6 +204,17 @@
 #define ENABLE_UART_PROTOCOL 1
 
 /**
+ * @brief Defines whether support for DCF77 should be included
+ *
+ * If set to 1, the firmware will be built with support for decoding the
+ * DCF77 time signal in order to be able to get the current date and time
+ * automatically.
+ *
+ * @see memcheck.h
+ */
+#define ENABLE_DEBUG_MEMCHECK 0
+
+/**
  * @brief Defines whether the main module should output logging information
  *
  * This affects `main.c` and controls whether functions within this file
