@@ -303,24 +303,24 @@
 
 /**
  *
- * @brief Defines whether information about EEPROM init should be logged
- *
- * This affects `preferences.c` and controls whether debug information about the
- * initialization process of the EEPROM module should be output.
- *
- * @see preferences.c
- */
-#define LOG_EEPROM_INIT 0
-
-/**
- * @brief Defines whether information about EEPROM writeback should be logged
+ * @brief Defines whether information about preferences init should be logged
  *
  * This affects `preferences.c` and controls whether debug information about
- * writebacks to the EEPROM should be output.
+ * the the initialization process of the preferences module should be output.
  *
  * @see preferences.c
  */
-#define LOG_EEPROM_WRITEBACK 0
+#define LOG_PREFERENCES_INIT 0
+
+/**
+ * @brief Defines whether information about preferences saves should be logged
+ *
+ * This affects `preferences.c` and controls whether debug information about
+ * saves of the preferences should be output.
+ *
+ * @see preferences.c
+ */
+#define LOG_PREFERENCES_SAVE 0
 
 /**
  * @brief Defines whether information about the DCF77 decoding should be logged

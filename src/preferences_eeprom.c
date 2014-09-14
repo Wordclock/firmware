@@ -108,7 +108,7 @@ void preferences_init()
 
     if ((prefs.version != VERSION) || (prefs.prefs_size != sizeof(prefs_t))) {
 
-        #if (LOG_EEPROM_INIT == 1)
+        #if (LOG_PREFERENCES_INIT == 1)
 
             uart_puts_P("Using default settings\n");
 
@@ -118,7 +118,7 @@ void preferences_init()
 
     }
 
-    #if (LOG_EEPROM_INIT == 1)
+    #if (LOG_PREFERENCES_INIT == 1)
 
         uart_puts_P("EEPROM: ");
 
@@ -172,7 +172,7 @@ prefs_t* preferences_get()
 bool preferences_save()
 {
 
-    #if (LOG_EEPROM_WRITEBACK == 1)
+    #if (LOG_PREFERENCES_SAVE == 1)
 
         uart_puts_P("Initiating writeback\n");
 
