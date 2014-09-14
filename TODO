@@ -214,3 +214,8 @@
 
 - uart_protocol.c: Implement uart_protocol_input_arg_hex() and use it.
 
+- log: Implement callback functions with streaming handler
+
+- log: Instead of own printf() implementation, make use of printf() from
+  <stdio.h> and get rid of most of the functions from base.
+
