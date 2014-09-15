@@ -37,6 +37,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "base.h"
@@ -136,6 +137,60 @@ static bool log_enabled = false;
  * @see log_set_level()
  */
 static log_level_t log_level[LOG_MODULE_COUNT];
+
+/**
+ * @brief Puts the character into the UART transmission buffer
+ *
+ * This puts the given character into the UART transmission buffer, queuing it
+ * up for output. In case the buffer is full, _FDEV_ERR is returned. In case
+ * the character was queued up, 0 is returned, indicating success. On top of
+ * that the output buffer will be {@link uart_flush_output() flushed} whenever
+ * the given character is `\n`.
+ *
+ * @todo Extract newline character into constant, possibly within UART module
+ * @todo Consider flushing output within UART module
+ *
+ * @param c Character to output
+ * @param stream For compatibility reasons with FDEV_SETUP_STREAM()
+ *
+ * @return 0 in case output was written, _FDEV_ERR else
+ *
+ * @see uart_putc()
+ * @see uart_flush_output()
+ */
+static int log_putc(char c, FILE* stream)
+{
+
+    // Flush output buffer in case of a newline
+    if (c == '\n') {
+
+        uart_flush_output();
+
+    }
+
+    bool result = uart_putc(c);
+
+    // Output error in case output buffer was full
+    if (!result) {
+
+        return _FDEV_ERR;
+
+    }
+
+    return 0;
+
+}
+
+/**
+ * @brief Log output stream used throughout this module
+ *
+ * This registers a new stream, which is used throughout the module for putting
+ * out content. It opens the stream for write intents only, and forwards any
+ * output to {@link log_putc()}.
+ *
+ * @see uart_putc()
+ */
+static FILE logout = FDEV_SETUP_STREAM(log_putc, NULL, _FDEV_SETUP_WRITE);
 
 /**
  * @brief Initializes the logging module
@@ -552,81 +607,7 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
     }
 
     log_output_prefix(module, level);
-    callback();
+    callback(&logout);
     log_output_eol();
-
-}
-
-/**
- * @brief Outputs a character as part of a log message
- *
- * This is a simple wrapper for {@link uart_putc()}.
- *
- * @note This function is meant to be used from within the context of
- * {@link #log_output_callback_t callback} functions to output content. It is
- * not meant to be used on its own.
- *
- * @see log_output_callback_t
- * @see uart_putc()
- */
-void log_output_putc(char c)
-{
-
-    uart_putc(c);
-
-}
-
-/**
- * @brief Outputs a string as part of a log message
- *
- * This is a simple wrapper for {@link uart_outputf()}.
- *
- * @note This function is meant to be used from within the context of
- * {@link #log_output_callback_t callback} functions to output content. It is
- * not meant to be used on its own.
- *
- * @param fmt Format string describing logging output
- * @param ... List with arguments for specifiers within format string
- *
- * @see log_output_callback_t
- * @see log_outputf()
- */
-void log_output_puts(const char* fmt, ...)
-{
-
-    va_list va;
-    va_start(va, fmt);
-    log_outputf(fmt, va);
-    va_end(va);
-
-}
-
-/**
- * @brief Outputs a string as part of a log message from program space
- *
- * This is a simple wrapper for {@link uart_outputf()}. It retrieves the format
- * string from program space, copies it into a buffer, and passes it to
- * {@link #log_outputf()} for processing.
- *
- * @note This function is meant to be used from within the context of
- * {@link #log_output_callback_t callback} functions to output content. It is
- * not meant to be used on its own.
- *
- * @param fmt Format string (from program space) describing logging output
- * @param ... List with arguments for specifiers within format string
- *
- * @see log_output_callback_t
- * @see log_outputf()
- */
-void log_output_puts_p(PGM_P fmt, ...)
-{
-
-    char buffer[LOG_FORMAT_MAX_STRING_LENGTH];
-    strncpy_P(buffer, fmt, LOG_FORMAT_MAX_STRING_LENGTH);
-
-    va_list va;
-    va_start(va, fmt);
-    log_outputf(buffer, va);
-    va_end(va);
 
 }

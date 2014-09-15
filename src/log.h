@@ -43,6 +43,7 @@
 #include <avr/pgmspace.h>
 
 #include <stdbool.h>
+#include <stdio.h>
 
 /**
  * @brief Enumeration of modules able to output logging information
@@ -117,7 +118,7 @@ typedef enum {
  *
  * @see log_output_callback()
  */
-typedef void (*log_output_callback_t)();
+typedef void (*log_output_callback_t)(FILE* logout);
 
 extern PGM_P const log_level_names[] PROGMEM;
 extern PGM_P const log_module_names[] PROGMEM;
