@@ -229,12 +229,12 @@
 /**
  * @brief Defines whether changes in the brightness should be logged
  *
- * This affects `main.c` and controls whether debug information about changes
- * in the brightness should be logged.
+ * This affects `brightness.c` and controls whether debug information about
+ * changes in the brightness should be logged.
  *
- * @see main.c
+ * @see brightness.c
  */
-#define LOG_MAIN_BRIGHTNESS 0
+#define LOG_BRIGHTNESS 0
 
 /**
  * @brief Defines whether the measured LDR values should be logged

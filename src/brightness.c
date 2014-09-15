@@ -52,7 +52,7 @@
  *
  * @see ldr_get_brightness()
  * @see pwm_set_brightness()
- * @see LOG_MAIN_BRIGHTNESS
+ * @see LOG_BRIGHTNESS
  * @see ldr.h
  */
 void brightness_handle()
@@ -64,7 +64,7 @@ void brightness_handle()
 
     if (last_ldr_brightness != ldr_brightness) {
 
-        #if (LOG_MAIN_BRIGHTNESS == 1)
+        #if (LOG_BRIGHTNESS == 1)
 
             char buff[5];
 
