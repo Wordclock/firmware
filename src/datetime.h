@@ -102,7 +102,7 @@ extern bool datetime_validate(const datetime_t* datetime);
 extern void datetime_handle();
 
 extern bool datetime_set(datetime_t* dt);
-extern datetime_t* datetime_get();
+extern const datetime_t* datetime_get();
 
 extern void datetime_ISR();
 

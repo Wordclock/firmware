@@ -1300,7 +1300,7 @@ void user_isr1Hz()
 static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2)
 {
 
-    datetime_t* datetime = datetime_get();
+    const datetime_t* datetime = datetime_get();
 
     uint8_t h = datetime->hh;
     uint8_t m = datetime->mm;

@@ -754,7 +754,7 @@ static void _preset_write(uint8_t argc, char* argv[])
 static void _time_get(uint8_t argc, char* argv[])
 {
 
-    datetime_t* datetime = datetime_get();
+    const datetime_t* datetime = datetime_get();
     uart_protocol_output_args_hex(3, datetime->hh, datetime->mm, datetime->ss);
 
 }
@@ -834,7 +834,7 @@ static void _time_set(uint8_t argc, char* argv[])
 static void _date_get(uint8_t argc, char* argv[])
 {
 
-    datetime_t* datetime = datetime_get();
+    const datetime_t* datetime = datetime_get();
     uart_protocol_output_args_hex(4, datetime->DD, datetime->MM, datetime->YY, datetime->WD);
 
 }
