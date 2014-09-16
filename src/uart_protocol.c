@@ -1307,7 +1307,7 @@ void uart_protocol_handle()
             uart_protocol_command_buffer[buffer_index] = '\0';
             buffer_index = 0;
 
-            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Command: %s", uart_protocol_command_buffer);
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Received command: %s", uart_protocol_command_buffer);
 
             char* argv[UART_PROTOCOL_COMMAND_BUFFER_MAX_ARGS];
             uint8_t argc;
@@ -1336,6 +1336,8 @@ void uart_protocol_handle()
 
             }
 
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "No suitable callback function");
+
             uart_protocol_error();
 
             return;
@@ -1349,6 +1351,10 @@ void uart_protocol_handle()
 
             // Put character into buffer
             uart_protocol_command_buffer[buffer_index++] = c;
+
+        } else {
+
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_INFO, "Command buffer full");
 
         }
 
