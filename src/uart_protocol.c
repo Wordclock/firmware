@@ -222,6 +222,8 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         // Leave loop immediately in case of an error
         if (!status) {
 
+            log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_ERROR, "Invalid argument: %u", i);
+
             result = false;
 
             break;
