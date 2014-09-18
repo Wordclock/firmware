@@ -96,16 +96,23 @@ static prefs_t prefs;
  * @see eepromParams
  * @see log_output_callback_t
  */
-static void preferences_output()
+static void preferences_output(FILE* logout)
 {
 
-    log_output_puts_P("Content: ");
+    fprintf_P(logout, PSTR("Content: "));
 
     uint8_t* ptr = (uint8_t*)(&prefs);
 
     for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
 
-        log_output_puts_P("%h", *ptr++);
+        // TODO: Get rid of flushing implicitly within UART module
+        if (i % UART_BUFFER_SIZE_OUT / 2) {
+
+            uart_flush_output();
+
+        }
+
+        fprintf_P(logout, PSTR("%02x"), *ptr++);
 
     }
 
