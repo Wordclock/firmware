@@ -135,7 +135,7 @@ static void uart_protocol_error()
  * This puts out the hex representation for each given argument by building up
  * the string manually and finally passing it over to uart_protocol_output().
  *
- * @param args Number of arguments
+ * @param argc Number of arguments
  * @param ... Actual arguments to convert and output
  *
  * @see uint8ToHexStr()
@@ -144,20 +144,20 @@ static void uart_protocol_error()
  * @note This is a variadic function based upon `<stdarg.h>`. The number of
  * arguments varies and is described by the first argument.
  */
-static void uart_protocol_output_args_hex(uint8_t args, ...)
+static void uart_protocol_output_args_hex(uint8_t argc, ...)
 {
 
     va_list va;
-    va_start(va, args);
+    va_start(va, argc);
 
     // Three bytes per character (2 byte hex representation + space/terminator)
-    char str[args * 3];
+    char str[argc * 3];
 
-    for (uint8_t i = 0; i < args; i++) {
+    for (uint8_t i = 0; i < argc; i++) {
 
         uint8ToHexStr((uint8_t)va_arg(va, int), &str[i * 3]);
 
-        if (i == args - 1) {
+        if (i == argc - 1) {
 
             // String terminator at the very end
             str[i * 3 + 2] = '\0';
@@ -762,7 +762,7 @@ static void _preset_write(uint8_t argc, char* argv[])
 static void _time_get(uint8_t argc, char* argv[])
 {
 
-    datetime_t* datetime = datetime_get();
+    const datetime_t* datetime = datetime_get();
     uart_protocol_output_args_hex(3, datetime->hh, datetime->mm, datetime->ss);
 
 }
@@ -830,7 +830,7 @@ static void _time_set(uint8_t argc, char* argv[])
 static void _date_get(uint8_t argc, char* argv[])
 {
 
-    datetime_t* datetime = datetime_get();
+    const datetime_t* datetime = datetime_get();
     uart_protocol_output_args_hex(4, datetime->DD, datetime->MM, datetime->YY, datetime->WD);
 
 }

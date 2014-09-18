@@ -199,4 +199,3 @@
 
 - log: Instead of own printf() implementation, make use of printf() from
   <stdio.h> and get rid of most of the functions from base.
-

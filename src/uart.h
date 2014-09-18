@@ -73,11 +73,11 @@ extern bool uart_putc(char c);
 
 extern char uart_getc_wait();
 
-extern bool uart_getc_nowait(char* character);
+extern bool uart_getc_nowait(char* c);
 
-extern void uart_puts(const char*);
+extern void uart_puts(const char* str);
 
-extern void uart_puts_p(PGM_P);
+extern void uart_puts_p(PGM_P str);
 
 /**
  * @brief Macro used to automatically put a string constant into program memory
@@ -88,7 +88,7 @@ extern void uart_puts_p(PGM_P);
  * @see PSTR()
  * @see uart_puts_p()
  */
-#define uart_puts_P(s) uart_puts_p(PSTR(s))
+#define uart_puts_P(str) uart_puts_p(PSTR(str))
 
 /**
  * @brief Waits for the transmit buffer to be flushed completely

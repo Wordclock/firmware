@@ -416,7 +416,7 @@ bool datetime_set(datetime_t* dt)
  * @see datetime
  * @see datetime_t
  */
-datetime_t* datetime_get()
+const datetime_t* datetime_get()
 {
 
     return &datetime;
