@@ -236,10 +236,10 @@ bool uart_putc(char c)
  * @see uart_fifo_in
  * @see fifo_get_nowait()
  */
-bool uart_getc_nowait(char* character)
+bool uart_getc_nowait(char* c)
 {
 
-    return fifo_get_nowait(&uart_fifo_in, (uint8_t*)character);
+    return fifo_get_nowait(&uart_fifo_in, (uint8_t*)c);
 
 }
 
