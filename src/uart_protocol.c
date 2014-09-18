@@ -134,7 +134,7 @@ static void uart_protocol_error()
  * This puts out the hex representation for each given argument by building up
  * the string manually and finally passing it over to uart_protocol_output().
  *
- * @param args Number of arguments
+ * @param argc Number of arguments
  * @param ... Actual arguments to convert and output
  *
  * @see uint8ToHexStr()
@@ -143,20 +143,20 @@ static void uart_protocol_error()
  * @note This is a variadic function based upon `<stdarg.h>`. The number of
  * arguments varies and is described by the first argument.
  */
-static void uart_protocol_output_args_hex(uint8_t args, ...)
+static void uart_protocol_output_args_hex(uint8_t argc, ...)
 {
 
     va_list va;
-    va_start(va, args);
+    va_start(va, argc);
 
     // Three bytes per character (2 byte hex representation + space/terminator)
-    char str[args * 3];
+    char str[argc * 3];
 
-    for (uint8_t i = 0; i < args; i++) {
+    for (uint8_t i = 0; i < argc; i++) {
 
         uint8ToHexStr((uint8_t)va_arg(va, int), &str[i * 3]);
 
-        if (i == args - 1) {
+        if (i == argc - 1) {
 
             // String terminator at the very end
             str[i * 3 + 2] = '\0';
@@ -173,6 +173,65 @@ static void uart_protocol_output_args_hex(uint8_t args, ...)
     uart_protocol_output(str);
 
     va_end(va);
+
+}
+
+/**
+ * @brief Reads in hex representations from strings
+ *
+ * This reads in the given number of arguments and puts them into the provided
+ * locations. The arguments are expected to be alternating between pointers to
+ * strings to parse and pointers to variables where the parsed results will be
+ * put. The arguments are parsed consecutively. In case of an error further
+ * parsing is stopped, and false is returned. If every argument could be parsed
+ * successfully, true is returned.
+ *
+ * @param argc Number of arguments (actually only half the number of arguments)
+ * @param ... Alternating between pointers to strings and pointers to variables
+ *
+ * @return True if data could be parsed completely, false otherwise
+ *
+ * @see hexStrToUint8()
+ *
+ * @note This is a variadic function based upon `<stdarg.h>`. The number of
+ * arguments varies and is described by the first argument.
+ *
+ * @note The first parameter describes the number of variables to parse. As
+ * there is a string pointer for each variable, there are actually twice as
+ * many arguments expected.
+ */
+static bool uart_protocol_input_args_hex(uint8_t argc, ...)
+{
+
+    bool result = true;
+
+    va_list va;
+    va_start(va, argc);
+
+    for (uint8_t i = 0; i < argc; i++) {
+
+        // Get next string and variable to put content in
+        char* str = (char*)va_arg(va, int);
+        uint8_t* var = (uint8_t*)va_arg(va, int);
+
+        bool status;
+
+        *var = hexStrToUint8(str, &status);
+
+        // Leave loop immediately in case of an error
+        if (!status) {
+
+            result = false;
+
+            break;
+
+        }
+
+    }
+
+    va_end(va);
+
+    return result;
 
 }
 
@@ -504,7 +563,7 @@ static void _color_read(uint8_t argc, char* argv[])
  * @see uart_protocol_command_buffer
  * @see uart_protocol_error()
  * @see uart_protocol_ok()
- * @see hexStrToUint8()
+ * @see uart_protocol_input_args_hex()
  * @see pwm_set_color()
  *
  * @todo Not real 8 bits, but 2^8-1?
@@ -514,31 +573,9 @@ static void _color_write(uint8_t argc, char* argv[])
 {
 
     color_rgb_t color;
-    bool status;
 
-    color.red = hexStrToUint8(argv[1], &status);
-
-    if (!status) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    color.green = hexStrToUint8(argv[2], &status);
-
-    if (!status) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    color.blue = hexStrToUint8(argv[3], &status);
-
-    if (!status) {
+    if (!uart_protocol_input_args_hex(3, argv[1], &color.red,
+            argv[2], &color.green, argv[3], &color.blue)) {
 
         uart_protocol_error();
 
@@ -604,10 +641,10 @@ static void _preset_active(uint8_t argc, char* argv[])
 static void _preset_set(uint8_t argc, char* argv[])
 {
 
-    bool status;
-    uint8_t preset = hexStrToUint8(argv[1], &status);
+    uint8_t preset;
 
-    if (status && preset < UI_COLOR_PRESET_COUNT) {
+    if (uart_protocol_input_args_hex(1, argv[1], &preset)
+            && preset < UI_COLOR_PRESET_COUNT) {
 
         (&(preferences_get()->user_prefs))->curColorProfile = preset;
         preferences_save();
@@ -636,17 +673,17 @@ static void _preset_set(uint8_t argc, char* argv[])
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
- * @see hexStrToUint8()
+ * @see uart_protocol_input_args_hex()
  * @see user_prefs_t::colorPresets
  * @see uart_protocol_output_args_hex()
  */
 static void _preset_read(uint8_t argc, char* argv[])
 {
 
-    bool status;
-    uint8_t preset = hexStrToUint8(argv[1], &status);
+    uint8_t preset;
 
-    if (status && preset < UI_COLOR_PRESET_COUNT) {
+    if (uart_protocol_input_args_hex(1, argv[1], &preset)
+            && preset < UI_COLOR_PRESET_COUNT) {
 
         color_rgb_t color = (&(preferences_get()->user_prefs))->colorPresets[preset];
 
@@ -670,7 +707,7 @@ static void _preset_read(uint8_t argc, char* argv[])
  *
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_command_buffer
- * @see hexStrToUint8()
+ * @see uart_protocol_input_args_hex()
  * @see user_prefs_t::colorPresets
  * @see uart_protocol_ok()
  */
@@ -679,41 +716,9 @@ static void _preset_write(uint8_t argc, char* argv[])
 
     uint8_t preset;
     color_rgb_t color;
-    bool status;
 
-    preset = hexStrToUint8(argv[1], &status);
-
-    if (!status || preset >= UI_COLOR_PRESET_COUNT) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    color.red = hexStrToUint8(argv[2], &status);
-
-    if (!status) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    color.green = hexStrToUint8(argv[3], &status);
-
-    if (!status) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    color.blue = hexStrToUint8(argv[4], &status);
-
-    if (!status) {
+    if (!uart_protocol_input_args_hex(4, argv[1], &preset, argv[2], &color.red,
+            argv[3], &color.green, argv[4], &color.blue)) {
 
         uart_protocol_error();
 
@@ -769,6 +774,7 @@ static void _time_get(uint8_t argc, char* argv[])
  * invalid, an error will be output.
  *
  * @see uart_protocol_command_callback_t
+ * @see uart_protocol_input_args_hex()
  * @see datetime_get()
  * @see datetime_set()
  * @see uart_protocol_ok()
@@ -777,24 +783,11 @@ static void _time_get(uint8_t argc, char* argv[])
 static void _time_set(uint8_t argc, char* argv[])
 {
 
-    uint8_t time[3];
-    uint8_t i;
+    uint8_t hh;
+    uint8_t mm;
+    uint8_t ss;
 
-    for (i = 1; i < 4; i++) {
-
-        bool status;
-
-        time[i - 1] = hexStrToUint8(argv[i], &status);
-
-        if (!status) {
-
-           break;
-
-        }
-
-    }
-
-    if (i != 4) {
+    if (!uart_protocol_input_args_hex(3, argv[1], &hh, argv[2], &mm, argv[3], &ss)) {
 
         uart_protocol_error();
 
@@ -804,9 +797,9 @@ static void _time_set(uint8_t argc, char* argv[])
 
     datetime_t datetime = *datetime_get();
 
-    datetime.hh = time[0];
-    datetime.mm = time[1];
-    datetime.ss = time[2];
+    datetime.hh = hh;
+    datetime.mm = mm;
+    datetime.ss = ss;
 
     if (datetime_set(&datetime)) {
 
@@ -849,6 +842,7 @@ static void _date_get(uint8_t argc, char* argv[])
  * invalid, an error will be output.
  *
  * @see uart_protocol_command_callback_t
+ * @see uart_protocol_input_args_hex()
  * @see datetime_get()
  * @see datetime_set()
  * @see uart_protocol_ok()
@@ -857,24 +851,12 @@ static void _date_get(uint8_t argc, char* argv[])
 static void _date_set(uint8_t argc, char* argv[])
 {
 
-    uint8_t date[4];
-    uint8_t i = 0;
+    uint8_t dd;
+    uint8_t mm;
+    uint8_t yy;
+    uint8_t wd;
 
-    for (i = 1; i < 5; i++) {
-
-        bool status;
-
-        date[i - 1] = hexStrToUint8(argv[i], &status);
-
-        if (!status) {
-
-           break;
-
-        }
-
-    }
-
-    if (i != 5) {
+    if (!uart_protocol_input_args_hex(4, argv[1], &dd, argv[2], &mm, argv[3], &yy, argv[4], &wd)) {
 
         uart_protocol_error();
 
@@ -884,10 +866,10 @@ static void _date_set(uint8_t argc, char* argv[])
 
     datetime_t datetime = *datetime_get();
 
-    datetime.DD = date[0];
-    datetime.MM = date[1];
-    datetime.YY = date[2];
-    datetime.WD = date[3];
+    datetime.DD = dd;
+    datetime.MM = mm;
+    datetime.YY = yy;
+    datetime.WD = wd;
 
     if (datetime_set(&datetime)) {
 
