@@ -606,6 +606,9 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
 
     }
 
+    // Wait for UART output buffer to be empty
+    uart_flush_output();
+
     log_output_prefix(module, level);
     callback(&logout);
     log_output_eol();

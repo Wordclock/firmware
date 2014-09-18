@@ -105,6 +105,13 @@ static void preferences_output(FILE* logout)
 
     for (uint8_t i = 0; i < sizeof(prefs_t); i++) {
 
+        // TODO: Get rid of flushing implicitly within UART module
+        if (i % UART_BUFFER_SIZE_OUT / 2) {
+
+            uart_flush_output();
+
+        }
+
         fprintf_P(logout, PSTR("%02x"), *ptr++);
 
     }
