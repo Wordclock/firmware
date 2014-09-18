@@ -101,6 +101,8 @@ extern void uart_puts_p(PGM_P str);
  *
  * @todo Think about returning immediately in case interrupts are disabled to
  * prevent deadlock situations?
+ *
+ * @todo Consider to flush the buffer implicitly and get rid of this function
  */
 inline void uart_flush_output()
 {
