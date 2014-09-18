@@ -197,8 +197,6 @@
 - avr-libc 1.8.1 provides an own implementation of time.h, which includes
   the tm struct. This should be used instead of the own datetime_t struct.
 
-- log: Implement callback functions with streaming handler
-
 - log: Instead of own printf() implementation, make use of printf() from
   <stdio.h> and get rid of most of the functions from base.
 
