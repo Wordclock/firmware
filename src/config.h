@@ -254,6 +254,13 @@
  * should be output.
  *
  * @see pwm.c
+ *
+ * @todo Implement this mapping in brightness module and remove this switch
+ * as it would be covered by LOG_BRIGHTNESS.
+ *
+ * @todo Due to the limited size of the UART transmission buffer a lot of
+ * output gets dropped. Fix this either by flushing the output explicitly
+ * within the appropriate functions, or flush the UART buffer implicitly.
  */
 #define LOG_LDR2PWM 0
 
