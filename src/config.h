@@ -329,10 +329,10 @@
 /**
  * @brief Defines whether information about preferences saves should be logged
  *
- * This affects `preferences.c` and controls whether debug information about
- * saves of the preferences should be output.
+ * This affects `preferences_eeprom.c` and controls whether debug information
+ * about saves of the preferences to the backend should be output.
  *
- * @see preferences.c
+ * @see preferences_eeprom.c
  */
 #define LOG_PREFERENCES_SAVE 0
 
