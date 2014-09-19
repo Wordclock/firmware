@@ -29,10 +29,11 @@
  */
 
 #include <inttypes.h>
+#include <stdio.h>
 
-#include "base.h"
 #include "brightness.h"
 #include "config.h"
+#include "format.h"
 #include "ldr.h"
 #include "uart.h"
 #include "pwm.h"
@@ -71,7 +72,7 @@ void brightness_handle()
 
             char buff[5];
 
-            uint8ToStrLessOneHundred(ldr_brightness, buff);
+            sprintf_P(buff, fmt_unsigned_decimal, ldr_brightness);
             uart_puts_P("brightness: ");
             uart_puts(buff);
             uart_putc('\n');
