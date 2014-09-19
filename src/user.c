@@ -33,6 +33,7 @@
  */
 
 #include "config.h"
+#include "format.h"
 #include "user.h"
 #include "IRMP/irmp.h"
 #include "pwm.h"
@@ -949,11 +950,11 @@ void handle_ir_code()
             char text[20];
 
             uart_puts_P("IR-cmd: ");
-            sprintf_P(text, PSTR("%x"), ir_data.protocol);
+            sprintf_P(text, fmt_hex, ir_data.protocol);
             uart_puts(text);
-            sprintf_P(text, PSTR("%x"), ir_data.address);
+            sprintf_P(text, fmt_hex, ir_data.address);
             uart_puts(text);
-            sprintf_P(text, PSTR("%x"), ir_data.command);
+            sprintf_P(text, fmt_hex, ir_data.command);
             uart_puts(text);
             uart_putc('\n');
 

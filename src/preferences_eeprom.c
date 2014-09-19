@@ -42,6 +42,7 @@
 
 #include "base.h"
 #include "eeprom.h"
+#include "format.h"
 #include "preferences.h"
 #include "uart.h"
 #include "version.h"
@@ -130,7 +131,7 @@ void preferences_init()
 
             char buf[3];
 
-            sprintf_P(buf, PSTR("%x"), *ptr++);
+            sprintf_P(buf, fmt_hex, *ptr++);
             uart_puts(buf);
 
         }

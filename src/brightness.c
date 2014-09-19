@@ -34,6 +34,7 @@
 #include "base.h"
 #include "brightness.h"
 #include "config.h"
+#include "format.h"
 #include "ldr.h"
 #include "uart.h"
 #include "pwm.h"
@@ -72,7 +73,7 @@ void brightness_handle()
 
             char buff[5];
 
-            sprintf_P(buff, PSTR("%x"), ldr_brightness);
+            sprintf_P(buff, fmt_unsigned_decimal, ldr_brightness);
             uart_puts_P("brightness: ");
             uart_puts(buff);
             uart_putc('\n');

@@ -44,6 +44,7 @@
 #include <stdio.h>
 
 #include "config.h"
+#include "format.h"
 #include "uart.h"
 #include "ldr.h"
 #include "base.h"
@@ -138,7 +139,7 @@ void ldr_init()
 
         char buff[5];
 
-        sprintf_P(buff, PSTR("%d"), result);
+        sprintf_P(buff, fmt_unsigned_decimal, result);
         uart_puts_P("LDR init: ");
         uart_puts(buff);
         uart_putc('\n');
@@ -200,7 +201,7 @@ ISR(ADC_vect)
 
         char buff[5];
 
-        sprintf_P(buff, PSTR("%d"), measurement);
+        sprintf_P(buff, fmt_unsigned_decimal, measurement);
         uart_puts_P("LDR: ");
         uart_puts(buff);
         uart_putc('\n');

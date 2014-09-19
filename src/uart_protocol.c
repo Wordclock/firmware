@@ -42,6 +42,7 @@
 #include "config.h"
 #include "base.h"
 #include "datetime.h"
+#include "format.h"
 #include "ldr.h"
 #include "memcheck.h"
 #include "uart.h"
@@ -155,7 +156,7 @@ static void uart_protocol_output_args_hex(uint8_t argc, ...)
 
     for (uint8_t i = 0; i < argc; i++) {
 
-        sprintf_P(&str[i * 3], PSTR("%x"), (uint8_t)va_arg(va, int));
+        sprintf_P(&str[i * 3], fmt_hex, (uint8_t)va_arg(va, int));
 
         if (i == argc - 1) {
 
@@ -898,7 +899,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_unused();
         char buffer[5];
-        sprintf_P(buffer, PSTR("%x"), unused);
+        sprintf_P(buffer, fmt_hex, unused);
         uart_protocol_output(buffer);
 
     }
@@ -918,7 +919,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_current();
         char buffer[5];
-        sprintf_P(buffer, PSTR("%x"), unused);
+        sprintf_P(buffer, fmt_hex, unused);
         uart_protocol_output(buffer);
 
     }
