@@ -30,8 +30,11 @@
 
 #include <inttypes.h>
 
+#include "base.h"
 #include "brightness.h"
+#include "config.h"
 #include "ldr.h"
+#include "uart.h"
 #include "pwm.h"
 
 /**
