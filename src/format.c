@@ -31,12 +31,12 @@
 /**
  * @brief Format string describing an unsigned decimal of variable length
  */
-char const fmt_unsigned_decimal[] PROGMEM = "%u";
+char const fmt_output_unsigned_decimal[] PROGMEM = "%u";
 
 /**
  * @brief Format string describing a (unsigned) hexadecimal of variable length
  */
-char const fmt_hex[] PROGMEM = "%x";
+char const fmt_output_hex[] PROGMEM = "%x";
 
 /**
  * @brief Format string used for outputting a single byte as hex
