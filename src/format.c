@@ -37,3 +37,16 @@ char const fmt_unsigned_decimal[] PROGMEM = "%u";
  * @brief Format string describing a (unsigned) hexadecimal of variable length
  */
 char const fmt_hex[] PROGMEM = "%x";
+
+/**
+ * @brief Format string used for outputting a single byte as hex
+ *
+ * This puts out a single byte as hex. The length will always be two
+ * characters (padded with `0`).
+ */
+char const fmt_output_byte_as_hex[] PROGMEM = "%02x";
+
+/**
+ * @brief Format string used for scanning in a single byte as hex
+ */
+char const fmt_input_byte_as_hex[] PROGMEM = "%hhx";

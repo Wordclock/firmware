@@ -155,7 +155,7 @@ static void uart_protocol_output_args_hex(uint8_t argc, ...)
 
     for (uint8_t i = 0; i < argc; i++) {
 
-        sprintf_P(&str[i * 3], fmt_hex, (uint8_t)va_arg(va, int));
+        sprintf_P(&str[i * 3], fmt_output_byte_as_hex, (uint8_t)va_arg(va, int));
 
         if (i == argc - 1) {
 
@@ -216,7 +216,7 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         uint8_t* var = (uint8_t*)va_arg(va, int);
 
         // Leave loop immediately in case of an error
-        if (strlen(str) != 2 || sscanf_P(str, "%hhx", var) != 1) {
+        if (strlen(str) != 2 || sscanf_P(str, fmt_input_byte_as_hex, var) != 1) {
 
             result = false;
 

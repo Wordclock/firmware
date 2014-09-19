@@ -39,5 +39,7 @@
 
 extern char const fmt_unsigned_decimal[] PROGMEM;
 extern char const fmt_hex[] PROGMEM;
+extern char const fmt_output_byte_as_hex[] PROGMEM;
+extern char const fmt_input_byte_as_hex[] PROGMEM;
 
 #endif /* _WC_FORMAT_H_ */
