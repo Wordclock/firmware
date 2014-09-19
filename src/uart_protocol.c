@@ -40,7 +40,6 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "base.h"
 #include "datetime.h"
 #include "format.h"
 #include "ldr.h"

@@ -47,7 +47,6 @@
 #include "format.h"
 #include "uart.h"
 #include "ldr.h"
-#include "base.h"
 
 /**
  * @brief Stores the last measurements taken

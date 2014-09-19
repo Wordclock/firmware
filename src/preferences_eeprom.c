@@ -40,7 +40,6 @@
 
 #include <stdio.h>
 
-#include "base.h"
 #include "eeprom.h"
 #include "format.h"
 #include "preferences.h"

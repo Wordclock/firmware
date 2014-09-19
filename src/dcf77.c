@@ -44,7 +44,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "base.h"
 #include "config.h"
 #include "dcf77.h"
 #include "format.h"

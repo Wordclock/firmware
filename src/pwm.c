@@ -48,7 +48,6 @@
 #include "preferences.h"
 
 #include "uart.h"
-#include "base.h"
 #include "config.h"
 #include "format.h"
 #include "pwm.h"

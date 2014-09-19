@@ -31,7 +31,6 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#include "base.h"
 #include "brightness.h"
 #include "config.h"
 #include "format.h"
