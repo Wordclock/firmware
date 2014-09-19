@@ -38,6 +38,8 @@
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
 
+#include <stdio.h>
+
 #include "base.h"
 #include "eeprom.h"
 #include "preferences.h"
@@ -128,7 +130,7 @@ void preferences_init()
 
             char buf[3];
 
-            uint8ToHexStr(*ptr++, buf);
+            sprintf_P(buf, PSTR("%x"), *ptr++);
             uart_puts(buf);
 
         }

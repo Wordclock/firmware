@@ -41,6 +41,7 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <stdio.h>
 
 #include "config.h"
 #include "uart.h"
@@ -137,7 +138,7 @@ void ldr_init()
 
         char buff[5];
 
-        uint8ToStr(result, buff);
+        sprintf_P(buff, PSTR("%d"), result);
         uart_puts_P("LDR init: ");
         uart_puts(buff);
         uart_putc('\n');
@@ -199,7 +200,7 @@ ISR(ADC_vect)
 
         char buff[5];
 
-        uint8ToStr(measurement, buff);
+        sprintf_P(buff, PSTR("%d"), measurement);
         uart_puts_P("LDR: ");
         uart_puts(buff);
         uart_putc('\n');

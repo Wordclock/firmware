@@ -647,7 +647,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
         char buff[5];
 
         uart_puts_P("Ir train. Enter cmd #");
-        uint8ToStrLessOneHundred(mode_trainIrState.curKey, buff);
+        sprintf_P(buff, PSTR("%u"), mode_trainIrState.curKey);
         uart_puts(buff);
         uart_putc('\n');
 

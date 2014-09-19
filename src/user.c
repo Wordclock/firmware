@@ -445,10 +445,10 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
         char txt[8];
 
-        uint8ToStrLessOneHundred(time->hh, txt);
+        sprintf_P(txt, PSTR("%u"), time->hh);
         uart_puts(txt);
         uart_putc(':');
-        uint8ToStrLessOneHundred(time->mm, txt);
+        sprintf_P(txt, PSTR("%u"), time->mm);
         uart_puts(txt);
         uart_putc('\n');
 
@@ -614,7 +614,7 @@ bool leaveSubState(int8_t indexOfStateToLeave)
 
             char buff[5];
 
-            uint8ToStrLessOneHundred(g_stateStack[i], buff);
+            sprintf_P(buff, PSTR("%u"), g_stateStack[i]);
             uart_puts(buff);
             uart_putc(':');
             uart_putc(canLeave ? 'y' : 'n');
@@ -949,11 +949,11 @@ void handle_ir_code()
             char text[20];
 
             uart_puts_P("IR-cmd: ");
-            uint16ToHexStr(ir_data.protocol, text);
+            sprintf_P(text, PSTR("%x"), ir_data.protocol);
             uart_puts(text);
-            uint16ToHexStr(ir_data.address, text);
+            sprintf_P(text, PSTR("%x"), ir_data.address);
             uart_puts(text);
-            uint16ToHexStr(ir_data.command, text);
+            sprintf_P(text, PSTR("%x"), ir_data.command);
             uart_puts(text);
             uart_putc('\n');
 

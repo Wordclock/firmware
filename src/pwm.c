@@ -44,6 +44,7 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "preferences.h"
 
 #include "uart.h"
@@ -582,7 +583,7 @@ void pwm_release_brightness()
 
         for (uint8_t i = 0; i < LDR2PWM_COUNT; i++) {
 
-            uint8ToStr(g_ldrBrightness2pwmStep[i], buf);
+            sprintf_P(buf, PSTR("%d"), g_ldrBrightness2pwmStep[i]);
             uart_puts(buf);
 
         }

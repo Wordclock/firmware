@@ -42,6 +42,7 @@
 #include <inttypes.h>
 #include <avr/io.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "base.h"
 #include "config.h"
@@ -516,23 +517,23 @@ static void dcf77_check_receiver_type()
 
             char log_text[8];
 
-            uint8ToStr(count_low, log_text);
+            sprintf_P(log_text, PSTR("%d"), count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_high, log_text);
+            sprintf_P(log_text, PSTR("%d"), count_high);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_high+count_low, log_text);
+            sprintf_P(log_text, PSTR("%d"), count_high + count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_pass, log_text);
+            sprintf_P(log_text, PSTR("%d"), count_pass);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_switch, log_text);
+            sprintf_P(log_text, PSTR("%d"), count_switch);
             uart_puts(log_text);
             uart_puts("\n");
 
@@ -749,7 +750,7 @@ static bool dcf77_check()
             /*
              * Output the length of the last pause
              */
-            uint8ToStr(DCF.PauseCounter, log_text);
+            sprintf_P(log_text, PSTR("%d"), DCF.PauseCounter);
             uart_puts(log_text);
             uart_puts(" ");
 

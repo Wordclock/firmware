@@ -37,6 +37,7 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "config.h"
 #include "base.h"
@@ -154,7 +155,7 @@ static void uart_protocol_output_args_hex(uint8_t argc, ...)
 
     for (uint8_t i = 0; i < argc; i++) {
 
-        uint8ToHexStr((uint8_t)va_arg(va, int), &str[i * 3]);
+        sprintf_P(&str[i * 3], PSTR("%x"), (uint8_t)va_arg(va, int));
 
         if (i == argc - 1) {
 
@@ -214,12 +215,8 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         char* str = (char*)va_arg(va, int);
         uint8_t* var = (uint8_t*)va_arg(va, int);
 
-        bool status;
-
-        *var = hexStrToUint8(str, &status);
-
         // Leave loop immediately in case of an error
-        if (!status) {
+        if (strlen(str) != 2 || sscanf_P(str, "%hhx", var) != 1) {
 
             result = false;
 
@@ -901,7 +898,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_unused();
         char buffer[5];
-        uint16ToHexStr(unused, buffer);
+        sprintf_P(buffer, PSTR("%x"), unused);
         uart_protocol_output(buffer);
 
     }
@@ -921,7 +918,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_current();
         char buffer[5];
-        uint16ToHexStr(unused, buffer);
+        sprintf_P(buffer, PSTR("%x"), unused);
         uart_protocol_output(buffer);
 
     }
@@ -1136,7 +1133,7 @@ void uart_protocol_handle()
 
                 char str[3];
 
-                uint8ToStrLessOneHundred(buffer_index, str);
+                sprintf_P(str, PSTR("%u"), buffer_index);
 
                 uart_puts_P("Buffer index: ");
                 uart_puts(str);
