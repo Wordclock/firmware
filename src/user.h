@@ -532,7 +532,7 @@ typedef struct {
      */
     uint8_t m;
 
-} UiTime;
+} ui_time_t;
 
 /**
  * @brief Amount of supported on/off (autoOff) time(s)
@@ -576,7 +576,7 @@ typedef struct {
  * USER_ON_OFF_TIME_DEFAULTS. It defaults to "0" for the hours and "0" for the
  * minutes.
  *
- * @see UiTime
+ * @see ui_time_t
  * @see USER_ON_OFF_TIME_DEFAULTS
  */
 #define USER_DEFAULT_TIME {0, 0}
@@ -698,7 +698,7 @@ typedef struct user_prefs_t {
      * @see UI_MAX_ONOFF_TIMES
      * @see UI_ONOFFTIMES_COUNT
      */
-    UiTime onOffTimes[UI_ONOFFTIMES_COUNT];
+    ui_time_t onOffTimes[UI_ONOFFTIMES_COUNT];
 
     /**
      * @brief Stores whether an animation should be displayed during autoOff
