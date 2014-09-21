@@ -650,7 +650,7 @@ typedef struct {
  * @see USEREEPROMPARAMS_DEFAULT
  * @see prefs_t::user_prefs
  */
-typedef struct user_prefs_t {
+typedef struct {
 
     /**
      * @brief The address of the trained IR remote control

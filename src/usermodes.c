@@ -38,7 +38,7 @@
  * @see mode_trainIrState
  * @see menu_state_t::MS_irTrain
  */
-typedef struct TrainIrState {
+typedef struct {
 
     /**
      * @brief Number of seconds passed since entering the "training" mode
@@ -79,7 +79,7 @@ static TrainIrState mode_trainIrState;
  * @see mode_showNumberState
  * @see menu_state_t::MS_showNumber
  */
-typedef struct ShowNumberState {
+typedef struct {
 
     /**
      * @brief Counter to keep track of the time the number has been shown
@@ -147,7 +147,7 @@ static ShowNumberState mode_showNumberState;
      * @see mode_normalState
      * @see menu_state_t::MS_normalMode
      */
-    typedef struct NormalState {
+    typedef struct {
 
         /**
          * @brief Keeps track which property is currently being set
@@ -191,7 +191,7 @@ static ShowNumberState mode_showNumberState;
  * @see mode_pulseState
  * @see menu_state_t::MS_pulseMode
  */
-typedef struct PulseState {
+typedef struct {
 
     /**
      * @brief Holds the current brightness step
@@ -236,7 +236,7 @@ static PulseState mode_pulseState;
      * @see mode_autoHueState
      * @see menu_state_t::MS_hueMode
      */
-    typedef struct AutoHueState {
+    typedef struct {
 
         /**
          * @brief The hue the output is currently being displayed with
@@ -284,7 +284,7 @@ static PulseState mode_pulseState;
  * @see mode_demoState
  * @see menu_state_t::MS_demoMode
  */
-typedef struct DemoState {
+typedef struct {
 
     /**
      * @brief The current step of the demo animation
@@ -347,7 +347,7 @@ static DemoState mode_demoState;
  * @see mode_setSystemTimeState
  * @see menu_state_t::MS_setSystemTime
  */
-typedef struct SetSystemTimeState {
+typedef struct {
 
     /**
      * @brief Indicates whether or not the mode can currently be left
@@ -376,7 +376,7 @@ static SetSystemTimeState mode_setSystemTimeState;
  * @see mode_setOnOffTimeState
  * @see menu_state_t::MS_setOnOffTime
  */
-typedef struct SetOnOffTimeState {
+typedef struct {
 
     /**
      * @brief Indicates whether or not the mode can currently be left
@@ -419,7 +419,7 @@ static SetOnOffTimeState mode_setOnOffTimeState;
  * @see mode_enterTimeState
  * @see menu_state_t::MS_enterTime
  */
-typedef struct EnterTimeState {
+typedef struct {
 
     /**
      * @brief Indicates whether or not the mode can currently be left
