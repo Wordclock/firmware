@@ -69,7 +69,7 @@
 /**
  * @brief Indicates whether the autoOff animation is currently being enabled
  *
- * @see POWER_STATES::UPS_AUTO_OFF
+ * @see user_power_state_t::UPS_AUTO_OFF
  */
 bool useAutoOffAnimation;
 
@@ -159,10 +159,10 @@ static uint8_t g_keyDelay;
  * The current "power" state is hold by g_powerState and at any given point in
  * time will contain one of these values:
  *
- *  - normal_on (POWER_STATES::UPS_NORMAL_ON)
- *  - auto_off (POWER_STATES::UPS_AUTO_OFF)
- *  - user_off (POWER_STATES::UPS_MANUAL_OFF)
- *  - override_on (POWER_STATES::UPS_OVERRIDE_ON)
+ *  - normal_on (user_power_state_t::UPS_NORMAL_ON)
+ *  - auto_off (user_power_state_t::UPS_AUTO_OFF)
+ *  - user_off (user_power_state_t::UPS_MANUAL_OFF)
+ *  - override_on (user_power_state_t::UPS_OVERRIDE_ON)
  *
  * The following "inputs" are possible for each of this states:
  *
@@ -197,7 +197,7 @@ static uint8_t g_keyDelay;
  * @see user_setNewTime()
  * @see user_isr1Hz()
  */
-enum POWER_STATES {
+typedef enum {
 
     /**
      * @brief Represents the state when the display is turned on normally
@@ -241,18 +241,18 @@ enum POWER_STATES {
      */
     UPS_MANUAL_OFF,
 
-};
+} user_power_state_t;
 
 /**
  * @brief Holds the current "power" state
  *
- * This contains a value of POWER_STATES and determines the current "power"
+ * This contains a value of user_power_state_t and determines the current "power"
  * state. Based on this, other states can be reached - depending upon the
  * "input".
  *
- * @see POWER_STATES
+ * @see user_power_state_t
  */
-static uint8_t g_powerState;
+static user_power_state_t g_powerState;
 
 #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
@@ -277,7 +277,7 @@ static uint8_t g_powerState;
  * display_autoOffAnimStep1Hz(), where this variable will simply be passed on
  * as a parameter.
  *
- * @see POWER_STATES::UPS_AUTO_OFF
+ * @see user_power_state_t::UPS_AUTO_OFF
  * @see display_autoOffAnimStep1Hz()
  */
 static bool g_animPreview = false;
