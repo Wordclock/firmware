@@ -516,7 +516,7 @@ typedef enum
  *
  * @see user_prefs_t::onOffTimes
  */
-typedef struct UiTime {
+typedef struct {
 
     /**
      * @brief Hours
