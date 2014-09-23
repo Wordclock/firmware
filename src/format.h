@@ -40,6 +40,7 @@
 extern char const fmt_output_unsigned_decimal[] PROGMEM;
 extern char const fmt_output_hex[] PROGMEM;
 extern char const fmt_output_byte_as_hex[] PROGMEM;
+
 extern char const fmt_input_byte_as_hex[] PROGMEM;
 
 #endif /* _WC_FORMAT_H_ */
