@@ -640,7 +640,7 @@ static void TrainIrState_handleIR(const IRMP_DATA* i_irCode)
 
     }
 
-    #if (LOG_USER_IR_TRAIN)
+    #if (LOG_USER_IR_TRAIN == 1)
 
     {
 
