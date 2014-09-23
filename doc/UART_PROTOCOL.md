@@ -31,9 +31,10 @@ of the transmission, so make sure to set up everything correctly.
 
 ## DEBUGGING
 
-The `LOG_UART_PROTOCOL` switch within `src/config.h` can be used to enable
-various debugging messages of the uart_protocol module and is disabled
-by default.
+The `LOG_LEVEL_UART_PROTOCOL_DEFAULT` switch within `src/config.h` can be used
+to enable debugging messages of the uart_protocol module and is disabled
+by default. You can also change the log level during runtime using the commands
+listed below. Note however, that you might miss some events in this case.
 
 ## COMMAND SYNTAX
 
