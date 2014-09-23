@@ -1,13 +1,11 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * irmp.c - infrared multi-protocol decoder, supports several remote control protocols
  *
- * Copyright (c) 2009-2013 Frank Meyer - frank(at)fli4l.de
+ * Copyright (c) 2009-2014 Frank Meyer - frank(at)fli4l.de
  *
- * $Id: irmp.c,v 1.145 2014/02/20 14:55:17 fm Exp $
+ * $Id: irmp.c,v 1.166 2014/09/19 13:26:00 fm Exp $
  *
- * ATMEGA88 @ 8 MHz
- *
- * Supported mikrocontrollers:
+ * Supported AVR mikrocontrollers:
  *
  * ATtiny87,  ATtiny167
  * ATtiny45,  ATtiny85
@@ -145,10 +143,10 @@
 #define MATSUSHITA_0_PAUSE_LEN_MIN              ((uint8_t)(F_INTERRUPTS * MATSUSHITA_0_PAUSE_TIME * MIN_TOLERANCE_40 + 0.5) - 1)
 #define MATSUSHITA_0_PAUSE_LEN_MAX              ((uint8_t)(F_INTERRUPTS * MATSUSHITA_0_PAUSE_TIME * MAX_TOLERANCE_40 + 0.5) + 1)
 
-#define KASEIKYO_START_BIT_PULSE_LEN_MIN        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PULSE_TIME * MIN_TOLERANCE_10 + 0.5) - 1)
-#define KASEIKYO_START_BIT_PULSE_LEN_MAX        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PULSE_TIME * MAX_TOLERANCE_10 + 0.5) + 1)
-#define KASEIKYO_START_BIT_PAUSE_LEN_MIN        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PAUSE_TIME * MIN_TOLERANCE_10 + 0.5) - 1)
-#define KASEIKYO_START_BIT_PAUSE_LEN_MAX        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PAUSE_TIME * MAX_TOLERANCE_10 + 0.5) + 1)
+#define KASEIKYO_START_BIT_PULSE_LEN_MIN        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define KASEIKYO_START_BIT_PULSE_LEN_MAX        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define KASEIKYO_START_BIT_PAUSE_LEN_MIN        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define KASEIKYO_START_BIT_PAUSE_LEN_MAX        ((uint8_t)(F_INTERRUPTS * KASEIKYO_START_BIT_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
 #define KASEIKYO_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * KASEIKYO_PULSE_TIME * MIN_TOLERANCE_50 + 0.5) - 1)
 #define KASEIKYO_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * KASEIKYO_PULSE_TIME * MAX_TOLERANCE_50 + 0.5) + 1)
 #define KASEIKYO_1_PAUSE_LEN_MIN                ((uint8_t)(F_INTERRUPTS * KASEIKYO_1_PAUSE_TIME * MIN_TOLERANCE_30 + 0.5) - 1)
@@ -229,6 +227,19 @@
 #define NUBERT_0_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * NUBERT_0_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
 #define NUBERT_0_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * NUBERT_0_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
 #define NUBERT_0_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * NUBERT_0_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+
+#define SPEAKER_START_BIT_PULSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * SPEAKER_START_BIT_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_START_BIT_PULSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * SPEAKER_START_BIT_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define SPEAKER_START_BIT_PAUSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * SPEAKER_START_BIT_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_START_BIT_PAUSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * SPEAKER_START_BIT_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define SPEAKER_1_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * SPEAKER_1_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_1_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * SPEAKER_1_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define SPEAKER_1_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * SPEAKER_1_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_1_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * SPEAKER_1_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define SPEAKER_0_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * SPEAKER_0_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_0_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * SPEAKER_0_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define SPEAKER_0_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * SPEAKER_0_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define SPEAKER_0_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * SPEAKER_0_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
 
 #define BANG_OLUFSEN_START_BIT1_PULSE_LEN_MIN   ((uint8_t)(F_INTERRUPTS * BANG_OLUFSEN_START_BIT1_PULSE_TIME * MIN_TOLERANCE_10 + 0.5) - 1)
 #define BANG_OLUFSEN_START_BIT1_PULSE_LEN_MAX   ((uint8_t)(F_INTERRUPTS * BANG_OLUFSEN_START_BIT1_PULSE_TIME * MAX_TOLERANCE_10 + 0.5) + 1)
@@ -420,20 +431,35 @@
 #define ROOMBA_0_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * ROOMBA_0_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
 #define ROOMBA_0_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * ROOMBA_0_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
 
-#define RCMM32_START_BIT_PULSE_LEN_MIN            ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PULSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_START_BIT_PULSE_LEN_MAX            ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PULSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_START_BIT_PAUSE_LEN_MIN            ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_START_BIT_PAUSE_LEN_MAX            ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_BIT_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * RCMM32_PULSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_BIT_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * RCMM32_PULSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_BIT_00_PAUSE_LEN_MIN               ((uint8_t)(F_INTERRUPTS * RCMM32_00_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_BIT_00_PAUSE_LEN_MAX               ((uint8_t)(F_INTERRUPTS * RCMM32_00_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_BIT_01_PAUSE_LEN_MIN               ((uint8_t)(F_INTERRUPTS * RCMM32_01_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_BIT_01_PAUSE_LEN_MAX               ((uint8_t)(F_INTERRUPTS * RCMM32_01_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_BIT_10_PAUSE_LEN_MIN               ((uint8_t)(F_INTERRUPTS * RCMM32_10_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_BIT_10_PAUSE_LEN_MAX               ((uint8_t)(F_INTERRUPTS * RCMM32_10_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
-#define RCMM32_BIT_11_PAUSE_LEN_MIN               ((uint8_t)(F_INTERRUPTS * RCMM32_11_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
-#define RCMM32_BIT_11_PAUSE_LEN_MAX               ((uint8_t)(F_INTERRUPTS * RCMM32_11_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_START_BIT_PULSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PULSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_START_BIT_PULSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PULSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_START_BIT_PAUSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_START_BIT_PAUSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * RCMM32_START_BIT_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_BIT_PULSE_LEN_MIN                ((uint8_t)(F_INTERRUPTS * RCMM32_PULSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_BIT_PULSE_LEN_MAX                ((uint8_t)(F_INTERRUPTS * RCMM32_PULSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_BIT_00_PAUSE_LEN_MIN             ((uint8_t)(F_INTERRUPTS * RCMM32_00_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_BIT_00_PAUSE_LEN_MAX             ((uint8_t)(F_INTERRUPTS * RCMM32_00_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_BIT_01_PAUSE_LEN_MIN             ((uint8_t)(F_INTERRUPTS * RCMM32_01_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_BIT_01_PAUSE_LEN_MAX             ((uint8_t)(F_INTERRUPTS * RCMM32_01_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_BIT_10_PAUSE_LEN_MIN             ((uint8_t)(F_INTERRUPTS * RCMM32_10_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_BIT_10_PAUSE_LEN_MAX             ((uint8_t)(F_INTERRUPTS * RCMM32_10_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+#define RCMM32_BIT_11_PAUSE_LEN_MIN             ((uint8_t)(F_INTERRUPTS * RCMM32_11_PAUSE_TIME * MIN_TOLERANCE_05 + 0.5) - 1)
+#define RCMM32_BIT_11_PAUSE_LEN_MAX             ((uint8_t)(F_INTERRUPTS * RCMM32_11_PAUSE_TIME * MAX_TOLERANCE_05 + 0.5) + 1)
+
+#define RADIO1_START_BIT_PULSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * RADIO1_START_BIT_PULSE_TIME * MIN_TOLERANCE_10 + 0.5) - 1)
+#define RADIO1_START_BIT_PULSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * RADIO1_START_BIT_PULSE_TIME * MAX_TOLERANCE_10 + 0.5) + 1)
+#define RADIO1_START_BIT_PAUSE_LEN_MIN          ((uint8_t)(F_INTERRUPTS * RADIO1_START_BIT_PAUSE_TIME * MIN_TOLERANCE_10 + 0.5) - 1)
+#define RADIO1_START_BIT_PAUSE_LEN_MAX          ((uint8_t)(F_INTERRUPTS * RADIO1_START_BIT_PAUSE_TIME * MAX_TOLERANCE_10 + 0.5) + 1)
+#define RADIO1_1_PAUSE_LEN_EXACT                ((uint8_t)(F_INTERRUPTS * RADIO1_1_PAUSE_TIME + 0.5))
+#define RADIO1_1_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * RADIO1_1_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define RADIO1_1_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * RADIO1_1_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define RADIO1_1_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * RADIO1_1_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define RADIO1_1_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * RADIO1_1_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define RADIO1_0_PAUSE_LEN                      ((uint8_t)(F_INTERRUPTS * RADIO1_0_PAUSE_TIME))
+#define RADIO1_0_PULSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * RADIO1_0_PULSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define RADIO1_0_PULSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * RADIO1_0_PULSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
+#define RADIO1_0_PAUSE_LEN_MIN                  ((uint8_t)(F_INTERRUPTS * RADIO1_0_PAUSE_TIME * MIN_TOLERANCE_20 + 0.5) - 1)
+#define RADIO1_0_PAUSE_LEN_MAX                  ((uint8_t)(F_INTERRUPTS * RADIO1_0_PAUSE_TIME * MAX_TOLERANCE_20 + 0.5) + 1)
 
 #define AUTO_FRAME_REPETITION_LEN               (uint16_t)(F_INTERRUPTS * AUTO_FRAME_REPETITION_TIME + 0.5)       // use uint16_t!
 
@@ -446,12 +472,16 @@
 static int                                      silent;
 static int                                      time_counter;
 static int                                      verbose;
+
+/*******************************                not every PIC compiler knows variadic macros :-(
 #else
 #  define ANALYZE_PUTCHAR(a)
 #  define ANALYZE_ONLY_NORMAL_PUTCHAR(a)
 #  define ANALYZE_PRINTF(...)
 #  define ANALYZE_ONLY_NORMAL_PRINTF(...)
+#  endif
 #  define ANALYZE_NEWLINE()
+*********************************/
 #endif
 
 #if IRMP_USE_CALLBACK == 1
@@ -466,48 +496,98 @@ static void                                     (*irmp_callback_ptr) (uint8_t);
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 #if defined(UNIX_OR_WINDOWS) || IRMP_PROTOCOL_NAMES == 1
-char *
-irmp_protocol_names[IRMP_N_PROTOCOLS + 1] =
+static const char proto_unknown[]       PROGMEM = "UNKNOWN";
+static const char proto_sircs[]         PROGMEM = "SIRCS";
+static const char proto_nec[]           PROGMEM = "NEC";
+static const char proto_samsung[]       PROGMEM = "SAMSUNG";
+static const char proto_matsushita[]    PROGMEM = "MATSUSH";
+static const char proto_kaseikyo[]      PROGMEM = "KASEIKYO";
+static const char proto_recs80[]        PROGMEM = "RECS80";
+static const char proto_rc5[]           PROGMEM = "RC5";
+static const char proto_denon[]         PROGMEM = "DENON";
+static const char proto_rc6[]           PROGMEM = "RC6";
+static const char proto_samsung32[]     PROGMEM = "SAMSG32";
+static const char proto_apple[]         PROGMEM = "APPLE";
+static const char proto_recs80ext[]     PROGMEM = "RECS80EX";
+static const char proto_nubert[]        PROGMEM = "NUBERT";
+static const char proto_bang_olufsen[]  PROGMEM = "BANG OLU";
+static const char proto_grundig[]       PROGMEM = "GRUNDIG";
+static const char proto_nokia[]         PROGMEM = "NOKIA";
+static const char proto_siemens[]       PROGMEM = "SIEMENS";
+static const char proto_fdc[]           PROGMEM = "FDC";
+static const char proto_rccar[]         PROGMEM = "RCCAR";
+static const char proto_jvc[]           PROGMEM = "JVC";
+static const char proto_rc6a[]          PROGMEM = "RC6A";
+static const char proto_nikon[]         PROGMEM = "NIKON";
+static const char proto_ruwido[]        PROGMEM = "RUWIDO";
+static const char proto_ir60[]          PROGMEM = "IR60";
+static const char proto_kathrein[]      PROGMEM = "KATHREIN";
+static const char proto_netbox[]        PROGMEM = "NETBOX";
+static const char proto_nec16[]         PROGMEM = "NEC16";
+static const char proto_nec42[]         PROGMEM = "NEC42";
+static const char proto_lego[]          PROGMEM = "LEGO";
+static const char proto_thomson[]       PROGMEM = "THOMSON";
+static const char proto_bose[]          PROGMEM = "BOSE";
+static const char proto_a1tvbox[]       PROGMEM = "A1TVBOX";
+static const char proto_ortek[]         PROGMEM = "ORTEK";
+static const char proto_telefunken[]    PROGMEM = "TELEFUNKEN";
+static const char proto_roomba[]        PROGMEM = "ROOMBA";
+static const char proto_rcmm32[]        PROGMEM = "RCMM32";
+static const char proto_rcmm24[]        PROGMEM = "RCMM24";
+static const char proto_rcmm12[]        PROGMEM = "RCMM12";
+static const char proto_speaker[]       PROGMEM = "SPEAKER";
+static const char proto_lgair[]         PROGMEM = "LGAIR";
+static const char proto_samsung48[]     PROGMEM = "SAMSG48";
+
+static const char proto_radio1[]        PROGMEM = "RADIO1";
+
+const char * const
+irmp_protocol_names[IRMP_N_PROTOCOLS + 1] PROGMEM =
 {
-    "UNKNOWN",
-    "SIRCS",
-    "NEC",
-    "SAMSUNG",
-    "MATSUSH",
-    "KASEIKYO",
-    "RECS80",
-    "RC5",
-    "DENON",
-    "RC6",
-    "SAMSG32",
-    "APPLE",
-    "RECS80EX",
-    "NUBERT",
-    "BANG OLU",
-    "GRUNDIG",
-    "NOKIA",
-    "SIEMENS",
-    "FDC",
-    "RCCAR",
-    "JVC",
-    "RC6A",
-    "NIKON",
-    "RUWIDO",
-    "IR60",
-    "KATHREIN",
-    "NETBOX",
-    "NEC16",
-    "NEC42",
-    "LEGO",
-    "THOMSON",
-    "BOSE",
-    "A1TVBOX",
-    "ORTEK",
-    "TELEFUNKEN",
-    "ROOMBA",
-    "RCMM32",
-    "RCMM24",
-    "RCMM12"
+    proto_unknown,
+    proto_sircs,
+    proto_nec,
+    proto_samsung,
+    proto_matsushita,
+    proto_kaseikyo,
+    proto_recs80,
+    proto_rc5,
+    proto_denon,
+    proto_rc6,
+    proto_samsung32,
+    proto_apple,
+    proto_recs80ext,
+    proto_nubert,
+    proto_bang_olufsen,
+    proto_grundig,
+    proto_nokia,
+    proto_siemens,
+    proto_fdc,
+    proto_rccar,
+    proto_jvc,
+    proto_rc6a,
+    proto_nikon,
+    proto_ruwido,
+    proto_ir60,
+    proto_kathrein,
+    proto_netbox,
+    proto_nec16,
+    proto_nec42,
+    proto_lego,
+    proto_thomson,
+    proto_bose,
+    proto_a1tvbox,
+    proto_ortek,
+    proto_telefunken,
+    proto_roomba,
+    proto_rcmm32,
+    proto_rcmm24,
+    proto_rcmm12,
+    proto_speaker,
+    proto_lgair,
+    proto_samsung48,
+
+    proto_radio1
 };
 
 #endif
@@ -516,15 +596,29 @@ irmp_protocol_names[IRMP_N_PROTOCOLS + 1] =
  *  Logging
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
-#if IRMP_LOGGING == 1                                               // logging via UART
+#if IRMP_LOGGING == 1                                                   // logging via UART
 
-#if IRMP_EXT_LOGGING == 1                                           // use external logging
-#include "irmpextlog.h"
-#else                                                               // normal UART log (IRMP_EXT_LOGGING == 0)
-#define BAUD                                    9600L
-#ifndef UNIX_OR_WINDOWS
-#include <util/setbaud.h>
-#endif
+#if defined(ARM_STM32F4XX)
+#  define  STM32_GPIO_CLOCK   RCC_AHB1Periph_GPIOA                      // UART2 on PA2
+#  define  STM32_UART_CLOCK   RCC_APB1Periph_USART2
+#  define  STM32_GPIO_PORT    GPIOA
+#  define  STM32_GPIO_PIN     GPIO_Pin_2
+#  define  STM32_GPIO_SOURCE  GPIO_PinSource2
+#  define  STM32_UART_AF      GPIO_AF_USART2
+#  define  STM32_UART_COM     USART2
+#  define  STM32_UART_BAUD    115200                                    // 115200 Baud
+#  include "stm32f4xx_usart.h"
+#elif defined(ARM_STM32F10X)
+#  define  STM32_UART_COM     USART3                                    // UART3 on PB10
+#  include "stm32f10x_usart.h"
+#else
+#  if IRMP_EXT_LOGGING == 1                                             // use external logging
+#    include "irmpextlog.h"
+#  else                                                                 // normal UART log (IRMP_EXT_LOGGING == 0)
+#    define BAUD                                    9600L
+#  ifndef UNIX_OR_WINDOWS
+#    include <util/setbaud.h>
+#  endif
 
 #ifdef UBRR0H
 
@@ -566,6 +660,7 @@ irmp_protocol_names[IRMP_N_PROTOCOLS + 1] =
 
 #endif //UBRR0H
 #endif //IRMP_EXT_LOGGING
+#endif //ARM_STM32F4XX
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  *  Initialize  UART
@@ -576,6 +671,78 @@ void
 irmp_uart_init (void)
 {
 #ifndef UNIX_OR_WINDOWS
+#if defined(ARM_STM32F4XX)
+    GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+
+    // Clock enable vom TX Pin
+    RCC_AHB1PeriphClockCmd(STM32_GPIO_CLOCK, ENABLE);
+
+    // Clock enable der UART
+    RCC_APB1PeriphClockCmd(STM32_UART_CLOCK, ENABLE);
+
+    // UART Alternative-Funktion mit dem IO-Pin verbinden
+    GPIO_PinAFConfig(STM32_GPIO_PORT,STM32_GPIO_SOURCE,STM32_UART_AF);
+
+    // UART als Alternative-Funktion mit PushPull
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+
+    // TX-Pin
+    GPIO_InitStructure.GPIO_Pin = STM32_GPIO_PIN;
+    GPIO_Init(STM32_GPIO_PORT, &GPIO_InitStructure);
+
+    // Oversampling
+    USART_OverSampling8Cmd(STM32_UART_COM, ENABLE);
+
+    // init mit Baudrate, 8Databits, 1Stopbit, keine Parität, kein RTS+CTS
+    USART_InitStructure.USART_BaudRate = STM32_UART_BAUD;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx;
+    USART_Init(STM32_UART_COM, &USART_InitStructure);
+
+    // UART enable
+    USART_Cmd(STM32_UART_COM, ENABLE);
+
+#elif defined(ARM_STM32F10X)
+    GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+
+    // Clock enable vom TX Pin
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); // UART3 an PB10
+
+    // Clock enable der UART
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+
+    // UART als Alternative-Funktion mit PushPull
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+
+    // TX-Pin
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    // Oversampling
+    USART_OverSampling8Cmd(STM32_UART_COM, ENABLE);
+
+    // init mit Baudrate, 8Databits, 1Stopbit, keine Parität, kein RTS+CTS
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx;
+    USART_Init(STM32_UART_COM, &USART_InitStructure);
+
+    // UART enable
+    USART_Cmd(STM32_UART_COM, ENABLE);
+#else
+
 #if (IRMP_EXT_LOGGING == 0)                                                                         // use UART
     UART0_UBRRH = UBRRH_VALUE;                                                                      // set baud rate
     UART0_UBRRL = UBRRL_VALUE;
@@ -589,8 +756,9 @@ irmp_uart_init (void)
     UART0_UCSRC = UART0_UCSZ1_BIT_VALUE | UART0_UCSZ0_BIT_VALUE | UART0_URSEL_BIT_VALUE;
     UART0_UCSRB |= UART0_TXEN_BIT_VALUE;                                                            // enable UART TX
 #else                                                                                               // other log method
-        initextlog();                                                         
+    initextlog();                                                         
 #endif //IRMP_EXT_LOGGING
+#endif //ARM_STM32F4XX
 #endif // UNIX_OR_WINDOWS
 }
 
@@ -604,16 +772,37 @@ void
 irmp_uart_putc (unsigned char ch)
 {
 #ifndef UNIX_OR_WINDOWS
+#if defined(ARM_STM32F4XX) || defined(ARM_STM32F10X)
+    // warten bis altes Byte gesendet wurde
+    while (USART_GetFlagStatus(STM32_UART_COM, USART_FLAG_TXE) == RESET)
+    {
+        ;
+    }
+
+    USART_SendData(STM32_UART_COM, ch);
+
+    if (ch == '\n')
+    {
+        while (USART_GetFlagStatus(STM32_UART_COM, USART_FLAG_TXE) == RESET);
+        USART_SendData(STM32_UART_COM, '\r');
+    }
+
+#else
 #if (IRMP_EXT_LOGGING == 0)
+
     while (!(UART0_UCSRA & UART0_UDRE_BIT_VALUE))
     {
         ;
     }
 
     UART0_UDR = ch;
+
 #else
-    sendextlog(ch); //Use external log
-#endif
+
+    sendextlog(ch);                                                         // use external log
+
+#endif //IRMP_EXT_LOGGING
+#endif //ARM_STM32F4XX
 #else
     fputc (ch, stderr);
 #endif // UNIX_OR_WINDOWS
@@ -627,79 +816,6 @@ irmp_uart_putc (unsigned char ch)
 #define STARTCYCLES                       2                                 // min count of zeros before start of logging
 #define ENDBITS                        1000                                 // number of sequenced highbits to detect end
 #define DATALEN                         700                                 // log buffer size
-
-#if 0                                                                       // old log routine
-
-static void
-irmp_log (uint8_t val)
-{
-    static uint8_t  buf[DATALEN];                                           // logging buffer
-    static uint16_t buf_idx;                                                // number of written bits
-    static uint8_t  startcycles;                                            // current number of start-zeros
-    static uint16_t cnt;                                                    // counts sequenced highbits - to detect end
-
-    if (! val && (startcycles < STARTCYCLES) && !buf_idx)                   // prevent that single random zeros init logging
-    {
-        startcycles++;
-    }
-    else
-    {
-        startcycles = 0;
-
-        if (! val || (val && buf_idx != 0))                                 // start or continue logging on "0", "1" cannot init logging
-        {
-            if (buf_idx < DATALEN * 8)                                      // index in range?
-            {                                                               // yes
-                if (val)
-                {
-                    buf[(buf_idx / 8)] |=  (1<<(buf_idx % 8));              // set bit
-                }
-                else
-                {
-                    buf[(buf_idx / 8)] &= ~(1<<(buf_idx % 8));              // reset bit
-                }
-
-                buf_idx++;
-            }
-
-            if (val)
-            {                                                               // if high received then look at log-stop condition
-                cnt++;
-
-                if (cnt > ENDBITS)
-                {                                                           // if stop condition is true, output on uart
-                    uint16_t i;
-
-                    for (i = 0; i < STARTCYCLES; i++)
-                    {
-                        irmp_uart_putc ('0');                               // the ignored starting zeros
-                    }
-
-                    for (i = 0; i < (buf_idx - ENDBITS + 20) / 8; i++)      // transform bitset into uart chars
-                    {
-                        uint8_t d = buf[i];
-                        uint8_t j;
-
-                        for (j = 0; j < 8; j++)
-                        {
-                            irmp_uart_putc ((d & 1) + '0');
-                            d >>= 1;
-                        }
-                    }
-
-                    irmp_uart_putc ('\n');
-                    buf_idx = 0;
-                }
-            }
-            else
-            {
-                cnt = 0;
-            }
-        }
-    }
-}
-
-#else                                                                       // new log routine
 
 static void
 irmp_log (uint8_t val)
@@ -788,8 +904,6 @@ irmp_log (uint8_t val)
         }
     }
 }
-
-#endif
 
 #else
 #define irmp_log(val)
@@ -905,6 +1019,31 @@ static const PROGMEM IRMP_PARAMETER nec42_param =
     NEC42_COMMAND_OFFSET,                                               // command_offset:  command offset
     NEC42_COMMAND_OFFSET + NEC42_COMMAND_LEN,                           // command_end:     end of command
     NEC42_COMPLETE_DATA_LEN,                                            // complete_len:    complete length of frame
+    NEC_STOP_BIT,                                                       // stop_bit:        flag: frame has stop bit
+    NEC_LSB,                                                            // lsb_first:       flag: LSB first
+    NEC_FLAGS                                                           // flags:           some flags
+};
+
+#endif
+
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+
+static const PROGMEM IRMP_PARAMETER lgair_param =
+{
+    IRMP_LGAIR_PROTOCOL,                                                // protocol:        ir protocol
+    NEC_PULSE_LEN_MIN,                                                  // pulse_1_len_min: minimum length of pulse with bit value 1
+    NEC_PULSE_LEN_MAX,                                                  // pulse_1_len_max: maximum length of pulse with bit value 1
+    NEC_1_PAUSE_LEN_MIN,                                                // pause_1_len_min: minimum length of pause with bit value 1
+    NEC_1_PAUSE_LEN_MAX,                                                // pause_1_len_max: maximum length of pause with bit value 1
+    NEC_PULSE_LEN_MIN,                                                  // pulse_0_len_min: minimum length of pulse with bit value 0
+    NEC_PULSE_LEN_MAX,                                                  // pulse_0_len_max: maximum length of pulse with bit value 0
+    NEC_0_PAUSE_LEN_MIN,                                                // pause_0_len_min: minimum length of pause with bit value 0
+    NEC_0_PAUSE_LEN_MAX,                                                // pause_0_len_max: maximum length of pause with bit value 0
+    LGAIR_ADDRESS_OFFSET,                                               // address_offset:  address offset
+    LGAIR_ADDRESS_OFFSET + LGAIR_ADDRESS_LEN,                           // address_end:     end of address
+    LGAIR_COMMAND_OFFSET,                                               // command_offset:  command offset
+    LGAIR_COMMAND_OFFSET + LGAIR_COMMAND_LEN,                           // command_end:     end of command
+    LGAIR_COMPLETE_DATA_LEN,                                            // complete_len:    complete length of frame
     NEC_STOP_BIT,                                                       // stop_bit:        flag: frame has stop bit
     NEC_LSB,                                                            // lsb_first:       flag: LSB first
     NEC_FLAGS                                                           // flags:           some flags
@@ -1159,6 +1298,31 @@ static const PROGMEM IRMP_PARAMETER nubert_param =
     NUBERT_STOP_BIT,                                                    // stop_bit:        flag: frame has stop bit
     NUBERT_LSB,                                                         // lsb_first:       flag: LSB first
     NUBERT_FLAGS                                                        // flags:           some flags
+};
+
+#endif
+
+#if IRMP_SUPPORT_SPEAKER_PROTOCOL == 1
+
+static const PROGMEM IRMP_PARAMETER speaker_param =
+{
+    IRMP_SPEAKER_PROTOCOL,                                              // protocol:        ir protocol
+    SPEAKER_1_PULSE_LEN_MIN,                                            // pulse_1_len_min: minimum length of pulse with bit value 1
+    SPEAKER_1_PULSE_LEN_MAX,                                            // pulse_1_len_max: maximum length of pulse with bit value 1
+    SPEAKER_1_PAUSE_LEN_MIN,                                            // pause_1_len_min: minimum length of pause with bit value 1
+    SPEAKER_1_PAUSE_LEN_MAX,                                            // pause_1_len_max: maximum length of pause with bit value 1
+    SPEAKER_0_PULSE_LEN_MIN,                                            // pulse_0_len_min: minimum length of pulse with bit value 0
+    SPEAKER_0_PULSE_LEN_MAX,                                            // pulse_0_len_max: maximum length of pulse with bit value 0
+    SPEAKER_0_PAUSE_LEN_MIN,                                            // pause_0_len_min: minimum length of pause with bit value 0
+    SPEAKER_0_PAUSE_LEN_MAX,                                            // pause_0_len_max: maximum length of pause with bit value 0
+    SPEAKER_ADDRESS_OFFSET,                                             // address_offset:  address offset
+    SPEAKER_ADDRESS_OFFSET + SPEAKER_ADDRESS_LEN,                       // address_end:     end of address
+    SPEAKER_COMMAND_OFFSET,                                             // command_offset:  command offset
+    SPEAKER_COMMAND_OFFSET + SPEAKER_COMMAND_LEN,                       // command_end:     end of command
+    SPEAKER_COMPLETE_DATA_LEN,                                          // complete_len:    complete length of frame
+    SPEAKER_STOP_BIT,                                                   // stop_bit:        flag: frame has stop bit
+    SPEAKER_LSB,                                                        // lsb_first:       flag: LSB first
+    SPEAKER_FLAGS                                                       // flags:           some flags
 };
 
 #endif
@@ -1522,24 +1686,50 @@ static const PROGMEM IRMP_PARAMETER roomba_param =
 
 static const PROGMEM IRMP_PARAMETER rcmm_param =
 {
-    IRMP_RCMM32_PROTOCOL,                                                 // protocol:        ir protocol
+    IRMP_RCMM32_PROTOCOL,                                               // protocol:        ir protocol
    
-    RCMM32_BIT_PULSE_LEN_MIN,                                             // pulse_1_len_min: here: minimum length of short pulse
-    RCMM32_BIT_PULSE_LEN_MAX,                                             // pulse_1_len_max: here: maximum length of short pulse
+    RCMM32_BIT_PULSE_LEN_MIN,                                           // pulse_1_len_min: here: minimum length of short pulse
+    RCMM32_BIT_PULSE_LEN_MAX,                                           // pulse_1_len_max: here: maximum length of short pulse
     0,                                                                  // pause_1_len_min: here: minimum length of short pause
     0,                                                                  // pause_1_len_max: here: maximum length of short pause
-    RCMM32_BIT_PULSE_LEN_MIN,                                             // pulse_0_len_min: here: not used
-    RCMM32_BIT_PULSE_LEN_MAX,                                             // pulse_0_len_max: here: not used
+    RCMM32_BIT_PULSE_LEN_MIN,                                           // pulse_0_len_min: here: not used
+    RCMM32_BIT_PULSE_LEN_MAX,                                           // pulse_0_len_max: here: not used
     0,                                                                  // pause_0_len_min: here: not used
     0,                                                                  // pause_0_len_max: here: not used
-    RCMM32_ADDRESS_OFFSET,                                                // address_offset:  address offset
-    RCMM32_ADDRESS_OFFSET + RCMM32_ADDRESS_LEN,                             // address_end:     end of address
-    RCMM32_COMMAND_OFFSET,                                                // command_offset:  command offset
-    RCMM32_COMMAND_OFFSET + RCMM32_COMMAND_LEN,                             // command_end:     end of command
-    RCMM32_COMPLETE_DATA_LEN,                                             // complete_len:    complete length of frame
-    RCMM32_STOP_BIT,                                                      // stop_bit:        flag: frame has stop bit
-    RCMM32_LSB,                                                           // lsb_first:       flag: LSB first
-    RCMM32_FLAGS                                                          // flags:           some flags
+    RCMM32_ADDRESS_OFFSET,                                              // address_offset:  address offset
+    RCMM32_ADDRESS_OFFSET + RCMM32_ADDRESS_LEN,                         // address_end:     end of address
+    RCMM32_COMMAND_OFFSET,                                              // command_offset:  command offset
+    RCMM32_COMMAND_OFFSET + RCMM32_COMMAND_LEN,                         // command_end:     end of command
+    RCMM32_COMPLETE_DATA_LEN,                                           // complete_len:    complete length of frame
+    RCMM32_STOP_BIT,                                                    // stop_bit:        flag: frame has stop bit
+    RCMM32_LSB,                                                         // lsb_first:       flag: LSB first
+    RCMM32_FLAGS                                                        // flags:           some flags
+};
+
+#endif
+
+#if IRMP_SUPPORT_RADIO1_PROTOCOL == 1
+
+static const PROGMEM IRMP_PARAMETER radio1_param =
+{
+    IRMP_RADIO1_PROTOCOL,                                               // protocol:        ir protocol
+   
+    RADIO1_1_PULSE_LEN_MIN,                                             // pulse_1_len_min: minimum length of pulse with bit value 1
+    RADIO1_1_PULSE_LEN_MAX,                                             // pulse_1_len_max: maximum length of pulse with bit value 1
+    RADIO1_1_PAUSE_LEN_MIN,                                             // pause_1_len_min: minimum length of pause with bit value 1
+    RADIO1_1_PAUSE_LEN_MAX,                                             // pause_1_len_max: maximum length of pause with bit value 1
+    RADIO1_0_PULSE_LEN_MIN,                                             // pulse_0_len_min: minimum length of pulse with bit value 0
+    RADIO1_0_PULSE_LEN_MAX,                                             // pulse_0_len_max: maximum length of pulse with bit value 0
+    RADIO1_0_PAUSE_LEN_MIN,                                             // pause_0_len_min: minimum length of pause with bit value 0
+    RADIO1_0_PAUSE_LEN_MAX,                                             // pause_0_len_max: maximum length of pause with bit value 0
+    RADIO1_ADDRESS_OFFSET,                                              // address_offset:  address offset
+    RADIO1_ADDRESS_OFFSET + RADIO1_ADDRESS_LEN,                         // address_end:     end of address
+    RADIO1_COMMAND_OFFSET,                                              // command_offset:  command offset
+    RADIO1_COMMAND_OFFSET + RADIO1_COMMAND_LEN,                         // command_end:     end of command
+    RADIO1_COMPLETE_DATA_LEN,                                           // complete_len:    complete length of frame
+    RADIO1_STOP_BIT,                                                    // stop_bit:        flag: frame has stop bit
+    RADIO1_LSB,                                                         // lsb_first:       flag: LSB first
+    RADIO1_FLAGS                                                        // flags:           some flags
 };
 
 #endif
@@ -1551,7 +1741,7 @@ static IRMP_PARAMETER                       irmp_param;
 static IRMP_PARAMETER                       irmp_param2;
 #endif
 
-static volatile uint8_t                     irmp_ir_detected;
+static volatile uint8_t                     irmp_ir_detected = FALSE;
 static volatile uint8_t                     irmp_protocol;
 static volatile uint16_t                    irmp_address;
 static volatile uint16_t                    irmp_command;
@@ -1562,6 +1752,7 @@ static volatile uint8_t                     irmp_flags;
 #ifdef ANALYZE
 #define input(x)                            (x)
 static uint8_t                              IRMP_PIN;
+static uint8_t                              radio;
 #endif
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1642,7 +1833,15 @@ irmp_get_data (IRMP_DATA * irmp_data_p)
                     rtc = TRUE;
                 }
                 break;
+
+#if IRMP_SUPPORT_SAMSUNG48_PROTOCOL == 1
+            case IRMP_SAMSUNG48_PROTOCOL:
+                irmp_command = (irmp_command & 0x00FF) | ((irmp_id & 0x00FF) << 8);
+                rtc = TRUE;
+                break;
 #endif
+#endif
+
 #if IRMP_SUPPORT_NEC_PROTOCOL == 1
             case IRMP_NEC_PROTOCOL:
                 if ((irmp_command >> 8) == (~irmp_command & 0x00FF))
@@ -1652,7 +1851,9 @@ irmp_get_data (IRMP_DATA * irmp_data_p)
                 }
                 else if (irmp_address == 0x87EE)
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("Switching to APPLE protocol\n");
+#endif // ANALYZE
                     irmp_protocol = IRMP_APPLE_PROTOCOL;
                     irmp_address = (irmp_command & 0xFF00) >> 8;
                     irmp_command &= 0x00FF;
@@ -1701,7 +1902,9 @@ irmp_get_data (IRMP_DATA * irmp_data_p)
                 }
                 else
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF("Info IR60: got start instruction frame\n");
+#endif // ANALYZE
                 }
                 break;
 #endif
@@ -1736,12 +1939,16 @@ irmp_get_data (IRMP_DATA * irmp_data_p)
                     }
                     else
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF("error NETBOX: bit6/7 must be 0/1\n");
+#endif // ANALYZE
                     }
                 }
                 else
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF("error NETBOX: last bit not set\n");
+#endif // ANALYZE
                 }
                 break;
 #endif
@@ -1757,7 +1964,9 @@ irmp_get_data (IRMP_DATA * irmp_data_p)
                 }
                 else
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("CRC error in LEGO protocol\n");
+#endif // ANALYZE
                     // rtc = TRUE;                              // don't accept codes with CRC errors
                 }
                 break;
@@ -1806,9 +2015,14 @@ irmp_set_callback_ptr (void (*cb)(uint8_t))
 static uint16_t irmp_tmp_address;                                                       // ir address
 static uint16_t irmp_tmp_command;                                                       // ir command
 
-#if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1) || IRMP_SUPPORT_NEC42_PROTOCOL == 1
+#if (IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1)) || IRMP_SUPPORT_NEC42_PROTOCOL == 1
 static uint16_t irmp_tmp_address2;                                                      // ir address
 static uint16_t irmp_tmp_command2;                                                      // ir command
+#endif
+
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+static uint16_t irmp_lgair_address;                                                     // ir address
+static uint16_t irmp_lgair_command;                                                     // ir command
 #endif
 
 #if IRMP_SUPPORT_SAMSUNG_PROTOCOL == 1
@@ -1897,7 +2111,16 @@ irmp_store_bit (uint8_t value)
     {
         if (irmp_param.lsb_first)
         {
-            irmp_tmp_command |= (((uint16_t) (value)) << (irmp_bit - irmp_param.command_offset));   // CV wants cast
+#if IRMP_SUPPORT_SAMSUNG48_PROTOCOL == 1
+            if (irmp_param.protocol == IRMP_SAMSUNG48_PROTOCOL && irmp_bit >= 32)
+            {
+                irmp_tmp_id |= (((uint16_t) (value)) << (irmp_bit - 32));   // CV wants cast
+            }
+            else
+#endif
+            {
+                irmp_tmp_command |= (((uint16_t) (value)) << (irmp_bit - irmp_param.command_offset));   // CV wants cast
+            }
         }
         else
         {
@@ -1905,6 +2128,23 @@ irmp_store_bit (uint8_t value)
             irmp_tmp_command |= value;
         }
     }
+
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+    if (irmp_param.protocol == IRMP_NEC_PROTOCOL || irmp_param.protocol == IRMP_NEC42_PROTOCOL)
+    {
+        if (irmp_bit < 8)
+        {
+            irmp_lgair_address <<= 1;                                                               // LGAIR uses MSB
+            irmp_lgair_address |= value;
+        }
+        else if (irmp_bit < 24)
+        {
+            irmp_lgair_command <<= 1;                                                               // LGAIR uses MSB
+            irmp_lgair_command |= value;
+        }
+    }
+    // NO else!
+#endif
 
 #if IRMP_SUPPORT_NEC42_PROTOCOL == 1
     if (irmp_param.protocol == IRMP_NEC42_PROTOCOL && irmp_bit >= 13 && irmp_bit < 26)
@@ -2021,7 +2261,7 @@ irmp_ISR (void)
 
 #ifdef ANALYZE
     time_counter++;
-#endif
+#endif // ANALYZE
 
     irmp_input = input(IRMP_PIN);
 
@@ -2052,7 +2292,7 @@ irmp_ISR (void)
                 {
                     ANALYZE_PRINTF("%8.3fms [starting pulse]\n", (double) (time_counter * 1000) / F_INTERRUPTS);
                 }
-#endif
+#endif // ANALYZE
                 irmp_pulse_time++;                                              // increment counter
             }
             else
@@ -2067,12 +2307,18 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_KASEIKYO_PROTOCOL == 1
                     genre2                  = 0;
 #endif
+#if IRMP_SUPPORT_SAMSUNG_PROTOCOL == 1
+                    irmp_tmp_id = 0;
+#endif
 
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1) || IRMP_SUPPORT_NEC42_PROTOCOL == 1
                     irmp_tmp_command2       = 0;
                     irmp_tmp_address2       = 0;
 #endif
-
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+                    irmp_lgair_command      = 0;
+                    irmp_lgair_address      = 0;
+#endif
                     irmp_bit                = 0xff;
                     irmp_pause_time         = 1;                                // 1st pause: set to 1, not to 0!
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1
@@ -2092,8 +2338,10 @@ irmp_ISR (void)
 
                             if (denon_repetition_len >= DENON_AUTO_REPETITION_PAUSE_LEN && last_irmp_denon_command != 0)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("%8.3fms warning: did not receive inverted command repetition\n",
                                                 (double) (time_counter * 1000) / F_INTERRUPTS);
+#endif // ANALYZE
                                 last_irmp_denon_command = 0;
                                 denon_repetition_len = 0xFFFF;
                             }
@@ -2126,10 +2374,12 @@ irmp_ISR (void)
                         else
 #endif // IRMP_SUPPORT_JVC_PROTOCOL == 1
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("%8.3fms error 1: pause after start bit pulse %d too long: %d\n", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_pulse_time, irmp_pause_time);
                             ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
+#endif // ANALYZE
                         }
-//                      irmp_busy_flag = FALSE;
+
                         irmp_start_bit_detected = 0;                            // reset flags, let's wait for another start bit
                         irmp_pulse_time         = 0;
                         irmp_pause_time         = 0;
@@ -2137,21 +2387,26 @@ irmp_ISR (void)
                 }
                 else
                 {                                                               // receiving first data pulse!
-                    IRMP_PARAMETER * irmp_param_p = (IRMP_PARAMETER *) 0;
+                    IRMP_PARAMETER * irmp_param_p;
+                    irmp_param_p = (IRMP_PARAMETER *) 0;
 
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1)
                     irmp_param2.protocol = 0;
 #endif
 
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("%8.3fms [start-bit: pulse = %2d, pause = %2d]\n", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_pulse_time, irmp_pause_time);
+#endif // ANALYZE
 
 #if IRMP_SUPPORT_SIRCS_PROTOCOL == 1
                     if (irmp_pulse_time >= SIRCS_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= SIRCS_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= SIRCS_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= SIRCS_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's SIRCS
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = SIRCS, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         SIRCS_START_BIT_PULSE_LEN_MIN, SIRCS_START_BIT_PULSE_LEN_MAX,
                                         SIRCS_START_BIT_PAUSE_LEN_MIN, SIRCS_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) (IRMP_PARAMETER *) &sircs_param;
                     }
                     else
@@ -2162,9 +2417,11 @@ irmp_ISR (void)
                         irmp_pulse_time >= JVC_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= JVC_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= JVC_REPEAT_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= JVC_REPEAT_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NEC or JVC (type 1) repeat frame, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         JVC_START_BIT_PULSE_LEN_MIN, JVC_START_BIT_PULSE_LEN_MAX,
                                         JVC_REPEAT_START_BIT_PAUSE_LEN_MIN, JVC_REPEAT_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nec_param;
                     }
                     else
@@ -2175,17 +2432,20 @@ irmp_ISR (void)
                         irmp_pause_time >= NEC_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NEC_START_BIT_PAUSE_LEN_MAX)
                     {
 #if IRMP_SUPPORT_NEC42_PROTOCOL == 1
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NEC42, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NEC_START_BIT_PULSE_LEN_MIN, NEC_START_BIT_PULSE_LEN_MAX,
                                         NEC_START_BIT_PAUSE_LEN_MIN, NEC_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nec42_param;
 #else
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NEC, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NEC_START_BIT_PULSE_LEN_MIN, NEC_START_BIT_PULSE_LEN_MAX,
                                         NEC_START_BIT_PAUSE_LEN_MIN, NEC_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nec_param;
 #endif
-
                     }
                     else if (irmp_pulse_time >= NEC_START_BIT_PULSE_LEN_MIN        && irmp_pulse_time <= NEC_START_BIT_PULSE_LEN_MAX &&
                              irmp_pause_time >= NEC_REPEAT_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NEC_REPEAT_START_BIT_PAUSE_LEN_MAX)
@@ -2193,17 +2453,21 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_JVC_PROTOCOL == 1
                         if (irmp_protocol == IRMP_JVC_PROTOCOL)                 // last protocol was JVC, awaiting repeat frame
                         {                                                       // some jvc remote controls use nec repetition frame for jvc repetition frame
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("protocol = JVC repeat frame type 2, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             NEC_START_BIT_PULSE_LEN_MIN, NEC_START_BIT_PULSE_LEN_MAX,
                                             NEC_REPEAT_START_BIT_PAUSE_LEN_MIN, NEC_REPEAT_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                             irmp_param_p = (IRMP_PARAMETER *) &nec_param;
                         }
                         else
 #endif // IRMP_SUPPORT_JVC_PROTOCOL == 1
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("protocol = NEC (repetition frame), start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             NEC_START_BIT_PULSE_LEN_MIN, NEC_START_BIT_PULSE_LEN_MAX,
                                             NEC_REPEAT_START_BIT_PAUSE_LEN_MIN, NEC_REPEAT_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
 
                             irmp_param_p = (IRMP_PARAMETER *) &nec_rep_param;
                         }
@@ -2215,9 +2479,11 @@ irmp_ISR (void)
                         irmp_pulse_time >= NEC_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= NEC_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= NEC_0_PAUSE_LEN_MIN         && irmp_pause_time <= NEC_0_PAUSE_LEN_MAX)
                     {                                                           // it's JVC repetition type 3
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = JVC repeat frame type 3, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NEC_START_BIT_PULSE_LEN_MIN, NEC_START_BIT_PULSE_LEN_MAX,
                                         NEC_0_PAUSE_LEN_MIN, NEC_0_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nec_param;
                     }
                     else
@@ -2229,9 +2495,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= TELEFUNKEN_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= TELEFUNKEN_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= TELEFUNKEN_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= TELEFUNKEN_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = TELEFUNKEN, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         TELEFUNKEN_START_BIT_PULSE_LEN_MIN, TELEFUNKEN_START_BIT_PULSE_LEN_MAX,
                                         TELEFUNKEN_START_BIT_PAUSE_LEN_MIN, TELEFUNKEN_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &telefunken_param;
                     }
                     else
@@ -2241,9 +2509,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= ROOMBA_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= ROOMBA_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= ROOMBA_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= ROOMBA_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = ROOMBA, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         ROOMBA_START_BIT_PULSE_LEN_MIN, ROOMBA_START_BIT_PULSE_LEN_MAX,
                                         ROOMBA_START_BIT_PAUSE_LEN_MIN, ROOMBA_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &roomba_param;
                     }
                     else
@@ -2253,9 +2523,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= NIKON_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= NIKON_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= NIKON_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NIKON_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NIKON, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NIKON_START_BIT_PULSE_LEN_MIN, NIKON_START_BIT_PULSE_LEN_MAX,
                                         NIKON_START_BIT_PAUSE_LEN_MIN, NIKON_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nikon_param;
                     }
                     else
@@ -2265,9 +2537,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= SAMSUNG_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= SAMSUNG_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= SAMSUNG_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= SAMSUNG_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's SAMSUNG
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = SAMSUNG, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         SAMSUNG_START_BIT_PULSE_LEN_MIN, SAMSUNG_START_BIT_PULSE_LEN_MAX,
                                         SAMSUNG_START_BIT_PAUSE_LEN_MIN, SAMSUNG_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &samsung_param;
                     }
                     else
@@ -2277,9 +2551,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= MATSUSHITA_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= MATSUSHITA_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= MATSUSHITA_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= MATSUSHITA_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's MATSUSHITA
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = MATSUSHITA, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         MATSUSHITA_START_BIT_PULSE_LEN_MIN, MATSUSHITA_START_BIT_PULSE_LEN_MAX,
                                         MATSUSHITA_START_BIT_PAUSE_LEN_MIN, MATSUSHITA_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &matsushita_param;
                     }
                     else
@@ -2289,21 +2565,39 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= KASEIKYO_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= KASEIKYO_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= KASEIKYO_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= KASEIKYO_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's KASEIKYO
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = KASEIKYO, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         KASEIKYO_START_BIT_PULSE_LEN_MIN, KASEIKYO_START_BIT_PULSE_LEN_MAX,
                                         KASEIKYO_START_BIT_PAUSE_LEN_MIN, KASEIKYO_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &kaseikyo_param;
                     }
                     else
 #endif // IRMP_SUPPORT_KASEIKYO_PROTOCOL == 1
 
+#if IRMP_SUPPORT_RADIO1_PROTOCOL == 1
+                    if (irmp_pulse_time >= RADIO1_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RADIO1_START_BIT_PULSE_LEN_MAX &&
+                        irmp_pause_time >= RADIO1_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RADIO1_START_BIT_PAUSE_LEN_MAX)
+                    {
+#ifdef ANALYZE
+                        ANALYZE_PRINTF ("protocol = RADIO1, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
+                                        RADIO1_START_BIT_PULSE_LEN_MIN, RADIO1_START_BIT_PULSE_LEN_MAX,
+                                        RADIO1_START_BIT_PAUSE_LEN_MIN, RADIO1_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
+                        irmp_param_p = (IRMP_PARAMETER *) &radio1_param;
+                    }
+                    else
+#endif // IRMP_SUPPORT_RRADIO1_PROTOCOL == 1
+
 #if IRMP_SUPPORT_RECS80_PROTOCOL == 1
                     if (irmp_pulse_time >= RECS80_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RECS80_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= RECS80_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RECS80_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's RECS80
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RECS80, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         RECS80_START_BIT_PULSE_LEN_MIN, RECS80_START_BIT_PULSE_LEN_MAX,
                                         RECS80_START_BIT_PAUSE_LEN_MIN, RECS80_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &recs80_param;
                     }
                     else
@@ -2319,6 +2613,7 @@ irmp_ISR (void)
                         if (irmp_pulse_time >= FDC_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= FDC_START_BIT_PULSE_LEN_MAX &&
                             irmp_pause_time >= FDC_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= FDC_START_BIT_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("protocol = RC5 or FDC\n");
                             ANALYZE_PRINTF ("FDC start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             FDC_START_BIT_PULSE_LEN_MIN, FDC_START_BIT_PULSE_LEN_MAX,
@@ -2326,6 +2621,7 @@ irmp_ISR (void)
                             ANALYZE_PRINTF ("RC5 start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX,
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX);
+#endif // ANALYZE
                             memcpy_P (&irmp_param2, &fdc_param, sizeof (IRMP_PARAMETER));
                         }
                         else
@@ -2335,6 +2631,7 @@ irmp_ISR (void)
                         if (irmp_pulse_time >= RCCAR_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RCCAR_START_BIT_PULSE_LEN_MAX &&
                             irmp_pause_time >= RCCAR_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_START_BIT_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("protocol = RC5 or RCCAR\n");
                             ANALYZE_PRINTF ("RCCAR start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             RCCAR_START_BIT_PULSE_LEN_MIN, RCCAR_START_BIT_PULSE_LEN_MAX,
@@ -2342,16 +2639,19 @@ irmp_ISR (void)
                             ANALYZE_PRINTF ("RC5 start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX,
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX);
+#endif // ANALYZE
                             memcpy_P (&irmp_param2, &rccar_param, sizeof (IRMP_PARAMETER));
                         }
                         else
 #endif // IRMP_SUPPORT_RCCAR_PROTOCOL == 1
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("protocol = RC5, start bit timings: pulse: %3d - %3d, pause: %3d - %3d or pulse: %3d - %3d, pause: %3d - %3d\n",
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX,
                                             2 * RC5_START_BIT_LEN_MIN, 2 * RC5_START_BIT_LEN_MAX,
                                             RC5_START_BIT_LEN_MIN, RC5_START_BIT_LEN_MAX,
                                             2 * RC5_START_BIT_LEN_MIN, 2 * RC5_START_BIT_LEN_MAX);
+#endif // ANALYZE
                         }
 
                         irmp_param_p = (IRMP_PARAMETER *) &rc5_param;
@@ -2376,10 +2676,12 @@ irmp_ISR (void)
                         ((irmp_pause_time >= DENON_1_PAUSE_LEN_MIN && irmp_pause_time <= DENON_1_PAUSE_LEN_MAX) ||
                          (irmp_pause_time >= DENON_0_PAUSE_LEN_MIN && irmp_pause_time <= DENON_0_PAUSE_LEN_MAX)))
                     {                                                           // it's DENON
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = DENON, start bit timings: pulse: %3d - %3d, pause: %3d - %3d or %3d - %3d\n",
                                         DENON_PULSE_LEN_MIN, DENON_PULSE_LEN_MAX,
                                         DENON_1_PAUSE_LEN_MIN, DENON_1_PAUSE_LEN_MAX,
                                         DENON_0_PAUSE_LEN_MIN, DENON_0_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &denon_param;
                     }
                     else
@@ -2390,10 +2692,12 @@ irmp_ISR (void)
                         ((irmp_pause_time >= THOMSON_1_PAUSE_LEN_MIN && irmp_pause_time <= THOMSON_1_PAUSE_LEN_MAX) ||
                          (irmp_pause_time >= THOMSON_0_PAUSE_LEN_MIN && irmp_pause_time <= THOMSON_0_PAUSE_LEN_MAX)))
                     {                                                           // it's THOMSON
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = THOMSON, start bit timings: pulse: %3d - %3d, pause: %3d - %3d or %3d - %3d\n",
                                         THOMSON_PULSE_LEN_MIN, THOMSON_PULSE_LEN_MAX,
                                         THOMSON_1_PAUSE_LEN_MIN, THOMSON_1_PAUSE_LEN_MAX,
                                         THOMSON_0_PAUSE_LEN_MIN, THOMSON_0_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &thomson_param;
                     }
                     else
@@ -2403,9 +2707,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= BOSE_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= BOSE_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= BOSE_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= BOSE_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = BOSE, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         BOSE_START_BIT_PULSE_LEN_MIN, BOSE_START_BIT_PULSE_LEN_MAX,
                                         BOSE_START_BIT_PAUSE_LEN_MIN, BOSE_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &bose_param;
                     }
                     else
@@ -2415,9 +2721,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= RC6_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RC6_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= RC6_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RC6_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's RC6
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RC6, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         RC6_START_BIT_PULSE_LEN_MIN, RC6_START_BIT_PULSE_LEN_MAX,
                                         RC6_START_BIT_PAUSE_LEN_MIN, RC6_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &rc6_param;
                         last_pause = 0;
                         last_value = 1;
@@ -2429,9 +2737,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= RECS80EXT_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RECS80EXT_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= RECS80EXT_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RECS80EXT_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's RECS80EXT
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RECS80EXT, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         RECS80EXT_START_BIT_PULSE_LEN_MIN, RECS80EXT_START_BIT_PULSE_LEN_MAX,
                                         RECS80EXT_START_BIT_PAUSE_LEN_MIN, RECS80EXT_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &recs80ext_param;
                     }
                     else
@@ -2441,18 +2751,35 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= NUBERT_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= NUBERT_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= NUBERT_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NUBERT_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's NUBERT
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NUBERT, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NUBERT_START_BIT_PULSE_LEN_MIN, NUBERT_START_BIT_PULSE_LEN_MAX,
                                         NUBERT_START_BIT_PAUSE_LEN_MIN, NUBERT_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &nubert_param;
                     }
                     else
 #endif // IRMP_SUPPORT_NUBERT_PROTOCOL == 1
 
+#if IRMP_SUPPORT_SPEAKER_PROTOCOL == 1
+                    if (irmp_pulse_time >= SPEAKER_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= SPEAKER_START_BIT_PULSE_LEN_MAX &&
+                        irmp_pause_time >= SPEAKER_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= SPEAKER_START_BIT_PAUSE_LEN_MAX)
+                    {                                                           // it's SPEAKER
+#ifdef ANALYZE
+                        ANALYZE_PRINTF ("protocol = SPEAKER, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
+                                        SPEAKER_START_BIT_PULSE_LEN_MIN, SPEAKER_START_BIT_PULSE_LEN_MAX,
+                                        SPEAKER_START_BIT_PAUSE_LEN_MIN, SPEAKER_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
+                        irmp_param_p = (IRMP_PARAMETER *) &speaker_param;
+                    }
+                    else
+#endif // IRMP_SUPPORT_SPEAKER_PROTOCOL == 1
+
 #if IRMP_SUPPORT_BANG_OLUFSEN_PROTOCOL == 1
                     if (irmp_pulse_time >= BANG_OLUFSEN_START_BIT1_PULSE_LEN_MIN && irmp_pulse_time <= BANG_OLUFSEN_START_BIT1_PULSE_LEN_MAX &&
                         irmp_pause_time >= BANG_OLUFSEN_START_BIT1_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_START_BIT1_PAUSE_LEN_MAX)
                     {                                                           // it's BANG_OLUFSEN
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = BANG_OLUFSEN\n");
                         ANALYZE_PRINTF ("start bit 1 timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         BANG_OLUFSEN_START_BIT1_PULSE_LEN_MIN, BANG_OLUFSEN_START_BIT1_PULSE_LEN_MAX,
@@ -2466,6 +2793,7 @@ irmp_ISR (void)
                         ANALYZE_PRINTF ("start bit 4 timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         BANG_OLUFSEN_START_BIT4_PULSE_LEN_MIN, BANG_OLUFSEN_START_BIT4_PULSE_LEN_MAX,
                                         BANG_OLUFSEN_START_BIT4_PAUSE_LEN_MIN, BANG_OLUFSEN_START_BIT4_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &bang_olufsen_param;
                         last_value = 0;
                     }
@@ -2476,9 +2804,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= GRUNDIG_NOKIA_IR60_START_BIT_LEN_MIN && irmp_pulse_time <= GRUNDIG_NOKIA_IR60_START_BIT_LEN_MAX &&
                         irmp_pause_time >= GRUNDIG_NOKIA_IR60_PRE_PAUSE_LEN_MIN && irmp_pause_time <= GRUNDIG_NOKIA_IR60_PRE_PAUSE_LEN_MAX)
                     {                                                           // it's GRUNDIG
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = GRUNDIG, pre bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         GRUNDIG_NOKIA_IR60_START_BIT_LEN_MIN, GRUNDIG_NOKIA_IR60_START_BIT_LEN_MAX,
                                         GRUNDIG_NOKIA_IR60_PRE_PAUSE_LEN_MIN, GRUNDIG_NOKIA_IR60_PRE_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &grundig_param;
                         last_pause = irmp_pause_time;
                         last_value  = 1;
@@ -2492,11 +2822,13 @@ irmp_ISR (void)
                         ((irmp_pause_time >= SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MAX) || 
                          (irmp_pause_time >= 2 * SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= 2 * SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MAX)))
                     {                                                           // it's RUWIDO or SIEMENS
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RUWIDO, start bit timings: pulse: %3d - %3d or %3d - %3d, pause: %3d - %3d or %3d - %3d\n",
                                         SIEMENS_OR_RUWIDO_START_BIT_PULSE_LEN_MIN,   SIEMENS_OR_RUWIDO_START_BIT_PULSE_LEN_MAX,
                                         2 * SIEMENS_OR_RUWIDO_START_BIT_PULSE_LEN_MIN, 2 * SIEMENS_OR_RUWIDO_START_BIT_PULSE_LEN_MAX,
                                         SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MIN,   SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MAX,
                                         2 * SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MIN, 2 * SIEMENS_OR_RUWIDO_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &ruwido_param;
                         last_pause = irmp_pause_time;
                         last_value  = 1;
@@ -2508,9 +2840,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= FDC_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= FDC_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= FDC_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= FDC_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = FDC, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         FDC_START_BIT_PULSE_LEN_MIN, FDC_START_BIT_PULSE_LEN_MAX,
                                         FDC_START_BIT_PAUSE_LEN_MIN, FDC_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &fdc_param;
                     }
                     else
@@ -2520,9 +2854,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= RCCAR_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RCCAR_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= RCCAR_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RCCAR, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         RCCAR_START_BIT_PULSE_LEN_MIN, RCCAR_START_BIT_PULSE_LEN_MAX,
                                         RCCAR_START_BIT_PAUSE_LEN_MIN, RCCAR_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &rccar_param;
                     }
                     else
@@ -2532,9 +2868,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= KATHREIN_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= KATHREIN_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= KATHREIN_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= KATHREIN_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's KATHREIN
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = KATHREIN, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         KATHREIN_START_BIT_PULSE_LEN_MIN, KATHREIN_START_BIT_PULSE_LEN_MAX,
                                         KATHREIN_START_BIT_PAUSE_LEN_MIN, KATHREIN_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &kathrein_param;
                     }
                     else
@@ -2544,9 +2882,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= NETBOX_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= NETBOX_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= NETBOX_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NETBOX_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's NETBOX
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = NETBOX, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         NETBOX_START_BIT_PULSE_LEN_MIN, NETBOX_START_BIT_PULSE_LEN_MAX,
                                         NETBOX_START_BIT_PAUSE_LEN_MIN, NETBOX_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &netbox_param;
                     }
                     else
@@ -2556,9 +2896,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= LEGO_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= LEGO_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= LEGO_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= LEGO_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = LEGO, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         LEGO_START_BIT_PULSE_LEN_MIN, LEGO_START_BIT_PULSE_LEN_MAX,
                                         LEGO_START_BIT_PAUSE_LEN_MIN, LEGO_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &lego_param;
                     }
                     else
@@ -2568,9 +2910,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= A1TVBOX_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= A1TVBOX_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= A1TVBOX_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= A1TVBOX_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's A1TVBOX
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = A1TVBOX, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         A1TVBOX_START_BIT_PULSE_LEN_MIN, A1TVBOX_START_BIT_PULSE_LEN_MAX,
                                         A1TVBOX_START_BIT_PAUSE_LEN_MIN, A1TVBOX_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &a1tvbox_param;
                         last_pause = 0;
                         last_value = 1;
@@ -2582,9 +2926,11 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= ORTEK_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= ORTEK_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= ORTEK_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= ORTEK_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's ORTEK (Hama)
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = ORTEK, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         ORTEK_START_BIT_PULSE_LEN_MIN, ORTEK_START_BIT_PULSE_LEN_MAX,
                                         ORTEK_START_BIT_PAUSE_LEN_MIN, ORTEK_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &ortek_param;
                         last_pause  = 0;
                         last_value  = 1;
@@ -2597,16 +2943,19 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= RCMM32_START_BIT_PULSE_LEN_MIN && irmp_pulse_time <= RCMM32_START_BIT_PULSE_LEN_MAX &&
                         irmp_pause_time >= RCMM32_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= RCMM32_START_BIT_PAUSE_LEN_MAX)
                     {                                                           // it's RCMM
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = RCMM, start bit timings: pulse: %3d - %3d, pause: %3d - %3d\n",
                                         RCMM32_START_BIT_PULSE_LEN_MIN, RCMM32_START_BIT_PULSE_LEN_MAX,
                                         RCMM32_START_BIT_PAUSE_LEN_MIN, RCMM32_START_BIT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                         irmp_param_p = (IRMP_PARAMETER *) &rcmm_param;
                     }
                     else
 #endif // IRMP_SUPPORT_RCMM_PROTOCOL == 1
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("protocol = UNKNOWN\n");
-//                      irmp_busy_flag = FALSE;
+#endif // ANALYZE
                         irmp_start_bit_detected = 0;                            // wait for another start bit...
                     }
 
@@ -2614,27 +2963,32 @@ irmp_ISR (void)
                     {
                         memcpy_P (&irmp_param, irmp_param_p, sizeof (IRMP_PARAMETER));
 
-#ifdef ANALYZE
                         if (! (irmp_param.flags & IRMP_PARAM_FLAG_IS_MANCHESTER))
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse_1: %3d - %3d\n", irmp_param.pulse_1_len_min, irmp_param.pulse_1_len_max);
                             ANALYZE_PRINTF ("pause_1: %3d - %3d\n", irmp_param.pause_1_len_min, irmp_param.pause_1_len_max);
+#endif // ANALYZE
                         }
                         else
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse: %3d - %3d or %3d - %3d\n", irmp_param.pulse_1_len_min, irmp_param.pulse_1_len_max,
                                             2 * irmp_param.pulse_1_len_min, 2 * irmp_param.pulse_1_len_max);
                             ANALYZE_PRINTF ("pause: %3d - %3d or %3d - %3d\n", irmp_param.pause_1_len_min, irmp_param.pause_1_len_max,
                                             2 * irmp_param.pause_1_len_min, 2 * irmp_param.pause_1_len_max);
+#endif // ANALYZE
                         }
 
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1)
                         if (irmp_param2.protocol)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse_0: %3d - %3d\n", irmp_param2.pulse_0_len_min, irmp_param2.pulse_0_len_max);
                             ANALYZE_PRINTF ("pause_0: %3d - %3d\n", irmp_param2.pause_0_len_min, irmp_param2.pause_0_len_max);
                             ANALYZE_PRINTF ("pulse_1: %3d - %3d\n", irmp_param2.pulse_1_len_min, irmp_param2.pulse_1_len_max);
                             ANALYZE_PRINTF ("pause_1: %3d - %3d\n", irmp_param2.pause_1_len_min, irmp_param2.pause_1_len_max);
+#endif // ANALYZE
                         }
 #endif
 
@@ -2642,23 +2996,30 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_RC6_PROTOCOL == 1
                         if (irmp_param.protocol == IRMP_RC6_PROTOCOL)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse_toggle: %3d - %3d\n", RC6_TOGGLE_BIT_LEN_MIN, RC6_TOGGLE_BIT_LEN_MAX);
+#endif // ANALYZE
                         }
 #endif
 
                         if (! (irmp_param.flags & IRMP_PARAM_FLAG_IS_MANCHESTER))
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse_0: %3d - %3d\n", irmp_param.pulse_0_len_min, irmp_param.pulse_0_len_max);
                             ANALYZE_PRINTF ("pause_0: %3d - %3d\n", irmp_param.pause_0_len_min, irmp_param.pause_0_len_max);
+#endif // ANALYZE
                         }
                         else
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("pulse: %3d - %3d or %3d - %3d\n", irmp_param.pulse_0_len_min, irmp_param.pulse_0_len_max,
                                             2 * irmp_param.pulse_0_len_min, 2 * irmp_param.pulse_0_len_max);
                             ANALYZE_PRINTF ("pause: %3d - %3d or %3d - %3d\n", irmp_param.pause_0_len_min, irmp_param.pause_0_len_max,
                                             2 * irmp_param.pause_0_len_min, 2 * irmp_param.pause_0_len_max);
+#endif // ANALYZE
                         }
 
+#ifdef ANALYZE
 #if IRMP_SUPPORT_BANG_OLUFSEN_PROTOCOL == 1
                         if (irmp_param.protocol == IRMP_BANG_OLUFSEN_PROTOCOL)
                         {
@@ -2683,17 +3044,20 @@ irmp_ISR (void)
                     {
                         if (irmp_pause_time > irmp_param.pulse_1_len_max && irmp_pause_time <= 2 * irmp_param.pulse_1_len_max)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("%8.3fms [bit %2d: pulse = %3d, pause = %3d] ", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit, irmp_pulse_time, irmp_pause_time);
                             ANALYZE_PUTCHAR ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? '0' : '1');
                             ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             irmp_store_bit ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? 0 : 1);
                         }
                         else if (! last_value)  // && irmp_pause_time >= irmp_param.pause_1_len_min && irmp_pause_time <= irmp_param.pause_1_len_max)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("%8.3fms [bit %2d: pulse = %3d, pause = %3d] ", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit, irmp_pulse_time, irmp_pause_time);
-
                             ANALYZE_PUTCHAR ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? '1' : '0');
                             ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             irmp_store_bit ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? 1 : 0);
                         }
                     }
@@ -2712,19 +3076,25 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_DENON_PROTOCOL == 1
                     if (irmp_param.protocol == IRMP_DENON_PROTOCOL)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("%8.3fms [bit %2d: pulse = %3d, pause = %3d] ", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit, irmp_pulse_time, irmp_pause_time);
+#endif // ANALYZE
 
                         if (irmp_pause_time >= DENON_1_PAUSE_LEN_MIN && irmp_pause_time <= DENON_1_PAUSE_LEN_MAX)
                         {                                                       // pause timings correct for "1"?
-                          ANALYZE_PUTCHAR ('1');                                  // yes, store 1
-                          ANALYZE_NEWLINE ();
-                          irmp_store_bit (1);
+#ifdef ANALYZE
+                            ANALYZE_PUTCHAR ('1');                                  // yes, store 1
+                            ANALYZE_NEWLINE ();
+#endif // ANALYZE
+                            irmp_store_bit (1);
                         }
                         else // if (irmp_pause_time >= DENON_0_PAUSE_LEN_MIN && irmp_pause_time <= DENON_0_PAUSE_LEN_MAX)
                         {                                                       // pause timings correct for "0"?
-                          ANALYZE_PUTCHAR ('0');                                  // yes, store 0
-                          ANALYZE_NEWLINE ();
-                          irmp_store_bit (0);
+#ifdef ANALYZE
+                            ANALYZE_PUTCHAR ('0');                                  // yes, store 0
+                            ANALYZE_NEWLINE ();
+#endif // ANALYZE
+                            irmp_store_bit (0);
                         }
                     }
                     else
@@ -2732,18 +3102,24 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_THOMSON_PROTOCOL == 1
                     if (irmp_param.protocol == IRMP_THOMSON_PROTOCOL)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("%8.3fms [bit %2d: pulse = %3d, pause = %3d] ", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit, irmp_pulse_time, irmp_pause_time);
+#endif // ANALYZE
 
                         if (irmp_pause_time >= THOMSON_1_PAUSE_LEN_MIN && irmp_pause_time <= THOMSON_1_PAUSE_LEN_MAX)
                         {                                                       // pause timings correct for "1"?
+#ifdef ANALYZE
                           ANALYZE_PUTCHAR ('1');                                  // yes, store 1
                           ANALYZE_NEWLINE ();
+#endif // ANALYZE
                           irmp_store_bit (1);
                         }
                         else // if (irmp_pause_time >= THOMSON_0_PAUSE_LEN_MIN && irmp_pause_time <= THOMSON_0_PAUSE_LEN_MAX)
                         {                                                       // pause timings correct for "0"?
+#ifdef ANALYZE
                           ANALYZE_PUTCHAR ('0');                                  // yes, store 0
                           ANALYZE_NEWLINE ();
+#endif // ANALYZE
                           irmp_store_bit (0);
                         }
                     }
@@ -2780,15 +3156,15 @@ irmp_ISR (void)
                             {
                                 ANALYZE_PRINTF ("stop bit detected\n");
                             }
-#endif
+#endif // ANALYZE
                             irmp_param.stop_bit = 0;
                         }
                         else
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("error: stop bit timing wrong, irmp_bit = %d, irmp_pulse_time = %d, pulse_0_len_min = %d, pulse_0_len_max = %d\n",
                                             irmp_bit, irmp_pulse_time, irmp_param.pulse_0_len_min, irmp_param.pulse_0_len_max);
-
-//                          irmp_busy_flag = FALSE;
+#endif // ANALYZE
                             irmp_start_bit_detected = 0;                        // wait for another start bit...
                             irmp_pulse_time         = 0;
                             irmp_pause_time         = 0;
@@ -2825,7 +3201,9 @@ irmp_ISR (void)
                         {
                             if (irmp_pause_time > IR60_TIMEOUT_LEN && (irmp_bit == 5 || irmp_bit == 6))
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to IR60 protocol\n");
+#endif // ANALYZE
                                 got_light = TRUE;                                       // this is a lie, but generates a stop bit ;-)
                                 irmp_param.stop_bit = TRUE;                             // set flag
 
@@ -2847,7 +3225,9 @@ irmp_ISR (void)
                             }
                             else if (irmp_bit >= GRUNDIG_COMPLETE_DATA_LEN)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to NOKIA protocol\n");
+#endif // ANALYZE
                                 irmp_param.protocol         = IRMP_NOKIA_PROTOCOL;      // change protocol
                                 irmp_param.address_offset   = NOKIA_ADDRESS_OFFSET;
                                 irmp_param.address_end      = NOKIA_ADDRESS_OFFSET + NOKIA_ADDRESS_LEN;
@@ -2874,7 +3254,9 @@ irmp_ISR (void)
                             }
                             else if (irmp_bit >= RUWIDO_COMPLETE_DATA_LEN)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to SIEMENS protocol\n");
+#endif // ANALYZE
                                 irmp_param.protocol         = IRMP_SIEMENS_PROTOCOL;    // change protocol
                                 irmp_param.address_offset   = SIEMENS_ADDRESS_OFFSET;
                                 irmp_param.address_end      = SIEMENS_ADDRESS_OFFSET + SIEMENS_ADDRESS_LEN;
@@ -2928,7 +3310,9 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_JVC_PROTOCOL == 1
                             else if (irmp_param.protocol == IRMP_NEC_PROTOCOL && (irmp_bit == 16 || irmp_bit == 17))      // it was a JVC stop bit
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to JVC protocol, irmp_bit = %d\n", irmp_bit);
+#endif // ANALYZE
                                 irmp_param.stop_bit     = TRUE;                                     // set flag
                                 irmp_param.protocol     = IRMP_JVC_PROTOCOL;                        // switch protocol
                                 irmp_param.complete_len = irmp_bit;                                 // patch length: 16 or 17
@@ -2937,12 +3321,28 @@ irmp_ISR (void)
                                 irmp_start_bit_detected = 1;                                        // tricky: don't wait for another start bit...
                             }
 #endif // IRMP_SUPPORT_JVC_PROTOCOL == 1
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+                            else if (irmp_param.protocol == IRMP_NEC_PROTOCOL && (irmp_bit == 28 || irmp_bit == 29))      // it was a LGAIR stop bit
+                            {
+#ifdef ANALYZE
+                                ANALYZE_PRINTF ("Switching to LGAIR protocol, irmp_bit = %d\n", irmp_bit);
+#endif // ANALYZE
+                                irmp_param.stop_bit     = TRUE;                                     // set flag
+                                irmp_param.protocol     = IRMP_LGAIR_PROTOCOL;                      // switch protocol
+                                irmp_param.complete_len = irmp_bit;                                 // patch length: 16 or 17
+                                irmp_tmp_command        = irmp_lgair_command;                       // set command: upper 8 bits are command bits
+                                irmp_tmp_address        = irmp_lgair_address;                       // lower 4 bits are address bits
+                                irmp_start_bit_detected = 1;                                        // tricky: don't wait for another start bit...
+                            }
+#endif // IRMP_SUPPORT_LGAIR_PROTOCOL == 1
 
 #if IRMP_SUPPORT_NEC42_PROTOCOL == 1
 #if IRMP_SUPPORT_NEC_PROTOCOL == 1
-                            else if (irmp_param.protocol == IRMP_NEC42_PROTOCOL && irmp_bit == 32)  // it was a NEC stop bit
+                            else if (irmp_param.protocol == IRMP_NEC42_PROTOCOL && irmp_bit == 32)      // it was a NEC stop bit
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to NEC protocol\n");
+#endif // ANALYZE
                                 irmp_param.stop_bit     = TRUE;                                     // set flag
                                 irmp_param.protocol     = IRMP_NEC_PROTOCOL;                        // switch protocol
                                 irmp_param.complete_len = irmp_bit;                                 // patch length: 16 or 17
@@ -2954,10 +3354,25 @@ irmp_ISR (void)
                                 irmp_tmp_command        = (irmp_tmp_address2 >> 3) | (irmp_tmp_command << 10);
                             }
 #endif // IRMP_SUPPORT_NEC_PROTOCOL == 1
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1
+                            else if (irmp_param.protocol == IRMP_NEC42_PROTOCOL && irmp_bit == 28)      // it was a NEC stop bit
+                            {
+#ifdef ANALYZE
+                                ANALYZE_PRINTF ("Switching to LGAIR protocol\n");
+#endif // ANALYZE
+                                irmp_param.stop_bit     = TRUE;                                     // set flag
+                                irmp_param.protocol     = IRMP_LGAIR_PROTOCOL;                      // switch protocol
+                                irmp_param.complete_len = irmp_bit;                                 // patch length: 16 or 17
+                                irmp_tmp_address        = irmp_lgair_address;
+                                irmp_tmp_command        = irmp_lgair_command;
+                            }
+#endif // IRMP_SUPPORT_LGAIR_PROTOCOL == 1
 #if IRMP_SUPPORT_JVC_PROTOCOL == 1
                             else if (irmp_param.protocol == IRMP_NEC42_PROTOCOL && (irmp_bit == 16 || irmp_bit == 17))  // it was a JVC stop bit
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to JVC protocol, irmp_bit = %d\n", irmp_bit);
+#endif // ANALYZE
                                 irmp_param.stop_bit     = TRUE;                                     // set flag
                                 irmp_param.protocol     = IRMP_JVC_PROTOCOL;                        // switch protocol
                                 irmp_param.complete_len = irmp_bit;                                 // patch length: 16 or 17
@@ -2970,6 +3385,20 @@ irmp_ISR (void)
                             }
 #endif // IRMP_SUPPORT_JVC_PROTOCOL == 1
 #endif // IRMP_SUPPORT_NEC42_PROTOCOL == 1
+
+#if IRMP_SUPPORT_SAMSUNG48_PROTOCOL == 1
+                            else if (irmp_param.protocol == IRMP_SAMSUNG48_PROTOCOL && irmp_bit == 32)          // it was a SAMSUNG32 stop bit
+                            {
+#ifdef ANALYZE
+                                ANALYZE_PRINTF ("Switching to SAMSUNG32 protocol\n");
+#endif // ANALYZE
+                                irmp_param.protocol         = IRMP_SAMSUNG32_PROTOCOL;
+                                irmp_param.command_offset   = SAMSUNG32_COMMAND_OFFSET;
+                                irmp_param.command_end      = SAMSUNG32_COMMAND_OFFSET + SAMSUNG32_COMMAND_LEN;
+                                irmp_param.complete_len     = SAMSUNG32_COMPLETE_DATA_LEN;
+                            }
+#endif // IRMP_SUPPORT_SAMSUNG_PROTOCOL == 1
+
 #if IRMP_SUPPORT_RCMM_PROTOCOL == 1
                             else if (irmp_param.protocol == IRMP_RCMM32_PROTOCOL && (irmp_bit == 12 || irmp_bit == 24))  // it was a RCMM stop bit
                             {
@@ -2978,12 +3407,16 @@ irmp_ISR (void)
                                     irmp_tmp_command = (irmp_tmp_address & 0xFF);                   // set command: lower 8 bits are command bits
                                     irmp_tmp_address >>= 8;                                         // upper 4 bits are address bits
 
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("Switching to RCMM12 protocol, irmp_bit = %d\n", irmp_bit);
+#endif // ANALYZE
                                     irmp_param.protocol     = IRMP_RCMM12_PROTOCOL;                 // switch protocol
                                 }
                                 else // if ((irmp_bit == 24)
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("Switching to RCMM24 protocol, irmp_bit = %d\n", irmp_bit);
+#endif // ANALYZE
                                     irmp_param.protocol     = IRMP_RCMM24_PROTOCOL;                 // switch protocol
                                 }
                                 irmp_param.stop_bit     = TRUE;                                     // set flag
@@ -2992,10 +3425,10 @@ irmp_ISR (void)
 #endif // IRMP_SUPPORT_RCMM_PROTOCOL == 1
                             else
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("error 2: pause %d after data bit %d too long\n", irmp_pause_time, irmp_bit);
                                 ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-
-//                              irmp_busy_flag = FALSE;
+#endif // ANALYZE
                                 irmp_start_bit_detected = 0;                    // wait for another start bit...
                                 irmp_pulse_time         = 0;
                                 irmp_pause_time         = 0;
@@ -3010,7 +3443,9 @@ irmp_ISR (void)
 
                 if (got_light)
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("%8.3fms [bit %2d: pulse = %3d, pause = %3d] ", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit, irmp_pulse_time, irmp_pause_time);
+#endif // ANALYZE
 
 #if IRMP_SUPPORT_MANCHESTER == 1
                     if ((irmp_param.flags & IRMP_PARAM_FLAG_IS_MANCHESTER))                                     // Manchester
@@ -3025,7 +3460,9 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_RC6_PROTOCOL == 1
                             if (irmp_param.protocol == IRMP_RC6_PROTOCOL && irmp_bit == 4 && irmp_pulse_time > RC6_TOGGLE_BIT_LEN_MIN)         // RC6 toggle bit
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('T');
+#endif // ANALYZE
                                 if (irmp_param.complete_len == RC6_COMPLETE_DATA_LEN_LONG)                      // RC6 mode 6A
                                 {
                                     irmp_store_bit (1);
@@ -3036,18 +3473,24 @@ irmp_ISR (void)
                                     irmp_store_bit (0);
                                     last_value = 0;
                                 }
+#ifdef ANALYZE
                                 ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             }
                             else
 #endif // IRMP_SUPPORT_RC6_PROTOCOL == 1
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? '0' : '1');
+#endif // ANALYZE
                                 irmp_store_bit ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? 0  :  1 );
 
 #if IRMP_SUPPORT_RC6_PROTOCOL == 1
                                 if (irmp_param.protocol == IRMP_RC6_PROTOCOL && irmp_bit == 4 && irmp_pulse_time > RC6_TOGGLE_BIT_LEN_MIN)      // RC6 toggle bit
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PUTCHAR ('T');
+#endif // ANALYZE
                                     irmp_store_bit (1);
 
                                     if (irmp_pause_time > 2 * irmp_param.pause_1_len_max)
@@ -3058,18 +3501,24 @@ irmp_ISR (void)
                                     {
                                         last_value = 1;
                                     }
+#ifdef ANALYZE
                                     ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                 }
                                 else
 #endif // IRMP_SUPPORT_RC6_PROTOCOL == 1
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PUTCHAR ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? '1' : '0');
+#endif // ANALYZE
                                     irmp_store_bit ((irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? 1 :   0 );
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1)
                                     if (! irmp_param2.protocol)
 #endif
                                     {
+#ifdef ANALYZE
                                         ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                     }
                                     last_value = (irmp_param.flags & IRMP_PARAM_FLAG_1ST_PULSE_IS_1) ? 1 : 0;
                                 }
@@ -3090,19 +3539,25 @@ irmp_ISR (void)
                                 manchester_value = last_value;
                             }
 
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR (manchester_value + '0');
+#endif // ANALYZE
 
 #if IRMP_SUPPORT_RC5_PROTOCOL == 1 && (IRMP_SUPPORT_FDC_PROTOCOL == 1 || IRMP_SUPPORT_RCCAR_PROTOCOL == 1)
                             if (! irmp_param2.protocol)
 #endif
                             {
+#ifdef ANALYZE
                                 ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             }
 
 #if IRMP_SUPPORT_RC6_PROTOCOL == 1
                             if (irmp_param.protocol == IRMP_RC6_PROTOCOL && irmp_bit == 1 && manchester_value == 1)     // RC6 mode != 0 ???
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to RC6A protocol\n");
+#endif // ANALYZE
                                 irmp_param.complete_len = RC6_COMPLETE_DATA_LEN_LONG;
                                 irmp_param.address_offset = 5;
                                 irmp_param.address_end = irmp_param.address_offset + 15;
@@ -3122,7 +3577,9 @@ irmp_ISR (void)
                                 ((irmp_pause_time >= FDC_1_PAUSE_LEN_MIN && irmp_pause_time <= FDC_1_PAUSE_LEN_MAX) ||
                                  (irmp_pause_time >= FDC_0_PAUSE_LEN_MIN && irmp_pause_time <= FDC_0_PAUSE_LEN_MAX)))
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('?');
+#endif // ANALYZE
                                 irmp_param.protocol = 0;                // switch to FDC, see below
                             }
                             else
@@ -3133,17 +3590,20 @@ irmp_ISR (void)
                                 ((irmp_pause_time >= RCCAR_1_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_1_PAUSE_LEN_MAX) ||
                                  (irmp_pause_time >= RCCAR_0_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_0_PAUSE_LEN_MAX)))
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('?');
+#endif // ANALYZE
                                 irmp_param.protocol = 0;                // switch to RCCAR, see below
                             }
                             else
 #endif // IRMP_SUPPORT_RCCAR_PROTOCOL == 1
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('?');
                                 ANALYZE_NEWLINE ();
                                 ANALYZE_PRINTF ("error 3 manchester: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                                 ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                              irmp_busy_flag = FALSE;
+#endif // ANALYZE
                                 irmp_start_bit_detected = 0;                            // reset flags and wait for next start bit
                                 irmp_pause_time         = 0;
                             }
@@ -3154,18 +3614,24 @@ irmp_ISR (void)
                         {
                             if (irmp_pause_time >= FDC_1_PAUSE_LEN_MIN && irmp_pause_time <= FDC_1_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("   1 (FDC)\n");
+#endif // ANALYZE
                                 irmp_store_bit2 (1);
                             }
                             else if (irmp_pause_time >= FDC_0_PAUSE_LEN_MIN && irmp_pause_time <= FDC_0_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("   0 (FDC)\n");
+#endif // ANALYZE
                                 irmp_store_bit2 (0);
                             }
 
                             if (! irmp_param.protocol)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to FDC protocol\n");
+#endif // ANALYZE
                                 memcpy (&irmp_param, &irmp_param2, sizeof (IRMP_PARAMETER));
                                 irmp_param2.protocol = 0;
                                 irmp_tmp_address = irmp_tmp_address2;
@@ -3178,18 +3644,24 @@ irmp_ISR (void)
                         {
                             if (irmp_pause_time >= RCCAR_1_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_1_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("   1 (RCCAR)\n");
+#endif // ANALYZE
                                 irmp_store_bit2 (1);
                             }
                             else if (irmp_pause_time >= RCCAR_0_PAUSE_LEN_MIN && irmp_pause_time <= RCCAR_0_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("   0 (RCCAR)\n");
+#endif // ANALYZE
                                 irmp_store_bit2 (0);
                             }
 
                             if (! irmp_param.protocol)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Switching to RCCAR protocol\n");
+#endif // ANALYZE
                                 memcpy (&irmp_param, &irmp_param2, sizeof (IRMP_PARAMETER));
                                 irmp_param2.protocol = 0;
                                 irmp_tmp_address = irmp_tmp_address2;
@@ -3209,7 +3681,9 @@ irmp_ISR (void)
                     {
                         while (irmp_bit < irmp_param.complete_len && irmp_pulse_time > irmp_param.pulse_1_len_max)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('1');
+#endif // ANALYZE
                             irmp_store_bit (1);
 
                             if (irmp_pulse_time >= irmp_param.pulse_1_len_min)
@@ -3224,7 +3698,9 @@ irmp_ISR (void)
 
                         while (irmp_bit < irmp_param.complete_len && irmp_pause_time > irmp_param.pause_1_len_max)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('0');
+#endif // ANALYZE
                             irmp_store_bit (0);
 
                             if (irmp_pause_time >= irmp_param.pause_1_len_min)
@@ -3236,7 +3712,9 @@ irmp_ISR (void)
                                 irmp_pause_time = 0;
                             }
                         }
+#ifdef ANALYZE
                         ANALYZE_NEWLINE ();
+#endif // ANALYZE
                         wait_for_space = 0;
                     }
                     else
@@ -3248,40 +3726,56 @@ irmp_ISR (void)
                         if (irmp_pulse_time >= SAMSUNG_PULSE_LEN_MIN && irmp_pulse_time <= SAMSUNG_PULSE_LEN_MAX &&
                             irmp_pause_time >= SAMSUNG_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= SAMSUNG_START_BIT_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("SYNC\n");
+#endif // ANALYZE
                             wait_for_space = 0;
-                            irmp_tmp_id = 0;
                             irmp_bit++;
                         }
                         else  if (irmp_pulse_time >= SAMSUNG_PULSE_LEN_MIN && irmp_pulse_time <= SAMSUNG_PULSE_LEN_MAX)
                         {
+#if IRMP_SUPPORT_SAMSUNG48_PROTOCOL == 1
+#ifdef ANALYZE
+                            ANALYZE_PRINTF ("Switching to SAMSUNG48 protocol ");
+#endif // ANALYZE
+                            irmp_param.protocol         = IRMP_SAMSUNG48_PROTOCOL;
+                            irmp_param.command_offset   = SAMSUNG48_COMMAND_OFFSET;
+                            irmp_param.command_end      = SAMSUNG48_COMMAND_OFFSET + SAMSUNG48_COMMAND_LEN;
+                            irmp_param.complete_len     = SAMSUNG48_COMPLETE_DATA_LEN;
+#else
+#ifdef ANALYZE
+                            ANALYZE_PRINTF ("Switching to SAMSUNG32 protocol ");
+#endif // ANALYZE
                             irmp_param.protocol         = IRMP_SAMSUNG32_PROTOCOL;
                             irmp_param.command_offset   = SAMSUNG32_COMMAND_OFFSET;
                             irmp_param.command_end      = SAMSUNG32_COMMAND_OFFSET + SAMSUNG32_COMMAND_LEN;
                             irmp_param.complete_len     = SAMSUNG32_COMPLETE_DATA_LEN;
-
+#endif
                             if (irmp_pause_time >= SAMSUNG_1_PAUSE_LEN_MIN && irmp_pause_time <= SAMSUNG_1_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('1');
                                 ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                 irmp_store_bit (1);
                                 wait_for_space = 0;
                             }
                             else
                             {
+#ifdef ANALYZE
                                 ANALYZE_PUTCHAR ('0');
                                 ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                 irmp_store_bit (0);
                                 wait_for_space = 0;
                             }
-
-                            ANALYZE_PRINTF ("Switching to SAMSUNG32 protocol\n");
                         }
                         else
                         {                                                           // timing incorrect!
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("error 3 Samsung: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                             ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                          irmp_busy_flag = FALSE;
+#endif // ANALYZE
                             irmp_start_bit_detected = 0;                            // reset flags and wait for next start bit
                             irmp_pause_time         = 0;
                         }
@@ -3297,7 +3791,9 @@ irmp_ISR (void)
 #endif // IRMP_SUPPORT_NEC42_PROTOCOL == 1
                         irmp_bit == 8 && irmp_pause_time >= NEC_START_BIT_PAUSE_LEN_MIN && irmp_pause_time <= NEC_START_BIT_PAUSE_LEN_MAX)
                     {
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("Switching to NEC16 protocol\n");
+#endif // ANALYZE
                         irmp_param.protocol         = IRMP_NEC16_PROTOCOL;
                         irmp_param.address_offset   = NEC16_ADDRESS_OFFSET;
                         irmp_param.address_end      = NEC16_ADDRESS_OFFSET + NEC16_ADDRESS_LEN;
@@ -3318,15 +3814,18 @@ irmp_ISR (void)
                             {
                                 if (irmp_pause_time >= BANG_OLUFSEN_START_BIT3_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_START_BIT3_PAUSE_LEN_MAX)
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("3rd start bit\n");
+#endif // ANALYZE
                                     wait_for_space = 0;
                                     irmp_bit++;
                                 }
                                 else
                                 {                                                   // timing incorrect!
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("error 3a B&O: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                                     ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                                  irmp_busy_flag = FALSE;
+#endif // ANALYZE
                                     irmp_start_bit_detected = 0;                    // reset flags and wait for next start bit
                                     irmp_pause_time         = 0;
                                 }
@@ -3335,15 +3834,18 @@ irmp_ISR (void)
                             {
                                 if (irmp_pause_time >= BANG_OLUFSEN_TRAILER_BIT_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_TRAILER_BIT_PAUSE_LEN_MAX)
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("trailer bit\n");
+#endif // ANALYZE
                                     wait_for_space = 0;
                                     irmp_bit++;
                                 }
                                 else
                                 {                                                   // timing incorrect!
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("error 3b B&O: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                                     ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                                  irmp_busy_flag = FALSE;
+#endif // ANALYZE
                                     irmp_start_bit_detected = 0;                    // reset flags and wait for next start bit
                                     irmp_pause_time         = 0;
                                 }
@@ -3352,32 +3854,39 @@ irmp_ISR (void)
                             {
                                 if (irmp_pause_time >= BANG_OLUFSEN_1_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_1_PAUSE_LEN_MAX)
                                 {                                                   // pulse & pause timings correct for "1"?
+#ifdef ANALYZE
                                     ANALYZE_PUTCHAR ('1');
                                     ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                     irmp_store_bit (1);
                                     last_value = 1;
                                     wait_for_space = 0;
                                 }
                                 else if (irmp_pause_time >= BANG_OLUFSEN_0_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_0_PAUSE_LEN_MAX)
                                 {                                                   // pulse & pause timings correct for "0"?
+#ifdef ANALYZE
                                     ANALYZE_PUTCHAR ('0');
                                     ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                     irmp_store_bit (0);
                                     last_value = 0;
                                     wait_for_space = 0;
                                 }
                                 else if (irmp_pause_time >= BANG_OLUFSEN_R_PAUSE_LEN_MIN && irmp_pause_time <= BANG_OLUFSEN_R_PAUSE_LEN_MAX)
                                 {
+#ifdef ANALYZE
                                     ANALYZE_PUTCHAR (last_value + '0');
                                     ANALYZE_NEWLINE ();
+#endif // ANALYZE
                                     irmp_store_bit (last_value);
                                     wait_for_space = 0;
                                 }
                                 else
                                 {                                                   // timing incorrect!
+#ifdef ANALYZE
                                     ANALYZE_PRINTF ("error 3c B&O: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                                     ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                                  irmp_busy_flag = FALSE;
+#endif // ANALYZE
                                     irmp_start_bit_detected = 0;                    // reset flags and wait for next start bit
                                     irmp_pause_time         = 0;
                                 }
@@ -3385,9 +3894,10 @@ irmp_ISR (void)
                         }
                         else
                         {                                                           // timing incorrect!
+#ifdef ANALYZE
                             ANALYZE_PRINTF ("error 3d B&O: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                             ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                          irmp_busy_flag = FALSE;
+#endif // ANALYZE
                             irmp_start_bit_detected = 0;                            // reset flags and wait for next start bit
                             irmp_pause_time         = 0;
                         }
@@ -3400,33 +3910,43 @@ irmp_ISR (void)
                     {
                         if (irmp_pause_time >= RCMM32_BIT_00_PAUSE_LEN_MIN && irmp_pause_time <= RCMM32_BIT_00_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('0');
                             ANALYZE_PUTCHAR ('0');
+#endif // ANALYZE
                             irmp_store_bit (0);
                             irmp_store_bit (0);
                         }
                         else if (irmp_pause_time >= RCMM32_BIT_01_PAUSE_LEN_MIN && irmp_pause_time <= RCMM32_BIT_01_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('0');
                             ANALYZE_PUTCHAR ('1');
+#endif // ANALYZE
                             irmp_store_bit (0);
                             irmp_store_bit (1);
                         }
                         else if (irmp_pause_time >= RCMM32_BIT_10_PAUSE_LEN_MIN && irmp_pause_time <= RCMM32_BIT_10_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('1');
                             ANALYZE_PUTCHAR ('0');
+#endif // ANALYZE
                             irmp_store_bit (1);
                             irmp_store_bit (0);
                         }
                         else if (irmp_pause_time >= RCMM32_BIT_11_PAUSE_LEN_MIN && irmp_pause_time <= RCMM32_BIT_11_PAUSE_LEN_MAX)
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('1');
                             ANALYZE_PUTCHAR ('1');
+#endif // ANALYZE
                             irmp_store_bit (1);
                             irmp_store_bit (1);
                         }
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("\n");
+#endif // ANALYZE
                         wait_for_space = 0;
                     }
                     else
@@ -3435,16 +3955,20 @@ irmp_ISR (void)
                     if (irmp_pulse_time >= irmp_param.pulse_1_len_min && irmp_pulse_time <= irmp_param.pulse_1_len_max &&
                         irmp_pause_time >= irmp_param.pause_1_len_min && irmp_pause_time <= irmp_param.pause_1_len_max)
                     {                                                               // pulse & pause timings correct for "1"?
+#ifdef ANALYZE
                         ANALYZE_PUTCHAR ('1');
                         ANALYZE_NEWLINE ();
+#endif // ANALYZE
                         irmp_store_bit (1);
                         wait_for_space = 0;
                     }
                     else if (irmp_pulse_time >= irmp_param.pulse_0_len_min && irmp_pulse_time <= irmp_param.pulse_0_len_max &&
                              irmp_pause_time >= irmp_param.pause_0_len_min && irmp_pause_time <= irmp_param.pause_0_len_max)
                     {                                                               // pulse & pause timings correct for "0"?
+#ifdef ANALYZE
                         ANALYZE_PUTCHAR ('0');
                         ANALYZE_NEWLINE ();
+#endif // ANALYZE
                         irmp_store_bit (0);
                         wait_for_space = 0;
                     }
@@ -3462,14 +3986,18 @@ irmp_ISR (void)
                         if (irmp_bit == 8)
                         {
                             irmp_bit++;
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('S');
                             ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             irmp_tmp_command <<= 1;
                         }
                         else
                         {
+#ifdef ANALYZE
                             ANALYZE_PUTCHAR ('S');
                             ANALYZE_NEWLINE ();
+#endif // ANALYZE
                             irmp_store_bit (1);
                         }
                         wait_for_space = 0;
@@ -3477,9 +4005,10 @@ irmp_ISR (void)
                     else
 #endif // IRMP_SUPPORT_KATHREIN_PROTOCOL
                     {                                                               // timing incorrect!
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("error 3: timing not correct: data bit %d,  pulse: %d, pause: %d\n", irmp_bit, irmp_pulse_time, irmp_pause_time);
                         ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
-//                      irmp_busy_flag = FALSE;
+#endif // ANALYZE
                         irmp_start_bit_detected = 0;                                // reset flags and wait for next start bit
                         irmp_pause_time         = 0;
                     }
@@ -3515,8 +4044,10 @@ irmp_ISR (void)
                 // if SIRCS protocol and the code will be repeated within 50 ms, we will ignore 2nd and 3rd repetition frame
                 if (irmp_param.protocol == IRMP_SIRCS_PROTOCOL && (repetition_frame_number == 1 || repetition_frame_number == 2))
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("code skipped: SIRCS auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
                                     repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
                     key_repetition_len = 0;
                 }
                 else
@@ -3526,8 +4057,10 @@ irmp_ISR (void)
                 // if ORTEK protocol and the code will be repeated within 50 ms, we will ignore 2nd repetition frame
                 if (irmp_param.protocol == IRMP_ORTEK_PROTOCOL && repetition_frame_number == 1)
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("code skipped: ORTEK auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
                                     repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
                     key_repetition_len = 0;
                 }
                 else
@@ -3537,19 +4070,23 @@ irmp_ISR (void)
                 // if KASEIKYO protocol and the code will be repeated within 50 ms, we will ignore 2nd repetition frame
                 if (irmp_param.protocol == IRMP_KASEIKYO_PROTOCOL && repetition_frame_number == 1)
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("code skipped: KASEIKYO auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
                                     repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
                     key_repetition_len = 0;
                 }
                 else
 #endif
 
 #if IRMP_SUPPORT_SAMSUNG_PROTOCOL == 1
-                // if SAMSUNG32 protocol and the code will be repeated within 50 ms, we will ignore every 2nd frame
-                if (irmp_param.protocol == IRMP_SAMSUNG32_PROTOCOL && (repetition_frame_number & 0x01))
+                // if SAMSUNG32 or SAMSUNG48 protocol and the code will be repeated within 50 ms, we will ignore every 2nd frame
+                if ((irmp_param.protocol == IRMP_SAMSUNG32_PROTOCOL || irmp_param.protocol == IRMP_SAMSUNG48_PROTOCOL) && (repetition_frame_number & 0x01))
                 {
-                    ANALYZE_PRINTF ("code skipped: SAMSUNG32 auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
+#ifdef ANALYZE
+                    ANALYZE_PRINTF ("code skipped: SAMSUNG32/SAMSUNG48 auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
                                     repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
                     key_repetition_len = 0;
                 }
                 else
@@ -3559,15 +4096,32 @@ irmp_ISR (void)
                 // if NUBERT protocol and the code will be repeated within 50 ms, we will ignore every 2nd frame
                 if (irmp_param.protocol == IRMP_NUBERT_PROTOCOL && (repetition_frame_number & 0x01))
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("code skipped: NUBERT auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
                                     repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
+                    key_repetition_len = 0;
+                }
+                else
+#endif
+
+#if IRMP_SUPPORT_SPEAKER_PROTOCOL == 1
+                // if SPEAKER protocol and the code will be repeated within 50 ms, we will ignore every 2nd frame
+                if (irmp_param.protocol == IRMP_SPEAKER_PROTOCOL && (repetition_frame_number & 0x01))
+                {
+#ifdef ANALYZE
+                    ANALYZE_PRINTF ("code skipped: SPEAKER auto repetition frame #%d, counter = %d, auto repetition len = %d\n",
+                                    repetition_frame_number + 1, key_repetition_len, AUTO_FRAME_REPETITION_LEN);
+#endif // ANALYZE
                     key_repetition_len = 0;
                 }
                 else
 #endif
 
                 {
+#ifdef ANALYZE
                     ANALYZE_PRINTF ("%8.3fms code detected, length = %d\n", (double) (time_counter * 1000) / F_INTERRUPTS, irmp_bit);
+#endif // ANALYZE
                     irmp_ir_detected = TRUE;
 
 #if IRMP_SUPPORT_DENON_PROTOCOL == 1
@@ -3586,14 +4140,18 @@ irmp_ISR (void)
                         {
                             if ((irmp_tmp_command & 0x01) == 0x00)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("%8.3fms info Denon: waiting for inverted command repetition\n", (double) (time_counter * 1000) / F_INTERRUPTS);
+#endif // ANALYZE
                                 last_irmp_denon_command = irmp_tmp_command;
                                 denon_repetition_len = 0;
                                 irmp_ir_detected = FALSE;
                             }
                             else
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("%8.3fms warning Denon: got unexpected inverted command, ignoring it\n", (double) (time_counter * 1000) / F_INTERRUPTS);
+#endif // ANALYZE
                                 last_irmp_denon_command = 0;
                                 irmp_ir_detected = FALSE;
                             }
@@ -3605,7 +4163,9 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_GRUNDIG_PROTOCOL == 1
                     if (irmp_param.protocol == IRMP_GRUNDIG_PROTOCOL && irmp_tmp_command == 0x01ff)
                     {                                                               // Grundig start frame?
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("Detected GRUNDIG start frame, ignoring it\n");
+#endif // ANALYZE
                         irmp_ir_detected = FALSE;
                     }
                     else
@@ -3614,7 +4174,9 @@ irmp_ISR (void)
 #if IRMP_SUPPORT_NOKIA_PROTOCOL == 1
                     if (irmp_param.protocol == IRMP_NOKIA_PROTOCOL && irmp_tmp_address == 0x00ff && irmp_tmp_command == 0x00fe)
                     {                                                               // Nokia start frame?
+#ifdef ANALYZE
                         ANALYZE_PRINTF ("Detected NOKIA start frame, ignoring it\n");
+#endif // ANALYZE
                         irmp_ir_detected = FALSE;
                     }
                     else
@@ -3625,8 +4187,10 @@ irmp_ISR (void)
                         {
                             if (key_repetition_len < NEC_FRAME_REPEAT_PAUSE_LEN_MAX)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Detected NEC repetition frame, key_repetition_len = %d\n", key_repetition_len);
                                 ANALYZE_ONLY_NORMAL_PRINTF("REPETETION FRAME                ");
+#endif // ANALYZE
                                 irmp_tmp_address = last_irmp_address;                   // address is last address
                                 irmp_tmp_command = last_irmp_command;                   // command is last command
                                 irmp_flags |= IRMP_FLAG_REPETITION;
@@ -3634,8 +4198,10 @@ irmp_ISR (void)
                             }
                             else
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("Detected NEC repetition frame, ignoring it: timeout occured, key_repetition_len = %d > %d\n",
                                                 key_repetition_len, NEC_FRAME_REPEAT_PAUSE_LEN_MAX);
+#endif // ANALYZE
                                 irmp_ir_detected = FALSE;
                             }
                         }
@@ -3645,14 +4211,14 @@ irmp_ISR (void)
                         if (irmp_param.protocol == IRMP_KASEIKYO_PROTOCOL)
                         {
                             uint8_t xor_value;
-                            // ANALYZE_PRINTF ("0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n",
-                            //                 xor_check[0], xor_check[1], xor_check[2], xor_check[3], xor_check[4], xor_check[5]);
 
                             xor_value = (xor_check[0] & 0x0F) ^ ((xor_check[0] & 0xF0) >> 4) ^ (xor_check[1] & 0x0F) ^ ((xor_check[1] & 0xF0) >> 4);
 
                             if (xor_value != (xor_check[2] & 0x0F))
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("error 4: wrong XOR check for customer id: 0x%1x 0x%1x\n", xor_value, xor_check[2] & 0x0F);
+#endif // ANALYZE
                                 irmp_ir_detected = FALSE;
                             }
 
@@ -3660,7 +4226,9 @@ irmp_ISR (void)
 
                             if (xor_value != xor_check[5])
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("error 5: wrong XOR check for data bits: 0x%02x 0x%02x\n", xor_value, xor_check[5]);
+#endif // ANALYZE
                                 irmp_ir_detected = FALSE;
                             }
 
@@ -3673,13 +4241,17 @@ irmp_ISR (void)
                         {
                             if (parity == PARITY_CHECK_FAILED)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("error 6: parity check failed\n");
+#endif // ANALYZE
                                 irmp_ir_detected = FALSE;
                             }
 
                             if ((irmp_tmp_address & 0x03) == 0x02)
                             {
+#ifdef ANALYZE
                                 ANALYZE_PRINTF ("code skipped: ORTEK end of transmission frame (key release)\n");
+#endif // ANALYZE
                                 irmp_ir_detected = FALSE;
                             }
                             irmp_tmp_address >>= 2;
@@ -3751,10 +4323,11 @@ irmp_ISR (void)
                 }
                 else
                 {
+#ifdef ANALYZE
                     ANALYZE_ONLY_NORMAL_PUTCHAR ('\n');
+#endif // ANALYZE
                 }
 
-//              irmp_busy_flag          = FALSE;
                 irmp_start_bit_detected = 0;                                        // and wait for next start bit
                 irmp_tmp_command        = 0;
                 irmp_pulse_time         = 0;
@@ -3870,6 +4443,11 @@ print_timings (void)
             NUBERT_0_PULSE_LEN_MIN, NUBERT_0_PULSE_LEN_MAX, NUBERT_0_PAUSE_LEN_MIN, NUBERT_0_PAUSE_LEN_MAX,
             NUBERT_1_PULSE_LEN_MIN, NUBERT_1_PULSE_LEN_MAX, NUBERT_1_PAUSE_LEN_MIN, NUBERT_1_PAUSE_LEN_MAX);
 
+    printf ("SPEAKER        1  %3d - %3d  %3d - %3d  %3d - %3d  %3d - %3d  %3d - %3d  %3d - %3d\n",
+            SPEAKER_START_BIT_PULSE_LEN_MIN, SPEAKER_START_BIT_PULSE_LEN_MAX, SPEAKER_START_BIT_PAUSE_LEN_MIN, SPEAKER_START_BIT_PAUSE_LEN_MAX,
+            SPEAKER_0_PULSE_LEN_MIN, SPEAKER_0_PULSE_LEN_MAX, SPEAKER_0_PAUSE_LEN_MIN, SPEAKER_0_PAUSE_LEN_MAX,
+            SPEAKER_1_PULSE_LEN_MIN, SPEAKER_1_PULSE_LEN_MAX, SPEAKER_1_PAUSE_LEN_MIN, SPEAKER_1_PAUSE_LEN_MAX);
+
     printf ("BANG_OLUFSEN   1  %3d - %3d  %3d - %3d\n",
             BANG_OLUFSEN_START_BIT1_PULSE_LEN_MIN, BANG_OLUFSEN_START_BIT1_PULSE_LEN_MAX,
             BANG_OLUFSEN_START_BIT1_PAUSE_LEN_MIN, BANG_OLUFSEN_START_BIT1_PAUSE_LEN_MAX);
@@ -3963,7 +4541,7 @@ print_spectrum (char * text, int * buf, int is_pulse)
         }
     }
 
-    for (i = 1; i < 100; i++)
+    for (i = 1; i < 200; i++)
     {
         if (buf[i] > 0)
         {
@@ -4303,6 +4881,10 @@ main (int argc, char ** argv)
         {
             print_timings ();
             return (0);
+        }
+        else if (! strcmp (argv[1], "-r"))
+        {
+            radio = TRUE;
         }
     }
 
