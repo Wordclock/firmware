@@ -310,9 +310,9 @@ L: [0-9a-f]{2} **Log level**
 
 ### Get log level for particular module
 
-**Command**: ls M  
+**Command**: lg M  
 M: [0-9a-f]{2} **Module**  
-**Description:** Get the log level for a particular module  
+**Description:** Returns the log level for a particular module  
 **Response (values valid):** L  
 L: [0-9a-f]{2} **Log level**  
 **Response (values invalid):** ERROR  
