@@ -1133,7 +1133,7 @@ void uart_protocol_handle()
 
                 char str[3];
 
-                sprintf_P(str, PSTR("%u"), buffer_index);
+                sprintf_P(str, fmt_output_unsigned_decimal, buffer_index);
 
                 uart_puts_P("Buffer index: ");
                 uart_puts(str);
