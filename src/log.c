@@ -594,7 +594,7 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
  *
- * @see log_output_callback_t()
+ * @see log_output_callback_t
  */
 void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback)
 {
