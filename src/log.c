@@ -328,186 +328,21 @@ static void log_output_eol()
 }
 
 /**
- * @brief Outputs a message as specified by the format string
- *
- * This function iterates over over the format string on a character basis and
- * examines it for specifiers. It replaces those specifiers with the arguments
- * provided by <code>ap</code>.
- *
- * Currently the following specifiers are supported:
- *
- * - %c: Character
- * - %s: String
- * - %u: uint8_t with values below 100 -> {@link uint8ToStrLessOneHundred()}
- * - %U: uint8_t with the full range of values -> {@link uint8ToStr()}
- * - %h: uint8_t in its hex representation -> {@link uint8ToHexStr()}
- * - %H: uint16_t in its hex representation -> {@link uint16ToHexStr()}
- * - %%: Escape sequence for `%`
- *
- * Invalid specifiers are simply ignored.
- *
- * @param fmt Format string describing logging output
- * @param va List with arguments for specifiers within format string
- *
- * @see uart_puts_p()
- * @see uart_puts_P()
- * @see uart_putc()
- * @see uart_puts()
- * @see uint8ToStrLessOneHundred()
- * @see uint8ToStr()
- * @see uint8ToHexStr()
- * @see uint16ToHexStr()
- */
-static void log_outputf(const char* fmt, va_list ap)
-{
-
-    // Wait for UART output buffer to be empty
-    uart_flush_output();
-
-    // Keeps track of length of format string
-    uint8_t length = 0;
-
-    // Iterate over format string
-    while (*fmt && length++ < LOG_FORMAT_MAX_STRING_LENGTH) {
-
-        // Check for format specifier
-        if (*fmt == '%') {
-
-            // Analyze specifier
-            switch(*++fmt) {
-
-                // Character
-                case 'c':
-
-                    {
-
-                        // Retrieve character and output it
-                        char c = (char)va_arg(ap, int);
-                        uart_putc(c);
-
-                    }
-
-                    break;
-
-                // String
-                case 's':
-
-                    {
-
-                        // Retrieve string and output it
-                        const char* s = va_arg(ap, const char*);
-                        uart_puts(s);
-
-                    }
-
-                    break;
-
-                // uint8_t smaller than one hundred (takes up 2 digits)
-                case 'u':
-
-                    {
-
-                        // Convert into string and output it
-                        char buffer[3];
-                        uint8_t u = (uint8_t)va_arg(ap, int);
-                        uint8ToStrLessOneHundred(u, buffer);
-                        uart_puts(buffer);
-
-                    }
-
-                    break;
-
-                // uint8_t bigger than one hundred (takes up 3 digits)
-                case 'U':
-
-                    {
-
-                        // Convert into string and output it
-                        char buffer[4];
-                        uint8_t u = (uint8_t)va_arg(ap, int);
-                        uint8ToStr(u, buffer);
-                        uart_puts(buffer);
-
-                    }
-
-                    break;
-
-                // uint8_t as hex
-                case 'h':
-
-                    {
-
-                        // Convert into hex string and output it
-                        char buffer[3];
-                        uint8_t u = (uint8_t)va_arg(ap, int);
-                        uint8ToHexStr(u, buffer);
-                        uart_puts(buffer);
-
-                    }
-
-                    break;
-
-                // uint16_t as hex
-                case 'H':
-
-                    {
-
-                        // Convert into hex string and output it
-                        char buffer[5];
-                        uint16_t u = va_arg(ap, uint16_t);
-                        uint16ToHexStr(u, buffer);
-                        uart_puts(buffer);
-
-                    }
-
-                    break;
-
-                // Escape sequence for %
-                case '%':
-
-                    uart_putc('%');
-                    break;
-
-                // Invalid specifiers
-                default:
-
-                    // This makes sure that the invalid specifier is output
-                    continue;
-
-            }
-
-        // No format specifier
-        } else {
-
-            // Simply output character
-            uart_putc(*fmt);
-
-        }
-
-        // Handle next character
-        fmt++;
-
-    }
-
-}
-
-/**
  * @brief Outputs a log message
  *
- * This is essentially a wrapper around {@link #log_outputf()}. It uses
- * functionality from `<stdarg.h>` to retrieve a `va_list` and passes
- * everything over to generate the actual output.
- *
- * It makes also sure that the output is generated in the correct format,
- * {@link #log_output_prefix()} it and putting {@link #log_output_eol()} at
- * the end.
+ * This outputs a formatted log message with the format string residing in RAM.
+ * It makes sure that the log message complies with the specified formatting,
+ * e.g. by prepending a {@link log_output_prefix() prefix} and ending with
+ * {@link log_output_eol() EOL}. The conversion itself are are performed by
+ * vfprint_P().
  *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param fmt Format string describing logging output
  * @param ... Arguments for specifiers within format string
  *
- * @see log_outputf()
+ * @see log_outputf_prefix()
+ * @see log_output_eol()
  */
 void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
 {
@@ -524,7 +359,7 @@ void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
 
     va_list va;
     va_start(va, fmt);
-    log_outputf(fmt, va);
+    vfprintf(&logout, fmt, va);
     va_end(va);
 
     // Output EOL
@@ -535,22 +370,19 @@ void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
 /**
  * @brief Outputs a log message stored in program space
  *
- * This is essentially a wrapper around {@link #log_outputf()} for format
- * strings stored in program space. After copying over the log format string
- * from program space into a buffer, is uses functionality from `<stdarg.h>` to
- * retrieve a `va_list` and passes everything over to generate the actual
- * output.
- *
- * It makes also sure that the output is generated in the correct format,
- * {@link #log_output_prefix()} it and putting {@link #log_output_eol()} at
- * the end.
+ * This outputs a formatted log message with the format string residing in RAM.
+ * It makes sure that the log message complies with the specified formatting,
+ * e.g. by prepending a {@link log_output_prefix() prefix} and ending with
+ * {@link log_output_eol() EOL}. The conversion itself are are performed by
+ * vfprint_P().
  *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param fmt Format string (from program space) describing logging output
  * @param ... Arguments for specifiers within format string
  *
- * @see log_outputf()
+ * @see log_outputf_prefix()
+ * @see log_output_eol()
  */
 void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
 {
@@ -565,12 +397,9 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
     // Output prefix, including module name and separator
     log_output_prefix(module, level);
 
-    char buffer[LOG_FORMAT_MAX_STRING_LENGTH];
-    strncpy_P(buffer, fmt, LOG_FORMAT_MAX_STRING_LENGTH);
-
     va_list va;
     va_start(va, fmt);
-    log_outputf(buffer, va);
+    vfprintf_P(&logout, fmt, va);
     va_end(va);
 
     // Output EOL

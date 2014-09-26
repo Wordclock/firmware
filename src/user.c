@@ -943,7 +943,7 @@ void handle_ir_code()
 
         }
 
-        log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Protocol: %H, address: %H, command: %H", ir_data.protocol, ir_data.address, ir_data.command);
+        log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Protocol: %04x, address: %04x, command: %04x", ir_data.protocol, ir_data.address, ir_data.command);
 
         g_keyDelay = USER_KEY_PRESS_DELAY_100MS;
 

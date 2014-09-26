@@ -131,7 +131,7 @@ void ldr_init()
     curr_sum *= MEASUREMENTS_ARRAY_SIZE;
 
     log_set_level(LOG_MODULE_LDR, LOG_LEVEL_LDR_DEFAULT);
-    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "Init: %U", result);
+    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "Init: %u", result);
 
     /*
      * ADIE: ADC interrupt enable
@@ -180,7 +180,7 @@ ISR(ADC_vect)
 
     uint8_t measurement = ADCH;
 
-    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "Value: %U", measurement);
+    log_output_P(LOG_MODULE_LDR, LOG_LEVEL_INFO, "Value: %u", measurement);
 
     curr_sum -= measurements[curr_index];
     measurements[curr_index] = measurement;
