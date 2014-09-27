@@ -41,7 +41,6 @@
 
 #include "config.h"
 #include "datetime.h"
-#include "format.h"
 #include "ldr.h"
 #include "log.h"
 #include "memcheck.h"
@@ -156,7 +155,7 @@ static void uart_protocol_output_args_hex(uint8_t argc, ...)
 
     for (uint8_t i = 0; i < argc; i++) {
 
-        sprintf_P(&str[i * 3], fmt_output_byte_as_hex, (uint8_t)va_arg(va, int));
+        sprintf_P(&str[i * 3], PSTR("%02x"), (uint8_t)va_arg(va, int));
 
         if (i == argc - 1) {
 
@@ -217,7 +216,7 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         uint8_t* var = (uint8_t*)va_arg(va, int);
 
         // Leave loop immediately in case of an error
-        if (strlen(str) != 2 || sscanf_P(str, fmt_input_byte_as_hex, var) != 1) {
+        if (strlen(str) != 2 || sscanf_P(str, PSTR("%hhx"), var) != 1) {
 
             log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_ERROR, "Invalid argument: %u", i);
 
@@ -901,7 +900,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_unused();
         char buffer[5];
-        sprintf_P(buffer, fmt_hex, unused);
+        sprintf_P(buffer, PSTR("%04x"), unused);
         uart_protocol_output(buffer);
 
     }
@@ -921,7 +920,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_current();
         char buffer[5];
-        sprintf_P(buffer, fmt_hex, unused);
+        sprintf_P(buffer, PSTR("%04x"), unused);
         uart_protocol_output(buffer);
 
     }

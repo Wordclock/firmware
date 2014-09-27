@@ -33,7 +33,6 @@
 
 #include "brightness.h"
 #include "config.h"
-#include "format.h"
 #include "ldr.h"
 #include "log.h"
 #include "pwm.h"

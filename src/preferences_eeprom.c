@@ -41,7 +41,6 @@
 #include <stdio.h>
 
 #include "eeprom.h"
-#include "format.h"
 #include "log.h"
 #include "preferences.h"
 #include "uart.h"
@@ -114,7 +113,7 @@ static void preferences_output(FILE* logout)
 
         }
 
-        fprintf_P(logout, fmt_output_byte_as_hex, *ptr++);
+        fprintf_P(logout, PSTR("%02x"), *ptr++);
 
     }
 

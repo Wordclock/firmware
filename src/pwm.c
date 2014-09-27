@@ -49,7 +49,6 @@
 
 #include "uart.h"
 #include "config.h"
-#include "format.h"
 #include "pwm.h"
 #include "ports.h"
 
@@ -583,7 +582,7 @@ void pwm_release_brightness()
 
         for (uint8_t i = 0; i < LDR2PWM_COUNT; i++) {
 
-            sprintf_P(buf, fmt_unsigned_decimal, g_ldrBrightness2pwmStep[i]);
+            sprintf_P(buf, PSTR("%u"), g_ldrBrightness2pwmStep[i]);
             uart_puts(buf);
 
         }

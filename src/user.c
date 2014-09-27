@@ -33,7 +33,6 @@
  */
 
 #include "config.h"
-#include "format.h"
 #include "user.h"
 #include "IRMP/irmp.h"
 #include "pwm.h"
@@ -447,10 +446,10 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
         char txt[8];
 
-        sprintf_P(txt, fmt_output_unsigned_decimal, time->hh);
+        sprintf_P(txt, PSTR("%u"), time->hh);
         uart_puts(txt);
         uart_putc(':');
-        sprintf_P(txt, fmt_output_unsigned_decimal, time->mm);
+        sprintf_P(txt, PSTR("%u"), time->mm);
         uart_puts(txt);
         uart_putc('\n');
 
@@ -616,7 +615,7 @@ bool leaveSubState(int8_t indexOfStateToLeave)
 
             char buff[5];
 
-            sprintf_P(buff, fmt_output_unsigned_decimal, g_stateStack[i]);
+            sprintf_P(buff, PSTR("%u"), g_stateStack[i]);
             uart_puts(buff);
             uart_putc(':');
             uart_putc(canLeave ? 'y' : 'n');

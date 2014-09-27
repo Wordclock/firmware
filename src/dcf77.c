@@ -46,7 +46,6 @@
 
 #include "config.h"
 #include "dcf77.h"
-#include "format.h"
 #include "uart.h"
 #include "ports.h"
 
@@ -517,23 +516,23 @@ static void dcf77_check_receiver_type()
 
             char log_text[8];
 
-            sprintf_P(log_text, fmt_unsigned_decimal, count_low);
+            sprintf_P(log_text, PSTR("%u"), count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            sprintf_P(log_text, fmt_unsigned_decimal, count_high);
+            sprintf_P(log_text, PSTR("%u"), count_high);
             uart_puts(log_text);
             uart_puts(" ");
 
-            sprintf_P(log_text, fmt_unsigned_decimal, count_high + count_low);
+            sprintf_P(log_text, PSTR("%u"), count_high + count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            sprintf_P(log_text, fmt_unsigned_decimal, count_pass);
+            sprintf_P(log_text, PSTR("%u"), count_pass);
             uart_puts(log_text);
             uart_puts(" ");
 
-            sprintf_P(log_text, fmt_unsigned_decimal, count_switch);
+            sprintf_P(log_text, PSTR("%u"), count_switch);
             uart_puts(log_text);
             uart_puts("\n");
 
@@ -750,7 +749,7 @@ static bool dcf77_check()
             /*
              * Output the length of the last pause
              */
-            sprintf_P(log_text, fmt_unsigned_decimal, DCF.PauseCounter);
+            sprintf_P(log_text, PSTR("%u"), DCF.PauseCounter);
             uart_puts(log_text);
             uart_puts(" ");
 

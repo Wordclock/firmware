@@ -44,7 +44,6 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "format.h"
 #include "ldr.h"
 #include "log.h"
 
