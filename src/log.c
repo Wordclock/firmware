@@ -419,6 +419,10 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * strings are output automatically, but everything in between is up to the
  * callback function itself.
  *
+ * @note Before the callback function gets executed the output buffer is
+ * flushed. If the callback function is generating a lot of output, it needs
+ * to flush the output for itself.
+ *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
