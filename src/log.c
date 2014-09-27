@@ -54,6 +54,7 @@ const char const log_module_name_4[] PROGMEM = "UARTP";
 const char const log_module_name_5[] PROGMEM = "DATE";
 const char const log_module_name_6[] PROGMEM = "IR";
 const char const log_module_name_7[] PROGMEM = "PREFS";
+const char const log_module_name_8[] PROGMEM = "DISP";
 
 /**
  * @brief Names of modules able to output logging information
@@ -79,6 +80,7 @@ PGM_P const log_module_names[] PROGMEM = {
     log_module_name_5,
     log_module_name_6,
     log_module_name_7,
+    log_module_name_8,
 
 };
 
@@ -417,16 +419,18 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * strings are output automatically, but everything in between is up to the
  * callback function itself.
  *
- * @note Callback functions are expected to use the log_output_put* function
- * family to output content.
+ * @note Before the callback function gets executed the output buffer is
+ * flushed. If the callback function is generating a lot of output, it needs
+ * to flush the output for itself.
  *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
+ * @param args Arguments to pass along to the callback function
  *
  * @see log_output_callback_t
  */
-void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback)
+void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback, void* args)
 {
 
     // Check whether output is enabled (globally and for specific module)
@@ -440,7 +444,7 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
     uart_flush_output();
 
     log_output_prefix(module, level);
-    callback(&logout);
+    callback(&logout, args);
     log_output_eol();
 
 }
