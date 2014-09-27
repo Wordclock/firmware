@@ -932,7 +932,7 @@ static bool dcf77_check()
  *
  * This function initializes the DCF77 module. Among other things it sets the
  * data direction registers for the input and output. Furthermore some flags
- * are set and/or cleared to trigger further initilization tasks, such as the
+ * are set and/or cleared to trigger further initialization tasks, such as the
  * detection of the receiver type.
  *
  * @see dcf77_check_receiver_type()

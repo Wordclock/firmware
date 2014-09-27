@@ -322,7 +322,7 @@
  *
  * This affects the {@link preferences.h preferences} module and controls
  * whether debug information about the initialization and save operations
- * should be ouput.
+ * should be output.
  *
  * @see log_level_t
  * @see preferences.h
