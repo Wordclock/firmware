@@ -510,7 +510,7 @@ static void UserState_enter(menu_state_t state, const void* param);
  * @see display_getIndicatorMask()
  * @see display_setDisplayState()
  */
-static void TrainIrState_enter(__attribute__ ((unused)) const void* param)
+static void TrainIrState_enter(__ATTR_UNUSED__ const void* param)
 {
 
     log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Entering training state");
@@ -914,7 +914,7 @@ static bool NormalState_handleUserCommand(user_command_t command)
      * @see AutoHueState::delay100ms
      * @see mode_autoHueState
      */
-    static void AutoHueState_enter(__attribute__ ((unused)) const void* param)
+    static void AutoHueState_enter(__ATTR_UNUSED__ const void* param)
     {
 
         mode_autoHueState.delay100ms = 0;
@@ -1262,7 +1262,7 @@ static bool EnterTimeState_handleUserCommand(user_command_t command)
  * @see menu_state_t::MS_enterTime
  * @see datetime_get()
  */
-static void SetSystemTimeState_enter(__attribute__ ((unused)) const void* param)
+static void SetSystemTimeState_enter(__ATTR_UNUSED__ const void* param)
 {
 
     log_state("SST\n");
@@ -1324,7 +1324,7 @@ static void SetSystemTimeState_substateFinished(menu_state_t finishedState, cons
  * @see menu_state_t::MS_enterTime
  * @see addSubState()
  */
-static void SetOnOffTimeState_enter(__attribute__ ((unused)) const void* param)
+static void SetOnOffTimeState_enter(__ATTR_UNUSED__ const void* param)
 {
 
     datetime_t dt = {0, 0, 0, 0, 0, 0, 0};

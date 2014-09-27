@@ -32,6 +32,7 @@
  * @see usermodes.c
  */
 
+#include "attributes.h"
 #include "config.h"
 #include "user.h"
 #include "IRMP/irmp.h"

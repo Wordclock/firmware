@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "attributes.h"
 #include "base.h"
 #include "config.h"
 #include "log.h"
@@ -158,7 +159,7 @@ static log_level_t log_level[LOG_MODULE_COUNT];
  * @see uart_putc()
  * @see uart_flush_output()
  */
-static int log_putc(char c, __attribute__ ((unused)) FILE* stream)
+static int log_putc(char c, __ATTR_UNUSED__ FILE* stream)
 {
 
     // Flush output buffer in case of a newline

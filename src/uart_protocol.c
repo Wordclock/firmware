@@ -39,6 +39,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "attributes.h"
 #include "config.h"
 #include "datetime.h"
 #include "ldr.h"
@@ -216,7 +217,7 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         uint8_t* var = (uint8_t*)va_arg(va, int);
 
         // Leave loop immediately in case of an error
-        if (strlen(str) != 2 || sscanf_P(str, PSTR("%hhx"), var) != 1) {
+        if (sscanf_P(str, PSTR("%hhx"), var) != 1) {
 
             log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_ERROR, "Invalid argument: %u", i);
 
@@ -315,7 +316,7 @@ typedef void (*uart_protocol_command_callback_t)(uint8_t argc, char* argv[]);
  * @see handle_user_command()
  * @see user_command_t
  */
-static void _ir_user_command(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _ir_user_command(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     if (strlen(argv[1]) == 1) {
@@ -441,7 +442,7 @@ static void _ir_user_command(__attribute__ ((unused)) uint8_t argc, char* argv[]
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_output_args_hex()
  */
-static void _version(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _version(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_output_args_hex(2, VERSION_MAJOR, VERSION_MINOR);
@@ -458,7 +459,7 @@ static void _version(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unus
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_ok()
  */
-static void _keepalive(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _keepalive(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_ok();
@@ -475,7 +476,7 @@ static void _keepalive(__attribute__ ((unused)) uint8_t argc, __attribute__ ((un
  * @see uart_protocol_command_callback_t
  * @see uart_protocol_ok()
  */
-static void _reset(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _reset(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_ok();
@@ -499,7 +500,7 @@ static void _reset(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused
  * @see prefs_t::version
  * @see _reset()
  */
-static void _factory_reset(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _factory_reset(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     preferences_get()->version = 0;
@@ -519,7 +520,7 @@ static void _factory_reset(__attribute__ ((unused)) uint8_t argc, __attribute__ 
  * @see ldr_get_brightness()
  * @see uart_protocol_output_args_hex()
  */
-static void _brightness_get(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _brightness_get(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_output_args_hex(1, ldr_get_brightness());
@@ -541,7 +542,7 @@ static void _brightness_get(__attribute__ ((unused)) uint8_t argc, __attribute__
  *
  * @todo Not real 8 bits, but 2^8-1?
  */
-static void _color_read(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _color_read(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     const color_rgb_t* color = pwm_get_color();
@@ -568,7 +569,7 @@ static void _color_read(__attribute__ ((unused)) uint8_t argc, __attribute__ ((u
  * @todo Not real 8 bits, but 2^8-1?
  * @todo Let the user set 00 00 00? Disable?
  */
-static void _color_write(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _color_write(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     color_rgb_t color;
@@ -597,7 +598,7 @@ static void _color_write(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see UI_COLOR_PRESET_COUNT
  * @see uart_protocol_output_args_hex()
  */
-static void _preset_number(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _preset_number(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_output_args_hex(1, UI_COLOR_PRESET_COUNT);
@@ -616,7 +617,7 @@ static void _preset_number(__attribute__ ((unused)) uint8_t argc, __attribute__ 
  *
  * @todo Return error when currently not in normal mode?
  */
-static void _preset_active(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _preset_active(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uint8_t preset = (&(preferences_get()->user_prefs))->curColorProfile;
@@ -637,7 +638,7 @@ static void _preset_active(__attribute__ ((unused)) uint8_t argc, __attribute__ 
  * @see user_prefs_t::curColorProfile
  * @see pwm_set_color()
  */
-static void _preset_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _preset_set(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     uint8_t preset;
@@ -676,7 +677,7 @@ static void _preset_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see user_prefs_t::colorPresets
  * @see uart_protocol_output_args_hex()
  */
-static void _preset_read(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _preset_read(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     uint8_t preset;
@@ -710,7 +711,7 @@ static void _preset_read(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see user_prefs_t::colorPresets
  * @see uart_protocol_ok()
  */
-static void _preset_write(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _preset_write(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     uint8_t preset;
@@ -755,7 +756,7 @@ static void _preset_write(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see datetime_get()
  * @see uart_protocol_output_args_hex()
  */
-static void _time_get(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _time_get(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     const datetime_t* datetime = datetime_get();
@@ -779,7 +780,7 @@ static void _time_get(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unu
  * @see uart_protocol_ok()
  * @see uart_protocol_error()
  */
-static void _time_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _time_set(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     uint8_t hh;
@@ -823,7 +824,7 @@ static void _time_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see datetime_get()
  * @see uart_protocol_output_args_hex()
  */
-static void _date_get(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _date_get(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     const datetime_t* datetime = datetime_get();
@@ -847,7 +848,7 @@ static void _date_get(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unu
  * @see uart_protocol_ok()
  * @see uart_protocol_error()
  */
-static void _date_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _date_set(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     uint8_t dd;
@@ -895,7 +896,7 @@ static void _date_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
      * @see memcheck_get_unused()
      * @see uart_protocol_output()
      */
-    static void _memory_unused(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+    static void _memory_unused(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
     {
 
         unsigned short unused = memcheck_get_unused();
@@ -915,7 +916,7 @@ static void _date_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
      * @see memcheck_get_current()
      * @see uart_protocol_output()
      */
-    static void _memory_current(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+    static void _memory_current(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
     {
 
         unsigned short unused = memcheck_get_current();
@@ -934,7 +935,7 @@ static void _date_set(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see log_enable()
  * @see uart_protocol_ok()
  */
-static void _log_enable(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _log_enable(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     log_enable();
@@ -949,7 +950,7 @@ static void _log_enable(__attribute__ ((unused)) uint8_t argc, __attribute__ ((u
  * @see log_disable()
  * @see uart_protocol_ok()
  */
-static void _log_disable(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _log_disable(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     log_disable();
@@ -964,7 +965,7 @@ static void _log_disable(__attribute__ ((unused)) uint8_t argc, __attribute__ ((
  * @see log_is_enabled()
  * @see
  */
-static void _log_is_enabled(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _log_is_enabled(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     uart_protocol_output_args_hex(1, (uint8_t)log_is_enabled());
@@ -985,7 +986,7 @@ static void _log_is_enabled(__attribute__ ((unused)) uint8_t argc, __attribute__
  * @see uart_protocl_error()
  * @see uart_protocol_ok()
  */
-static void _log_set_level(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _log_set_level(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     log_module_t module;
@@ -1020,7 +1021,7 @@ static void _log_set_level(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see uart_protocl_error()
  * @see uart_protocol_ok()
  */
-static void _log_get_level(__attribute__ ((unused)) uint8_t argc, char* argv[])
+static void _log_get_level(__ATTR_UNUSED__ uint8_t argc, char* argv[])
 {
 
     log_module_t module;
@@ -1053,7 +1054,7 @@ static void _log_get_level(__attribute__ ((unused)) uint8_t argc, char* argv[])
  * @see log_module_names
  * @see uart_protocol_output_p()
  */
-static void _log_modules(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _log_modules(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     for (uint8_t i = 0; i < LOG_MODULE_COUNT; i++) {
@@ -1080,7 +1081,7 @@ static void _log_modules(__attribute__ ((unused)) uint8_t argc, __attribute__ ((
  * @see log_level_names
  * @see uart_protocol_output_p()
  */
-static void _log_levels(__attribute__ ((unused)) uint8_t argc, __attribute__ ((unused)) char* argv[])
+static void _log_levels(__ATTR_UNUSED__ uint8_t argc, __ATTR_UNUSED__ char* argv[])
 {
 
     for (uint8_t i = 0; i < LOG_LEVEL_COUNT; i++) {
