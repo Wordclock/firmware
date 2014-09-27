@@ -417,9 +417,6 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * strings are output automatically, but everything in between is up to the
  * callback function itself.
  *
- * @note Callback functions are expected to use the log_output_put* function
- * family to output content.
- *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
