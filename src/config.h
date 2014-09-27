@@ -277,14 +277,14 @@
 #define LOG_LDR2PWM 0
 
 /**
- * @brief Defines whether changes of the display state should be logged
+ * @brief Default log level of the display module
  *
- * This affects `display_wc.c` and controls whether debug information about any
- * changes to the display state should be output.
+ * This affects the {@link display_wc.c display} and controls whether debug
+ * information about any changes to the display state should be output.
  *
  * @see display_wc.c
  */
-#define LOG_DISPLAY_STATE 0
+#define LOG_LEVEL_DISPLAY_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level for IR commands within user module

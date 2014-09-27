@@ -39,9 +39,37 @@
 
 #include "config.h"
 #include "display.h"
+#include "log.h"
 #include "shift.h"
 #include "uart.h"
 #include "ports.h"
+
+/**
+ * @brief Outputs the bit pattern of the display state
+ *
+ * This iterates over the display state passed in as a pointer by args and
+ * outputs a bit pattern of it.
+ *
+ * @param logout Stream used to output content
+ * @param args Pointer to the {@link display_state_t state} to output
+ *
+ * @see display_state_t
+ * @see log_output_callback_t
+ */
+static void display_output_state(FILE* logout, void* args)
+{
+
+    fprintf_P(logout, PSTR("State: "));
+    display_state_t state = *((display_state_t*)args);
+
+    for (uint8_t i = 0; i < 32; i++) {
+
+        fprintf(logout, "%u", (state & 1) ? 1 : 0);
+        state >>= 1;
+
+    }
+
+}
 
 /**
  * @brief Initializes the display module
@@ -55,6 +83,8 @@
  */
 void display_init()
 {
+
+    log_set_level(LOG_MODULE_DISPLAY, LOG_LEVEL_DISPLAY_DEFAULT);
 
     shift24_init();
 
@@ -74,9 +104,9 @@ void display_init()
  * @brief Outputs a display state
  *
  * This will output a given display state, which involves enabling and/or
- * disabling the minute LEDs and shifting out the bit pattern. When logging
- * for this particular module is enabled (LOG_DISPLAY_STATE), some debugging
- * information will be output via UART.
+ * disabling the minute LEDs and shifting out the bit pattern. Additionally
+ * the bit pattern of the state might be output by
+ * {@link #display_output_state()}.
  *
  * @param state The DisplayState that should be output
  *
@@ -130,23 +160,7 @@ void display_outputData(display_state_t state)
 
     }
 
-    #if (LOG_DISPLAY_STATE == 1)
-
-        uint8_t i;
-
-        uart_puts_P("Disp: ");
-
-        for (i = 0; i < 32; i++) {
-
-            uart_putc('0' + (state & 1));
-
-            state >>= 1;
-
-        }
-
-        uart_putc('\n');
-
-    #endif
+    log_output_callback(LOG_MODULE_DISPLAY, LOG_LEVEL_DEBUG, display_output_state, &state);
 
 }
 
