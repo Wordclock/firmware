@@ -992,7 +992,7 @@ static void _log_set_level(__ATTR_UNUSED__ uint8_t argc, char* argv[])
     log_module_t module;
     log_level_t level;
 
-    if (!uart_protocol_input_args_hex(1, argv[1], &module, argv[2], &level)
+    if (!uart_protocol_input_args_hex(2, argv[1], &module, argv[2], &level)
             || module >= LOG_MODULE_COUNT
             || level >= LOG_LEVEL_COUNT) {
 
