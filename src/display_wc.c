@@ -64,7 +64,7 @@ static void display_output_state(FILE* logout, void* args)
 
     for (uint8_t i = 0; i < 32; i++) {
 
-        fprintf(logout, "%u", (state & 1) ? 1 : 0);
+        fprintf_P(logout, PSTR("%u"), (state & 1) ? 1 : 0);
         state >>= 1;
 
     }
