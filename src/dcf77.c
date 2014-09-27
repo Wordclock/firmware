@@ -46,6 +46,7 @@
 
 #include "config.h"
 #include "dcf77.h"
+#include "log.h"
 #include "uart.h"
 #include "ports.h"
 
@@ -53,35 +54,6 @@
  * Only compile the following if DCF77 functionality is enabled
  */
 #if (ENABLE_DCF_SUPPORT == 1)
-
-/*
- * Check whether logging for this module is enabled
- */
-#if  (LOG_DCF77 == 1)
-
-    /**
-     * @brief Used to output logging information of this module
-     *
-     * When the logging for this module is enabled (LOG_DCF77 == 1), this macro
-     * is used to output various kinds of information.
-     *
-     * @see LOG_DCF77
-     */
-    #define log_dcf77(x) uart_puts_P(x)
-
-#else
-
-    /**
-     * @brief Used to output logging information of this module
-     *
-     * This makes sure that nothing is being output when the logging for this
-     * module is deactivated (LOG_DCF77 == 0).
-     *
-     * @see LOG_DCF77
-     */
-    #define log_dcf77(x)
-
-#endif
 
 /**
  * @brief Stores various flags used within this module
@@ -460,7 +432,7 @@ void dcf77_disable()
 static void dcf77_reset()
 {
 
-    log_dcf77("DCF77 Reset\n");
+    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Reset");
 
     DCF.Parity = 0;
     DCF.PauseCounter = 0;
@@ -571,10 +543,7 @@ static void dcf77_check_receiver_type()
                      */
                     PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
 
-                    /*
-                     * Output logging information regarding the change
-                     */
-                    log_dcf77(" Pull-UP deactivated\n");
+                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up deactivated");
 
                 } else {
 
@@ -583,10 +552,7 @@ static void dcf77_check_receiver_type()
                      */
                     PORT(DCF_INPUT) |= _BV(BIT(DCF_INPUT));
 
-                    /*
-                     * Output logging information regarding the change
-                     */
-                    log_dcf77(" Pull-UP activated\n");
+                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up activated");
 
                 }
 
@@ -608,10 +574,7 @@ static void dcf77_check_receiver_type()
                     setFlag(DEFINED);
                     clearFlag(AVAILABLE);
 
-                    /*
-                     * Output logging information
-                     */
-                    log_dcf77("\nNo DCF77 Module detected!\n");
+                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Module detected");
 
                 }
 
@@ -936,19 +899,13 @@ static bool dcf77_check()
 
         if ((DCF.OldTime + 1) == NewTime) {
 
-            /*
-             * Output some log information
-             */
-            log_dcf77(" 2nd DCF77 correct\n");
+            log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Second time frame correct");
 
             return true;
 
         } else {
 
-            /*
-             * Output some log information
-             */
-            log_dcf77(" 1st DCF77 correct\n");
+            log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "First time frame correct");
 
             /*
              * Take over the NewTime as OldTime for the next iteration
@@ -983,6 +940,9 @@ static bool dcf77_check()
  */
 void dcf77_init()
 {
+
+    // Set default log level
+    log_set_level(LOG_MODULE_DCF77, LOG_LEVEL_DCF77_DEFAULT);
 
     /*
      * Set up DCF input pin

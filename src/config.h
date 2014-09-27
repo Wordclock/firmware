@@ -330,14 +330,15 @@
 #define LOG_LEVEL_PREFERENCES_DEFAULT LOG_LEVEL_NONE
 
 /**
- * @brief Defines whether information about the DCF77 decoding should be logged
+ * @brief Default log level of the DCF77 module
  *
- * This affects `dcf77.c` and controls whether various debug information about
- * the current state of the DCF77 module should be output.
+ * This affects the {@link dcf77.c DCF77} module and controls whether debug
+ * information about the detection and decoding of the time signal should be
+ * output.
  *
  * @see dcf77.c
  */
-#define LOG_DCF77 0
+#define LOG_LEVEL_DCF77_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level of the UART protocol module
