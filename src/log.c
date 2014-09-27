@@ -158,7 +158,7 @@ static log_level_t log_level[LOG_MODULE_COUNT];
  * @see uart_putc()
  * @see uart_flush_output()
  */
-static int log_putc(char c, FILE* stream)
+static int log_putc(char c, __attribute__ ((unused)) FILE* stream)
 {
 
     // Flush output buffer in case of a newline

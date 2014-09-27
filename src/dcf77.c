@@ -230,7 +230,7 @@ static inline void clearFlag(FLAGS flag)
  * These variables are needed in order to successfully decode the DCF77 time
  * signal. They are combined in a struct.
  */
-volatile typedef struct {
+typedef volatile struct {
 
     /**
      * @brief Counter for the pause length
@@ -410,7 +410,7 @@ static uint8_t count_high;
  *
  * @see DCF_Struct::BCDShifter
  */
-const static uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
+static const uint8_t BcdWeights[] = {1, 2, 4, 8, 10, 20, 40, 80};
 
 /**
  * @brief Enables the DCF77 reception

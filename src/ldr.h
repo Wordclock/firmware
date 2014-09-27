@@ -69,7 +69,7 @@ extern uint8_t ldr_get_brightness();
  * @see INTERRUPT_1HZ
  * @see ISR(ADC_vect)
  */
-void inline ldr_ADC() {
+inline void ldr_ADC() {
 
     /*
      * ADSC: ADC start conversion
