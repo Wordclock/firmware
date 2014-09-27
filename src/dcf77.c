@@ -432,7 +432,7 @@ void dcf77_disable()
 static void dcf77_reset()
 {
 
-    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Reset");
+    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Reset");
 
     DCF.Parity = 0;
     DCF.PauseCounter = 0;
@@ -543,7 +543,7 @@ static void dcf77_check_receiver_type()
                      */
                     PORT(DCF_INPUT) &= ~_BV(BIT(DCF_INPUT));
 
-                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up deactivated");
+                    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up deactivated");
 
                 } else {
 
@@ -552,7 +552,7 @@ static void dcf77_check_receiver_type()
                      */
                     PORT(DCF_INPUT) |= _BV(BIT(DCF_INPUT));
 
-                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up activated");
+                    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pull-up activated");
 
                 }
 
@@ -574,7 +574,7 @@ static void dcf77_check_receiver_type()
                     setFlag(DEFINED);
                     clearFlag(AVAILABLE);
 
-                    log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Module detected");
+                    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Module detected");
 
                 }
 
@@ -899,13 +899,13 @@ static bool dcf77_check()
 
         if ((DCF.OldTime + 1) == NewTime) {
 
-            log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Second time frame correct");
+            log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Second time frame correct");
 
             return true;
 
         } else {
 
-            log_output(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "First time frame correct");
+            log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "First time frame correct");
 
             /*
              * Take over the NewTime as OldTime for the next iteration
