@@ -269,7 +269,7 @@ enum e_displayWordPos
  * @see DISPLAY_ADD_JESTER_MODE
  * @see display_prefs_t
  */
-typedef enum e_WcGerModes {
+typedef enum {
 
     tm_wessi = 0,
     tm_rheinRuhr,

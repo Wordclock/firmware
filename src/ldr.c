@@ -41,12 +41,12 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <stdio.h>
 
 #include "config.h"
-#include "uart.h"
+#include "format.h"
 #include "ldr.h"
 #include "log.h"
-#include "base.h"
 
 /**
  * @brief Stores the last measurements taken

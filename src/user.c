@@ -33,6 +33,7 @@
  */
 
 #include "config.h"
+#include "format.h"
 #include "user.h"
 #include "IRMP/irmp.h"
 #include "pwm.h"
@@ -69,7 +70,7 @@
 /**
  * @brief Indicates whether the autoOff animation is currently being enabled
  *
- * @see POWER_STATES::UPS_AUTO_OFF
+ * @see user_power_state_t::UPS_AUTO_OFF
  */
 bool useAutoOffAnimation;
 
@@ -156,13 +157,13 @@ static uint8_t g_keyDelay;
  * display manually. Although the outcome may seem equal to the outside, these
  * states are handled quite different internally.
  *
- * The current "power" state is hold by g_powerState and at any given point in
- * time will contain one of these values:
+ * The current "power" state is hold by user_power_state and at any given point
+ * in time will contain one of these values:
  *
- *  - normal_on (POWER_STATES::UPS_NORMAL_ON)
- *  - auto_off (POWER_STATES::UPS_AUTO_OFF)
- *  - user_off (POWER_STATES::UPS_MANUAL_OFF)
- *  - override_on (POWER_STATES::UPS_OVERRIDE_ON)
+ *  - normal_on (user_power_state_t::UPS_NORMAL_ON)
+ *  - auto_off (user_power_state_t::UPS_AUTO_OFF)
+ *  - user_off (user_power_state_t::UPS_MANUAL_OFF)
+ *  - override_on (user_power_state_t::UPS_OVERRIDE_ON)
  *
  * The following "inputs" are possible for each of this states:
  *
@@ -192,17 +193,17 @@ static uint8_t g_keyDelay;
  * @note Be careful with changes and/or adaptations to the ordering of these
  * items, as some functions rely on it.
  *
- * @see g_powerState
+ * @see user_power_state
  * @see handle_ir_code()
  * @see user_setNewTime()
  * @see user_isr1Hz()
  */
-enum POWER_STATES {
+typedef enum {
 
     /**
      * @brief Represents the state when the display is turned on normally
      *
-     * This is the value for g_powerState when the display is turned on
+     * This is the value for user_power_state when the display is turned on
      * normally. This is mainly needed to differentiate against the various
      * forms of "off" modes.
      */
@@ -213,15 +214,15 @@ enum POWER_STATES {
      *
      * When the display was turned off by the autoOff feature, but was enabled
      * by the user manually afterwards, this is the value that will be assigned
-     * to g_powerState.
+     * to user_power_state.
      */
     UPS_OVERRIDE_ON,
 
     /**
      * @brief Represents the state when the display was turned off by autoOff
      *
-     * This will be assigned to g_powerState whenever the display is turned off
-     * automatically by the autoOff feature.
+     * This will be assigned to user_power_state whenever the display is turned
+     * off automatically by the autoOff feature.
      *
      * It is possible to activate an animation during this "power" state, which
      * will indicate to the user, which mode the Wordclock is currently in.
@@ -236,23 +237,23 @@ enum POWER_STATES {
     /**
      * @brief Represents the state when the display was turned off manually
      *
-     * This will be assigned to g_powerState whenever the display was turned
-     * off manually by the user.
+     * This will be assigned to user_power_state whenever the display was
+     * turned off manually by the user.
      */
     UPS_MANUAL_OFF,
 
-};
+} user_power_state_t;
 
 /**
  * @brief Holds the current "power" state
  *
- * This contains a value of POWER_STATES and determines the current "power"
+ * This contains a value of user_power_state_t and determines the current "power"
  * state. Based on this, other states can be reached - depending upon the
  * "input".
  *
- * @see POWER_STATES
+ * @see user_power_state_t
  */
-static uint8_t g_powerState;
+static user_power_state_t user_power_state;
 
 #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
@@ -277,7 +278,7 @@ static uint8_t g_powerState;
  * display_autoOffAnimStep1Hz(), where this variable will simply be passed on
  * as a parameter.
  *
- * @see POWER_STATES::UPS_AUTO_OFF
+ * @see user_power_state_t::UPS_AUTO_OFF
  * @see display_autoOffAnimStep1Hz()
  */
 static bool g_animPreview = false;
@@ -446,10 +447,10 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
         char txt[8];
 
-        uint8ToStrLessOneHundred(time->hh, txt);
+        sprintf_P(txt, fmt_output_unsigned_decimal, time->hh);
         uart_puts(txt);
         uart_putc(':');
-        uint8ToStrLessOneHundred(time->mm, txt);
+        sprintf_P(txt, fmt_output_unsigned_decimal, time->mm);
         uart_puts(txt);
         uart_putc('\n');
 
@@ -615,7 +616,7 @@ bool leaveSubState(int8_t indexOfStateToLeave)
 
             char buff[5];
 
-            uint8ToStrLessOneHundred(g_stateStack[i], buff);
+            sprintf_P(buff, fmt_output_unsigned_decimal, g_stateStack[i]);
             uart_puts(buff);
             uart_putc(':');
             uart_putc(canLeave ? 'y' : 'n');
@@ -724,20 +725,20 @@ void handle_user_command(user_command_t user_command)
 
         log_state("OF\n");
 
-        if (g_powerState < UPS_AUTO_OFF) {
+        if (user_power_state < UPS_AUTO_OFF) {
 
-            g_powerState = UPS_MANUAL_OFF;
+            user_power_state = UPS_MANUAL_OFF;
             pwm_off();
 
         } else {
 
-            if (g_powerState == UPS_MANUAL_OFF) {
+            if (user_power_state == UPS_MANUAL_OFF) {
 
-                g_powerState = UPS_NORMAL_ON;
+                user_power_state = UPS_NORMAL_ON;
 
             } else {
 
-                g_powerState = UPS_OVERRIDE_ON;
+                user_power_state = UPS_OVERRIDE_ON;
 
             }
 
@@ -943,7 +944,9 @@ void handle_ir_code()
 
         }
 
-        log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO, "Protocol: %04x, address: %04x, command: %04x", ir_data.protocol, ir_data.address, ir_data.command);
+        log_output_P(LOG_MODULE_USER_IR, LOG_LEVEL_INFO,
+                "Protocol: %04x, address: %04x, command: %04x",
+                ir_data.protocol, ir_data.address, ir_data.command);
 
         g_keyDelay = USER_KEY_PRESS_DELAY_100MS;
 
@@ -1084,11 +1087,11 @@ void user_setNewTime(const datetime_t* i_time)
 
             if (checkActivation()) {
 
-                if (g_powerState != UPS_MANUAL_OFF) {
+                if (user_power_state != UPS_MANUAL_OFF) {
 
                     #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
-                        if (g_powerState == UPS_AUTO_OFF) {
+                        if (user_power_state == UPS_AUTO_OFF) {
 
                             PORT(USER_AMBILIGHT) |= g_settingOfAmbilightBeforeAutoOff;
 
@@ -1096,16 +1099,16 @@ void user_setNewTime(const datetime_t* i_time)
 
                     #endif
 
-                    g_powerState = UPS_NORMAL_ON;
+                    user_power_state = UPS_NORMAL_ON;
                     pwm_on();
 
                 }
 
             } else {
 
-                if (g_powerState == UPS_NORMAL_ON) {
+                if (user_power_state == UPS_NORMAL_ON) {
 
-                    g_powerState = UPS_AUTO_OFF;
+                    user_power_state = UPS_AUTO_OFF;
 
                     #if (ENABLE_AMBILIGHT_SUPPORT == 1)
 
@@ -1129,7 +1132,7 @@ void user_setNewTime(const datetime_t* i_time)
     }
 
     if (!UserState_prohibitTimeDisplay(user_get_current_menu_state())
-            && (g_powerState != UPS_AUTO_OFF)) {
+            && (user_power_state != UPS_AUTO_OFF)) {
 
         log_time("disp Time ");
 
@@ -1212,7 +1215,7 @@ void user_isr10Hz()
  * (USER_DELAY_BEFORE_SAVE_EEPROM_S). It will also make sure that either
  * UserState_Isr1Hz() with the current state as parameter and/or
  * display_autoOffAnimStep1Hz() with the current setting of g_animPreview are
- * executed - depending on the current power "state" (g_powerState).
+ * executed - depending on the current power "state" (user_power_state).
  *
  * @see INTERRUPT_1HZ
  * @see g_eepromSaveDelay
@@ -1222,7 +1225,7 @@ void user_isr10Hz()
  * @see UserState_Isr1Hz()
  * @see display_autoOffAnimStep1Hz()
  * @see g_animPreview
- * @see g_powerState
+ * @see user_power_state
  */
 void user_isr1Hz()
 {
@@ -1251,7 +1254,7 @@ void user_isr1Hz()
 
     #endif
 
-    if ((g_powerState != UPS_AUTO_OFF) && (!g_animPreview)) {
+    if ((user_power_state != UPS_AUTO_OFF) && (!g_animPreview)) {
 
         UserState_Isr1Hz(user_get_current_menu_state());
 

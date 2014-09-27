@@ -138,6 +138,8 @@
 
 - Come up with a suitable Makefile
 
+- Look into making use of autotools
+
 - Make use of git branches!
 
 - pwm.c: Check whether it would make sense to adapt pwm_on() and pwm_off() to

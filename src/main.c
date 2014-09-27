@@ -48,7 +48,6 @@
 #include "timer.h"
 #include "user.h"
 #include "uart.h"
-#include "base.h"
 #include "preferences.h"
 #include "uart_protocol.h"
 

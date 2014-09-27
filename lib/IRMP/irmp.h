@@ -1,11 +1,9 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
  * irmp.h
  *
- * Copyright (c) 2009-2013 Frank Meyer - frank(at)fli4l.de
+ * Copyright (c) 2009-2014 Frank Meyer - frank(at)fli4l.de
  *
- * $Id: irmp.h,v 1.84 2014/02/19 12:57:36 fm Exp $
- *
- * ATMEGA88 @ 8 MHz
+ * $Id: irmp.h,v 1.89 2014/09/15 10:27:38 fm Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,6 +126,12 @@
 #  define IRMP_SUPPORT_LEGO_PROTOCOL            0
 #endif
 
+#if IRMP_SUPPORT_SAMSUNG48_PROTOCOL == 1 && IRMP_SUPPORT_SAMSUNG_PROTOCOL == 0
+#  warning SAMSUNG48 protocol needs also SAMSUNG protocol, SAMSUNG protocol enabled
+#  undef IRMP_SUPPORT_SAMSUNG_PROTOCOL
+#  define IRMP_SUPPORT_SAMSUNG_PROTOCOL         1
+#endif
+
 #if IRMP_SUPPORT_JVC_PROTOCOL == 1 && IRMP_SUPPORT_NEC_PROTOCOL == 0
 #  warning JVC protocol needs also NEC protocol, NEC protocol enabled
 #  undef IRMP_SUPPORT_NEC_PROTOCOL
@@ -142,6 +146,12 @@
 
 #if IRMP_SUPPORT_NEC42_PROTOCOL == 1 && IRMP_SUPPORT_NEC_PROTOCOL == 0
 #  warning NEC42 protocol needs also NEC protocol, NEC protocol enabled
+#  undef IRMP_SUPPORT_NEC_PROTOCOL
+#  define IRMP_SUPPORT_NEC_PROTOCOL             1
+#endif
+
+#if IRMP_SUPPORT_LGAIR_PROTOCOL == 1 && IRMP_SUPPORT_NEC_PROTOCOL == 0
+#  warning LGAIR protocol needs also NEC protocol, NEC protocol enabled
 #  undef IRMP_SUPPORT_NEC_PROTOCOL
 #  define IRMP_SUPPORT_NEC_PROTOCOL             1
 #endif
@@ -166,7 +176,7 @@ extern uint8_t                          irmp_is_busy (void);
 extern uint8_t                          irmp_ISR (void);
 
 #if IRMP_PROTOCOL_NAMES == 1
-extern char *                           irmp_protocol_names[IRMP_N_PROTOCOLS + 1];
+extern const char * const               irmp_protocol_names[IRMP_N_PROTOCOLS + 1] PROGMEM;
 #endif
 
 #if IRMP_USE_CALLBACK == 1

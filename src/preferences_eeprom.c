@@ -38,8 +38,10 @@
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
 
-#include "base.h"
+#include <stdio.h>
+
 #include "eeprom.h"
+#include "format.h"
 #include "log.h"
 #include "preferences.h"
 #include "uart.h"
@@ -112,7 +114,7 @@ static void preferences_output(FILE* logout)
 
         }
 
-        fprintf_P(logout, PSTR("%02x"), *ptr++);
+        fprintf_P(logout, fmt_output_byte_as_hex, *ptr++);
 
     }
 
@@ -152,6 +154,7 @@ void preferences_init()
     }
 
     log_output_callback(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, preferences_output);
+
 }
 
 /**

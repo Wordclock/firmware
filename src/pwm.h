@@ -82,7 +82,7 @@
  * @see PWMEEPROMPARAMS_DEFAULT
  * @see prefs_t::pwm_prefs
  */
-typedef struct pwm_prefs_t {
+typedef struct {
 
     /**
      * @brief User defined offset to the brightness control

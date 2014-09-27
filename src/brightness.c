@@ -29,9 +29,11 @@
  */
 
 #include <inttypes.h>
+#include <stdio.h>
 
 #include "brightness.h"
 #include "config.h"
+#include "format.h"
 #include "ldr.h"
 #include "log.h"
 #include "pwm.h"

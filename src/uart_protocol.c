@@ -37,10 +37,11 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "config.h"
-#include "base.h"
 #include "datetime.h"
+#include "format.h"
 #include "ldr.h"
 #include "log.h"
 #include "memcheck.h"
@@ -155,7 +156,7 @@ static void uart_protocol_output_args_hex(uint8_t argc, ...)
 
     for (uint8_t i = 0; i < argc; i++) {
 
-        uint8ToHexStr((uint8_t)va_arg(va, int), &str[i * 3]);
+        sprintf_P(&str[i * 3], fmt_output_byte_as_hex, (uint8_t)va_arg(va, int));
 
         if (i == argc - 1) {
 
@@ -215,12 +216,8 @@ static bool uart_protocol_input_args_hex(uint8_t argc, ...)
         char* str = (char*)va_arg(va, int);
         uint8_t* var = (uint8_t*)va_arg(va, int);
 
-        bool status;
-
-        *var = hexStrToUint8(str, &status);
-
         // Leave loop immediately in case of an error
-        if (!status) {
+        if (strlen(str) != 2 || sscanf_P(str, fmt_input_byte_as_hex, var) != 1) {
 
             log_output_P(LOG_MODULE_UART_PROTOCOL, LOG_LEVEL_ERROR, "Invalid argument: %u", i);
 
@@ -904,7 +901,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_unused();
         char buffer[5];
-        uint16ToHexStr(unused, buffer);
+        sprintf_P(buffer, fmt_hex, unused);
         uart_protocol_output(buffer);
 
     }
@@ -924,7 +921,7 @@ static void _date_set(uint8_t argc, char* argv[])
 
         unsigned short unused = memcheck_get_current();
         char buffer[5];
-        uint16ToHexStr(unused, buffer);
+        sprintf_P(buffer, fmt_hex, unused);
         uart_protocol_output(buffer);
 
     }
@@ -985,7 +982,6 @@ static void _log_is_enabled(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see log_module_t
  * @see log_level_t
- * @see hexStrToUint8()
  * @see log_set_level()
  * @see uart_protocl_error()
  * @see uart_protocol_ok()
@@ -993,21 +989,12 @@ static void _log_is_enabled(uint8_t argc, char* argv[])
 static void _log_set_level(uint8_t argc, char* argv[])
 {
 
-    bool status;
+    log_module_t module;
+    log_level_t level;
 
-    log_module_t module = hexStrToUint8(argv[1], &status);
-
-    if (!status || module >= LOG_MODULE_COUNT) {
-
-        uart_protocol_error();
-
-        return;
-
-    }
-
-    log_level_t level = hexStrToUint8(argv[2], &status);
-
-    if (!status || level >= LOG_LEVEL_COUNT) {
+    if (!uart_protocol_input_args_hex(1, argv[1], &module, argv[2], &level)
+            || module >= LOG_MODULE_COUNT
+            || level >= LOG_LEVEL_COUNT) {
 
         uart_protocol_error();
 
@@ -1030,7 +1017,6 @@ static void _log_set_level(uint8_t argc, char* argv[])
  * @see uart_protocol_command_callback_t
  * @see log_module_t
  * @see log_level_t
- * @see hexStrToUint8()
  * @see log_get_level()
  * @see uart_protocl_error()
  * @see uart_protocol_ok()
@@ -1038,11 +1024,9 @@ static void _log_set_level(uint8_t argc, char* argv[])
 static void _log_get_level(uint8_t argc, char* argv[])
 {
 
-    bool status;
+    log_module_t module;
 
-    log_module_t module = hexStrToUint8(argv[1], &status);
-
-    if (!status || module >= LOG_MODULE_COUNT) {
+    if (!uart_protocol_input_args_hex(1, argv[1]) || module >= LOG_MODULE_COUNT) {
 
         uart_protocol_error();
 

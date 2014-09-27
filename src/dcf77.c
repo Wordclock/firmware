@@ -42,10 +42,11 @@
 #include <inttypes.h>
 #include <avr/io.h>
 #include <stdbool.h>
+#include <stdio.h>
 
-#include "base.h"
 #include "config.h"
 #include "dcf77.h"
+#include "format.h"
 #include "uart.h"
 #include "ports.h"
 
@@ -89,7 +90,7 @@
  * These flags are mainly used to keep up of the current state of
  * this module. To save some space they are combined into an enumeration.
  *
- * @see FLAGS_e
+ * @see FLAGS
  * @see getFlag()
  * @see setFlag()
  * @see clearFlag()
@@ -97,7 +98,7 @@
 uint8_t DCF_FLAG;
 
 /**
- * @brief Holds various flags defined in FLAGS_e
+ * @brief Holds various flags defined in FLAGS
  *
  * This is the actual variable holding the flags. It gets used by getFlag(),
  * setFlag() and clearFLag().
@@ -106,7 +107,7 @@ uint8_t DCF_FLAG;
  * @see setFlag()
  * @see clearFlag()
  */
-typedef enum FLAGS_e {
+typedef enum {
 
     /**
      * @brief Indicates whether a new full pulse has been received
@@ -124,9 +125,9 @@ typedef enum FLAGS_e {
      *
      * This is set when the receiver type has been detected successfully. This
      * might also get set when no receiver could be found. In that case it is
-     * combined FLAGS_e::AVAILABLE.
+     * combined FLAGS::AVAILABLE.
      *
-     * @see FLAGS_e::AVAILABLE
+     * @see FLAGS::AVAILABLE
      * @see dcf77_check_receiver_type()
      */
     DEFINED,
@@ -137,10 +138,10 @@ typedef enum FLAGS_e {
      * When a receiver could successfully be detected, it is set. When no
      * receiver could be found it is cleared.
      *
-     * In combination with FLAGS_e::DEFINED it tells whether there is a usable
+     * In combination with FLAGS::DEFINED it tells whether there is a usable
      * receiver available or not.
      *
-     * @see FLAGS_e::DEFINED
+     * @see FLAGS::DEFINED
      * @see dcf77_check_receiver_type()
      */
     AVAILABLE,
@@ -163,7 +164,7 @@ typedef enum FLAGS_e {
 /**
  * @brief Retrieves the value of an individual flag
  *
- * @see FLAGS_e
+ * @see FLAGS
  * @see setFlag()
  * @see clearFlag()
  */
@@ -177,7 +178,7 @@ static inline bool getFlag(FLAGS flag)
 /**
  * @brief Sets the value for an individual flag
  *
- * @see FLAGS_e
+ * @see FLAGS
  * @see getFlag()
  * @see clearFlag()
  */
@@ -191,7 +192,7 @@ static inline void setFlag(FLAGS flag)
 /**
  * @brief Clears the value for an individual flag
  *
- * @see FLAGS_e
+ * @see FLAGS
  * @see getFlag()
  * @see clearFlag()
  */
@@ -491,7 +492,7 @@ static void dcf77_reset()
  * This function is only used during the initialization phase. Once the type of
  * the receiver has been determined, it won't change during runtime anymore.
  *
- * @see FLAGS_e
+ * @see FLAGS
  */
 static void dcf77_check_receiver_type()
 {
@@ -516,23 +517,23 @@ static void dcf77_check_receiver_type()
 
             char log_text[8];
 
-            uint8ToStr(count_low, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_high, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, count_high);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_high+count_low, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, count_high + count_low);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_pass, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, count_pass);
             uart_puts(log_text);
             uart_puts(" ");
 
-            uint8ToStr(count_switch, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, count_switch);
             uart_puts(log_text);
             uart_puts("\n");
 
@@ -749,7 +750,7 @@ static bool dcf77_check()
             /*
              * Output the length of the last pause
              */
-            uint8ToStr(DCF.PauseCounter, log_text);
+            sprintf_P(log_text, fmt_unsigned_decimal, DCF.PauseCounter);
             uart_puts(log_text);
             uart_puts(" ");
 
@@ -979,7 +980,7 @@ static bool dcf77_check()
  * detection of the receiver type.
  *
  * @see dcf77_check_receiver_type()
- * @see FLAGS_e
+ * @see FLAGS
  */
 void dcf77_init()
 {
@@ -1028,7 +1029,7 @@ void dcf77_init()
  * Furthermore it sets the output pin according to the input pin.
  *
  * @see dcf77_check()
- * @see FLAGS_e
+ * @see FLAGS
  * @see INTERRUPT_100HZ
  */
 void dcf77_ISR()
@@ -1144,7 +1145,7 @@ void dcf77_ISR()
  *
  * @return True if date & time has been put into buffer, false otherwise
  *
- * @see FLAGS_e
+ * @see FLAGS
  */
 bool dcf77_get_datetime(datetime_t * dt)
 {

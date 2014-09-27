@@ -182,7 +182,7 @@ enum e_displayWordPos
     * @see DISPLAY_DEACTIVATABLE_ITIS
     * @see display_prefs_t
     */
-    typedef enum e_WcEngModes {
+    typedef enum {
 
         tm_itIsOn = 0,
         tm_itIsOff,
