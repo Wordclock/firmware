@@ -420,10 +420,11 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
  * @param callback Callback function responsible for generating output
+ * @param args Arguments to pass along to the callback function
  *
  * @see log_output_callback_t
  */
-void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback)
+void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback, void* args)
 {
 
     // Check whether output is enabled (globally and for specific module)
@@ -437,7 +438,7 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
     uart_flush_output();
 
     log_output_prefix(module, level);
-    callback(&logout);
+    callback(&logout, args);
     log_output_eol();
 
 }

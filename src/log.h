@@ -116,9 +116,12 @@ typedef enum {
  * This defines the type of functions that can be invoked by
  * {@link #log_output_callback()} to generate custom output.
  *
+ * @param logout Stream used to output content
+ * @param args Additional data passed to the callback function
+ *
  * @see log_output_callback()
  */
-typedef void (*log_output_callback_t)(FILE* logout);
+typedef void (*log_output_callback_t)(FILE* logout, void* args);
 
 extern PGM_P const log_level_names[] PROGMEM;
 extern PGM_P const log_module_names[] PROGMEM;
@@ -134,7 +137,7 @@ log_level_t log_get_level(log_module_t module);
 
 void log_output(log_module_t module, log_level_t level, const char* fmt, ...);
 void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...);
-void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback);
+void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback, void *args);
 
 void log_output_putc(char c);
 void log_output_puts(const char* fmt, ...);

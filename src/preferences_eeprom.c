@@ -40,6 +40,7 @@
 
 #include <stdio.h>
 
+#include "attributes.h"
 #include "eeprom.h"
 #include "log.h"
 #include "preferences.h"
@@ -93,11 +94,14 @@ static prefs_t prefs;
  * the content on a byte by byte basis. The length of the content is determined
  * by {@link #prefs_t}.
  *
+ * @param logout Stream used to output content
+ * @param args Only defined for consistency reasons, not being used here
+ *
  * @see g_epromWorking
  * @see eepromParams
  * @see log_output_callback_t
  */
-static void preferences_output(FILE* logout)
+static void preferences_output(FILE* logout, __ATTR_UNUSED__ void* args)
 {
 
     fprintf_P(logout, PSTR("Content: "));
@@ -152,7 +156,7 @@ void preferences_init()
 
     }
 
-    log_output_callback(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, preferences_output);
+    log_output_callback(LOG_MODULE_PREFERENCES, LOG_LEVEL_INFO, preferences_output, NULL);
 
 }
 
