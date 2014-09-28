@@ -418,68 +418,6 @@ static bool curTimeIsBetween(uint8_t h1, uint8_t m1, uint8_t h2, uint8_t m2);
 
 #endif
 
-#if (LOG_USER_TIME == 1)
-
-    /**
-     * @brief Macro to output constant strings from program memory
-     *
-     * This is used within various functions of this module to output constant
-     * strings from program memory regarding the time of the module itself
-     * using UART.
-     *
-     * @see g_dateTime
-     * @see user_setNewTime()
-     * @see uart_puts_P()
-     */
-    #define log_time(x) uart_puts_P(x)
-
-    /**
-     * @brief Outputs the given time
-     *
-     * This can be used to output the hours and minutes of the given time
-     * using UART. Other attributes of datetime_t will simply be ignored.
-     *
-     * @see datetime_t
-     * @see uint8ToStrLessOneHundred()
-     */
-    void putTime(const datetime_t* time)
-    {
-
-        char txt[8];
-
-        sprintf_P(txt, PSTR("%u"), time->hh);
-        uart_puts(txt);
-        uart_putc(':');
-        sprintf_P(txt, PSTR("%u"), time->mm);
-        uart_puts(txt);
-        uart_putc('\n');
-
-    }
-
-#else
-
-    /**
-     * @brief Dummy macro in case logging is disabled
-     *
-     * When LOG_USER_TIME == 0 this makes sure that nothing is actually added
-     * to the code. This makes it possible to add log_state() within various
-     * functions without worrying whether or not the debugging is actually
-     * enabled.
-     */
-    #define log_time(x)
-
-    /**
-     * @brief Dummy macro in case logging is disabled
-     *
-     * When LOG_USER_TIME == 0 this makes sure that nothing is actually added
-     * to the code. This makes it possible to add log_state() within various
-     * functions without worrying whether or not the debugging is actually
-     * enabled.
-     */
-    #define putTime(x)
-
-#endif
-
 #include "usermodes.c"
 
 /**
@@ -1037,6 +975,28 @@ void user_init()
 }
 
 /**
+ * @brief Outputs the time for the given pointer
+ *
+ * This puts out the time (hour and minutes) of the datetime_t struct pointed
+ * to by args. It is used internally for debugging purposes, to see when and
+ * in which way the time is being changed.
+ *
+ * @param logout Stream used to output content
+ * @param args Pointer to the {@link datetime_t time} that should be output
+ *
+ * @see datetime_t
+ * @see log_output_callback_t
+ */
+static void output_time(FILE* logout, void* args)
+{
+
+    datetime_t* dt = (datetime_t*)args;
+
+    fprintf_P(logout, PSTR("Time: %u:%u"), dt->hh, dt->mm);
+
+}
+
+/**
  * @brief Outputs the given datetime to the display
  *
  * This will output the given time to the display by retrieving the appropriate
@@ -1054,7 +1014,8 @@ void user_init()
 static void dispInternalTime(const datetime_t* i_time, display_state_t blinkmask)
 {
 
-    putTime(i_time);
+    log_output_callback(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, output_time, (void*) i_time);
+
     display_setDisplayState(display_getTimeState(i_time), blinkmask);
 
 }
@@ -1081,7 +1042,7 @@ void user_setNewTime(const datetime_t* i_time)
 
     if (i_time) {
 
-        log_time("saved Time ");
+        log_output_P(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, "Setting new time");
 
         if ((g_checkIfAutoOffDelay >= USER_DELAY_CHECK_IF_AUTO_OFF_REACHED_S)) {
 
@@ -1134,12 +1095,11 @@ void user_setNewTime(const datetime_t* i_time)
     if (!UserState_prohibitTimeDisplay(user_get_current_menu_state())
             && (user_power_state != UPS_AUTO_OFF)) {
 
-        log_time("disp Time ");
+        const datetime_t* dt = datetime_get();
 
-        putTime(datetime_get());
-        display_fadeNewTime(datetime_get());
+        log_output_callback(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, output_time, (void*) dt);
 
-        log_time("\n");
+        display_fadeNewTime(dt);
 
     }
 

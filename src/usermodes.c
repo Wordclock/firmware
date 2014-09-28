@@ -1117,7 +1117,7 @@ static void EnterTimeState_enter(const void* param)
 
     display_state_t disp;
 
-    log_time("TH\n");
+    log_output_P(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, "TH");
 
     mode_enterTimeState.time = *((datetime_t*)param);
     mode_enterTimeState.curSubState = ETS_hour;
@@ -1185,13 +1185,13 @@ static bool EnterTimeState_handleUserCommand(user_command_t command)
 
         if (ETS_hour == mode_enterTimeState.curSubState) {
 
-            log_time("TM\n");
+            log_output_P(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, "TM");
 
             mode_enterTimeState.curSubState = ETS_minutes;
 
         } else if (ETS_minutes == mode_enterTimeState.curSubState) {
 
-            log_time("TS\n");
+            log_output_P(LOG_MODULE_USER_TIME, LOG_LEVEL_DEBUG, "TS");
 
             mode_enterTimeState.time.ss = 0;
             mode_enterTimeState.prohibitLeave = false;
