@@ -484,31 +484,13 @@ static void dcf77_check_receiver_type()
     */
     if (count_low + count_high >= 100) {
 
-        #if (LOG_DCF77 == 1)
-
-            char log_text[8];
-
-            sprintf_P(log_text, PSTR("%u"), count_low);
-            uart_puts(log_text);
-            uart_puts(" ");
-
-            sprintf_P(log_text, PSTR("%u"), count_high);
-            uart_puts(log_text);
-            uart_puts(" ");
-
-            sprintf_P(log_text, PSTR("%u"), count_high + count_low);
-            uart_puts(log_text);
-            uart_puts(" ");
-
-            sprintf_P(log_text, PSTR("%u"), count_pass);
-            uart_puts(log_text);
-            uart_puts(" ");
-
-            sprintf_P(log_text, PSTR("%u"), count_switch);
-            uart_puts(log_text);
-            uart_puts("\n");
-
-        #endif
+        log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO,
+            "Low: %u, high: %u, total: %u, pass: %u, switches: %u",
+            count_low,
+            count_high,
+            count_low + count_high,
+            count_pass,
+            count_switch);
 
         /*
          * Check if at least one of both counters is low
@@ -603,19 +585,16 @@ static void dcf77_check_receiver_type()
                  * If logging for this module is enabled the type of the
                  * receiver detected should be output
                  */
-                #if (LOG_DCF77 == 1)
 
-                    if (getFlag(HIGH_ACTIVE)) {
+                if (getFlag(HIGH_ACTIVE)) {
 
-                        log_dcf77("\nHigh active DCF77 Module detected!\n");
+                    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "High active module");
 
-                    } else {
+                } else {
 
-                        log_dcf77("\nLow active DCF77 Module detected!\n");
+                    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Low active module");
 
-                    }
-
-                #endif
+                }
 
                 return;
 
@@ -700,25 +679,7 @@ static void dcf77_check_receiver_type()
 static bool dcf77_check()
 {
 
-    /*
-     * Check whether logging for this module is enabled
-     */
-    #if (LOG_DCF77 == 1)
-
-        if (DCF.PauseCounter > 0) {
-
-            char log_text[8];
-
-            /*
-             * Output the length of the last pause
-             */
-            sprintf_P(log_text, PSTR("%u"), DCF.PauseCounter);
-            uart_puts(log_text);
-            uart_puts(" ");
-
-        }
-
-    #endif
+    log_output_P(LOG_MODULE_DCF77, LOG_LEVEL_INFO, "Pause: %u", DCF.PauseCounter);
 
    /*
     * Check whether pause length is smaller or equal to 60 ms, which is
