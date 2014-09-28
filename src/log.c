@@ -359,6 +359,9 @@ void log_output(log_module_t module, log_level_t level, const char* fmt, ...)
 
     }
 
+    // Wait for output buffer to be empty
+    uart_flush_output();
+
     // Output prefix, including module name and separator
     log_output_prefix(module, level);
 
@@ -399,6 +402,9 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
 
     }
 
+    // Wait for output buffer to be empty
+    uart_flush_output();
+
     // Output prefix, including module name and separator
     log_output_prefix(module, level);
 
@@ -423,7 +429,8 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  *
  * @note Before the callback function gets executed the output buffer is
  * flushed. If the callback function is generating a lot of output, it needs
- * to flush the output for itself.
+ * to flush the output for itself by calling {@link log_output_flush()} every
+ * now and then.
  *
  * @param module Module to generate logging output for
  * @param level Log level to generate output with
@@ -431,6 +438,7 @@ void log_output_p(log_module_t module, log_level_t level, PGM_P fmt, ...)
  * @param args Arguments to pass along to the callback function
  *
  * @see log_output_callback_t
+ * @see log_output_flush()
  */
 void log_output_callback(log_module_t module, log_level_t level, log_output_callback_t callback, void* args)
 {
@@ -442,11 +450,31 @@ void log_output_callback(log_module_t module, log_level_t level, log_output_call
 
     }
 
-    // Wait for UART output buffer to be empty
+    // Wait for output buffer to be empty
     uart_flush_output();
 
     log_output_prefix(module, level);
     callback(&logout, args);
     log_output_eol();
+
+}
+
+/**
+ * @brief Flushes the output buffer of the logging module
+ *
+ * This is a wrapper around {@link uart_flush_output()}. It can be used by
+ * callback functions to make sure that the output buffer will not overflow.
+ * The reason for this being a dedicated function of the log module is, so
+ * that callback function do not need to know anything about the backend, i.e.
+ * the UART module, which might make it easier to switch to a different backend
+ * later on.
+ *
+ * @see uart_flush_output
+ * @see LOG_OUTPUT_BUFFER_SIZE
+ */
+void log_output_flush()
+{
+
+    uart_flush_output();
 
 }
