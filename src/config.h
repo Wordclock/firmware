@@ -308,14 +308,15 @@
 #define LOG_USER_STATE 0
 
 /**
- * @brief Defines whether changes in time within user module should be logged
+ * @brief Default log level for time changes within the user module
  *
- * This affects `user.c` and controls whether debug information about changes
- * to the time should be output.
+ * This affects the {@link user.h user} module and controls whether debug
+ * information about changes to the internal time handling should be output.
  *
- * @see user.c
+ * @see user.h
+ * @see log_level_t
  */
-#define LOG_USER_TIME 0
+#define LOG_LEVEL_USER_TIME_DEFAULT LOG_LEVEL_NONE
 
 /**
  * @brief Default log level of the preferences module
